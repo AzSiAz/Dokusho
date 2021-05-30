@@ -14,52 +14,51 @@ public enum SourceError: Error {
     case fetchError
 }
 
-public enum LangSource: String {
+public enum SourceLang: String {
     case fr = "French"
     case en = "English"
     case jp = "Japanese"
 }
 
-public enum MangaCompletion: String {
+public enum SourceMangaCompletion: String {
     case ongoing = "Ongoing"
     case complete = "Complete"
     case unknown = "Unknown"
 }
 
-public enum MangaType: String {
+public enum SourceMangaType: String {
     case webtoon = "WebToon"
     case japanese = "Japanese"
     case chinese = "Chinese"
 }
 
-public struct Manga {
+public struct SourceManga {
     var id: String
     var title: String
     var thumbnailUrl: String
     var genres: [String]
     var authors: [String]
     var alternateNames: [String]
-    var status: MangaCompletion
+    var status: SourceMangaCompletion
     var description: String
-    var chapters: [Chapter]
-    var type: MangaType = .japanese
+    var chapters: [SourceChapter]
+    var type: SourceMangaType = .japanese
 }
 
-struct Chapter: Identifiable, Equatable, Hashable {
+struct SourceChapter: Identifiable, Equatable, Hashable {
     var name: String
     var id: String
     var dateUpload: Date
 }
 
-struct ChapterImage: Identifiable, Equatable, Hashable {
+struct SourceChapterImage: Identifiable, Equatable, Hashable {
     var id = UUID()
     
     var index: Int
     var imageUrl: String
-    var status: String? = nil
 }
 
-struct SmallManga: Identifiable, Equatable, Hashable {
+struct SourceSmallManga: Identifiable, Equatable, Hashable {
     var id: String
     var title: String
     var thumbnailUrl: String
@@ -70,31 +69,23 @@ public enum SourceFetchType: String {
     case popular = "Popular"
 }
 
-typealias PaginatedSmallManga = (mangas: [SmallManga], hasNextPage: Bool)
+typealias SourcePaginatedSmallManga = (mangas: [SourceSmallManga], hasNextPage: Bool)
 
 protocol Source {
     var name: String { get }
     var id: String { get }
     var versionNumber: Float { get }
     var updatedAt: Date { get }
-    var lang: LangSource { get }
+    var lang: SourceLang { get }
     var icon: String { get }
     var baseUrl: String { get }
     var supportsLatest: Bool  { get }
     var headers: HTTPHeaders { get }
     
-    func fetchPopularManga(page: Int, completion: @escaping (Result<PaginatedSmallManga, SourceError>) -> Void)
-    func fetchLatestUpdates(page: Int, completion: @escaping (Result<PaginatedSmallManga, SourceError>) -> Void)
-    func fetchSearchManga(query: String, page: Int, completion: @escaping (Result<PaginatedSmallManga, SourceError>) -> Void)
-    func fetchMangaDetail(id: String, completion: @escaping (Result<Manga, SourceError>) -> Void)
-    func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping (Result<[ChapterImage], SourceError>) -> Void)
+    func fetchPopularManga(page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void)
+    func fetchLatestUpdates(page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void)
+    func fetchSearchManga(query: String, page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void)
+    func fetchMangaDetail(id: String, completion: @escaping (Result<SourceManga, SourceError>) -> Void)
+    func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping (Result<[SourceChapterImage], SourceError>) -> Void)
     func mangaUrl(mangaId: String) -> URL
-}
-
-struct MiniSource: Identifiable, Hashable {
-    var id: Int
-    var sourceIndex: Int
-    var name: String
-    var lang: LangSource
-    var icon: String
 }

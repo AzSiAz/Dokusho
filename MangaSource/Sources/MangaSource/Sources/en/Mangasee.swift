@@ -65,7 +65,7 @@ class MangaSeeSource: Source {
     var id = "source.mangasee";
     var name = "Mangasee";
     var baseUrl = "https://mangasee123.com";
-    var lang = LangSource.en;
+    var lang = SourceLang.en;
     var supportsLatest = true;
     var headers = HTTPHeaders(["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"])
     var versionNumber: Float = 1.0
@@ -73,7 +73,7 @@ class MangaSeeSource: Source {
     
     private var directory: [MangaSeeDirectoryManga] = []
 
-    func fetchPopularManga(page: Int, completion: @escaping (Result<PaginatedSmallManga, SourceError>) -> Void) {
+    func fetchPopularManga(page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void) {
         return self.updateDirectory(page) { (updateResult) in
             switch(updateResult) {
             case .failure(let err): return completion(.failure(err))
@@ -82,7 +82,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchLatestUpdates(page: Int, completion: @escaping (Result<PaginatedSmallManga, SourceError>) -> Void) {
+    func fetchLatestUpdates(page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void) {
         return self.updateDirectory(page) { (updateResult) in
             switch(updateResult) {
             case .failure(let err): return completion(.failure(err))
@@ -91,7 +91,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchSearchManga(query: String, page: Int, completion: @escaping (Result<PaginatedSmallManga, SourceError>) -> Void) {
+    func fetchSearchManga(query: String, page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void) {
         return self.updateDirectory(page) { (updateResult) in
             switch(updateResult) {
             case .failure(let err): return completion(.failure(err))
@@ -100,7 +100,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchMangaDetail(id: String, completion: @escaping (Result<Manga, SourceError>) -> Void) {
+    func fetchMangaDetail(id: String, completion: @escaping (Result<SourceManga, SourceError>) -> Void) {
         return mangaDetailRequest(mangaId: id) { requestResult in
             switch (requestResult) {
             case .failure(_): return completion(.failure(SourceError.fetchError))
@@ -130,7 +130,7 @@ class MangaSeeSource: Source {
                         let directoryManga = self.directory.first { $0.id == id }
                         let alternateNames = directoryManga?.alternateNames ?? []
                         
-                        let manga = Manga(id: id, title: title, thumbnailUrl: thumbnailUrl, genres: genres, authors: authors, alternateNames: alternateNames, status: self.parseStatus(rawStatus), description: description, chapters: chapters)
+                        let manga = SourceManga(id: id, title: title, thumbnailUrl: thumbnailUrl, genres: genres, authors: authors, alternateNames: alternateNames, status: self.parseStatus(rawStatus), description: description, chapters: chapters)
                         
                         return completion(.success(manga))
                     }
@@ -142,7 +142,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping (Result<[ChapterImage], SourceError>) -> Void) {
+    func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping (Result<[SourceChapterImage], SourceError>) -> Void) {
         return self.mangaChapterImagesRequest(chapterId: chapterId) { requestResult in
             switch (requestResult) {
             case (.failure(_)): return completion(.failure(SourceError.fetchError))
@@ -176,9 +176,9 @@ class MangaSeeSource: Source {
                 let chNum = self.chapterImage(vmCurrChapterJSON.dictionaryValue["Chapter"]!.stringValue)
                 
                 // ideal: https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-001.png / https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-010.png
-                let images = (1...vmCurrChapterJSON["Page"].intValue).map { (number) -> ChapterImage in
+                let images = (1...vmCurrChapterJSON["Page"].intValue).map { (number) -> SourceChapterImage in
                     let i = "000\(number)"
-                    return ChapterImage(index: number, imageUrl: "https://\(path)\(chNum)-0\(i[i.index(i.endIndex, offsetBy: -2)...]).png")
+                    return SourceChapterImage(index: number, imageUrl: "https://\(path)\(chNum)-0\(i[i.index(i.endIndex, offsetBy: -2)...]).png")
                 }
                 
                 return completion(.success(images))
@@ -190,15 +190,15 @@ class MangaSeeSource: Source {
         return URL(string: "\(self.baseUrl)/manga/\(mangaId)")!
     }
     
-    private func searchMangaParse(query: String, page: Int) -> PaginatedSmallManga {
+    private func searchMangaParse(query: String, page: Int) -> SourcePaginatedSmallManga {
         let matchingMangasChunks = self.directory.filter { (mangaInDirectory) -> Bool in
             return mangaInDirectory.title.lowercased().contains(query.lowercased()) || mangaInDirectory.alternateNames.contains(where: { (alternateName) -> Bool in
                 return alternateName.lowercased().contains(query.lowercased())
             })
         }.chunked(into: 24)
 
-        return PaginatedSmallManga(mangas: matchingMangasChunks[page].map {
-            return SmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://cover.nep.li/cover/\($0.id).jpg")
+        return SourcePaginatedSmallManga(mangas: matchingMangasChunks[page].map {
+            return SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://cover.nep.li/cover/\($0.id).jpg")
         }, hasNextPage: page != matchingMangasChunks.count)
     }
     
@@ -206,7 +206,7 @@ class MangaSeeSource: Source {
         return fetchHtml(url: "\(baseUrl)/read-online/\(chapterId).html", completionHandler: completion)
     }
     
-    private func mangaChapterListParse(_ html: String, _ id: String) -> [Chapter] {
+    private func mangaChapterListParse(_ html: String, _ id: String) -> [SourceChapter] {
         guard let interrestingPartIndex = html.range(of: "MainFunction")?.upperBound else { return [] }
         let interrestingPart = String(html[interrestingPartIndex...])
 
@@ -222,13 +222,13 @@ class MangaSeeSource: Source {
                 
         let vmChapter = try! JSON(data: jsonData.data(using: .utf8)!)
         
-        return vmChapter.arrayValue.map { (rawChapter) -> Chapter in
+        return vmChapter.arrayValue.map { (rawChapter) -> SourceChapter in
             let chapter = rawChapter["Chapter"].stringValue
             let date = rawChapter["Date"].stringValue
             let type = rawChapter["Type"].stringValue
             let chapterName = rawChapter["ChapterName"].stringValue.isEmpty ? "\(type) \(chapterImage(chapter, clean: true))" : rawChapter["ChapterName"].stringValue
             
-            return Chapter(name: chapterName, id: "\(id)\(chapterURLEncode(chapter))", dateUpload: convertToDate(date))
+            return SourceChapter(name: chapterName, id: "\(id)\(chapterURLEncode(chapter))", dateUpload: convertToDate(date))
         }
     }
     
@@ -262,7 +262,7 @@ class MangaSeeSource: Source {
         return "-chapter-\(n)\(suffix)\(index)"
     }
     
-    private func parseStatus(_ text: String) -> MangaCompletion {
+    private func parseStatus(_ text: String) -> SourceMangaCompletion {
         switch text {
         case let t where t.lowercased().contains("ongoing"): return .ongoing
         case let t where t.lowercased().contains("complete"): return .complete
@@ -295,7 +295,7 @@ class MangaSeeSource: Source {
         return .success(MangaSeeDirectoryManga.parseFromRawDirectory(raw: rawData))
     }
     
-    private func extractInfoFromDirectory(page: Int, order: orderDirectory) -> Result<PaginatedSmallManga, SourceError> {
+    private func extractInfoFromDirectory(page: Int, order: orderDirectory) -> Result<SourcePaginatedSmallManga, SourceError> {
         let chunks = self.directory.sorted { (current, next) -> Bool in
             if (order == .lastUpdate) {
                 return current.lastUpdate > next.lastUpdate
@@ -305,8 +305,8 @@ class MangaSeeSource: Source {
             }
         }.chunked(into: 24)
 
-        return .success(PaginatedSmallManga(mangas: chunks[page-1].map {
-            return SmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://cover.nep.li/cover/\($0.id).jpg")
+        return .success(SourcePaginatedSmallManga(mangas: chunks[page-1].map {
+            return SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://cover.nep.li/cover/\($0.id).jpg")
         }, hasNextPage: page != chunks.count))
     }
     
