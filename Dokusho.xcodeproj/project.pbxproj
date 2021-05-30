@@ -1,0 +1,469 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E23961E42663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */; };
+		E23961E52663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */; };
+		E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D02663E60D00BA4833 /* DokushoApp.swift */; };
+		E23961E72663E60E00BA4833 /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D02663E60D00BA4833 /* DokushoApp.swift */; };
+		E23961E82663E60E00BA4833 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D12663E60D00BA4833 /* ContentView.swift */; };
+		E23961E92663E60E00BA4833 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D12663E60D00BA4833 /* ContentView.swift */; };
+		E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D22663E60D00BA4833 /* Persistence.swift */; };
+		E23961EB2663E60E00BA4833 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D22663E60D00BA4833 /* Persistence.swift */; };
+		E23961EC2663E60E00BA4833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E23961D32663E60E00BA4833 /* Assets.xcassets */; };
+		E23961ED2663E60E00BA4833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E23961D32663E60E00BA4833 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E23961CF2663E60D00BA4833 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
+		E23961D02663E60D00BA4833 /* DokushoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokushoApp.swift; sourceTree = "<group>"; };
+		E23961D12663E60D00BA4833 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E23961D22663E60D00BA4833 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		E23961D32663E60E00BA4833 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E23961D82663E60E00BA4833 /* Dokusho.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dokusho.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E23961DB2663E60E00BA4833 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E23961E02663E60E00BA4833 /* Dokusho.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dokusho.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E23961E22663E60E00BA4833 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E23961E32663E60E00BA4833 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E23961D52663E60E00BA4833 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E23961DD2663E60E00BA4833 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E23961C82663E60C00BA4833 = {
+			isa = PBXGroup;
+			children = (
+				E23961CD2663E60D00BA4833 /* Shared */,
+				E23961DA2663E60E00BA4833 /* iOS */,
+				E23961E12663E60E00BA4833 /* macOS */,
+				E23961D92663E60E00BA4833 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E23961CD2663E60D00BA4833 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E23961D02663E60D00BA4833 /* DokushoApp.swift */,
+				E23961D12663E60D00BA4833 /* ContentView.swift */,
+				E23961D22663E60D00BA4833 /* Persistence.swift */,
+				E23961D32663E60E00BA4833 /* Assets.xcassets */,
+				E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		E23961D92663E60E00BA4833 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E23961D82663E60E00BA4833 /* Dokusho.app */,
+				E23961E02663E60E00BA4833 /* Dokusho.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E23961DA2663E60E00BA4833 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				E23961DB2663E60E00BA4833 /* Info.plist */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		E23961E12663E60E00BA4833 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				E23961E22663E60E00BA4833 /* Info.plist */,
+				E23961E32663E60E00BA4833 /* macOS.entitlements */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E23961D72663E60E00BA4833 /* Dokusho (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E23961F02663E60E00BA4833 /* Build configuration list for PBXNativeTarget "Dokusho (iOS)" */;
+			buildPhases = (
+				E23961D42663E60E00BA4833 /* Sources */,
+				E23961D52663E60E00BA4833 /* Frameworks */,
+				E23961D62663E60E00BA4833 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Dokusho (iOS)";
+			productName = "Dokusho (iOS)";
+			productReference = E23961D82663E60E00BA4833 /* Dokusho.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E23961DF2663E60E00BA4833 /* Dokusho (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E23961F32663E60E00BA4833 /* Build configuration list for PBXNativeTarget "Dokusho (macOS)" */;
+			buildPhases = (
+				E23961DC2663E60E00BA4833 /* Sources */,
+				E23961DD2663E60E00BA4833 /* Frameworks */,
+				E23961DE2663E60E00BA4833 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Dokusho (macOS)";
+			productName = "Dokusho (macOS)";
+			productReference = E23961E02663E60E00BA4833 /* Dokusho.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E23961C92663E60C00BA4833 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					E23961D72663E60E00BA4833 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					E23961DF2663E60E00BA4833 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+				};
+			};
+			buildConfigurationList = E23961CC2663E60C00BA4833 /* Build configuration list for PBXProject "Dokusho" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E23961C82663E60C00BA4833;
+			productRefGroup = E23961D92663E60E00BA4833 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E23961D72663E60E00BA4833 /* Dokusho (iOS) */,
+				E23961DF2663E60E00BA4833 /* Dokusho (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E23961D62663E60E00BA4833 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E23961EC2663E60E00BA4833 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E23961DE2663E60E00BA4833 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E23961ED2663E60E00BA4833 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E23961D42663E60E00BA4833 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E23961E42663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */,
+				E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */,
+				E23961E82663E60E00BA4833 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E23961DC2663E60E00BA4833 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E23961E52663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */,
+				E23961EB2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E23961E72663E60E00BA4833 /* DokushoApp.swift in Sources */,
+				E23961E92663E60E00BA4833 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E23961EE2663E60E00BA4833 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E23961EF2663E60E00BA4833 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		E23961F12663E60E00BA4833 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 27U585A9E3;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_NAME = Dokusho;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E23961F22663E60E00BA4833 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 27U585A9E3;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_NAME = Dokusho;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E23961F42663E60E00BA4833 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 27U585A9E3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_NAME = Dokusho;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E23961F52663E60E00BA4833 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 27U585A9E3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_NAME = Dokusho;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E23961CC2663E60C00BA4833 /* Build configuration list for PBXProject "Dokusho" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E23961EE2663E60E00BA4833 /* Debug */,
+				E23961EF2663E60E00BA4833 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E23961F02663E60E00BA4833 /* Build configuration list for PBXNativeTarget "Dokusho (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E23961F12663E60E00BA4833 /* Debug */,
+				E23961F22663E60E00BA4833 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E23961F32663E60E00BA4833 /* Build configuration list for PBXNativeTarget "Dokusho (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E23961F42663E60E00BA4833 /* Debug */,
+				E23961F52663E60E00BA4833 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E23961CF2663E60D00BA4833 /* Shared.xcdatamodel */,
+			);
+			currentVersion = E23961CF2663E60D00BA4833 /* Shared.xcdatamodel */;
+			path = Dokusho.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = E23961C92663E60C00BA4833 /* Project object */;
+}
