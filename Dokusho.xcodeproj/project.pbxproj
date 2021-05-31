@@ -11,20 +11,25 @@
 		E23961E52663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */; };
 		E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D02663E60D00BA4833 /* DokushoApp.swift */; };
 		E23961E72663E60E00BA4833 /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D02663E60D00BA4833 /* DokushoApp.swift */; };
-		E23961E82663E60E00BA4833 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D12663E60D00BA4833 /* ContentView.swift */; };
-		E23961E92663E60E00BA4833 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D12663E60D00BA4833 /* ContentView.swift */; };
 		E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D22663E60D00BA4833 /* Persistence.swift */; };
 		E23961EB2663E60E00BA4833 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D22663E60D00BA4833 /* Persistence.swift */; };
 		E23961EC2663E60E00BA4833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E23961D32663E60E00BA4833 /* Assets.xcassets */; };
 		E23961ED2663E60E00BA4833 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E23961D32663E60E00BA4833 /* Assets.xcassets */; };
 		E23961FA2663F03100BA4833 /* MangaSource in Frameworks */ = {isa = PBXBuildFile; productRef = E23961F92663F03100BA4833 /* MangaSource */; };
 		E23961FC2663F03800BA4833 /* MangaSource in Frameworks */ = {isa = PBXBuildFile; productRef = E23961FB2663F03800BA4833 /* MangaSource */; };
+		E23961FE2664B27700BA4833 /* MangaSourceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961FD2664B27700BA4833 /* MangaSourceService.swift */; };
+		E23961FF2664B27700BA4833 /* MangaSourceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961FD2664B27700BA4833 /* MangaSourceService.swift */; };
+		E23962022664BE4D00BA4833 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962012664BE4D00BA4833 /* RootView.swift */; };
+		E23962032664BE4D00BA4833 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962012664BE4D00BA4833 /* RootView.swift */; };
+		E23962052664C1EC00BA4833 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962042664C1EC00BA4833 /* LibraryView.swift */; };
+		E23962062664C1EC00BA4833 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962042664C1EC00BA4833 /* LibraryView.swift */; };
+		E23962082664C23900BA4833 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962072664C23900BA4833 /* ExploreView.swift */; };
+		E23962092664C23900BA4833 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962072664C23900BA4833 /* ExploreView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E23961CF2663E60D00BA4833 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		E23961D02663E60D00BA4833 /* DokushoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokushoApp.swift; sourceTree = "<group>"; };
-		E23961D12663E60D00BA4833 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E23961D22663E60D00BA4833 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		E23961D32663E60E00BA4833 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E23961D82663E60E00BA4833 /* Dokusho.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dokusho.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,6 +38,10 @@
 		E23961E22663E60E00BA4833 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E23961E32663E60E00BA4833 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		E23961F72663E97500BA4833 /* MangaSource */ = {isa = PBXFileReference; lastKnownFileType = text; path = MangaSource; sourceTree = SOURCE_ROOT; };
+		E23961FD2664B27700BA4833 /* MangaSourceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaSourceService.swift; sourceTree = "<group>"; };
+		E23962012664BE4D00BA4833 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		E23962042664C1EC00BA4833 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		E23962072664C23900BA4833 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,10 +79,10 @@
 			isa = PBXGroup;
 			children = (
 				E23961D02663E60D00BA4833 /* DokushoApp.swift */,
-				E23961D12663E60D00BA4833 /* ContentView.swift */,
 				E23961D22663E60D00BA4833 /* Persistence.swift */,
 				E23961D32663E60E00BA4833 /* Assets.xcassets */,
 				E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */,
+				E23961FD2664B27700BA4833 /* MangaSourceService.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -90,6 +99,7 @@
 		E23961DA2663E60E00BA4833 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				E23962002664BE3A00BA4833 /* Views */,
 				E23961DB2663E60E00BA4833 /* Info.plist */,
 			);
 			path = iOS;
@@ -110,6 +120,16 @@
 				E23961F72663E97500BA4833 /* MangaSource */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E23962002664BE3A00BA4833 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E23962012664BE4D00BA4833 /* RootView.swift */,
+				E23962042664C1EC00BA4833 /* LibraryView.swift */,
+				E23962072664C23900BA4833 /* ExploreView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,10 +235,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E23962082664C23900BA4833 /* ExploreView.swift in Sources */,
+				E23961FE2664B27700BA4833 /* MangaSourceService.swift in Sources */,
 				E23961E42663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */,
+				E23962022664BE4D00BA4833 /* RootView.swift in Sources */,
 				E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E23962052664C1EC00BA4833 /* LibraryView.swift in Sources */,
 				E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */,
-				E23961E82663E60E00BA4833 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,10 +249,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E23962092664C23900BA4833 /* ExploreView.swift in Sources */,
+				E23961FF2664B27700BA4833 /* MangaSourceService.swift in Sources */,
 				E23961E52663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */,
+				E23962032664BE4D00BA4833 /* RootView.swift in Sources */,
 				E23961EB2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E23962062664C1EC00BA4833 /* LibraryView.swift in Sources */,
 				E23961E72663E60E00BA4833 /* DokushoApp.swift in Sources */,
-				E23961E92663E60E00BA4833 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

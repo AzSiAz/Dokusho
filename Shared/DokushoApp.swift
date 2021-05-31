@@ -6,15 +6,28 @@
 //
 
 import SwiftUI
+import MangaSource
 
 @main
 struct DokushoApp: App {
     let persistenceController = PersistenceController.shared
+    let mangaSourceSvc = MangaSourceService()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            Group {
+                #if os(iOS)
+                RootView()
+                #endif
+                
+                #if os(macOS)
+                NavigationView {
+                    Text("TODO")
+                }
+                #endif
+            }
+            .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            .environmentObject(mangaSourceSvc)
         }
     }
 }
