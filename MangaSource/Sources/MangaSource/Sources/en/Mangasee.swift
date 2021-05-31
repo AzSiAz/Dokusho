@@ -60,20 +60,22 @@ private struct LDJSONInfo: Codable {
     var mainEntity: LDJSONInfoMainEntity
 }
 
-class MangaSeeSource: Source {   
-    var icon = "https://mangasee123.com/media/favicon.png";
-    var id = "source.mangasee";
-    var name = "Mangasee";
-    var baseUrl = "https://mangasee123.com";
-    var lang = SourceLang.en;
-    var supportsLatest = true;
-    var headers = HTTPHeaders(["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"])
-    var versionNumber: Float = 1.0
-    var updatedAt = Date.from(year: 2021, month: 01, day: 07)
+public class MangaSeeSource: Source {   
+    public var icon = "https://mangasee123.com/media/favicon.png";
+    public var id = 1;
+    public var name = "Mangasee";
+    public var baseUrl = "https://mangasee123.com";
+    public var lang = SourceLang.en;
+    public var supportsLatest = true;
+    public var headers = HTTPHeaders(["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"])
+    public var versionNumber: Float = 1.0
+    public var updatedAt = Date.from(year: 2021, month: 01, day: 07)
     
     private var directory: [MangaSeeDirectoryManga] = []
+    
+    public init() {}
 
-    func fetchPopularManga(page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void) {
+    public func fetchPopularManga(page: Int, completion: @escaping SourcePaginatedSmallMangaHandler) {
         return self.updateDirectory(page) { (updateResult) in
             switch(updateResult) {
             case .failure(let err): return completion(.failure(err))
@@ -82,7 +84,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchLatestUpdates(page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void) {
+    public func fetchLatestUpdates(page: Int, completion: @escaping SourcePaginatedSmallMangaHandler) {
         return self.updateDirectory(page) { (updateResult) in
             switch(updateResult) {
             case .failure(let err): return completion(.failure(err))
@@ -91,7 +93,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchSearchManga(query: String, page: Int, completion: @escaping (Result<SourcePaginatedSmallManga, SourceError>) -> Void) {
+    public func fetchSearchManga(query: String, page: Int, completion: @escaping SourcePaginatedSmallMangaHandler) {
         return self.updateDirectory(page) { (updateResult) in
             switch(updateResult) {
             case .failure(let err): return completion(.failure(err))
@@ -100,7 +102,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchMangaDetail(id: String, completion: @escaping (Result<SourceManga, SourceError>) -> Void) {
+    public func fetchMangaDetail(id: String, completion: @escaping SourceMangaDetailHandler) {
         return mangaDetailRequest(mangaId: id) { requestResult in
             switch (requestResult) {
             case .failure(_): return completion(.failure(SourceError.fetchError))
@@ -142,7 +144,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping (Result<[SourceChapterImage], SourceError>) -> Void) {
+    public func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping SourceChapterImagesHandler) {
         return self.mangaChapterImagesRequest(chapterId: chapterId) { requestResult in
             switch (requestResult) {
             case (.failure(_)): return completion(.failure(SourceError.fetchError))
@@ -186,7 +188,7 @@ class MangaSeeSource: Source {
         }
     }
     
-    func mangaUrl(mangaId: String) -> URL {
+    public func mangaUrl(mangaId: String) -> URL {
         return URL(string: "\(self.baseUrl)/manga/\(mangaId)")!
     }
     
