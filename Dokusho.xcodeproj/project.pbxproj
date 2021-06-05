@@ -25,6 +25,10 @@
 		E23962062664C1EC00BA4833 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962042664C1EC00BA4833 /* LibraryView.swift */; };
 		E23962082664C23900BA4833 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962072664C23900BA4833 /* ExploreView.swift */; };
 		E23962092664C23900BA4833 /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23962072664C23900BA4833 /* ExploreView.swift */; };
+		E239620C266BBCAD00BA4833 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = E239620B266BBCAD00BA4833 /* NukeUI */; };
+		E239620F266BC2E900BA4833 /* SourceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E239620E266BC2E900BA4833 /* SourceRow.swift */; };
+		E2396211266BC38D00BA4833 /* Fixflickering.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2396210266BC38D00BA4833 /* Fixflickering.swift */; };
+		E2396215266BCCD800BA4833 /* ExploreDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2396214266BCCD800BA4833 /* ExploreDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +46,9 @@
 		E23962012664BE4D00BA4833 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		E23962042664C1EC00BA4833 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E23962072664C23900BA4833 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		E239620E266BC2E900BA4833 /* SourceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceRow.swift; sourceTree = "<group>"; };
+		E2396210266BC38D00BA4833 /* Fixflickering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixflickering.swift; sourceTree = "<group>"; };
+		E2396214266BCCD800BA4833 /* ExploreDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +57,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E23961FA2663F03100BA4833 /* MangaSource in Frameworks */,
+				E239620C266BBCAD00BA4833 /* NukeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +86,8 @@
 		E23961CD2663E60D00BA4833 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E2396216266BCD8800BA4833 /* ViewModels */,
+				E2396212266BC3BA00BA4833 /* Extensions */,
 				E23961D02663E60D00BA4833 /* DokushoApp.swift */,
 				E23961D22663E60D00BA4833 /* Persistence.swift */,
 				E23961D32663E60E00BA4833 /* Assets.xcassets */,
@@ -99,6 +109,7 @@
 		E23961DA2663E60E00BA4833 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				E239620D266BC2DC00BA4833 /* Components */,
 				E23962002664BE3A00BA4833 /* Views */,
 				E23961DB2663E60E00BA4833 /* Info.plist */,
 			);
@@ -128,8 +139,32 @@
 				E23962012664BE4D00BA4833 /* RootView.swift */,
 				E23962042664C1EC00BA4833 /* LibraryView.swift */,
 				E23962072664C23900BA4833 /* ExploreView.swift */,
+				E2396214266BCCD800BA4833 /* ExploreDetailView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		E239620D266BC2DC00BA4833 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E239620E266BC2E900BA4833 /* SourceRow.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		E2396212266BC3BA00BA4833 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E2396210266BC38D00BA4833 /* Fixflickering.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E2396216266BCD8800BA4833 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +185,7 @@
 			name = "Dokusho (iOS)";
 			packageProductDependencies = (
 				E23961F92663F03100BA4833 /* MangaSource */,
+				E239620B266BBCAD00BA4833 /* NukeUI */,
 			);
 			productName = "Dokusho (iOS)";
 			productReference = E23961D82663E60E00BA4833 /* Dokusho.app */;
@@ -201,6 +237,9 @@
 				Base,
 			);
 			mainGroup = E23961C82663E60C00BA4833;
+			packageReferences = (
+				E239620A266BBCAD00BA4833 /* XCRemoteSwiftPackageReference "NukeUI" */,
+			);
 			productRefGroup = E23961D92663E60E00BA4833 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -238,6 +277,9 @@
 				E23962082664C23900BA4833 /* ExploreView.swift in Sources */,
 				E23961FE2664B27700BA4833 /* MangaSourceService.swift in Sources */,
 				E23961E42663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */,
+				E2396215266BCCD800BA4833 /* ExploreDetailView.swift in Sources */,
+				E2396211266BC38D00BA4833 /* Fixflickering.swift in Sources */,
+				E239620F266BC2E900BA4833 /* SourceRow.swift in Sources */,
 				E23962022664BE4D00BA4833 /* RootView.swift in Sources */,
 				E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */,
 				E23962052664C1EC00BA4833 /* LibraryView.swift in Sources */,
@@ -500,6 +542,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		E239620A266BBCAD00BA4833 /* XCRemoteSwiftPackageReference "NukeUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/NukeUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		E23961F92663F03100BA4833 /* MangaSource */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -508,6 +561,11 @@
 		E23961FB2663F03800BA4833 /* MangaSource */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MangaSource;
+		};
+		E239620B266BBCAD00BA4833 /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E239620A266BBCAD00BA4833 /* XCRemoteSwiftPackageReference "NukeUI" */;
+			productName = NukeUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 

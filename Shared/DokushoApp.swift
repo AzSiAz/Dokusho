@@ -11,7 +11,7 @@ import MangaSource
 @main
 struct DokushoApp: App {
     let persistenceController = PersistenceController.shared
-    let mangaSourceSvc = MangaSourceService()
+    let mangaSourceSvc = MangaSourceService.shared
 
     var body: some Scene {
         WindowGroup {

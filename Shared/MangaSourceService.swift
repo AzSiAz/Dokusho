@@ -9,6 +9,7 @@ struct MiniSource: Identifiable, Hashable {
     var lang: SourceLang
     var icon: String
     var active: Bool
+    var supportLatest: Bool
 }
 
 class MangaSourceService: ObservableObject {
@@ -18,7 +19,7 @@ class MangaSourceService: ObservableObject {
     
     func getSourceList() -> [MiniSource] {
         return self.possibleSources.enumerated().map { (index, source) -> MiniSource in
-            return MiniSource(id: source.id, sourceIndex: index, name: source.name, lang: source.lang, icon: source.icon, active: true)
+            return MiniSource(id: source.id, sourceIndex: index, name: source.name, lang: source.lang, icon: source.icon, active: true, supportLatest: source.supportsLatest)
         }
     }
     

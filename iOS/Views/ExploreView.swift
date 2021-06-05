@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MangaSource
 
 struct ExploreView: View {
     @EnvironmentObject var sourcesSvc: MangaSourceService
@@ -14,13 +15,13 @@ struct ExploreView: View {
         NavigationView {
             ScrollView {
                 ForEach(sourcesSvc.getSourceList()) { src in
-                    HStack {
-                        Text(src.name)
-                    }
+                    SourceRow(source: src)
+                        .padding()
                 }
             }
+            .fixFlickering()
+            .navigationTitle("Explore")
         }
-        .navigationTitle("Explore")
     }
 }
 
