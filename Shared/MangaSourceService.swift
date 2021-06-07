@@ -12,7 +12,7 @@ struct MiniSource: Identifiable, Hashable {
     var supportLatest: Bool
 }
 
-class MangaSourceService: ObservableObject {
+class MangaSourceService {
     static let shared = MangaSourceService()
     
     private var possibleSources: [Source] = [MangaSeeSource()]
@@ -35,31 +35,31 @@ class MangaSourceService: ObservableObject {
         return foundSource
     }
     
-    func getSourceByIndex(sourceIndex: Int) -> Source {
-        return self.possibleSources[sourceIndex]
-    }
-    
-    func fetchLatestUpdates(page: Int, sourceId: Int, _ completion: @escaping SourcePaginatedSmallMangaHandler) {
-        let source = getSourceById(sourceId)
-
-        return source.fetchLatestUpdates(page: page, completion: completion)
-    }
-    
-    func fetchPopularManga(page: Int, sourceId: Int, _ completion: @escaping SourcePaginatedSmallMangaHandler) {
-        let source = getSourceById(sourceId)
-
-        return source.fetchPopularManga(page: page, completion: completion)
-    }
-
-    func getMangaDetail(id: String, sourceId: Int, _ completion: @escaping SourceMangaDetailHandler) {
-        let source = getSourceById(sourceId)
-
-        return source.fetchMangaDetail(id: id, completion: completion)
-    }
-
-    func getMangaChapterImages(chapterId: String, mangaId: String, sourceId: Int, _ completion: @escaping SourceChapterImagesHandler) {
-        let source = getSourceById(sourceId)
-
-        source.fetchChapterImages(mangaId: mangaId, chapterId: chapterId, completion: completion)
-    }
+//    func getSourceByIndex(sourceIndex: Int) -> Source {
+//        return self.possibleSources[sourceIndex]
+//    }
+//    
+//    func fetchLatestUpdates(page: Int, sourceId: Int, _ completion: @escaping SourcePaginatedSmallMangaHandler) {
+//        let source = getSourceById(sourceId)
+//
+//        return source.fetchLatestUpdates(page: page, completion: completion)
+//    }
+//    
+//    func fetchPopularManga(page: Int, sourceId: Int, _ completion: @escaping SourcePaginatedSmallMangaHandler) {
+//        let source = getSourceById(sourceId)
+//
+//        return source.fetchPopularManga(page: page, completion: completion)
+//    }
+//
+//    func getMangaDetail(id: String, sourceId: Int, _ completion: @escaping SourceMangaDetailHandler) {
+//        let source = getSourceById(sourceId)
+//
+//        return source.fetchMangaDetail(id: id, completion: completion)
+//    }
+//
+//    func getMangaChapterImages(chapterId: String, mangaId: String, sourceId: Int, _ completion: @escaping SourceChapterImagesHandler) {
+//        let source = getSourceById(sourceId)
+//
+//        source.fetchChapterImages(mangaId: mangaId, chapterId: chapterId, completion: completion)
+//    }
 }

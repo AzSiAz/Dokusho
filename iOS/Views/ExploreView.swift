@@ -9,7 +9,7 @@ import SwiftUI
 import MangaSource
 
 struct ExploreView: View {
-    @EnvironmentObject var sourcesSvc: MangaSourceService
+    let sourcesSvc: MangaSourceService = MangaSourceService.shared
     
     var body: some View {
         NavigationView {

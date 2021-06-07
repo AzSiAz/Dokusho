@@ -192,6 +192,8 @@ public class MangaSeeSource: Source {
         return URL(string: "\(self.baseUrl)/manga/\(mangaId)")!
     }
     
+    public func checkUpdates(mangaIds: [String]) {}
+    
     private func searchMangaParse(query: String, page: Int) -> SourcePaginatedSmallManga {
         let matchingMangasChunks = self.directory.filter { (mangaInDirectory) -> Bool in
             return mangaInDirectory.title.lowercased().contains(query.lowercased()) || mangaInDirectory.alternateNames.contains(where: { (alternateName) -> Bool in
@@ -333,7 +335,7 @@ public class MangaSeeSource: Source {
     
     private func fetchHtml(url: String, completionHandler: @escaping (Result<String, AFError>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
-            AF.request(url, headers: self.headers).validate().responseString { (data) in
+            AF.request(url, method: .get ,headers: self.headers).validate().responseString { (data) in
                 DispatchQueue.main.async {
                     switch (data.result) {
                     case .success(let html): return completionHandler(.success(html))

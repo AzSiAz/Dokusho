@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import OSLog
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -14,6 +15,8 @@ struct PersistenceController {
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "Dokusho")
+        
+        Logger.persistence.info("Starting CoreData \(inMemory ? "in memory" : "in sync") mode")
         
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -32,6 +35,9 @@ struct PersistenceController {
                 * The store could not be migrated to the current model version.
                 Check the error message to determine what the actual problem was.
                 */
+                
+                Logger.persistence.error("Unresolved error \(error) with \(error.userInfo)")
+
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })

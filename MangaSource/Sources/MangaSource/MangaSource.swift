@@ -59,6 +59,12 @@ public struct SourceChapterImage: Identifiable, Equatable, Hashable {
 }
 
 public struct SourceSmallManga: Identifiable, Equatable, Hashable {
+    public init(id: String, title: String, thumbnailUrl: String) {
+        self.id = id
+        self.title = title
+        self.thumbnailUrl = thumbnailUrl
+    }
+    
     public var id: String
     public var title: String
     public var thumbnailUrl: String
@@ -94,4 +100,5 @@ public protocol Source {
     func fetchMangaDetail(id: String, completion: @escaping SourceMangaDetailHandler)
     func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping SourceChapterImagesHandler)
     func mangaUrl(mangaId: String) -> URL
+    func checkUpdates(mangaIds: [String])
 }

@@ -11,7 +11,6 @@ import MangaSource
 @main
 struct DokushoApp: App {
     let persistenceController = PersistenceController.shared
-    let mangaSourceSvc = MangaSourceService.shared
 
     var body: some Scene {
         WindowGroup {
@@ -27,7 +26,6 @@ struct DokushoApp: App {
                 #endif
             }
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            .environmentObject(mangaSourceSvc)
         }
     }
 }

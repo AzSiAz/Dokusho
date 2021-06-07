@@ -7,16 +7,56 @@
 
 import SwiftUI
 import MangaSource
-
+import NukeUI
 
 struct ExploreDetailView: View {
-    @EnvironmentObject var sourcesSvc: MangaSourceService
-
-    @State var fetchType: SourceFetchType
-    @State var srcId: Int
+    @StateObject var vm: ExploreDetailViewModel
+    
+    var columns: [GridItem] {
+        var base = [
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+        ]
+        
+        if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
+            base = [GridItem(.adaptive(minimum: 180, maximum: 180))]
+        }
+        
+        return base
+    }
+    
+    init(fetchType: SourceFetchType, srcId: Int) {
+        let source = MangaSourceService.shared.getSourceById(srcId)
+        self._vm = .init(wrappedValue: ExploreDetailViewModel(fetchType, source: source))
+    }
     
     var body: some View {
-        Text(fetchType.rawValue)
+        ZStack {
+            if vm.mangas.isEmpty {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+            }
+            
+            if !vm.mangas.isEmpty {
+                ScrollView {
+                    LazyVGrid(columns: columns) {
+                        ForEach(vm.mangas) { manga in
+                            NavigationLink(destination: MangaDetailView(manga: manga)) {
+                                ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
+                                    .frame(height: 180)
+                                    .onAppear { vm.fetchMoreIfPossible(m: manga) }
+                            }
+                        }
+                    }
+                    .padding()
+                }
+            }
+        }
+        .navigationTitle(vm.getTitle())
+        .onAppear {
+            vm.fetchList()
+        }
     }
 }
 
