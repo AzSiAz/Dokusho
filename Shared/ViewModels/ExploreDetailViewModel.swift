@@ -30,12 +30,9 @@ class ExploreDetailViewModel: ObservableObject {
         
         do {
             let newManga = try await self.fetchType == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchPopularManga(page: nextPage)
-            
-            // TODO: Remove when onAppear can take async function
-            DispatchQueue.main.async {
-                self.mangas.append(contentsOf: newManga.mangas)
-                self.nextPage += 1
-            }
+
+            self.mangas.append(contentsOf: newManga.mangas)
+            self.nextPage += 1
         } catch {
             self.error = true
         }

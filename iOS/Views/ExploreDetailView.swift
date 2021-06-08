@@ -45,10 +45,8 @@ struct ExploreDetailView: View {
                             NavigationLink(destination: MangaDetailView(manga: manga, inSource: vm.src.id)) {
                                 ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                     .frame(height: 180)
-                                    .onAppear {
-                                        detach {
-                                            await vm.fetchMoreIfPossible(m: manga)
-                                        }
+                                    .task {
+                                        await vm.fetchMoreIfPossible(m: manga)
                                     }
                             }
                         }
@@ -60,10 +58,8 @@ struct ExploreDetailView: View {
             }
         }
         .navigationTitle(vm.getTitle())
-        .onAppear {
-            detach {
-                await vm.fetchList()
-            }
+        .task {
+            await vm.fetchList()
         }
     }
 }
