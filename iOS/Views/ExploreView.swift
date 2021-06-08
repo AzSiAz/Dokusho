@@ -19,7 +19,6 @@ struct ExploreView: View {
                         .padding()
                 }
             }
-            .fixFlickering()
             .navigationTitle("Explore")
         }
     }

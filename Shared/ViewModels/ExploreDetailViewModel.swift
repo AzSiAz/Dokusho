@@ -15,59 +15,34 @@ class ExploreDetailViewModel: ObservableObject {
     var nextPage = 1
     @Published var fetchType: SourceFetchType
     @Published var mangas = [SourceSmallManga]()
+    @Published var error = false
     
     init(_ fetchType: SourceFetchType, source: Source) {
         self.src = source
         self.fetchType = fetchType
     }
     
-    func fetchList(clean: Bool = false) {
-        switch self.fetchType {
-            case .latest:
-                fetchLatest(page: nextPage, clean: clean)
-            case .popular:
-                fetchPopular(page: nextPage, clean: clean)
+    func fetchList(clean: Bool = false) async {
+        if clean {
+            mangas = []
+            nextPage = 1
         }
-    }
-    
-    private func fetchLatest(page: Int, clean: Bool) {
-        src.fetchLatestUpdates(page: page) { [self] res in
-            switch res {
-                case .failure(let error):
-                    print(error)
-                case .success(let page):
-                    if !clean {
-                        mangas.append(contentsOf: page.mangas)
-                    }
-                    else {
-                        mangas = page.mangas
-                    }
-                    
-                    nextPage += 1
+        
+        do {
+            let newManga = try await self.fetchType == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchLatestUpdates(page: nextPage)
+            
+            DispatchQueue.main.async {
+                self.mangas.append(contentsOf: newManga.mangas)
+                self.nextPage += 1
             }
+        } catch {
+            self.error = true
         }
     }
     
-    private func fetchPopular(page: Int, clean: Bool) {
-        src.fetchPopularManga(page: page) { [self] res in
-            switch res {
-                case .failure(let error):
-                    print(error) 
-                case .success(let page):
-                    if !clean {
-                        mangas.append(contentsOf: page.mangas)
-                    }
-                    else {
-                        mangas = page.mangas
-                    }
-                    nextPage += 1
-            }
-        }
-    }
-    
-    func fetchMoreIfPossible(m: SourceSmallManga) {
+    func fetchMoreIfPossible(m: SourceSmallManga) async {
         if mangas.last == m {
-            fetchList()
+            return await fetchList()
         }
     }
     

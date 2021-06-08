@@ -77,12 +77,6 @@ public enum SourceFetchType: String {
 
 public typealias SourcePaginatedSmallManga = (mangas: [SourceSmallManga], hasNextPage: Bool)
 
-public typealias SourcePaginatedSmallMangaHandler = (Result<SourcePaginatedSmallManga, SourceError>) -> Void
-
-public typealias SourceMangaDetailHandler = (Result<SourceManga, SourceError>) -> Void
-
-public typealias SourceChapterImagesHandler = (Result<[SourceChapterImage], SourceError>) -> Void
-
 public protocol Source {
     var name: String { get }
     var id: Int { get }
@@ -94,11 +88,11 @@ public protocol Source {
     var supportsLatest: Bool  { get }
     var headers: HTTPHeaders { get }
     
-    func fetchPopularManga(page: Int, completion: @escaping SourcePaginatedSmallMangaHandler)
-    func fetchLatestUpdates(page: Int, completion: @escaping SourcePaginatedSmallMangaHandler)
-    func fetchSearchManga(query: String, page: Int, completion: @escaping SourcePaginatedSmallMangaHandler)
-    func fetchMangaDetail(id: String, completion: @escaping SourceMangaDetailHandler)
-    func fetchChapterImages(mangaId: String, chapterId: String, completion: @escaping SourceChapterImagesHandler)
+    func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga
+    func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallManga
+    func fetchSearchManga(query: String, page: Int) async throws -> SourcePaginatedSmallManga
+    func fetchMangaDetail(id: String) async throws -> SourceManga
+    func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage]
     func mangaUrl(mangaId: String) -> URL
-    func checkUpdates(mangaIds: [String])
+    func checkUpdates(mangaIds: [String]) async throws -> Void
 }

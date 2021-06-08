@@ -35,7 +35,7 @@ struct ExploreDetailView: View {
         ZStack {
             if vm.mangas.isEmpty {
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                    .progressViewStyle(.circular)
             }
             
             if !vm.mangas.isEmpty {
@@ -45,17 +45,25 @@ struct ExploreDetailView: View {
                             NavigationLink(destination: MangaDetailView(manga: manga)) {
                                 ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                     .frame(height: 180)
-                                    .onAppear { vm.fetchMoreIfPossible(m: manga) }
+                                    .onAppear {
+                                        detach {
+                                            await vm.fetchMoreIfPossible(m: manga)
+                                        }
+                                    }
                             }
                         }
                     }
                     .padding()
                 }
+                // Not Working as of now
+                .refreshable { await vm.fetchList(clean: true) }
             }
         }
         .navigationTitle(vm.getTitle())
         .onAppear {
-            vm.fetchList()
+            detach {
+                await vm.fetchList()
+            }
         }
     }
 }

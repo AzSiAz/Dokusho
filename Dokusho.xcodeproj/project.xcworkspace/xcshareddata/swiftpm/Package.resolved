@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/kean/Nuke.git",
         "state": {
           "branch": null,
-          "revision": "e1e9d056fedafa486508759923a0db61ce46f1bc",
-          "version": "10.1.0"
+          "revision": "35cd3fa3bcea8becf826d9610c1f5bba8f57b728",
+          "version": "10.2.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/kean/NukeUI",
         "state": {
           "branch": null,
-          "revision": "d2580b8d22b29c6244418d8e4b568f3162191460",
-          "version": "0.3.0"
+          "revision": "2e3fd56a135dad891747c83607e98c896162f974",
+          "version": "0.4.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
         "state": {
           "branch": null,
-          "revision": "11da8c685ddde2d519fad04a7daf8485bbbc773e",
-          "version": "1.7.5"
+          "revision": "774dc9c7213085db8aa59595e27c1cd22e428904",
+          "version": "2.3.2"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
         "state": {
           "branch": null,
-          "revision": "2b6054efa051565954e1d2b9da831680026cd768",
-          "version": "4.3.0"
+          "revision": "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07",
+          "version": "5.0.1"
         }
       }
     ]

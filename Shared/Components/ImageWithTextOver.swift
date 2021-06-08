@@ -36,5 +36,6 @@ struct ImageWithTextOver: View {
 struct ImageWithTextOver_Previews: PreviewProvider {
     static var previews: some View {
         ImageWithTextOver(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")
+            .frame(width: 150, height: 180)
     }
 }

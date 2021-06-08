@@ -13,7 +13,6 @@ struct LibraryView: View {
             ScrollView {
                 Text("Library")
             }
-            .fixFlickering()
             .navigationTitle("Library")
         }
     }
