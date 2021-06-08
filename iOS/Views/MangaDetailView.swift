@@ -11,6 +11,10 @@ import MangaSource
 struct MangaDetailView: View {
     var manga: SourceSmallManga
     
+    init(manga: SourceSmallManga, inSource sourceId: Int) {
+        self.manga = manga
+    }
+    
     var body: some View {
         VStack {
             Text(manga.title)
@@ -21,6 +25,6 @@ struct MangaDetailView: View {
 
 struct MangaDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        MangaDetailView(manga: SourceSmallManga(id: "Ookii-Kouhai-wa-Suki-Desu-ka", title: "Ookii Kouhai wa Suki Desu ka", thumbnailUrl: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg"))
+        MangaDetailView(manga: SourceSmallManga(id: "Ookii-Kouhai-wa-Suki-Desu-ka", title: "Ookii Kouhai wa Suki Desu ka", thumbnailUrl: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg"), inSource: 1)
     }
 }

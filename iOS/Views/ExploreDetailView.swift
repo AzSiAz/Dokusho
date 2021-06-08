@@ -42,7 +42,7 @@ struct ExploreDetailView: View {
                 ScrollView {
                     LazyVGrid(columns: columns) {
                         ForEach(vm.mangas) { manga in
-                            NavigationLink(destination: MangaDetailView(manga: manga)) {
+                            NavigationLink(destination: MangaDetailView(manga: manga, inSource: vm.src.id)) {
                                 ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                     .frame(height: 180)
                                     .onAppear {
@@ -55,7 +55,7 @@ struct ExploreDetailView: View {
                     }
                     .padding()
                 }
-                // Not Working as of now
+                // TODO: Not Working as of now for scrollview
                 .refreshable { await vm.fetchList(clean: true) }
             }
         }
