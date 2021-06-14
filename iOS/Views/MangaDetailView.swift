@@ -6,29 +6,140 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct MangaDetailView: View {
-    var manga: SourceSmallManga
+    @StateObject var vm: MangaDetailVM
     
-    init(for manga: SourceSmallManga, in sourceId: Int) {
-        self.manga = manga
-    }
-
     var body: some View {
-        VStack {
-            Text(manga.title)
-            Text(manga.id)
-        }
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                
+        ZStack {
+            if vm.error {
+                VStack {
+                    Text("Something weird happened, try again")
+                    Button(action: {
+                        async {
+                            await vm.fetchManga()
+                        }
+                    }, label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    })
+                }
             }
+            
+            if !vm.error && vm.manga == nil {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .frame(maxWidth: .infinity)
+            }
+            
+            if let manga = vm.manga {
+                ScrollView {
+                    Header(manga)
+                    Divider()
+                    Information(manga)
+                        .padding(.top, 5)
+                        .padding(.bottom, 15)
+                    Divider()
+                    ChapterList(manga)
+                        .padding(.bottom)
+                }
+                .refreshable { await vm.fetchManga() }
+            }
+        }
+        .navigationTitle(vm.manga?.title ?? "Loading")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Link(destination: self.vm.getMangaURL()) {
+                    Image(systemName: "safari")
+                        .resizable()
+                }
+            }
+        }
+        .task { await vm.fetchManga() }
+    }
+    
+    fileprivate func Header(_ manga: SourceManga) -> some View {
+        return HStack(alignment: .top) {
+            LazyImage(source: manga.thumbnailUrl)
+                .contentMode(.aspectFit)
+                .frame(width: 180, height: 180, alignment: .leading)
+                .clipped()
+            
+            VStack {
+                VStack(alignment: .leading) {
+                    Text(manga.title)
+                        .lineLimit(2)
+                        .font(Font.title3.bold())
+                }
+                
+                Divider()
+                
+                VStack(alignment: .center) {
+                    if !manga.authors.isEmpty {
+                        Text(manga.authors.joined(separator: ", "))
+                            .font(.system(size: 13))
+                            .padding(.bottom, 5)
+                    }
+                    
+                    Text(manga.status.rawValue)
+                        .font(.system(size: 13))
+                        .padding(.bottom, 5)
+                    
+                    Text(vm.getSourceName())
+                        .font(.system(size: 13))
+                }
+            }
+        }
+    }
+    
+    fileprivate func Information(_ manga: SourceManga) -> some View {
+        return VStack {
+            Text(manga.description)
+                .padding(.horizontal)
+                .padding(.bottom)
+            
+            FlexibleView(data: manga.genres, spacing: 5, alignment: .leading) { genre in
+                Button(genre, action: {})
+                    .buttonStyle(.bordered)
+            }
+        }
+    }
+    
+    fileprivate func ChapterList(_ manga: SourceManga) -> some View {
+        return VStack(alignment: .leading) {
+            Text("Chapter List")
+                .padding()
+            ForEach(manga.chapters) { chapter in
+                Button(action: {print("Open")}) {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(chapter.name)
+                            Text(chapter.dateUpload.formatted())
+                                .font(.system(size: 12))
+                        }
+                    }
+                        
+                    Spacer()
+                    
+                    Button(action: { print("download")}) {
+                        Image(systemName: "icloud.and.arrow.down")
+                    }
+                }
+                .buttonStyle(.plain)
+                .padding(.vertical, 5)
+                .contentShape(Rectangle())
+
+                Divider()
+                    .padding(.leading, 15)
+            }
+            .padding(.horizontal, 10)
         }
     }
 }
 
 struct MangaDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        MangaDetailView(for: SourceSmallManga(id: "Ookii-Kouhai-wa-Suki-Desu-ka", title: "Ookii Kouhai wa Suki Desu ka", thumbnailUrl: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg"), in: 1)
+        MangaDetailView(vm: MangaDetailVM(for: MangaSeeSource(), mangaId: "Ookii-Kouhai-wa-Suki-Desu-ka"))
     }
 }
+
