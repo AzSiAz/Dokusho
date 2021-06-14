@@ -204,14 +204,12 @@ public class MangaSeeSource: Source {
                 
         let vmChapter = try! JSON(data: jsonData.data(using: .utf8)!)
         
-        return try vmChapter.arrayValue.reversed().map { (rawChapter) -> SourceChapter in
+        return try vmChapter.arrayValue.map { (rawChapter) -> SourceChapter in
             let chapter = rawChapter["Chapter"].stringValue
             let date = rawChapter["Date"].stringValue
             let type = rawChapter["Type"].stringValue
             let chapterName = rawChapter["ChapterName"].stringValue.isEmpty ? "\(type) \(chapterImage(chapter, clean: true))" : rawChapter["ChapterName"].stringValue
             let chapterId = "\(id)\(try chapterURLEncode(chapter))"
-            
-            print(chapterName, chapterId)
             
             return SourceChapter(name: chapterName, id: chapterId, dateUpload: convertToDate(date))
         }
