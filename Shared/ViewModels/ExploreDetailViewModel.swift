@@ -7,19 +7,17 @@
 
 import Foundation
 import SwiftUI
-import MangaSource
 
 class ExploreDetailViewModel: ObservableObject {
     let src: Source
-    
     var nextPage = 1
-    @Published var fetchType: SourceFetchType
+
     @Published var mangas = [SourceSmallManga]()
     @Published var error = false
+    @Published var type: SourceFetchType = .latest
     
-    init(_ fetchType: SourceFetchType, source: Source) {
+    init(for source: Source) {
         self.src = source
-        self.fetchType = fetchType
     }
     
     func fetchList(clean: Bool = false) async {
@@ -29,7 +27,7 @@ class ExploreDetailViewModel: ObservableObject {
         }
         
         do {
-            let newManga = try await self.fetchType == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchPopularManga(page: nextPage)
+            let newManga = try await type == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchPopularManga(page: nextPage)
 
             self.mangas.append(contentsOf: newManga.mangas)
             self.nextPage += 1
@@ -38,13 +36,13 @@ class ExploreDetailViewModel: ObservableObject {
         }
     }
     
-    func fetchMoreIfPossible(m: SourceSmallManga) async {
-        if mangas.last == m {
+    func fetchMoreIfPossible(for manga: SourceSmallManga) async {
+        if mangas.last == manga {
             return await fetchList()
         }
     }
     
     func getTitle() -> String {
-        return "\(src.name) - \(fetchType.rawValue)"
+        return "\(src.name) - \(type.rawValue)"
     }
 }

@@ -116,9 +116,9 @@
 				E2396212266BC3BA00BA4833 /* Extensions */,
 				E23961D02663E60D00BA4833 /* DokushoApp.swift */,
 				E23961D22663E60D00BA4833 /* Persistence.swift */,
+				E23961FD2664B27700BA4833 /* MangaSourceService.swift */,
 				E23961D32663E60E00BA4833 /* Assets.xcassets */,
 				E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */,
-				E23961FD2664B27700BA4833 /* MangaSourceService.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

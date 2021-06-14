@@ -70,9 +70,11 @@ public struct SourceSmallManga: Identifiable, Equatable, Hashable {
     public var thumbnailUrl: String
 }
 
-public enum SourceFetchType: String {
+public enum SourceFetchType: String, CaseIterable, Identifiable {
     case latest = "Latest"
     case popular = "Popular"
+    
+    public var id: Self { self }
 }
 
 public typealias SourcePaginatedSmallManga = (mangas: [SourceSmallManga], hasNextPage: Bool)

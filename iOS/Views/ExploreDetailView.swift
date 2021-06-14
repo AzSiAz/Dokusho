@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import MangaSource
 import NukeUI
 
 struct ExploreDetailView: View {
@@ -26,46 +25,66 @@ struct ExploreDetailView: View {
         return base
     }
     
-    init(fetchType: SourceFetchType, srcId: Int) {
-        let source = MangaSourceService.shared.getSourceById(srcId)
-        self._vm = .init(wrappedValue: ExploreDetailViewModel(fetchType, source: source))
-    }
-    
     var body: some View {
-        ZStack {
-            if vm.mangas.isEmpty {
-                ProgressView()
-                    .progressViewStyle(.circular)
+        ScrollView {
+            if vm.error {
+                VStack {
+                    Text("Something weird happened, try again")
+                    Button(action: {
+                        async {
+                            await vm.fetchList(clean: true)
+                        }
+                    }, label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    })
+                }
             }
             
-            if !vm.mangas.isEmpty {
-                ScrollView {
-                    LazyVGrid(columns: columns) {
-                        ForEach(vm.mangas) { manga in
-                            NavigationLink(destination: MangaDetailView(manga: manga, inSource: vm.src.id)) {
-                                ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
-                                    .frame(height: 180)
-                                    .task {
-                                        await vm.fetchMoreIfPossible(m: manga)
-                                    }
-                            }
+            if !vm.error && vm.mangas.isEmpty {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .frame(maxWidth: .infinity)
+            }
+            
+            if !vm.error && !vm.mangas.isEmpty {
+                LazyVGrid(columns: columns) {
+                    ForEach(vm.mangas) { manga in
+                        NavigationLink(destination: MangaDetailView(for: manga, in: vm.src.id)) {
+                            ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
+                                .frame(height: 180)
+                                .task { await vm.fetchMoreIfPossible(for: manga) }
                         }
                     }
-                    .padding()
                 }
-                // TODO: Not Working as of now for scrollview
-                .refreshable { await vm.fetchList(clean: true) }
+                .padding()
             }
         }
-        .navigationTitle(vm.getTitle())
-        .task {
-            await vm.fetchList()
+        .refreshable { await vm.fetchList(clean: true) }
+        .toolbar {
+            ToolbarItem(placement: .principal) { Header() }
         }
+        .navigationTitle(vm.getTitle())
+        .task { await vm.fetchList() }
+    }
+    
+    func Header() -> some View {
+        Picker("Order", selection: $vm.type) {
+            ForEach(SourceFetchType.allCases) { type in
+                Text(type.rawValue).tag(type)
+            }
+        }
+        .pickerStyle(.segmented)
+        .onChange(of: vm.type) { _ in
+            async {
+                await vm.fetchList(clean: true)
+            }
+        }
+        .frame(maxWidth: 150)
     }
 }
 
 struct ExploreDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ExploreDetailView(fetchType: .latest, srcId: 1)
+        ExploreDetailView(vm: ExploreDetailViewModel(for: MangaSeeSource()))
     }
 }

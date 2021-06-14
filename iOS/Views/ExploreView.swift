@@ -6,17 +6,22 @@
 //
 
 import SwiftUI
-import MangaSource
 
 struct ExploreView: View {
-    let sourcesSvc: MangaSourceService = MangaSourceService.shared
+    @EnvironmentObject var sourcesSvc: MangaSourceService
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                ForEach(sourcesSvc.getSourceList()) { src in
-                    SourceRow(source: src)
-                        .padding()
+            List($sourcesSvc.list, id: \.id) { $src in
+                NavigationLink(destination: ExploreDetailView(vm: ExploreDetailViewModel(for: src))) {
+                    SourceRow(source: $src)
+                        .padding(.vertical)
+                }
+            }
+            .searchable(text: $sourcesSvc.searchInSource)
+            .onSubmit(of: .search) {
+                async {
+                    await sourcesSvc.search()
                 }
             }
             .navigationTitle("Explore")

@@ -6,56 +6,27 @@
 //
 import SwiftUI
 import NukeUI
-import MangaSource
 
 struct SourceRow: View {
-    var source: MiniSource
-    
-    @State var navigateTo: SourceFetchType = .latest
-    @State var isNavigationActive = false
+    @Binding var source: Source
     
     var body: some View {
         HStack {
-            HStack {
-                LazyImage(source: source.icon)
-                    .placeholder {
-                        Circle()
-                            .foregroundColor(.blue)
-                            .frame(width: 32, height: 32)
-                    }
-                    .failure { Image("empty") }
-                    .contentMode(.aspectFill)
-                    .frame(width: 32, height: 32)
-
-                VStack(alignment: .leading) {
-                    Text(source.name)
-                    Text(source.lang.rawValue)
+            LazyImage(source: source.icon)
+                .placeholder {
+                    Circle()
+                        .foregroundColor(.blue)
+                        .frame(width: 32, height: 32)
                 }
-                .padding(.leading, 1)
+                .failure { Image("empty") }
+                .contentMode(.aspectFill)
+                .frame(width: 32, height: 32)
+            
+            VStack(alignment: .leading) {
+                Text(source.name)
+                Text(source.lang.rawValue)
             }
-            
-            Spacer()
-            
-            if source.supportLatest {
-                HStack {
-                    Button("Latest") {
-                        navigateTo = .latest
-                        isNavigationActive = true
-                    }
-                }
-                .padding()
-            }
-            
-            NavigationLink(
-                destination: ExploreDetailView(fetchType: navigateTo, srcId: source.id),
-                isActive: $isNavigationActive
-            ) { EmptyView() }
-        }
-        .frame(minHeight: 50)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            navigateTo = .popular
-            isNavigationActive = true
+            .padding(.leading, 8)
         }
     }
     

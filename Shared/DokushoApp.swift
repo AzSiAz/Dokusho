@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import MangaSource
 
 @main
 struct DokushoApp: App {
@@ -26,6 +25,7 @@ struct DokushoApp: App {
                 #endif
             }
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            .environmentObject(MangaSourceService.shared)
         }
     }
 }

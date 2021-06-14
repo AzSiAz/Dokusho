@@ -60,7 +60,7 @@ private struct LDJSONInfo: Codable {
     var mainEntity: LDJSONInfoMainEntity
 }
 
-public class MangaSeeSource: Source {   
+public class MangaSeeSource: Source {
     public var icon = "https://mangasee123.com/media/favicon.png";
     public var id = 1;
     public var name = "Mangasee";
