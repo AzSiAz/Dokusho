@@ -8,8 +8,8 @@
 import SwiftUI
 import NukeUI
 
-struct ExploreDetailView: View {
-    @StateObject var vm: ExploreDetailViewModel
+struct ExploreSourceView: View {
+    @StateObject var vm: ExploreSourceVM
     
     var columns: [GridItem] {
         var base = [
@@ -49,7 +49,7 @@ struct ExploreDetailView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns) {
                     ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(for: manga, in: vm.src.id)) {
+                        NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: vm.src, mangaId: manga.id))) {
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)
                                 .task { await vm.fetchMoreIfPossible(for: manga) }
@@ -83,8 +83,8 @@ struct ExploreDetailView: View {
     }
 }
 
-struct ExploreDetailView_Previews: PreviewProvider {
+struct ExploreSourceView_Previews: PreviewProvider {
     static var previews: some View {
-        ExploreDetailView(vm: ExploreDetailViewModel(for: MangaSeeSource()))
+        ExploreSourceView(vm: ExploreSourceVM(for: MangaSeeSource()))
     }
 }

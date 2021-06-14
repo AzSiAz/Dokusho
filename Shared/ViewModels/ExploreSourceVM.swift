@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class ExploreDetailViewModel: ObservableObject {
+class ExploreSourceVM: ObservableObject {
     let src: Source
     var nextPage = 1
 
@@ -25,6 +25,8 @@ class ExploreDetailViewModel: ObservableObject {
             mangas = []
             nextPage = 1
         }
+        
+        self.error = false
         
         do {
             let newManga = try await type == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchPopularManga(page: nextPage)

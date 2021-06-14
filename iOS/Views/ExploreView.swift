@@ -13,7 +13,7 @@ struct ExploreView: View {
     var body: some View {
         NavigationView {
             List($sourcesSvc.list, id: \.id) { $src in
-                NavigationLink(destination: ExploreDetailView(vm: ExploreDetailViewModel(for: src))) {
+                NavigationLink(destination: ExploreSourceView(vm: ExploreSourceVM(for: src))) {
                     SourceRow(source: $src)
                         .padding(.vertical)
                 }
