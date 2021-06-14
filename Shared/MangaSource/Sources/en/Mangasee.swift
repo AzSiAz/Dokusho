@@ -111,7 +111,7 @@ public class MangaSeeSource: Source {
         }
         let genres: [String] = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Genre)) a").array().map { try! $0.text().trimmingCharacters(in: .whitespacesAndNewlines) }
         let authors: [String] = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Author)) a").array().map { try! $0.text().trimmingCharacters(in: .whitespacesAndNewlines) }
-        let chapters = self.mangaChapterListParse(html, id)
+        let chapters = try self.mangaChapterListParse(html, id)
 
         try await self.updateDirectory(1)
         let directoryManga = self.directory.first { $0.id == id }
@@ -188,7 +188,7 @@ public class MangaSeeSource: Source {
         }, hasNextPage: page != matchingMangasChunks.count)
     }
     
-    private func mangaChapterListParse(_ html: String, _ id: String) -> [SourceChapter] {
+    private func mangaChapterListParse(_ html: String, _ id: String) throws -> [SourceChapter] {
         guard let interrestingPartIndex = html.range(of: "MainFunction")?.upperBound else { return [] }
         let interrestingPart = String(html[interrestingPartIndex...])
 
@@ -204,13 +204,16 @@ public class MangaSeeSource: Source {
                 
         let vmChapter = try! JSON(data: jsonData.data(using: .utf8)!)
         
-        return vmChapter.arrayValue.map { (rawChapter) -> SourceChapter in
+        return try vmChapter.arrayValue.reversed().map { (rawChapter) -> SourceChapter in
             let chapter = rawChapter["Chapter"].stringValue
             let date = rawChapter["Date"].stringValue
             let type = rawChapter["Type"].stringValue
             let chapterName = rawChapter["ChapterName"].stringValue.isEmpty ? "\(type) \(chapterImage(chapter, clean: true))" : rawChapter["ChapterName"].stringValue
+            let chapterId = "\(id)\(try chapterURLEncode(chapter))"
             
-            return SourceChapter(name: chapterName, id: "\(id)\(chapterURLEncode(chapter))", dateUpload: convertToDate(date))
+            print(chapterName, chapterId)
+            
+            return SourceChapter(name: chapterName, id: chapterId, dateUpload: convertToDate(date))
         }
     }
     
@@ -218,15 +221,16 @@ public class MangaSeeSource: Source {
         let t = String(chapterIndex.dropFirst().dropLast())
         
         let a = clean
-            ? t.replacingOccurrences(of: "^([0-9])", with: "", options: [.regularExpression])
+            ? t.replacingOccurrences(of: "^0+", with: "", options: [.regularExpression])
             : t
 
         let b = Int(chapterIndex[chapterIndex.index(chapterIndex.endIndex, offsetBy: -1)...])
-        
+
         return b == 0 ? a : "\(a).\(b!)"
     }
     
-    private func chapterURLEncode(_ chapterIndex: String) -> String {
+    private func chapterURLEncode(_ chapterIndex: String) throws -> String {
+        guard let intChapterIndex = Int(chapterIndex) else { throw SourceError.parseError }
         var index = ""
         var suffix = ""
         
@@ -235,8 +239,11 @@ public class MangaSeeSource: Source {
             index = "-index-\(t!)"
         }
         
-        let n = chapterIndex[chapterIndex.index(after: chapterIndex.startIndex)...chapterIndex.index(chapterIndex.endIndex, offsetBy: -2)]
-        let path = Int(chapterIndex[chapterIndex.index(chapterIndex.endIndex, offsetBy: -1)...])
+        let dgt = intChapterIndex < 100100 ? 4 : intChapterIndex < 101000 ? 3 : intChapterIndex < 110000 ? 2 : 1
+
+        let n = chapterIndex[chapterIndex.index(chapterIndex.startIndex, offsetBy: dgt)...chapterIndex.index(chapterIndex.endIndex, offsetBy: -2)]
+
+        let path = Int(chapterIndex[chapterIndex.index(before: chapterIndex.endIndex)...])
         if path != 0 {
             suffix = ".\(path!)"
         }
