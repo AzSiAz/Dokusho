@@ -24,8 +24,16 @@ class MangaDetailVM: ObservableObject {
         do {
             // TODO: Fetch from CoreData before and only fetch from source on refresh
             manga = try await src.fetchMangaDetail(id: mangaId)
+//            chapters = manga!.chapters
+//            manga?.chapters = []
         } catch {
             self.error = true
+        }
+    }
+    
+    func reverseChaptersOrder() {
+        if manga != nil {
+            manga!.chapters = manga!.chapters.reversed()
         }
     }
     

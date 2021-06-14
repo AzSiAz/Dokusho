@@ -40,7 +40,7 @@ struct MangaDetailView: View {
                         .padding(.top, 5)
                         .padding(.bottom, 15)
                     Divider()
-                    ChapterList(manga)
+                    ChapterList(manga.chapters)
                         .padding(.bottom)
                 }
                 .refreshable { await vm.fetchManga() }
@@ -105,11 +105,21 @@ struct MangaDetailView: View {
         }
     }
     
-    fileprivate func ChapterList(_ manga: SourceManga) -> some View {
+    fileprivate func ChapterList(_ chapters: [SourceChapter]) -> some View {
         return VStack(alignment: .leading) {
-            Text("Chapter List")
-                .padding()
-            ForEach(manga.chapters) { chapter in
+            HStack {
+                Text("Chapter List")
+
+                Spacer()
+                
+                Button(action: { vm.reverseChaptersOrder() }) {
+                    Image(systemName: "chevron.up.chevron.down")
+                }
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 15)
+            
+            ForEach(chapters) { chapter in
                 Button(action: {print("Open")}) {
                     HStack {
                         VStack(alignment: .leading) {
