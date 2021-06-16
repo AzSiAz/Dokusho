@@ -47,7 +47,7 @@ struct ExploreSourceView: View {
             }
             
             if !vm.error && !vm.mangas.isEmpty {
-                LazyVGrid(columns: columns) {
+                LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
                         NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: vm.src, mangaId: manga.id))) {
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)

@@ -10,6 +10,7 @@ import NukeUI
 
 struct MangaDetailView: View {
     @StateObject var vm: MangaDetailVM
+    @State var imageWidth: CGFloat = 0
     
     var body: some View {
         ZStack {
@@ -63,10 +64,15 @@ struct MangaDetailView: View {
     
     fileprivate func Header(_ manga: SourceManga) -> some View {
         return HStack(alignment: .top) {
-            LazyImage(source: manga.thumbnailUrl)
-                .contentMode(.aspectFit)
-                .frame(width: 180, height: 180, alignment: .leading)
+            LazyImage(source: manga.thumbnailUrl, resizingMode: .aspectFill)
+                .onSuccess({ imageWidth = $0.image.size.width })
+                .animation(nil)
+                .frame(maxHeight: 180)
+                .frame(width: imageWidth)
+                .background(Color.red)
+                .cornerRadius(10)
                 .clipped()
+                .padding(.leading, 10)
             
             VStack {
                 VStack(alignment: .leading) {

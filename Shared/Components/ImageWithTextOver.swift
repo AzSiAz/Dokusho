@@ -13,23 +13,31 @@ struct ImageWithTextOver: View {
     var imageUrl: String
     
     var body: some View {
-        LazyImage(source: imageUrl)
-            .placeholder {
-                ProgressView()
+        GeometryReader { proxy in
+            LazyImage(source: imageUrl) { state in
+                if state.isLoading {
+                    ProgressView()
+                }
+                if let image = state.image {
+                    image
+                        .resizingMode(.aspectFill)
+                }
             }
-            .contentMode(.aspectFill)
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .bottomLeading)
+            .animation(.none, value: 1)
             .overlay(
-                ZStack(alignment: .bottomLeading) {
+                ZStack {
                     Text(title)
                         .lineLimit(2)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.leading)
                         .clipped()
                 }
-                .frame(maxWidth: .infinity)
+                    .frame(width: proxy.size.width)
                 .background(Color(.systemGray).opacity(0.8))
                 , alignment: .bottomLeading)
             .cornerRadius(10)
+        }
     }
 }
 

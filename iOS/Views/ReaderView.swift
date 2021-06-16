@@ -31,7 +31,7 @@ struct ReaderView: View {
                     HorizontalReaderView(direction: .leftToRight, links: images.map { $0.imageUrl })
                 }
                 else {
-                    HorizontalReaderView(direction: .rightToLeft, links: images.map { $0.imageUrl })
+                    VerticalReaderView(links: images.map { $0.imageUrl })
                 }
             }
         }

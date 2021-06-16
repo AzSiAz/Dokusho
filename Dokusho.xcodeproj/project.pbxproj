@@ -666,7 +666,7 @@
 			repositoryURL = "https://github.com/kean/NukeUI";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.0;
+				minimumVersion = 0.6.1;
 			};
 		};
 		E253BBF3266FABEF00A3368C /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {

@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/kaishin/Gifu",
         "state": {
           "branch": null,
-          "revision": "0ffe24744cc3d82ab9edece53670d0352c6d5507",
-          "version": "3.3.0"
+          "revision": "51f2eab32903e336f590c013267cfa4d7f8b06c4",
+          "version": "3.3.1"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/kean/Nuke.git",
         "state": {
           "branch": null,
-          "revision": "35cd3fa3bcea8becf826d9610c1f5bba8f57b728",
-          "version": "10.2.0"
+          "revision": "69ae6d5b8c4b898450432f94bd35f863d3830cfc",
+          "version": "10.3.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/kean/NukeUI",
         "state": {
           "branch": null,
-          "revision": "2e3fd56a135dad891747c83607e98c896162f974",
-          "version": "0.4.0"
+          "revision": "62b55e26eddc2ed59e63377ab877efac4f9e049c",
+          "version": "0.6.1"
         }
       },
       {

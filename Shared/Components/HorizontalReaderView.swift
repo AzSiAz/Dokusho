@@ -36,12 +36,17 @@ struct HorizontalReaderView: View {
             hasControl: false)
         { _, image in
             GeometryReader { proxy in
-                LazyImage(source: image)
-                    .placeholder {
+                LazyImage(source: image) { state in
+                    if state.isLoading {
                         ProgressView()
                     }
-                    .contentMode(.aspectFit)
-                    .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                    
+                    if let image = state.image {
+                        image.resizingMode(.aspectFit)
+                    }
+                }
+                .animation(nil)
+                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
             }
         }
     }

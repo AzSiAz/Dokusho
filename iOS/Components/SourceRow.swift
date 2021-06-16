@@ -12,15 +12,21 @@ struct SourceRow: View {
     
     var body: some View {
         HStack {
-            LazyImage(source: source.icon)
-                .placeholder {
-                    Circle()
-                        .foregroundColor(.blue)
-                        .frame(width: 32, height: 32)
+            LazyImage(source: source.icon) { state in
+                if state.isLoading {
+                    ProgressView()
                 }
-                .failure { Image("empty") }
-                .contentMode(.aspectFill)
-                .frame(width: 32, height: 32)
+                if state.error != nil {
+                    Color.red
+                }
+                
+                if let image = state.image {
+                    image
+                        .resizingMode(.aspectFill)
+                }
+            }
+            .animation(nil)
+            .frame(width: 32, height: 32)
             
             VStack(alignment: .leading) {
                 Text(source.name)
