@@ -13,6 +13,7 @@ class MangaDetailVM: ObservableObject {
 
     @Published var error = false
     @Published var manga: SourceManga?
+    @Published var selectedChapter: SourceChapter?
     
     init(for source: Source, mangaId: String) {
         self.src = source
@@ -35,6 +36,10 @@ class MangaDetailVM: ObservableObject {
         if manga != nil {
             manga!.chapters = manga!.chapters.reversed()
         }
+    }
+    
+    func selectChapter(for chapter: SourceChapter) {
+        selectedChapter = chapter
     }
     
     func getMangaURL() -> URL {

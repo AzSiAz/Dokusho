@@ -27,9 +27,11 @@ public enum SourceMangaCompletion: String {
 }
 
 public enum SourceMangaType: String {
-    case webtoon = "WebToon"
-    case japanese = "Japanese"
-    case chinese = "Chinese"
+    case manga = "Manga"
+    case manhua = "Manhua"
+    case manhwa = "Manhwa"
+    case doujinshi = "Doujinshi"
+    case unknown = "Unknown"
 }
 
 public struct SourceManga: Identifiable, Equatable, Hashable {
@@ -42,7 +44,7 @@ public struct SourceManga: Identifiable, Equatable, Hashable {
     public var status: SourceMangaCompletion
     public var description: String
     public var chapters: [SourceChapter]
-    public var type: SourceMangaType = .japanese
+    public var type: SourceMangaType
 }
 
 public struct SourceChapter: Identifiable, Equatable, Hashable {

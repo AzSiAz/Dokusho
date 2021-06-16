@@ -56,6 +56,9 @@ struct MangaDetailView: View {
             }
         }
         .task { await vm.fetchManga() }
+        .fullScreenCover(item: $vm.selectedChapter) { chapter in
+            ReaderView(vm: ReaderVM(for: chapter, in: vm.manga!, with: vm.src))
+        }
     }
     
     fileprivate func Header(_ manga: SourceManga) -> some View {
@@ -112,6 +115,11 @@ struct MangaDetailView: View {
 
                 Spacer()
                 
+                Button(action: {}) {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                }
+                .padding(.trailing, 5)
+                
                 Button(action: { vm.reverseChaptersOrder() }) {
                     Image(systemName: "chevron.up.chevron.down")
                 }
@@ -120,7 +128,7 @@ struct MangaDetailView: View {
             .padding(.horizontal, 15)
             
             ForEach(chapters) { chapter in
-                Button(action: {print("Open")}) {
+                Button(action: { vm.selectChapter(for: chapter) }) {
                     HStack {
                         VStack(alignment: .leading) {
                             Text(chapter.name)

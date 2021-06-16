@@ -109,6 +109,9 @@ public class MangaSeeSource: Source {
         guard let rawStatus = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Status)) a:contains(Scan)").first()?.text().trimmingCharacters(in: .whitespacesAndNewlines) else {
             throw SourceError.parseError
         }
+        
+        let rawType = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Type))").first()?.text().trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        
         let genres: [String] = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Genre)) a").array().map { try! $0.text().trimmingCharacters(in: .whitespacesAndNewlines) }
         let authors: [String] = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Author)) a").array().map { try! $0.text().trimmingCharacters(in: .whitespacesAndNewlines) }
         let chapters = try self.mangaChapterListParse(html, id)
@@ -117,7 +120,7 @@ public class MangaSeeSource: Source {
         let directoryManga = self.directory.first { $0.id == id }
         let alternateNames = directoryManga?.alternateNames ?? []
         
-        return SourceManga(id: id, title: title, thumbnailUrl: thumbnailUrl, genres: genres, authors: authors, alternateNames: alternateNames, status: self.parseStatus(rawStatus), description: description, chapters: chapters)
+        return SourceManga(id: id, title: title, thumbnailUrl: thumbnailUrl, genres: genres, authors: authors, alternateNames: alternateNames, status: self.parseStatus(rawStatus), description: description, chapters: chapters, type: parseType(rawType))
     }
     
     public func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage] {
@@ -255,7 +258,16 @@ public class MangaSeeSource: Source {
         case let t where t.lowercased().contains("complete"): return .complete
         default: return .unknown
         }
-        
+    }
+    
+    private func parseType(_ text: String) -> SourceMangaType {
+        switch text {
+            case let t where t.lowercased().contains("manga"): return .manga
+            case let t where t.lowercased().contains("manhwa"): return .manhwa
+            case let t where t.lowercased().contains("manhua"): return .manhua
+            case let t where t.lowercased().contains("doujinshi"): return .doujinshi
+            default: return .unknown
+        }
     }
         
     private func extractDirectoryFromResponse(html: String) throws -> [MangaSeeDirectoryManga] {

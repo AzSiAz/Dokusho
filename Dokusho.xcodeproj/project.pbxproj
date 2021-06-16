@@ -46,6 +46,11 @@
 		E253BBFB266FAC2400A3368C /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = E253BBFA266FAC2400A3368C /* SwiftSoup */; };
 		E2DE87A1267794E000384FCA /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A0267794E000384FCA /* MangaDetailVM.swift */; };
 		E2DE87A32677B00300384FCA /* FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A22677B00300384FCA /* FlexibleView.swift */; };
+		E2DE87A526780DCE00384FCA /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A426780DCE00384FCA /* ReaderView.swift */; };
+		E2DE87A82678102B00384FCA /* Pages in Frameworks */ = {isa = PBXBuildFile; productRef = E2DE87A72678102B00384FCA /* Pages */; };
+		E2DE87AA26781CB600384FCA /* ReaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A926781CB600384FCA /* ReaderVM.swift */; };
+		E2DE87AC2679057700384FCA /* HorizontalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87AB2679057700384FCA /* HorizontalReaderView.swift */; };
+		E2DE87AE2679E76400384FCA /* VerticalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87AD2679E76400384FCA /* VerticalReaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +81,10 @@
 		E24EB5F5266FA75D00BEDBF4 /* Mangasee.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mangasee.swift; sourceTree = "<group>"; };
 		E2DE87A0267794E000384FCA /* MangaDetailVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetailVM.swift; sourceTree = "<group>"; };
 		E2DE87A22677B00300384FCA /* FlexibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexibleView.swift; sourceTree = "<group>"; };
+		E2DE87A426780DCE00384FCA /* ReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
+		E2DE87A926781CB600384FCA /* ReaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderVM.swift; sourceTree = "<group>"; };
+		E2DE87AB2679057700384FCA /* HorizontalReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalReaderView.swift; sourceTree = "<group>"; };
+		E2DE87AD2679E76400384FCA /* VerticalReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalReaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2DE87A82678102B00384FCA /* Pages in Frameworks */,
 				E253BBF8266FAC0300A3368C /* Alamofire in Frameworks */,
 				E253BBFB266FAC2400A3368C /* SwiftSoup in Frameworks */,
 				E253BBF5266FABEF00A3368C /* SwiftyJSON in Frameworks */,
@@ -170,6 +180,7 @@
 				E23962072664C23900BA4833 /* ExploreView.swift */,
 				E2396214266BCCD800BA4833 /* ExploreSourceView.swift */,
 				E2396224266D4FC100BA4833 /* MangaDetailView.swift */,
+				E2DE87A426780DCE00384FCA /* ReaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -198,6 +209,7 @@
 			children = (
 				E239621B266D206400BA4833 /* ExploreSourceVM.swift */,
 				E2DE87A0267794E000384FCA /* MangaDetailVM.swift */,
+				E2DE87A926781CB600384FCA /* ReaderVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -216,6 +228,8 @@
 				E2396221266D4F8600BA4833 /* NavigationLinkLazyView.swift */,
 				E239621D266D4DF700BA4833 /* ImageWithTextOver.swift */,
 				E2DE87A22677B00300384FCA /* FlexibleView.swift */,
+				E2DE87AB2679057700384FCA /* HorizontalReaderView.swift */,
+				E2DE87AD2679E76400384FCA /* VerticalReaderView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -266,6 +280,7 @@
 				E253BBF4266FABEF00A3368C /* SwiftyJSON */,
 				E253BBF7266FAC0300A3368C /* Alamofire */,
 				E253BBFA266FAC2400A3368C /* SwiftSoup */,
+				E2DE87A72678102B00384FCA /* Pages */,
 			);
 			productName = "Dokusho (iOS)";
 			productReference = E23961D82663E60E00BA4833 /* Dokusho.app */;
@@ -321,6 +336,7 @@
 				E253BBF3266FABEF00A3368C /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				E253BBF6266FAC0300A3368C /* XCRemoteSwiftPackageReference "Alamofire" */,
 				E253BBF9266FAC2400A3368C /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				E2DE87A62678102B00384FCA /* XCRemoteSwiftPackageReference "Pages" */,
 			);
 			productRefGroup = E23961D92663E60E00BA4833 /* Products */;
 			projectDirPath = "";
@@ -369,12 +385,16 @@
 				E239620F266BC2E900BA4833 /* SourceRow.swift in Sources */,
 				E23962022664BE4D00BA4833 /* RootView.swift in Sources */,
 				E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E2DE87A526780DCE00384FCA /* ReaderView.swift in Sources */,
 				E239621C266D206400BA4833 /* ExploreSourceVM.swift in Sources */,
 				E23962052664C1EC00BA4833 /* LibraryView.swift in Sources */,
 				E239621E266D4DF700BA4833 /* ImageWithTextOver.swift in Sources */,
 				E2DE87A1267794E000384FCA /* MangaDetailVM.swift in Sources */,
 				E24EB5F6266FA75D00BEDBF4 /* Mangasee.swift in Sources */,
+				E2DE87AA26781CB600384FCA /* ReaderVM.swift in Sources */,
 				E2396225266D4FC100BA4833 /* MangaDetailView.swift in Sources */,
+				E2DE87AC2679057700384FCA /* HorizontalReaderView.swift in Sources */,
+				E2DE87AE2679E76400384FCA /* VerticalReaderView.swift in Sources */,
 				E2DE87A32677B00300384FCA /* FlexibleView.swift in Sources */,
 				E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */,
 			);
@@ -673,6 +693,14 @@
 				minimumVersion = 2.3.2;
 			};
 		};
+		E2DE87A62678102B00384FCA /* XCRemoteSwiftPackageReference "Pages" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nachonavarro/Pages";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -695,6 +723,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E253BBF9266FAC2400A3368C /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		E2DE87A72678102B00384FCA /* Pages */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2DE87A62678102B00384FCA /* XCRemoteSwiftPackageReference "Pages" */;
+			productName = Pages;
 		};
 /* End XCSwiftPackageProductDependency section */
 
