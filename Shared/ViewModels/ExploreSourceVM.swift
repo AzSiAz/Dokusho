@@ -7,7 +7,9 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
+@MainActor
 class ExploreSourceVM: ObservableObject {
     let src: Source
     var nextPage = 1
@@ -46,5 +48,9 @@ class ExploreSourceVM: ObservableObject {
     
     func getTitle() -> String {
         return "\(src.name) - \(type.rawValue)"
+    }
+    
+    func buildMangaDetailVM(ctx: NSManagedObjectContext, manga: SourceSmallManga) -> MangaDetailVM {
+        return MangaDetailVM(for: src, mangaId: manga.id, context: ctx)
     }
 }

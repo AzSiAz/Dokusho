@@ -7,6 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2174BEF2680CC0A003573C5 /* Manga.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BEE2680CC0A003573C5 /* Manga.swift */; };
+		E2174BF32680D5CA003573C5 /* MangaAlternatesName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */; };
+		E2174BF52680D759003573C5 /* MangaAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF42680D759003573C5 /* MangaAuthor.swift */; };
+		E2174BF72680D827003573C5 /* MangaGenre.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF62680D827003573C5 /* MangaGenre.swift */; };
+		E2174BF92680D8B2003573C5 /* MangaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF82680D8B2003573C5 /* MangaChapter.swift */; };
+		E2174BFA2680E00C003573C5 /* Manga.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BEE2680CC0A003573C5 /* Manga.swift */; };
+		E2174BFB2680E00E003573C5 /* MangaAlternatesName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */; };
+		E2174BFC2680E010003573C5 /* MangaAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF42680D759003573C5 /* MangaAuthor.swift */; };
+		E2174BFD2680E013003573C5 /* MangaGenre.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF62680D827003573C5 /* MangaGenre.swift */; };
+		E2174BFE2680E017003573C5 /* MangaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF82680D8B2003573C5 /* MangaChapter.swift */; };
+		E2174BFF2680E01A003573C5 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24EB5ED266FA65900BEDBF4 /* Date.swift */; };
+		E2174C002680E01C003573C5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24EB5EB266FA65500BEDBF4 /* Array.swift */; };
+		E2174C012680E01F003573C5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2396218266BE7CA00BA4833 /* Logger.swift */; };
+		E2174C022680E022003573C5 /* Fixflickering.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2396210266BC38D00BA4833 /* Fixflickering.swift */; };
+		E2174C032680E02E003573C5 /* ExploreSourceVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E239621B266D206400BA4833 /* ExploreSourceVM.swift */; };
+		E2174C042680E031003573C5 /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A0267794E000384FCA /* MangaDetailVM.swift */; };
+		E2174C052680E034003573C5 /* ReaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A926781CB600384FCA /* ReaderVM.swift */; };
+		E2174C062680E03C003573C5 /* FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A22677B00300384FCA /* FlexibleView.swift */; };
+		E2174C072680E03F003573C5 /* HorizontalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87AB2679057700384FCA /* HorizontalReaderView.swift */; };
+		E2174C082680E041003573C5 /* VerticalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87AD2679E76400384FCA /* VerticalReaderView.swift */; };
+		E2174C0A2681D9F6003573C5 /* LibraryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174C092681D9F6003573C5 /* LibraryVM.swift */; };
+		E2174C0C2681DB05003573C5 /* RefreshableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174C0B2681DB05003573C5 /* RefreshableImageView.swift */; };
+		E22B2DD9267FBB24000E5379 /* iPages in Frameworks */ = {isa = PBXBuildFile; productRef = E22B2DD8267FBB24000E5379 /* iPages */; };
 		E23961E42663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */; };
 		E23961E52663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E23961CE2663E60D00BA4833 /* Dokusho.xcdatamodeld */; };
 		E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23961D02663E60D00BA4833 /* DokushoApp.swift */; };
@@ -47,13 +70,19 @@
 		E2DE87A1267794E000384FCA /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A0267794E000384FCA /* MangaDetailVM.swift */; };
 		E2DE87A32677B00300384FCA /* FlexibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A22677B00300384FCA /* FlexibleView.swift */; };
 		E2DE87A526780DCE00384FCA /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A426780DCE00384FCA /* ReaderView.swift */; };
-		E2DE87A82678102B00384FCA /* Pages in Frameworks */ = {isa = PBXBuildFile; productRef = E2DE87A72678102B00384FCA /* Pages */; };
 		E2DE87AA26781CB600384FCA /* ReaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87A926781CB600384FCA /* ReaderVM.swift */; };
 		E2DE87AC2679057700384FCA /* HorizontalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87AB2679057700384FCA /* HorizontalReaderView.swift */; };
 		E2DE87AE2679E76400384FCA /* VerticalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DE87AD2679E76400384FCA /* VerticalReaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E2174BEE2680CC0A003573C5 /* Manga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manga.swift; sourceTree = "<group>"; };
+		E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaAlternatesName.swift; sourceTree = "<group>"; };
+		E2174BF42680D759003573C5 /* MangaAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaAuthor.swift; sourceTree = "<group>"; };
+		E2174BF62680D827003573C5 /* MangaGenre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaGenre.swift; sourceTree = "<group>"; };
+		E2174BF82680D8B2003573C5 /* MangaChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaChapter.swift; sourceTree = "<group>"; };
+		E2174C092681D9F6003573C5 /* LibraryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryVM.swift; sourceTree = "<group>"; };
+		E2174C0B2681DB05003573C5 /* RefreshableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableImageView.swift; sourceTree = "<group>"; };
 		E23961CF2663E60D00BA4833 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		E23961D02663E60D00BA4833 /* DokushoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokushoApp.swift; sourceTree = "<group>"; };
 		E23961D22663E60D00BA4833 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -92,11 +121,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2DE87A82678102B00384FCA /* Pages in Frameworks */,
 				E253BBF8266FAC0300A3368C /* Alamofire in Frameworks */,
 				E253BBFB266FAC2400A3368C /* SwiftSoup in Frameworks */,
 				E253BBF5266FABEF00A3368C /* SwiftyJSON in Frameworks */,
 				E239620C266BBCAD00BA4833 /* NukeUI in Frameworks */,
+				E22B2DD9267FBB24000E5379 /* iPages in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +139,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E2174BF12680D18B003573C5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E2174BEE2680CC0A003573C5 /* Manga.swift */,
+				E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */,
+				E2174BF42680D759003573C5 /* MangaAuthor.swift */,
+				E2174BF62680D827003573C5 /* MangaGenre.swift */,
+				E2174BF82680D8B2003573C5 /* MangaChapter.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		E23961C82663E60C00BA4833 = {
 			isa = PBXGroup;
 			children = (
@@ -196,6 +237,7 @@
 		E2396212266BC3BA00BA4833 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E2174BF12680D18B003573C5 /* Models */,
 				E24EB5ED266FA65900BEDBF4 /* Date.swift */,
 				E24EB5EB266FA65500BEDBF4 /* Array.swift */,
 				E2396217266BE7B200BA4833 /* ScrollView */,
@@ -210,6 +252,7 @@
 				E239621B266D206400BA4833 /* ExploreSourceVM.swift */,
 				E2DE87A0267794E000384FCA /* MangaDetailVM.swift */,
 				E2DE87A926781CB600384FCA /* ReaderVM.swift */,
+				E2174C092681D9F6003573C5 /* LibraryVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -230,6 +273,7 @@
 				E2DE87A22677B00300384FCA /* FlexibleView.swift */,
 				E2DE87AB2679057700384FCA /* HorizontalReaderView.swift */,
 				E2DE87AD2679E76400384FCA /* VerticalReaderView.swift */,
+				E2174C0B2681DB05003573C5 /* RefreshableImageView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -280,7 +324,7 @@
 				E253BBF4266FABEF00A3368C /* SwiftyJSON */,
 				E253BBF7266FAC0300A3368C /* Alamofire */,
 				E253BBFA266FAC2400A3368C /* SwiftSoup */,
-				E2DE87A72678102B00384FCA /* Pages */,
+				E22B2DD8267FBB24000E5379 /* iPages */,
 			);
 			productName = "Dokusho (iOS)";
 			productReference = E23961D82663E60E00BA4833 /* Dokusho.app */;
@@ -336,7 +380,7 @@
 				E253BBF3266FABEF00A3368C /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				E253BBF6266FAC0300A3368C /* XCRemoteSwiftPackageReference "Alamofire" */,
 				E253BBF9266FAC2400A3368C /* XCRemoteSwiftPackageReference "SwiftSoup" */,
-				E2DE87A62678102B00384FCA /* XCRemoteSwiftPackageReference "Pages" */,
+				E22B2DD7267FBB24000E5379 /* XCRemoteSwiftPackageReference "iPages" */,
 			);
 			productRefGroup = E23961D92663E60E00BA4833 /* Products */;
 			projectDirPath = "";
@@ -380,23 +424,30 @@
 				E2396215266BCCD800BA4833 /* ExploreSourceView.swift in Sources */,
 				E24EB5EC266FA65500BEDBF4 /* Array.swift in Sources */,
 				E24EB5EE266FA65900BEDBF4 /* Date.swift in Sources */,
+				E2174BF72680D827003573C5 /* MangaGenre.swift in Sources */,
 				E2396211266BC38D00BA4833 /* Fixflickering.swift in Sources */,
 				E2396222266D4F8600BA4833 /* NavigationLinkLazyView.swift in Sources */,
 				E239620F266BC2E900BA4833 /* SourceRow.swift in Sources */,
 				E23962022664BE4D00BA4833 /* RootView.swift in Sources */,
+				E2174C0A2681D9F6003573C5 /* LibraryVM.swift in Sources */,
 				E23961EA2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E2174BF92680D8B2003573C5 /* MangaChapter.swift in Sources */,
 				E2DE87A526780DCE00384FCA /* ReaderView.swift in Sources */,
 				E239621C266D206400BA4833 /* ExploreSourceVM.swift in Sources */,
 				E23962052664C1EC00BA4833 /* LibraryView.swift in Sources */,
 				E239621E266D4DF700BA4833 /* ImageWithTextOver.swift in Sources */,
 				E2DE87A1267794E000384FCA /* MangaDetailVM.swift in Sources */,
 				E24EB5F6266FA75D00BEDBF4 /* Mangasee.swift in Sources */,
+				E2174C0C2681DB05003573C5 /* RefreshableImageView.swift in Sources */,
+				E2174BEF2680CC0A003573C5 /* Manga.swift in Sources */,
 				E2DE87AA26781CB600384FCA /* ReaderVM.swift in Sources */,
+				E2174BF32680D5CA003573C5 /* MangaAlternatesName.swift in Sources */,
 				E2396225266D4FC100BA4833 /* MangaDetailView.swift in Sources */,
 				E2DE87AC2679057700384FCA /* HorizontalReaderView.swift in Sources */,
 				E2DE87AE2679E76400384FCA /* VerticalReaderView.swift in Sources */,
 				E2DE87A32677B00300384FCA /* FlexibleView.swift in Sources */,
 				E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */,
+				E2174BF52680D759003573C5 /* MangaAuthor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,18 +455,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2174BFD2680E013003573C5 /* MangaGenre.swift in Sources */,
 				E23962092664C23900BA4833 /* ExploreView.swift in Sources */,
 				E23961FF2664B27700BA4833 /* MangaSourceService.swift in Sources */,
+				E2174BFB2680E00E003573C5 /* MangaAlternatesName.swift in Sources */,
+				E2174BFE2680E017003573C5 /* MangaChapter.swift in Sources */,
+				E2174C072680E03F003573C5 /* HorizontalReaderView.swift in Sources */,
+				E2174C062680E03C003573C5 /* FlexibleView.swift in Sources */,
 				E24EB5F7266FA75D00BEDBF4 /* Mangasee.swift in Sources */,
+				E2174C022680E022003573C5 /* Fixflickering.swift in Sources */,
+				E2174C052680E034003573C5 /* ReaderVM.swift in Sources */,
 				E239621F266D4DF700BA4833 /* ImageWithTextOver.swift in Sources */,
+				E2174BFF2680E01A003573C5 /* Date.swift in Sources */,
 				E23961E52663E60E00BA4833 /* Dokusho.xcdatamodeld in Sources */,
+				E2174C002680E01C003573C5 /* Array.swift in Sources */,
+				E2174C082680E041003573C5 /* VerticalReaderView.swift in Sources */,
+				E2174C042680E031003573C5 /* MangaDetailVM.swift in Sources */,
 				E23962032664BE4D00BA4833 /* RootView.swift in Sources */,
 				E23961EB2663E60E00BA4833 /* Persistence.swift in Sources */,
+				E2174C032680E02E003573C5 /* ExploreSourceVM.swift in Sources */,
 				E2396223266D4F8600BA4833 /* NavigationLinkLazyView.swift in Sources */,
 				E23962062664C1EC00BA4833 /* LibraryView.swift in Sources */,
 				E24EB5F2266FA72D00BEDBF4 /* MangaSource.swift in Sources */,
+				E2174C012680E01F003573C5 /* Logger.swift in Sources */,
 				E2396226266D4FC100BA4833 /* MangaDetailView.swift in Sources */,
+				E2174BFA2680E00C003573C5 /* Manga.swift in Sources */,
 				E23961E72663E60E00BA4833 /* DokushoApp.swift in Sources */,
+				E2174BFC2680E010003573C5 /* MangaAuthor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -661,6 +727,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E22B2DD7267FBB24000E5379 /* XCRemoteSwiftPackageReference "iPages" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/benjaminsage/iPages.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.9;
+			};
+		};
 		E239620A266BBCAD00BA4833 /* XCRemoteSwiftPackageReference "NukeUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/NukeUI";
@@ -693,17 +767,14 @@
 				minimumVersion = 2.3.2;
 			};
 		};
-		E2DE87A62678102B00384FCA /* XCRemoteSwiftPackageReference "Pages" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nachonavarro/Pages";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.5;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E22B2DD8267FBB24000E5379 /* iPages */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E22B2DD7267FBB24000E5379 /* XCRemoteSwiftPackageReference "iPages" */;
+			productName = iPages;
+		};
 		E239620B266BBCAD00BA4833 /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E239620A266BBCAD00BA4833 /* XCRemoteSwiftPackageReference "NukeUI" */;
@@ -723,11 +794,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E253BBF9266FAC2400A3368C /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
-		};
-		E2DE87A72678102B00384FCA /* Pages */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2DE87A62678102B00384FCA /* XCRemoteSwiftPackageReference "Pages" */;
-			productName = Pages;
 		};
 /* End XCSwiftPackageProductDependency section */
 

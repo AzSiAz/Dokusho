@@ -62,7 +62,7 @@ private struct LDJSONInfo: Codable {
 
 public class MangaSeeSource: Source {
     public var icon = "https://mangasee123.com/media/favicon.png";
-    public var id = 1;
+    public var id: Int16 = 1;
     public var name = "Mangasee";
     public var baseUrl = "https://mangasee123.com";
     public var lang = SourceLang.en;

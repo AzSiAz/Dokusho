@@ -9,6 +9,7 @@ import SwiftUI
 import NukeUI
 
 struct ExploreSourceView: View {
+    @Environment(\.managedObjectContext) var coreDataCtx
     @StateObject var vm: ExploreSourceVM
     
     var columns: [GridItem] {
@@ -49,7 +50,7 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: vm.src, mangaId: manga.id))) {
+                        NavigationLink(destination: MangaDetailView(vm: vm.buildMangaDetailVM(ctx: coreDataCtx, manga: manga))) {
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)
                                 .task { await vm.fetchMoreIfPossible(for: manga) }

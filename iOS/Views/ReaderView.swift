@@ -9,6 +9,8 @@ import SwiftUI
 import Pages
 import NukeUI
 
+typealias OnProgress = (_ status: MangaChapter.Status) -> Void
+
 struct ReaderView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var vm: ReaderVM
@@ -17,21 +19,39 @@ struct ReaderView: View {
         VStack {
             if vm.showToolBar {
                 VStack {
-                    Button(action: { presentationMode.wrappedValue.dismiss() }) {
+                    Button(action: {
+                        async {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }) {
                         Image(systemName: "xmark")
                     }
                 }
             }
             
-            if let images = vm.chapterImages {
-                if vm.manga.type == .manga {
-                    HorizontalReaderView(direction: .rightToLeft, links: images.map { $0.imageUrl })
+            if let links = vm.chapterImages?.map { $0.imageUrl } {
+                if vm.chapter.manga?.type == .manga {
+                    HorizontalReaderView(
+                        direction: .rightToLeft,
+                        links: links,
+                        showToolbar: $vm.showToolBar,
+                        onProgress: vm.saveProgress
+                    )
                 }
-                else if vm.manga.type == .manhua {
-                    HorizontalReaderView(direction: .leftToRight, links: images.map { $0.imageUrl })
+                else if vm.chapter.manga?.type == .manhua {
+                    HorizontalReaderView(
+                        direction: .leftToRight,
+                        links: links,
+                        showToolbar: $vm.showToolBar,
+                        onProgress: vm.saveProgress
+                    )
                 }
                 else {
-                    VerticalReaderView(links: images.map { $0.imageUrl })
+                    VerticalReaderView(
+                        showToolbar: $vm.showToolBar,
+                        links: links,
+                        onProgress: vm.saveProgress
+                    )
                 }
             }
         }
@@ -39,9 +59,3 @@ struct ReaderView: View {
         .task { await vm.fetchChapter() }
     }
 }
-
-//struct ReaderView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ReaderView(vm: ReaderVM(for: SourceChapter, in: <#T##SourceManga#>, with: <#T##Source#>))
-//    }
-//}

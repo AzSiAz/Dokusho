@@ -6,39 +6,121 @@
 //
 
 import Foundation
+import CoreData
 
+@MainActor
 class MangaDetailVM: ObservableObject {
+    enum ChapterOrder {
+        case base
+        case reversed
+        
+        mutating func toggle() {
+            if self == .reversed {
+                self = .base
+            }
+            else {
+                self = .reversed
+            }
+        }
+    }
+    
+    enum ChapterFilter {
+        case all
+        case unreader
+        
+        mutating func toggle() {
+            if self == .all {
+                self = .unreader
+            }
+            else {
+                self = .all
+            }
+        }
+    }
+    
     let src: Source
     let mangaId: String
+    var ctx: NSManagedObjectContext
 
     @Published var error = false
-    @Published var manga: SourceManga?
-    @Published var selectedChapter: SourceChapter?
+    @Published var manga: Manga?
+    @Published var selectedChapter: MangaChapter?
+    @Published var chapterOrder: ChapterOrder = .base
+    @Published var chapterFilter: ChapterFilter = .all
     
-    init(for source: Source, mangaId: String) {
+    init(for source: Source, mangaId: String, context ctx: NSManagedObjectContext) {
         self.src = source
         self.mangaId = mangaId
+        self.ctx = ctx
     }
     
     func fetchManga() async {
         self.error = false
         do {
-            // TODO: Fetch from CoreData before and only fetch from source on refresh
-            manga = try await src.fetchMangaDetail(id: mangaId)
-//            chapters = manga!.chapters
-//            manga?.chapters = []
+            let req = Manga.fetchRequest()
+            req.fetchLimit = 1
+            req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                NSPredicate(format: "sourceId = %@", mangaId),
+                NSPredicate(format: "source = %i", src.id)
+            ])
+            let res = try ctx.fetch(req)
+
+            if res.isEmpty {
+                await refresh()
+            }
+            else { manga = res.first }
         } catch {
             self.error = true
         }
     }
     
-    func reverseChaptersOrder() {
-        if manga != nil {
-            manga!.chapters = manga!.chapters.reversed()
+    // TODO: Implement refresh, merge old chapters data with new chapters data
+    func refresh() async {
+        self.error = false
+        self.manga = nil
+
+        do {
+            let sourceManga = try await src.fetchMangaDetail(id: mangaId)
+            try ctx.performAndWait {
+                let _ = Manga.fromSource(for: sourceManga, source: src, context: ctx)
+                try ctx.save()
+            }
+            
+            await fetchManga()
+        } catch {
+            self.error = true
         }
     }
     
-    func selectChapter(for chapter: SourceChapter) {
+    func chapters() -> [MangaChapter] {
+        guard manga != nil else { return [] }
+        guard manga!.chapters?.count != 0 else { return [] }
+        
+        guard let chapters = manga?.chapters as? Set<MangaChapter> else { return [] }
+        
+        let filteredChapters = chapters.filter { self.chapterFilter == .all ? true : $0.status.isUnread() }
+        let orderedChapters = filteredChapters.sorted { $0.position < $1.position }
+        
+        return chapterOrder == .reversed ? orderedChapters.reversed() : orderedChapters
+    }
+    
+    func genres() -> [MangaGenre] {
+        guard manga != nil else { return [] }
+        guard manga!.genres?.count != 0 else { return [] }
+        
+        guard let genres = manga?.genres as? Set<MangaGenre> else { return [] }
+        return genres.sorted { $0.name! < $1.name! }
+    }
+    
+    func authors() -> [MangaAuthor] {
+        guard manga != nil else { return [] }
+        guard manga!.authors?.count != 0 else { return [] }
+        
+        guard let authors = manga?.authors as? Set<MangaAuthor> else { return [] }
+        return authors.sorted { $0.name! < $1.name! }
+    }
+    
+    func selectChapter(for chapter: MangaChapter) {
         selectedChapter = chapter
     }
     

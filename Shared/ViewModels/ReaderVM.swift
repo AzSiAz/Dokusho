@@ -6,29 +6,35 @@
 //
 
 import Foundation
+import CoreData
 
 class ReaderVM: ObservableObject {
     var src: Source
+    var ctx: NSManagedObjectContext
     
-    @Published var chapter: SourceChapter
-    @Published var manga: SourceManga
+    @Published var chapter: MangaChapter
     @Published var tabIndex = 0
     @Published var showToolBar = true
     @Published var chapterImages: [SourceChapterImage]?
     @Published var error = false
 
-    init(for chapter: SourceChapter, in manga: SourceManga, with source: Source) {
+    init(for chapter: MangaChapter, with source: Source, context ctx: NSManagedObjectContext) {
         self.src = source
         self.chapter = chapter
-        self.manga = manga
+        self.ctx = ctx
     }
     
     func fetchChapter() async {
         do {
-            chapterImages = try await src.fetchChapterImages(mangaId: manga.id, chapterId: chapter.id)
+            chapterImages = try await src.fetchChapterImages(mangaId: chapter.manga!.sourceId!, chapterId: chapter.sourceId!)
             tabIndex = 0
         } catch {
             self.error = true
         }
+    }
+    
+    func saveProgress(_ status: MangaChapter.Status) {
+        chapter.status = status
+        try? ctx.save()
     }
 }

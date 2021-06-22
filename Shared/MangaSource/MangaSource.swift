@@ -83,7 +83,7 @@ public typealias SourcePaginatedSmallManga = (mangas: [SourceSmallManga], hasNex
 
 public protocol Source {
     var name: String { get }
-    var id: Int { get }
+    var id: Int16 { get }
     var versionNumber: Float { get }
     var updatedAt: Date { get }
     var lang: SourceLang { get }

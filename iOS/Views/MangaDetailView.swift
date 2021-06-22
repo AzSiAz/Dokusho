@@ -33,18 +33,20 @@ struct MangaDetailView: View {
                     .frame(maxWidth: .infinity)
             }
             
-            if let manga = vm.manga {
-                ScrollView {
-                    Header(manga)
-                    Divider()
-                    Information(manga)
-                        .padding(.top, 5)
-                        .padding(.bottom, 15)
-                    Divider()
-                    ChapterList(manga.chapters)
-                        .padding(.bottom)
+            if !vm.error {
+                if let manga = vm.manga {
+                    ScrollView {
+                        Header(manga)
+                        Divider()
+                        Information(manga)
+                            .padding(.top, 5)
+                            .padding(.bottom, 15)
+                        Divider()
+                        ChapterList(manga.chapters?.allObjects as? [MangaChapter] ?? [])
+                            .padding(.bottom)
+                    }
+                    .refreshable { await vm.fetchManga() }
                 }
-                .refreshable { await vm.fetchManga() }
             }
         }
         .navigationTitle(vm.manga?.title ?? "Loading")
@@ -58,103 +60,125 @@ struct MangaDetailView: View {
         }
         .task { await vm.fetchManga() }
         .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: ReaderVM(for: chapter, in: vm.manga!, with: vm.src))
+            ReaderView(vm: ReaderVM(for: chapter, with: vm.src, context: vm.ctx))
         }
     }
     
-    fileprivate func Header(_ manga: SourceManga) -> some View {
-        return HStack(alignment: .top) {
-            LazyImage(source: manga.thumbnailUrl, resizingMode: .aspectFill)
-                .onSuccess({ imageWidth = $0.image.size.width })
-                .animation(nil)
-                .frame(maxHeight: 180)
-                .frame(width: imageWidth)
-                .background(Color.red)
-                .cornerRadius(10)
-                .clipped()
-                .padding(.leading, 10)
-            
-            VStack {
-                VStack(alignment: .leading) {
-                    Text(manga.title)
-                        .lineLimit(2)
-                        .font(Font.title3.bold())
-                }
+    fileprivate func Header(_ manga: Manga) -> some View {
+        return Group {
+            HStack(alignment: .top) {
+                LazyImage(source: manga.cover, resizingMode: .aspectFill)
+                    .onSuccess({ imageWidth = $0.image.size.width })
+                    .animation(nil)
+                    .frame(maxHeight: 180)
+                    .frame(width: imageWidth)
+                    .background(Color.red)
+                    .cornerRadius(10)
+                    .clipped()
+                    .padding(.leading, 10)
                 
-                Divider()
-                
-                VStack(alignment: .center) {
-                    if !manga.authors.isEmpty {
-                        Text(manga.authors.joined(separator: ", "))
-                            .font(.system(size: 13))
-                            .padding(.bottom, 5)
+                VStack {
+                    VStack(alignment: .leading) {
+                        Text(manga.title!)
+                            .lineLimit(2)
+                            .font(Font.title3.bold())
                     }
                     
-                    Text(manga.status.rawValue)
-                        .font(.system(size: 13))
-                        .padding(.bottom, 5)
+                    Divider()
                     
-                    Text(vm.getSourceName())
-                        .font(.system(size: 13))
+                    VStack(alignment: .center) {
+                        if manga.authors?.count != 0 {
+                            VStack {
+                                ForEach(vm.authors()) { author in
+                                    Text("\(author.name!) ")
+                                }
+                            }
+                            .padding(.bottom, 5)
+                        }
+                        
+                        Text(manga.status.rawValue)
+                            .font(.system(size: 13))
+                            .padding(.bottom, 5)
+                        
+                        Text(vm.getSourceName())
+                            .font(.system(size: 13))
+                    }
                 }
             }
         }
     }
     
-    fileprivate func Information(_ manga: SourceManga) -> some View {
+    fileprivate func Information(_ manga: Manga) -> some View {
         return VStack {
-            Text(manga.description)
+            HStack(alignment: .center) {
+                Button(action: {}) {
+                    Label("Favoris", systemImage: "heart")
+                        .symbolVariant(.none)
+                }
+                Divider()
+                    .padding()
+                Button(action: { async { await vm.refresh() } }) {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+            }
+            .frame(width: UIScreen.main.bounds.width, height: 50)
+            .padding(.bottom, 5)
+            
+            Text(manga.desc!)
                 .padding(.horizontal)
                 .padding(.bottom)
             
-            FlexibleView(data: manga.genres, spacing: 5, alignment: .leading) { genre in
-                Button(genre, action: {})
+            FlexibleView(data: vm.genres(), spacing: 5, alignment: .leading) { genre in
+                Button(genre.name!, action: {})
                     .buttonStyle(.bordered)
             }
         }
     }
     
-    fileprivate func ChapterList(_ chapters: [SourceChapter]) -> some View {
+    fileprivate func ChapterList(_ chapters: [MangaChapter]) -> some View {
         return VStack(alignment: .leading) {
             HStack {
                 Text("Chapter List")
 
                 Spacer()
                 
-                Button(action: {}) {
+                Button(action: { vm.chapterFilter.toggle() }) {
                     Image(systemName: "line.3.horizontal.decrease.circle")
+                        .symbolVariant(vm.chapterFilter == .all ? .none : .fill)
                 }
                 .padding(.trailing, 5)
                 
-                Button(action: { vm.reverseChaptersOrder() }) {
+                Button(action: { vm.chapterOrder.toggle() }) {
                     Image(systemName: "chevron.up.chevron.down")
                 }
             }
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
             
-            ForEach(chapters) { chapter in
-                Button(action: { vm.selectChapter(for: chapter) }) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(chapter.name)
-                            Text(chapter.dateUpload.formatted())
-                                .font(.system(size: 12))
+            ForEach(vm.chapters(), id: \.sourceId) { chapter in
+                HStack {
+                    Button(action: { vm.selectChapter(for: chapter) }) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(chapter.title!)
+                                Text(chapter.dateSourceUpload?.formatted() ?? "Unknown")
+                                    .font(.system(size: 12))
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: { print("download")}) {
+                            Image(systemName: "icloud.and.arrow.down")
                         }
                     }
-                        
-                    Spacer()
+                    .buttonStyle(.plain)
+                    .padding(.vertical, 5)
                     
-                    Button(action: { print("download")}) {
-                        Image(systemName: "icloud.and.arrow.down")
-                    }
+                    Divider()
+                        .padding(.leading, 15)
                 }
-                .buttonStyle(.plain)
-                .padding(.vertical, 5)
-                .contentShape(Rectangle())
-
-                Divider()
-                    .padding(.leading, 15)
+                .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
             }
             .padding(.horizontal, 10)
         }
@@ -163,7 +187,11 @@ struct MangaDetailView: View {
 
 struct MangaDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        MangaDetailView(vm: MangaDetailVM(for: MangaSeeSource(), mangaId: "Ookii-Kouhai-wa-Suki-Desu-ka"))
+        MangaDetailView(vm: MangaDetailVM(
+            for: MangaSeeSource(),
+            mangaId: "Ookii-Kouhai-wa-Suki-Desu-ka",
+            context: PersistenceController(inMemory: true).container.viewContext
+        ))
     }
 }
 

@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "iPages",
+        "repositoryURL": "https://github.com/benjaminsage/iPages.git",
+        "state": {
+          "branch": null,
+          "revision": "f57e3cba2cf4bd0a689236254cde361e54315720",
+          "version": "0.0.13"
+        }
+      },
+      {
         "package": "Nuke",
         "repositoryURL": "https://github.com/kean/Nuke.git",
         "state": {
@@ -35,15 +44,6 @@
           "branch": null,
           "revision": "62b55e26eddc2ed59e63377ab877efac4f9e049c",
           "version": "0.6.1"
-        }
-      },
-      {
-        "package": "Pages",
-        "repositoryURL": "https://github.com/nachonavarro/Pages",
-        "state": {
-          "branch": null,
-          "revision": "4cdbe4ff2f9ddbfda8cf0376a2acb678a1a0a0a2",
-          "version": "0.1.5"
         }
       },
       {

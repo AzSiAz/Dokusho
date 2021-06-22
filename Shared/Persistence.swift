@@ -9,12 +9,13 @@ import CoreData
 import OSLog
 
 struct PersistenceController {
-    static let shared = PersistenceController()
+    static let shared = PersistenceController(inMemory: false)
 
     let container: NSPersistentCloudKitContainer
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "Dokusho")
+        container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         Logger.persistence.info("Starting CoreData \(inMemory ? "in memory" : "in sync") mode")
         
@@ -37,8 +38,7 @@ struct PersistenceController {
                 */
                 
                 Logger.persistence.error("Unresolved error \(error) with \(error.userInfo)")
-
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                fatalError()
             }
         })
     }
