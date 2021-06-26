@@ -40,19 +40,9 @@ struct HorizontalReaderView: View {
         iPages(selection: $index) {
             ForEach(self.links, id: \.self) { link in
                 GeometryReader { proxy in
-                    LazyImage(source: link) { state in
-                        if state.error != nil {
-                            Color.red
-                        }
-                        if state.isLoading {
-                            ProgressView()
-                        }
-                        
-                        if let image = state.image {
-                            image.resizingMode(.aspectFit)
-                        }
-                    }
-                    .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                    RefreshableImageView(url: link, size: proxy.size)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
                 }
             }
         }

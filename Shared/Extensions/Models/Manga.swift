@@ -31,22 +31,30 @@ extension Manga {
     
     static func fromSource(for m: SourceManga, source: Source, context ctx: NSManagedObjectContext) -> Manga {
         let manga = Manga(context: ctx)
-        
-        manga.source = source.id
-        manga.id = m.id
-        manga.title = m.title
-        manga.cover = m.thumbnailUrl
-        manga.desc = m.description
-        
-        manga.type = m.type
-        manga.status = m.status
 
-        manga.addToGenres(genres: m.genres, context: ctx)
-        manga.addToAuthors(authors: m.authors, context: ctx)
-        manga.addToAlternateNames(alternateNames: m.alternateNames, context: ctx)
-        manga.addToChapters(chapters: m.chapters, mangaId: m.id, context: ctx)
-
-        return manga
+        return manga.updateFromSource(for: m, source: source, context: ctx)
+    }
+    
+    func updateFromSource(for m: SourceManga, source: Source, context ctx: NSManagedObjectContext) -> Self {
+        self.id = m.id
+        self.source = source.id
+        self.title = m.title
+        self.cover = m.thumbnailUrl
+        self.desc = m.description
+        
+        self.type = m.type
+        self.status = m.status
+        
+        self.addToGenres(genres: m.genres, context: ctx)
+        self.addToAuthors(authors: m.authors, context: ctx)
+        self.addToAlternateNames(alternateNames: m.alternateNames, context: ctx)
+        self.addToChapters(chapters: m.chapters, context: ctx)
+        
+        let firstChapter: MangaChapter? = (self.chapters?.allObjects as? [MangaChapter])?.first { $0.position == 0 }
+        
+        self.lastChapterUpdate = firstChapter?.dateSourceUpload
+        
+        return self
     }
     
     func addToGenres(genres: [String], context ctx: NSManagedObjectContext) {
@@ -57,8 +65,8 @@ extension Manga {
         self.addToAuthors(NSSet(array: MangaAuthor.fromSource(authors: authors, context: ctx)))
     }
     
-    func addToChapters(chapters: [SourceChapter], mangaId: String, context ctx: NSManagedObjectContext) {
-        self.chapters = NSSet(array: MangaChapter.fromSource(chapters: chapters, mangaId: mangaId, context: ctx))
+    func addToChapters(chapters: [SourceChapter], context ctx: NSManagedObjectContext) {
+        MangaChapter.fromSource(chapters: chapters, manga: self, context: ctx)
     }
     
     func addToAlternateNames(alternateNames: [String], context ctx: NSManagedObjectContext) {

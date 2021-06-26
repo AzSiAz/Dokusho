@@ -58,6 +58,7 @@ class MangaDetailVM: ObservableObject {
     
     func fetchManga() async {
         self.error = false
+
         do {
             let req = Manga.fetchRequest()
             req.fetchLimit = 1
@@ -67,28 +68,34 @@ class MangaDetailVM: ObservableObject {
             ])
             let res = try ctx.fetch(req)
 
-            if res.isEmpty {
-                await refresh()
-            }
+            if res.isEmpty { await fetchAndInsert() }
             else { manga = res.first }
         } catch {
             self.error = true
         }
     }
     
-    // TODO: Implement refresh, merge old chapters data with new chapters data
-    func refresh() async {
+    func fetchAndInsert() async {
         self.error = false
         self.manga = nil
+        
+        do {
+            let sourceManga = try await src.fetchMangaDetail(id: mangaId)
+            self.manga = Manga.fromSource(for: sourceManga, source: src, context: ctx)
+            try ctx.save()
+        } catch {
+            self.error = true
+        }
+    }
+    
+    func refresh() async {
+        self.error = false
 
         do {
             let sourceManga = try await src.fetchMangaDetail(id: mangaId)
-            try ctx.performAndWait {
-                let _ = Manga.fromSource(for: sourceManga, source: src, context: ctx)
-                try ctx.save()
-            }
-            
-            await fetchManga()
+            self.manga = self.manga?.updateFromSource(for: sourceManga, source: src, context: ctx)
+            try ctx.save()
+            libState.reloadCollection()
         } catch {
             self.error = true
         }

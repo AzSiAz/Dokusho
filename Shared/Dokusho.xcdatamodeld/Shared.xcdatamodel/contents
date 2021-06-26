@@ -4,6 +4,7 @@
         <attribute name="cover" optional="YES" attributeType="String"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastChapterUpdate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="source" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
@@ -52,6 +53,7 @@
         </uniquenessConstraints>
     </entity>
     <entity name="MangaCollection" representedClassName="MangaCollection" syncable="YES" codeGenerationType="class">
+        <attribute name="filterRaw" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Manga" inverseName="collection" inverseEntity="Manga"/>
@@ -71,11 +73,11 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Manga" positionX="-81.4453125" positionY="-18" width="146.4453125" height="209"/>
+        <element name="Manga" positionX="-81.4453125" positionY="-18" width="146.4453125" height="224"/>
         <element name="MangaAlternatesName" positionX="-306.03125" positionY="-45.5625" width="128" height="73"/>
         <element name="MangaAuthor" positionX="-74.91796875" positionY="-144.19140625" width="128" height="73"/>
         <element name="MangaChapter" positionX="-303.76171875" positionY="86.30859375" width="128" height="119"/>
-        <element name="MangaCollection" positionX="116.2421875" positionY="62.17578125" width="128" height="74"/>
+        <element name="MangaCollection" positionX="116.2421875" positionY="62.17578125" width="128" height="89"/>
         <element name="MangaGenre" positionX="124.4609375" positionY="-81.7734375" width="128" height="73"/>
     </elements>
 </model>

@@ -7,21 +7,10 @@
 
 import Foundation
 
-enum LibraryFilter: CaseIterable {
-    case all
-    case read
-    case unread
-    
-    func isNotAll() -> Bool {
-        return !(self == .all)
-    }
-}
-
 @MainActor
 class LibraryVM: ObservableObject {
     @Published var libState: LibraryState
-    
-    @Published var libFilter: LibraryFilter = .unread
+
     @Published var searchText: String = ""
     
     init(libState: LibraryState) {
@@ -30,12 +19,13 @@ class LibraryVM: ObservableObject {
     
     func getMangas(collection: MangaCollection) -> [Manga] {
         guard collection.mangas?.count != 0 else { return [] }
-        
         guard let mangas = collection.mangas as? Set<Manga> else { return [] }
         
-        switch libFilter {
+        let sort = SortDescriptor(\Manga.lastChapterUpdate, order: .reverse)
+        
+        switch collection.filter {
             case .all:
-                return mangas.sorted { $0.title! < $1.title! }
+                return mangas.sorted(using: sort)
             case .read:
                 return mangas
                     .filter { manga in
@@ -46,7 +36,7 @@ class LibraryVM: ObservableObject {
                             return !chapter.status.isUnread()
                         }
                     }
-                    .sorted { $0.title! < $1.title! }
+                    .sorted(using: sort)
             case .unread:
                 return mangas
                     .filter { manga in
@@ -56,12 +46,14 @@ class LibraryVM: ObservableObject {
                             return chapter.status.isUnread()
                         }
                     }
-                    .sorted { $0.title! < $1.title! }
+                    .sorted(using: sort)
                     
         }
     }
     
-    func changeFilter(newFilterState: LibraryFilter) {
-        self.libFilter = newFilterState
+    func changeFilter(collection: MangaCollection, newFilterState: MangaCollection.Filter) {
+        collection.filter = newFilterState
+        
+        libState.saveLibraryState()
     }
 }

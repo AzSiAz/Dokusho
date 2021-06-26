@@ -15,6 +15,7 @@ struct LibraryView: View {
 
     @State var showSettings = false
     @State var showChangeFilter = false
+    @State var selectedTab = 0
     
     var columns: [GridItem] {
         var base = [
@@ -32,7 +33,7 @@ struct LibraryView: View {
     
     var body: some View {
         NavigationView {
-            TabView {
+            TabView(selection: $selectedTab) {
                 ForEach(vm.libState.collections) { collection in
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 10) {
@@ -55,33 +56,41 @@ struct LibraryView: View {
                     }
                     .padding(.horizontal, 5)
                     .navigationBarTitle(collection.name!)
+                    .navigationBarTitleDisplayMode(.inline)
                     .searchable(text: $vm.searchText)
+                    .tag(vm.libState.collections.firstIndex(of: collection) ?? 0)
+                }
+            }
+            .toolbar {
+                ToolbarItem {
+                    Image(systemName: "gear")
+                        .onTapGesture { showSettings.toggle() }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if !vm.libState.collections.isEmpty {
+                        Button(action: { showChangeFilter.toggle() }) {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                                .symbolVariant(vm.libState.collections[selectedTab].filter.isNotAll() ? .fill : .none)
+                        }
+                        .buttonStyle(.plain)
+                        .actionSheet(isPresented: $showChangeFilter) {
+                            ActionSheet(title: Text("Change Filter"), buttons: [
+                                .default(
+                                    Text("All"),
+                                    action: { vm.changeFilter(collection: vm.libState.collections[selectedTab], newFilterState: .all) }),
+                                .default(
+                                    Text("Only Read"),
+                                    action: { vm.changeFilter(collection: vm.libState.collections[selectedTab], newFilterState: .read) }),
+                                .default(
+                                    Text("Only Unread"),
+                                    action: { vm.changeFilter(collection: vm.libState.collections[selectedTab], newFilterState: .unread) }),
+                                .cancel()
+                            ])
+                        }
+                    }
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { showChangeFilter.toggle() }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                            .symbolVariant(vm.libFilter.isNotAll() ? .fill : .none)
-                    }
-                    .buttonStyle(.plain)
-                    .actionSheet(isPresented: $showChangeFilter) {
-                        ActionSheet(title: Text("Change Filter"), buttons: [
-                            .default(Text("All"), action: { vm.changeFilter(newFilterState: .all) }),
-                            .default(Text("Only Read"), action: { vm.changeFilter(newFilterState: .read) }),
-                            .default(Text("Only Unread"), action: { vm.changeFilter(newFilterState: .unread) }),
-                            .cancel()
-                        ])
-                    }
-                }
-                ToolbarItem {
-                    Image(systemName: "gear")
-                        .onTapGesture {
-                            showSettings.toggle()
-                        }
-                }
-            }
             .sheet(isPresented: $showSettings) {
                 ManageCollectionsModal()
                     .environmentObject(vm.libState)

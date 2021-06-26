@@ -29,12 +29,12 @@ extension MangaChapter {
         }
     }
     
-    static func fromSource(chapters: [SourceChapter], mangaId: String, context ctx: NSManagedObjectContext) -> [MangaChapter] {
+    static func fromSource(chapters: [SourceChapter], manga: Manga, context ctx: NSManagedObjectContext) {
         let req = MangaChapter.fetchRequest()
-        req.predicate = NSPredicate(format: "manga.id = %@", mangaId)
+        req.predicate = NSPredicate(format: "manga = %@", manga)
         let oldChapters = try? ctx.fetch(req)
         
-        return chapters.enumerated().map { (index, chapter) in
+        return chapters.enumerated().forEach { (index, chapter) in
             let old = oldChapters?.first { ($0.id == chapter.id) }
             
             let c = MangaChapter(context: ctx)
@@ -54,7 +54,7 @@ extension MangaChapter {
                 c.dateSourceUpload = chapter.dateUpload
             }
             
-            return c
+            manga.addToChapters(c)
         }
     }
 }

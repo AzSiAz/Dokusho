@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 class LibraryState: ObservableObject {
-    private var ctx: NSManagedObjectContext
+    var ctx: NSManagedObjectContext
 
     @Published var collections = [MangaCollection]()
     
@@ -76,5 +76,13 @@ class LibraryState: ObservableObject {
     func deleteMangaFromCollection(manga: Manga, collection: MangaCollection) {
         collection.removeFromMangas(manga)
         try? ctx.save()
+        
+        reloadCollection()
+    }
+    
+    func saveLibraryState() {
+        try? ctx.save()
+
+        reloadCollection()
     }
 }
