@@ -26,7 +26,7 @@ class ReaderVM: ObservableObject {
     
     func fetchChapter() async {
         do {
-            chapterImages = try await src.fetchChapterImages(mangaId: chapter.manga!.sourceId!, chapterId: chapter.sourceId!)
+            chapterImages = try await src.fetchChapterImages(mangaId: chapter.manga!.id!, chapterId: chapter.id!)
             tabIndex = 0
         } catch {
             self.error = true

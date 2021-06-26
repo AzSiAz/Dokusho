@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct RootView: View {
-    @State var tabIndex = 1
+    @EnvironmentObject var libState: LibraryState
+    @State var tabIndex = 0
     
     var body: some View {
         TabView(selection: $tabIndex) {
-            LibraryView()
+            LibraryView(vm: .init(libState: libState))
                 .tabItem {
                     Label("Library", systemImage: "books.vertical")
                 }

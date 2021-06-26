@@ -33,7 +33,7 @@ extension Manga {
         let manga = Manga(context: ctx)
         
         manga.source = source.id
-        manga.sourceId = m.id
+        manga.id = m.id
         manga.title = m.title
         manga.cover = m.thumbnailUrl
         manga.desc = m.description

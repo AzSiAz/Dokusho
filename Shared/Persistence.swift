@@ -9,13 +9,12 @@ import CoreData
 import OSLog
 
 struct PersistenceController {
-    static let shared = PersistenceController(inMemory: false)
+    static var shared = PersistenceController(inMemory: false)
 
     let container: NSPersistentCloudKitContainer
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "Dokusho")
-        container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         Logger.persistence.info("Starting CoreData \(inMemory ? "in memory" : "in sync") mode")
         
@@ -23,7 +22,7 @@ struct PersistenceController {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
         
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores { [self] (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -40,6 +39,9 @@ struct PersistenceController {
                 Logger.persistence.error("Unresolved error \(error) with \(error.userInfo)")
                 fatalError()
             }
-        })
+            
+            container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+            container.viewContext.automaticallyMergesChangesFromParent = true
+        }
     }
 }

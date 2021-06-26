@@ -31,16 +31,16 @@ extension MangaChapter {
     
     static func fromSource(chapters: [SourceChapter], mangaId: String, context ctx: NSManagedObjectContext) -> [MangaChapter] {
         let req = MangaChapter.fetchRequest()
-        req.predicate = NSPredicate(format: "manga.sourceId = %@", mangaId)
+        req.predicate = NSPredicate(format: "manga.id = %@", mangaId)
         let oldChapters = try? ctx.fetch(req)
         
         return chapters.enumerated().map { (index, chapter) in
-            let old = oldChapters?.first { ($0.sourceId == chapter.id) }
+            let old = oldChapters?.first { ($0.id == chapter.id) }
             
             let c = MangaChapter(context: ctx)
             
             c.title = chapter.name
-            c.sourceId = chapter.id
+            c.id = chapter.id
             c.position = Int64(index)
             
             if old?.dateSourceUpload != c.dateSourceUpload {

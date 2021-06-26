@@ -18,14 +18,16 @@ struct VerticalReaderView: View {
     var body: some View {
         GeometryReader { proxy in
             ScrollView([.vertical]) {
-                LazyVStack(spacing: 0) {
+                VStack(spacing: 0) {
                     ForEach(links, id: \.self) { link in
                         RefreshableImageView(url: link, size: CGSize(width: proxy.size.width, height: UIScreen.main.bounds.height))
                             .aspectRatio(contentMode: .fit)
                             .frame(width: proxy.size.width)
                     }
-                    Color.clear
-                        .onAppear { onProgress(.read) }
+                    LazyVStack {
+                        Color.clear
+                            .onAppear { onProgress(.read) }
+                    }
                 }
             }
         }

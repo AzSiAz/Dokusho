@@ -47,11 +47,13 @@ class MangaDetailVM: ObservableObject {
     @Published var selectedChapter: MangaChapter?
     @Published var chapterOrder: ChapterOrder = .base
     @Published var chapterFilter: ChapterFilter = .all
+    @Published var libState: LibraryState
     
-    init(for source: Source, mangaId: String, context ctx: NSManagedObjectContext) {
+    init(for source: Source, mangaId: String, context ctx: NSManagedObjectContext, libState: LibraryState) {
         self.src = source
         self.mangaId = mangaId
         self.ctx = ctx
+        self.libState = libState
     }
     
     func fetchManga() async {
@@ -60,7 +62,7 @@ class MangaDetailVM: ObservableObject {
             let req = Manga.fetchRequest()
             req.fetchLimit = 1
             req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-                NSPredicate(format: "sourceId = %@", mangaId),
+                NSPredicate(format: "id = %@", mangaId),
                 NSPredicate(format: "source = %i", src.id)
             ])
             let res = try ctx.fetch(req)

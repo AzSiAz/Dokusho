@@ -9,8 +9,8 @@ import SwiftUI
 
 @main
 struct DokushoApp: App {
-    let persistenceController = PersistenceController.shared
-
+    var persistenceController = PersistenceController.shared
+    
     var body: some Scene {
         WindowGroup {
             Group {
@@ -26,6 +26,7 @@ struct DokushoApp: App {
             }
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
             .environmentObject(MangaSourceService.shared)
+            .environmentObject(LibraryState(context: persistenceController.container.viewContext))
         }
     }
 }

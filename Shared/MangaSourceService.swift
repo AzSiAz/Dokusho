@@ -10,4 +10,8 @@ class MangaSourceService: ObservableObject {
     func search() async -> [SourcePaginatedSmallManga] {
         return []
     }
+    
+    func getSource(sourceId: Int16) -> Source? {
+        return list.first { $0.id == sourceId }
+    }
 }

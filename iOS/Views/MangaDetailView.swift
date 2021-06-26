@@ -11,6 +11,7 @@ import NukeUI
 struct MangaDetailView: View {
     @StateObject var vm: MangaDetailVM
     @State var imageWidth: CGFloat = 0
+    @State var addToCollection = false
     
     var body: some View {
         ZStack {
@@ -36,16 +37,18 @@ struct MangaDetailView: View {
             if !vm.error {
                 if let manga = vm.manga {
                     ScrollView {
-                        Header(manga)
-                        Divider()
-                        Information(manga)
-                            .padding(.top, 5)
-                            .padding(.bottom, 15)
-                        Divider()
-                        ChapterList(manga.chapters?.allObjects as? [MangaChapter] ?? [])
-                            .padding(.bottom)
+//                        LazyVStack {
+                            Header(manga)
+                            Divider()
+                            Information(manga)
+                                .padding(.top, 5)
+                                .padding(.bottom, 15)
+                            Divider()
+                            ChapterList(manga.chapters?.allObjects as? [MangaChapter] ?? [])
+                                .padding(.bottom)
+//                        }
+//                        .refreshable { await vm.fetchManga() }
                     }
-                    .refreshable { await vm.fetchManga() }
                 }
             }
         }
@@ -111,9 +114,9 @@ struct MangaDetailView: View {
     fileprivate func Information(_ manga: Manga) -> some View {
         return VStack {
             HStack(alignment: .center) {
-                Button(action: {}) {
+                Button(action: { addToCollection.toggle() }) {
                     Label("Favoris", systemImage: "heart")
-                        .symbolVariant(.none)
+                        .symbolVariant(vm.libState.isMangaInCollection(for: manga) ? .fill : .none)
                 }
                 Divider()
                     .padding()
@@ -132,6 +135,24 @@ struct MangaDetailView: View {
                 Button(genre.name!, action: {})
                     .buttonStyle(.bordered)
             }
+        }
+        .actionSheet(isPresented: $addToCollection) {
+            var actions: [ActionSheet.Button] = []
+            actions.append(contentsOf: vm.libState.collections.map { col in
+                return ActionSheet.Button.default(
+                    Text(col.name!),
+                    action: { vm.libState.addMangaToCollection(manga: manga, collection: col) }
+                )
+            })
+            if manga.collection != nil {
+                actions.append(.destructive(Text("Remove from collection"), action: {
+                    vm.libState.deleteMangaFromCollection(manga: manga, collection: manga.collection!)
+                }))
+            }
+            
+            actions.append(.cancel())
+            
+           return ActionSheet(title: Text("Choose collection"), buttons: actions)
         }
     }
     
@@ -155,7 +176,7 @@ struct MangaDetailView: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
             
-            ForEach(vm.chapters(), id: \.sourceId) { chapter in
+            ForEach(vm.chapters()) { chapter in
                 HStack {
                     Button(action: { vm.selectChapter(for: chapter) }) {
                         HStack {
@@ -187,10 +208,13 @@ struct MangaDetailView: View {
 
 struct MangaDetailView_Previews: PreviewProvider {
     static var previews: some View {
+        let ctx = PersistenceController(inMemory: true).container.viewContext
+        
         MangaDetailView(vm: MangaDetailVM(
             for: MangaSeeSource(),
             mangaId: "Ookii-Kouhai-wa-Suki-Desu-ka",
-            context: PersistenceController(inMemory: true).container.viewContext
+            context: ctx,
+            libState: .init(context: ctx)
         ))
     }
 }

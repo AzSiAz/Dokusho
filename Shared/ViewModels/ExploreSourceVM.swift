@@ -50,7 +50,7 @@ class ExploreSourceVM: ObservableObject {
         return "\(src.name) - \(type.rawValue)"
     }
     
-    func buildMangaDetailVM(ctx: NSManagedObjectContext, manga: SourceSmallManga) -> MangaDetailVM {
-        return MangaDetailVM(for: src, mangaId: manga.id, context: ctx)
+    func buildMangaDetailVM(ctx: NSManagedObjectContext, manga: SourceSmallManga, libState: LibraryState) -> MangaDetailVM {
+        return MangaDetailVM(for: src, mangaId: manga.id, context: ctx, libState: libState)
     }
 }

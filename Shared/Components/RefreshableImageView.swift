@@ -18,15 +18,17 @@ struct RefreshableImageView: View {
                 case .success(let image):
                     image
                         .resizable()
-                case .failure(_):
+                case .failure(let err as NSError):
                     VStack {
-                        Image(systemName: "arrow.clockwise")
-                            .resizable()
-                            .frame(width: 64)
-                        Text("Refresh")
+                        Button(action: { refresh.toggle() }) {
+                            Image(systemName: "arrow.clockwise")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                        }
+                        
+                        Text("Error: \(err)")
                     }
-                    .frame(width: size.width, height: size.height, alignment: .center)
-                    .onTapGesture { refresh.toggle() }
+                    .frame(height: size.height)
                 default:
                     ProgressView()
                         .frame(width: size.width, height: size.height, alignment: .center)
