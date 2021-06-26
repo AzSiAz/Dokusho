@@ -14,6 +14,7 @@ struct LibraryView: View {
     @StateObject var vm: LibraryVM
 
     @State var showSettings = false
+    @State var showChangeFilter = false
     
     var columns: [GridItem] {
         var base = [
@@ -39,18 +40,41 @@ struct LibraryView: View {
                                 NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: sourcesSvc.getSource(sourceId: manga.source)!, mangaId: manga.id!, context: coreDataCtx, libState: vm.libState))) {
                                     ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
                                         .frame(height: 180)
+                                        .overlay(alignment: .topTrailing) {
+                                            if manga.unreadChapterCount() > 0 {
+                                                Text(String(manga.unreadChapterCount()))
+                                                    .padding(2)
+                                                    .foregroundColor(.white)
+                                                    .background(Color.blue)
+                                                    .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+                                            }
+                                        }
                                 }
                             }
                         }
                     }
-                    .tabItem {
-                        Text(collection.name ?? "Default")
-                    }
+                    .padding(.horizontal, 5)
                     .navigationBarTitle(collection.name!)
+                    .searchable(text: $vm.searchText)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { showChangeFilter.toggle() }) {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .symbolVariant(vm.libFilter.isNotAll() ? .fill : .none)
+                    }
+                    .buttonStyle(.plain)
+                    .actionSheet(isPresented: $showChangeFilter) {
+                        ActionSheet(title: Text("Change Filter"), buttons: [
+                            .default(Text("All"), action: { vm.changeFilter(newFilterState: .all) }),
+                            .default(Text("Only Read"), action: { vm.changeFilter(newFilterState: .read) }),
+                            .default(Text("Only Unread"), action: { vm.changeFilter(newFilterState: .unread) }),
+                            .cancel()
+                        ])
+                    }
+                }
                 ToolbarItem {
                     Image(systemName: "gear")
                         .onTapGesture {
@@ -64,55 +88,6 @@ struct LibraryView: View {
             }
         }
         .navigationTitle("Library")
-    }
-}
-
-struct ManageCollectionsModal: View {
-    @EnvironmentObject var lib: LibraryState
-    
-    @State var add = false
-    @State var newCollectionName = ""
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                if add {
-                    VStack {
-                        TextField("New collection name", text: $newCollectionName)
-                            .textFieldStyle(.roundedBorder)
-                            .padding()
-                            .onSubmit {
-                                lib.addCollection(name: newCollectionName)
-                                add.toggle()
-                                newCollectionName = ""
-                            }
-                    }
-                    .frame(alignment: .top)
-                }
-                
-                List {
-                    ForEach(lib.collections) { col in
-                        if (col.name != nil) {
-                            HStack {
-                                Text(col.name!)
-                                Spacer()
-                                Button(action: { lib.deleteCollection(collection: col) }) {
-                                    Image(systemName: "trash")
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .navigationBarTitle("Manage Collections", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: { add.toggle() }) {
-                        Text(add ? "Done" : "Add")
-                    }
-                }
-            }
-        }
     }
 }
 

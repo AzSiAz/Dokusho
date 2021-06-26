@@ -66,4 +66,9 @@ extension Manga {
             NSSet(array: MangaAlternatesName.fromSource(titles: alternateNames, context: ctx))
         )
     }
+    
+    func unreadChapterCount() -> Int {
+        guard let chapters = self.chapters as? Set<MangaChapter> else { return 0 }
+        return chapters.filter { $0.status.isUnread() }.count
+    }
 }

@@ -9,7 +9,10 @@ import SwiftUI
 import NukeUI
 
 struct MangaDetailView: View {
+    @EnvironmentObject var libState: LibraryState
+    
     @StateObject var vm: MangaDetailVM
+
     @State var imageWidth: CGFloat = 0
     @State var addToCollection = false
     
@@ -63,7 +66,7 @@ struct MangaDetailView: View {
         }
         .task { await vm.fetchManga() }
         .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: ReaderVM(for: chapter, with: vm.src, context: vm.ctx))
+            ReaderView(vm: ReaderVM(for: chapter, with: vm.src, manga: vm.manga!, context: vm.ctx, libState: libState))
         }
     }
     
@@ -157,7 +160,7 @@ struct MangaDetailView: View {
     }
     
     fileprivate func ChapterList(_ chapters: [MangaChapter]) -> some View {
-        return VStack(alignment: .leading) {
+        return VStack {
             HStack {
                 Text("Chapter List")
 
@@ -177,29 +180,7 @@ struct MangaDetailView: View {
             .padding(.horizontal, 15)
             
             ForEach(vm.chapters()) { chapter in
-                HStack {
-                    Button(action: { vm.selectChapter(for: chapter) }) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(chapter.title!)
-                                Text(chapter.dateSourceUpload?.formatted() ?? "Unknown")
-                                    .font(.system(size: 12))
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: { print("download")}) {
-                            Image(systemName: "icloud.and.arrow.down")
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.vertical, 5)
-                    
-                    Divider()
-                        .padding(.leading, 15)
-                }
-                .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
+                ChapterListRow(vm: vm, chapter: chapter)
             }
             .padding(.horizontal, 10)
         }

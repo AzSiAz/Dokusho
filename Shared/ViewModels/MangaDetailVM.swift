@@ -26,11 +26,11 @@ class MangaDetailVM: ObservableObject {
     
     enum ChapterFilter {
         case all
-        case unreader
+        case unread
         
         mutating func toggle() {
             if self == .all {
-                self = .unreader
+                self = .unread
             }
             else {
                 self = .all
@@ -132,5 +132,37 @@ class MangaDetailVM: ObservableObject {
     
     func getSourceName() -> String {
         return src.name
+    }
+    
+    func changeChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
+        chapter.status = status
+        try? ctx.save()
+        
+        if libState.isMangaInCollection(for: manga!) {
+            libState.reloadCollection()
+        }
+    }
+    
+    func changePreviousChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
+        guard let rawChapters = manga?.chapters as? Set<MangaChapter> else { return }
+
+        rawChapters
+            .sorted { $0.position < $1.position }
+            .filter { chapter.position < $0.position }
+            .forEach { $0.status = status }
+        
+        try? ctx.save()
+        
+        if libState.isMangaInCollection(for: manga!) {
+            libState.reloadCollection()
+        }
+    }
+    
+    func hasPreviousUnreadChapter(for chapter: MangaChapter) -> Bool {
+        guard let chapters = manga?.chapters as? Set<MangaChapter> else { return false }
+
+        return chapters
+            .filter { chapter.position < $0.position }
+            .contains { $0.status == .unread }
     }
 }

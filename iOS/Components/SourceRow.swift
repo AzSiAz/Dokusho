@@ -8,7 +8,7 @@ import SwiftUI
 import NukeUI
 
 struct SourceRow: View {
-    @Binding var source: Source
+    var source: Source
     
     var body: some View {
         HStack {

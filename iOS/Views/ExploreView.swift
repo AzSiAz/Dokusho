@@ -12,10 +12,12 @@ struct ExploreView: View {
     
     var body: some View {
         NavigationView {
-            List($sourcesSvc.list, id: \.id) { $src in
-                NavigationLink(destination: ExploreSourceView(vm: ExploreSourceVM(for: src))) {
-                    SourceRow(source: $src)
-                        .padding(.vertical)
+            List {
+                ForEach(sourcesSvc.list, id: \.id) { src in
+                    NavigationLink(destination: ExploreSourceView(vm: ExploreSourceVM(for: src))) {
+                        SourceRow(source: src)
+                            .padding(.vertical)
+                    }
                 }
             }
             .searchable(text: $sourcesSvc.searchInSource)

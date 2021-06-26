@@ -52,22 +52,31 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(vm: vm.buildMangaDetailVM(ctx: coreDataCtx, manga: manga, libState: libState))) {
+                        NavigationLink(destination: MangaDetailView(vm: .init(for: vm.src, mangaId: manga.id, context: coreDataCtx, libState: libState))) {
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)
                                 .task { await vm.fetchMoreIfPossible(for: manga) }
+                                .overlay(alignment: .topTrailing) {
+                                    if libState.isMangaInCollection(for: manga) {
+                                        Image(systemName: "star")
+                                            .symbolVariant(.fill)
+                                            .padding(2)
+                                            .foregroundColor(.white)
+                                            .background(Color.blue)
+                                            .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+                                    }
+                                }
                         }
                     }
                 }
-                .padding()
             }
         }
-        .refreshable { await vm.fetchList(clean: true) }
+        .task { await vm.fetchList() }
+//        .refreshable { await vm.fetchList(clean: true) }
         .toolbar {
             ToolbarItem(placement: .principal) { Header() }
         }
         .navigationTitle(vm.getTitle())
-        .task { await vm.fetchList() }
     }
     
     func Header() -> some View {

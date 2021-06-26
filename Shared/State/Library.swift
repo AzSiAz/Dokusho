@@ -8,7 +8,6 @@
 import Foundation
 import CoreData
 
-
 class LibraryState: ObservableObject {
     private var ctx: NSManagedObjectContext
 
@@ -45,7 +44,6 @@ class LibraryState: ObservableObject {
     }
     
     func reloadCollection() {
-        collections = []
         collections = try! self.ctx.fetch(MangaCollection.fetchRequest())
     }
     
@@ -58,6 +56,14 @@ class LibraryState: ObservableObject {
         }
         
         return found
+    }
+    
+    func isMangaInCollection(for manga: SourceSmallManga) -> Bool {
+        return collections.contains { collection in
+            guard let mangas = collection.mangas as? Set<Manga> else { return false }
+            
+            return mangas.contains { $0.id == manga.id }
+        }
     }
     
     func addMangaToCollection(manga: Manga, collection: MangaCollection) {
