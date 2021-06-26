@@ -17,7 +17,7 @@ struct ChapterListRow: View {
             Button(action: { vm.selectChapter(for: chapter) }) {
                 HStack {
                     VStack(alignment: .leading) {
-                        Text(chapter.title!)
+                        Text(chapter.title ?? "No Title")
                         Text(chapter.dateSourceUpload?.formatted() ?? "Unknown")
                             .font(.system(size: 12))
                     }

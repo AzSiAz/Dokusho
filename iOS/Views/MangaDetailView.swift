@@ -126,9 +126,15 @@ struct MangaDetailView: View {
                 Button(action: { async { await vm.refresh() } }) {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
+                Divider()
+                    .padding()
+                Button(action: { vm.resetCache() }) {
+                    Label("Reset cache", systemImage: "xmark.bin.circle")
+                }
             }
-            .frame(width: UIScreen.main.bounds.width, height: 50)
+            .frame(height: 50)
             .padding(.bottom, 5)
+            .padding(.horizontal)
             
             Text(manga.desc!)
                 .padding(.horizontal)
@@ -179,7 +185,7 @@ struct MangaDetailView: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
             
-            ForEach(vm.chapters()) { chapter in
+            ForEach(vm.chapters(), id: \.id) { chapter in
                 ChapterListRow(vm: vm, chapter: chapter)
             }
             .padding(.horizontal, 10)

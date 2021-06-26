@@ -11,7 +11,7 @@
         <attribute name="typeRaw" optional="YES" attributeType="String"/>
         <relationship name="alternateNames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaAlternatesName" inverseName="manga" inverseEntity="MangaAlternatesName"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaAuthor" inverseName="mangas" inverseEntity="MangaAuthor"/>
-        <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaChapter" inverseName="manga" inverseEntity="MangaChapter"/>
+        <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MangaChapter" inverseName="manga" inverseEntity="MangaChapter"/>
         <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaCollection" inverseName="mangas" inverseEntity="MangaCollection"/>
         <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaGenre" inverseName="mangas" inverseEntity="MangaGenre"/>
         <uniquenessConstraints>

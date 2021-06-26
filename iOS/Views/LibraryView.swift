@@ -54,6 +54,12 @@ struct LibraryView: View {
                             }
                         }
                     }
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        if vm.libState.isRefreshing {
+                            ProgressView(value: Float(vm.libState.refreshProgress), total: Float(vm.libState.refreshCount))
+                                .background(Color.gray)
+                        }
+                    }
                     .padding(.horizontal, 5)
                     .navigationBarTitle(collection.name!)
                     .navigationBarTitleDisplayMode(.inline)
@@ -65,6 +71,12 @@ struct LibraryView: View {
                 ToolbarItem {
                     Image(systemName: "gear")
                         .onTapGesture { showSettings.toggle() }
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { vm.libState.refreshManga(for: vm.libState.collections[selectedTab]) }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     if !vm.libState.collections.isEmpty {

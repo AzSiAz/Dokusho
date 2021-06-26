@@ -12,6 +12,9 @@ class LibraryState: ObservableObject {
     var ctx: NSManagedObjectContext
 
     @Published var collections = [MangaCollection]()
+    @Published var isRefreshing = false
+    @Published var refreshCount = 0
+    @Published var refreshProgress = 0
     
     init(context ctx: NSManagedObjectContext) {
         self.ctx = ctx
@@ -23,28 +26,24 @@ class LibraryState: ObservableObject {
         let collection = MangaCollection(context: self.ctx)
         collection.id = UUID()
         collection.name = name
-        try? ctx.save()
-        
-        reloadCollection()
+        saveLibraryState()
     }
 
     func updateCollection(collection: MangaCollection, newName: String) {
         collection.name = newName
-        try? ctx.save()
-
-        reloadCollection()
+        saveLibraryState()
     }
     
     // TODO: move manga in collection to another if manga inside
     func deleteCollection(collection: MangaCollection) {
         ctx.delete(collection)
-        try? ctx.save()
-        
-        reloadCollection()
+        saveLibraryState()
     }
     
     func reloadCollection() {
-        collections = try! self.ctx.fetch(MangaCollection.fetchRequest())
+        DispatchQueue.main.async {
+            self.collections = try! self.ctx.fetch(MangaCollection.fetchRequest())
+        }
     }
     
     func isMangaInCollection(for manga: Manga) -> Bool {
@@ -68,21 +67,52 @@ class LibraryState: ObservableObject {
     
     func addMangaToCollection(manga: Manga, collection: MangaCollection) {
         collection.addToMangas(manga)
-        try? ctx.save()
-        
-        reloadCollection()
+        saveLibraryState()
     }
     
     func deleteMangaFromCollection(manga: Manga, collection: MangaCollection) {
         collection.removeFromMangas(manga)
-        try? ctx.save()
-        
-        reloadCollection()
+        saveLibraryState()
     }
     
     func saveLibraryState() {
-        try? ctx.save()
+        do {
+            try ctx.save()
+            reloadCollection()
+        } catch {
+            print(error)
+        }
+    }
+    
+    // TODO: Can crash sometimes, don't know why tought
+    func refreshManga(for collection: MangaCollection) {
+        guard let mangas = collection.mangas?.allObjects as? [Manga] else { return }
+        guard !mangas.isEmpty else { return }
+        isRefreshing = true
+        refreshCount = mangas.count
+        refreshProgress = 0
 
-        reloadCollection()
+        async {
+            for manga in mangas {
+                do {
+                    print("updating: \(manga.title!)")
+                    let src = MangaSourceService.shared.getSource(sourceId: manga.source)
+                    guard let src = src else { continue }
+                    
+                    let sourceManga = try await src.fetchMangaDetail(id: manga.id!)
+                    let _ = manga.updateFromSource(for: sourceManga, source: src, context: ctx)
+
+                    DispatchQueue.main.async { self.refreshProgress += 1 }
+                }
+                catch {
+                    print(error)
+                }
+            }
+
+            saveLibraryState()
+            
+            DispatchQueue.main.async { self.isRefreshing = false }
+            print("done")
+        }
     }
 }

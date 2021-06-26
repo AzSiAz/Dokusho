@@ -172,4 +172,17 @@ class MangaDetailVM: ObservableObject {
             .filter { chapter.position < $0.position }
             .contains { $0.status == .unread }
     }
+    
+    func resetCache() {
+        guard self.manga != nil else { return }
+        
+        ctx.delete(manga!)
+        
+        self.manga = nil
+        libState.saveLibraryState()
+        
+        async {
+            await fetchAndInsert()
+        }
+    }
 }

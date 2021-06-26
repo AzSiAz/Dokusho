@@ -7,7 +7,7 @@
 
 import Foundation
 
-@MainActor
+//@MainActor
 class LibraryVM: ObservableObject {
     @Published var libState: LibraryState
 
@@ -47,7 +47,6 @@ class LibraryVM: ObservableObject {
                         }
                     }
                     .sorted(using: sort)
-                    
         }
     }
     
