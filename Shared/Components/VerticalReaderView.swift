@@ -11,6 +11,7 @@ import iPages
 
 struct VerticalReaderView: View {
     @Binding var showToolbar: Bool
+    @Binding var sliderProgress: Double
     
     let links: [String]
     let onProgress: OnProgress
@@ -18,11 +19,15 @@ struct VerticalReaderView: View {
     var body: some View {
         GeometryReader { proxy in
             ScrollView([.vertical]) {
-                VStack(spacing: 0) {
+                LazyVStack(spacing: 0) {
                     ForEach(links, id: \.self) { link in
                         RefreshableImageView(url: link, size: CGSize(width: proxy.size.width, height: UIScreen.main.bounds.height))
                             .aspectRatio(contentMode: .fit)
                             .frame(width: proxy.size.width)
+                            .id(links.firstIndex { $0 == link })
+                            .onAppear {
+                                sliderProgress = Double(links.firstIndex { $0 == link } ?? 0) + 1
+                            }
                     }
                     LazyVStack {
                         Color.clear

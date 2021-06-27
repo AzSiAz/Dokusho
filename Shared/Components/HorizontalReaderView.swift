@@ -17,19 +17,20 @@ enum ReadingDirection {
 struct HorizontalReaderView: View {    
     @State var index = 0
     @GestureState var scale: CGFloat = 1.0
+    @Binding var showToolbar: Bool
+    @Binding var sliderProgress: Double
     
     var links: [String]
     var onProgress: OnProgress
     var direction: ReadingDirection
     
-    @Binding var showToolbar: Bool
-    
-    init(direction: ReadingDirection, links: [String], showToolbar: Binding<Bool>, onProgress: @escaping OnProgress) {
+    init(direction: ReadingDirection, links: [String], showToolbar: Binding<Bool>, sliderProgress: Binding<Double>, onProgress: @escaping OnProgress) {
         self.links = links
         self._showToolbar = showToolbar
         self.onProgress = onProgress
         self.direction = direction
-
+        self._sliderProgress = sliderProgress
+        
         if direction == .rightToLeft {
             self.links = links.reversed()
             self._index = .init(initialValue: self.links.count - 1)
@@ -43,10 +44,14 @@ struct HorizontalReaderView: View {
                     RefreshableImageView(url: link, size: proxy.size)
                         .aspectRatio(contentMode: .fit)
                         .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                        .onAppear {
+                            if direction == .leftToRight { sliderProgress = Double(links.firstIndex(of: link) ?? 0) + 1 }
+                            else { sliderProgress = Double(links.reversed().firstIndex(of: link) ?? 0) + 1 }
+                        }
                 }
             }
         }
-        .hideDots(!showToolbar)
+        .hideDots(true)
         .onChange(of: index, perform: { newValue in
             var status: MangaChapter.Status = .reading
             
@@ -64,7 +69,7 @@ struct HorizontalReaderView: View {
 
 struct HorizontalReaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HorizontalReaderView(direction: .leftToRight, links: [""], showToolbar: .constant(true)) { status in
+        HorizontalReaderView(direction: .leftToRight, links: [""], showToolbar: .constant(true), sliderProgress: .constant(0)) { status in
             print(status)
         }
     }

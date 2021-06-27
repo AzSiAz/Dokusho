@@ -16,7 +16,7 @@ class ReaderVM: ObservableObject {
     
     @Published var chapter: MangaChapter
     @Published var tabIndex = 0
-    @Published var showToolBar = true
+    @Published var showToolBar = false
     @Published var chapterImages: [SourceChapterImage]?
     @Published var error = false
 

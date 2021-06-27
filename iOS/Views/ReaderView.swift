@@ -12,29 +12,19 @@ import NukeUI
 typealias OnProgress = (_ status: MangaChapter.Status) -> Void
 
 struct ReaderView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @StateObject var vm: ReaderVM
+    @State var progress: Double = 0
     
     var body: some View {
         VStack {
-            if vm.showToolBar {
-                VStack {
-                    Button(action: {
-                        async {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }) {
-                        Image(systemName: "xmark")
-                    }
-                }
-            }
-            
             if let links = vm.chapterImages?.map { $0.imageUrl } {
                 if vm.chapter.manga?.type == .manga {
                     HorizontalReaderView(
                         direction: .rightToLeft,
                         links: links,
                         showToolbar: $vm.showToolBar,
+                        sliderProgress: $progress,
                         onProgress: vm.saveProgress
                     )
                 }
@@ -43,12 +33,14 @@ struct ReaderView: View {
                         direction: .leftToRight,
                         links: links,
                         showToolbar: $vm.showToolBar,
+                        sliderProgress: $progress,
                         onProgress: vm.saveProgress
                     )
                 }
                 else {
                     VerticalReaderView(
                         showToolbar: $vm.showToolBar,
+                        sliderProgress: $progress,
                         links: links,
                         onProgress: vm.saveProgress
                     )
@@ -57,5 +49,31 @@ struct ReaderView: View {
         }
         .onTapGesture { vm.showToolBar.toggle() }
         .task { await vm.fetchChapter() }
+        .overlay(alignment: .top) {
+            if vm.showToolBar {
+                HStack(alignment: .top) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                    }
+                    Spacer()
+                    Button(action: {}) {
+                        Image(systemName: "slider.vertical.3")
+                    }
+                }
+                .frame(height: 50, alignment: .center)
+                .padding(.horizontal)
+                .background(Color.black)
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if vm.showToolBar {
+                HStack(alignment: .top) {
+                    ProgressView(value: progress, total: Double(vm.chapterImages?.count ?? 0))
+                }
+                .frame(height: 50, alignment: .center)
+                .padding(.horizontal)
+                .background(Color.black)
+            }
+        }
     }
 }
