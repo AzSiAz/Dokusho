@@ -9,8 +9,8 @@ import SwiftUI
 
 struct RefreshableImageView: View {
     @State var url: String
-    @State var refresh: Bool = false
     @State var size: CGSize
+    @State var id = UUID()
     
     var body: some View {
         AsyncImage(url: URL(string: url)) { state in
@@ -20,7 +20,7 @@ struct RefreshableImageView: View {
                         .resizable()
                 case .failure(let err as NSError):
                     VStack {
-                        Button(action: { refresh.toggle() }) {
+                        Button(action: { id = UUID() }) {
                             Image(systemName: "arrow.clockwise")
                                 .resizable()
                                 .frame(width: 32, height: 32)
@@ -35,6 +35,7 @@ struct RefreshableImageView: View {
                         .scaleEffect(3)
             }
         }
+        .id(id)
     }
 }
 
