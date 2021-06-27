@@ -85,6 +85,7 @@
 		E20A03BC268752EA004CF038 /* ChapterListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListRow.swift; sourceTree = "<group>"; };
 		E20A03BF2687531A004CF038 /* ManageCollectionsModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCollectionsModal.swift; sourceTree = "<group>"; };
 		E20A03C126877193004CF038 /* MangaCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaCollection.swift; sourceTree = "<group>"; };
+		E20A03C32688ED9B004CF038 /* Dokusho.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dokusho.entitlements; sourceTree = "<group>"; };
 		E2174BEE2680CC0A003573C5 /* Manga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manga.swift; sourceTree = "<group>"; };
 		E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaAlternatesName.swift; sourceTree = "<group>"; };
 		E2174BF42680D759003573C5 /* MangaAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaAuthor.swift; sourceTree = "<group>"; };
@@ -182,6 +183,7 @@
 		E23961C82663E60C00BA4833 = {
 			isa = PBXGroup;
 			children = (
+				E20A03C32688ED9B004CF038 /* Dokusho.entitlements */,
 				E23961CD2663E60D00BA4833 /* Shared */,
 				E23961DA2663E60E00BA4833 /* iOS */,
 				E23961E12663E60E00BA4833 /* macOS */,
@@ -650,6 +652,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Dokusho.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -659,9 +662,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = Dokusho;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -672,6 +676,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Dokusho.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -681,9 +686,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = Dokusho;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -708,7 +714,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = Dokusho;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -733,7 +739,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = Dokusho;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Pages
 import NukeUI
 
 typealias OnProgress = (_ status: MangaChapter.Status) -> Void
