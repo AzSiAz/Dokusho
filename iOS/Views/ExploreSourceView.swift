@@ -66,6 +66,23 @@ struct ExploreSourceView: View {
                                             .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
                                     }
                                 }
+                                .contextMenu {
+                                    if (!libState.isMangaInCollection(for: manga)) {
+                                        ForEach(libState.collections) { collection in
+                                            Button(action: {
+                                                async {
+                                                    await libState.addMangaToCollection(
+                                                        smallManga: manga,
+                                                        source: vm.src,
+                                                        collection: collection
+                                                    )
+                                                }
+                                            }) {
+                                                Text("Add to \(collection.name!)")
+                                            }
+                                        }
+                                    }
+                                }
                         }
                     }
                 }

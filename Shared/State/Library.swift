@@ -70,6 +70,16 @@ class LibraryState: ObservableObject {
         saveLibraryState()
     }
     
+    func addMangaToCollection(smallManga: SourceSmallManga, source: Source, collection: MangaCollection) async {
+        do {
+            let sourceManga = try await source.fetchMangaDetail(id: smallManga.id)
+            let manga = Manga.fromSource(for: sourceManga, source: source, context: ctx)
+            addMangaToCollection(manga: manga, collection: collection)
+        } catch {
+            print(error)
+        }
+    }
+    
     func deleteMangaFromCollection(manga: Manga, collection: MangaCollection) {
         collection.removeFromMangas(manga)
         saveLibraryState()
