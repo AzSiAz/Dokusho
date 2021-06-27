@@ -47,8 +47,9 @@ struct ReaderView: View {
             }
         }
         .onAppear { self.direction = self.vm.chapter.manga?.type.getDefaultReadingDirection() ?? .vertical }
-        .onTapGesture { vm.showToolBar.toggle() }
+        .onTapGesture { withAnimation { vm.showToolBar.toggle() } }
         .task { await vm.fetchChapter() }
+        .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) {
             if vm.showToolBar {
                 HStack(alignment: .top) {
