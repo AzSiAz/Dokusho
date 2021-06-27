@@ -61,7 +61,7 @@ struct LibraryView: View {
                         }
                     }
                     .padding(.horizontal, 5)
-                    .navigationBarTitle(collection.name!, displayMode: .inline)
+                    .navigationBarTitle("\(collection.name!) (\(vm.getMangas(collection: collection).count))", displayMode: .inline)
                     .tag(vm.libState.collections.firstIndex(of: collection) ?? 0)
                 }
             }
