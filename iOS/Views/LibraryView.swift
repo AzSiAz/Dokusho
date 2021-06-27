@@ -61,12 +61,11 @@ struct LibraryView: View {
                         }
                     }
                     .padding(.horizontal, 5)
-                    .navigationBarTitle(collection.name!)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .searchable(text: $vm.searchText)
+                    .navigationBarTitle(collection.name!, displayMode: .inline)
                     .tag(vm.libState.collections.firstIndex(of: collection) ?? 0)
                 }
             }
+//            .searchable(text: $vm.searchText)
             .toolbar {
                 ToolbarItem {
                     Image(systemName: "gear")
@@ -108,7 +107,6 @@ struct LibraryView: View {
                     .environmentObject(vm.libState)
             }
         }
-        .navigationTitle("Library")
     }
 }
 

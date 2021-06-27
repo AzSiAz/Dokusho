@@ -42,7 +42,8 @@ struct MangaDetailView: View {
                 if let manga = vm.manga {
                     ScrollView {
                             Header(manga)
-                            Divider()
+                                .padding(.bottom)
+//                            Divider()
                             Information(manga)
                                 .padding(.top, 5)
                                 .padding(.bottom, 15)
@@ -54,7 +55,7 @@ struct MangaDetailView: View {
                 }
             }
         }
-        .navigationTitle(vm.manga?.title ?? "Loading")
+        .navigationBarTitle(vm.manga?.title ?? "Loading", displayMode: .large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Link(destination: self.vm.getMangaURL()) {
@@ -82,31 +83,34 @@ struct MangaDetailView: View {
                     .clipped()
                     .padding(.leading, 10)
                 
-                VStack {
+                VStack(spacing: 0) {
                     VStack(alignment: .leading) {
                         Text(manga.title!)
                             .lineLimit(2)
-                            .font(Font.title3.bold())
+                            .font(.subheadline.bold())
                     }
+                    .padding(.bottom, 5)
                     
                     Divider()
+                        .hidden()
                     
                     VStack(alignment: .center) {
                         if manga.authors?.count != 0 {
                             VStack {
                                 ForEach(vm.authors()) { author in
                                     Text("\(author.name!) ")
+                                        .font(.caption.italic())
                                 }
                             }
                             .padding(.bottom, 5)
                         }
                         
                         Text(manga.status.rawValue)
-                            .font(.system(size: 13))
+                            .font(.callout.bold())
                             .padding(.bottom, 5)
                         
                         Text(vm.getSourceName())
-                            .font(.system(size: 13))
+                            .font(.callout.bold())
                     }
                 }
             }
@@ -117,18 +121,27 @@ struct MangaDetailView: View {
         return VStack {
             HStack(alignment: .center) {
                 Button(action: { addToCollection.toggle() }) {
-                    Label("Favoris", systemImage: "heart")
-                        .symbolVariant(vm.libState.isMangaInCollection(for: manga) ? .fill : .none)
+                    VStack(alignment: .center, spacing: 1) {
+                        Image(systemName: "heart")
+                            .symbolVariant(vm.libState.isMangaInCollection(for: manga) ? .fill : .none)
+                        Text("Favoris")
+                    }
                 }
                 Divider()
-                    .padding()
+                    .padding(.horizontal)
                 Button(action: { async { await vm.refresh() } }) {
-                    Label("Refresh", systemImage: "arrow.clockwise")
+                    VStack(alignment: .center, spacing: 1) {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Refresh")
+                    }
                 }
                 Divider()
-                    .padding()
+                    .padding(.horizontal)
                 Button(action: { vm.resetCache() }) {
-                    Label("Reset cache", systemImage: "xmark.bin.circle")
+                    VStack(alignment: .center, spacing: 1) {
+                        Image(systemName: "xmark.bin.circle")
+                        Text("Reset cache")
+                    }
                 }
             }
             .frame(height: 50)
