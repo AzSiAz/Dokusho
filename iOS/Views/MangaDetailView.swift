@@ -25,9 +25,9 @@ struct MangaDetailView: View {
                         async {
                             await vm.fetchManga()
                         }
-                    }, label: {
+                    }) {
                         Image(systemName: "arrow.counterclockwise")
-                    })
+                    }
                 }
             }
             
@@ -40,7 +40,6 @@ struct MangaDetailView: View {
             if !vm.error {
                 if let manga = vm.manga {
                     ScrollView {
-//                        LazyVStack {
                             Header(manga)
                             Divider()
                             Information(manga)
@@ -49,9 +48,8 @@ struct MangaDetailView: View {
                             Divider()
                             ChapterList(manga.chapters?.allObjects as? [MangaChapter] ?? [])
                                 .padding(.bottom)
-//                        }
-//                        .refreshable { await vm.fetchManga() }
                     }
+//                    .refreshable { await vm.fetchManga() }
                 }
             }
         }

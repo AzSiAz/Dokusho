@@ -37,9 +37,9 @@ struct ExploreSourceView: View {
                         async {
                             await vm.fetchList(clean: true)
                         }
-                    }, label: {
+                    }) {
                         Image(systemName: "arrow.counterclockwise")
-                    })
+                    }
                 }
             }
             
