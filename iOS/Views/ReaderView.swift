@@ -11,33 +11,23 @@ import NukeUI
 
 typealias OnProgress = (_ status: MangaChapter.Status) -> Void
 
+enum ReadingDirection: String, CaseIterable {
+    case rightToLeft = "Right to Left (Manga)"
+    case leftToRight = "Left to Right (Manhua)"
+    case vertical = "Vertical (Webtoon, no gaps)"
+}
+
 struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var vm: ReaderVM
+    @State var direction: ReadingDirection = .vertical
     @State var progress: Double = 0
+    @State var showReaderDirectionChoice = false
     
     var body: some View {
         VStack {
             if let links = vm.chapterImages?.map { $0.imageUrl } {
-                if vm.chapter.manga?.type == .manga {
-                    HorizontalReaderView(
-                        direction: .rightToLeft,
-                        links: links,
-                        showToolbar: $vm.showToolBar,
-                        sliderProgress: $progress,
-                        onProgress: vm.saveProgress
-                    )
-                }
-                else if vm.chapter.manga?.type == .manhua {
-                    HorizontalReaderView(
-                        direction: .leftToRight,
-                        links: links,
-                        showToolbar: $vm.showToolBar,
-                        sliderProgress: $progress,
-                        onProgress: vm.saveProgress
-                    )
-                }
-                else {
+                if direction == .vertical {
                     VerticalReaderView(
                         showToolbar: $vm.showToolBar,
                         sliderProgress: $progress,
@@ -45,8 +35,18 @@ struct ReaderView: View {
                         onProgress: vm.saveProgress
                     )
                 }
+                else {
+                    HorizontalReaderView(
+                        direction: direction,
+                        links: links,
+                        showToolbar: $vm.showToolBar,
+                        sliderProgress: $progress,
+                        onProgress: vm.saveProgress
+                    )
+                }
             }
         }
+        .onAppear { self.direction = self.vm.chapter.manga?.type.getDefaultReadingDirection() ?? .vertical }
         .onTapGesture { vm.showToolBar.toggle() }
         .task { await vm.fetchChapter() }
         .overlay(alignment: .top) {
@@ -56,8 +56,20 @@ struct ReaderView: View {
                         Image(systemName: "xmark")
                     }
                     Spacer()
-                    Button(action: {}) {
+                    Button(action: { showReaderDirectionChoice.toggle() }) {
                         Image(systemName: "slider.vertical.3")
+                    }
+                    .actionSheet(isPresented: $showReaderDirectionChoice) {
+                        var actions: [ActionSheet.Button] = ReadingDirection.allCases.map { dir in
+                            return .default(Text(dir.rawValue), action: { self.direction = dir })
+                        }
+                        actions.append(.cancel())
+                        
+                        return ActionSheet(
+                            title: Text("Choose reader direction"),
+                            message: Text("Not saved for now"),
+                            buttons: actions
+                        )
                     }
                 }
                 .frame(height: 50, alignment: .center)

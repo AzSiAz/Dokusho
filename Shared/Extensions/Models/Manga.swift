@@ -8,6 +8,23 @@
 import Foundation
 import CoreData
 
+extension SourceMangaType {
+    func getDefaultReadingDirection() -> ReadingDirection {
+        switch self {
+            case .manga:
+                return .rightToLeft
+            case .manhua:
+                return .leftToRight
+            case .manhwa:
+                return .vertical
+            case .doujinshi:
+                return .rightToLeft
+            case .unknown:
+                return .vertical
+        }
+    }
+}
+
 extension Manga {
     var type: SourceMangaType {
         get {

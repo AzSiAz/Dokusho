@@ -9,11 +9,6 @@ import SwiftUI
 import NukeUI
 import iPages
 
-enum ReadingDirection {
-    case rightToLeft
-    case leftToRight
-}
-
 struct HorizontalReaderView: View {    
     @State var index = 0
     @GestureState var scale: CGFloat = 1.0
