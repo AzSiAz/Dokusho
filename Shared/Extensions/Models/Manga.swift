@@ -96,4 +96,12 @@ extension Manga {
         guard let chapters = self.chapters as? Set<MangaChapter> else { return 0 }
         return chapters.filter { $0.status.isUnread() }.count
     }
+    
+    func nextUnreadChapter() -> MangaChapter? {
+        guard let chapters = self.chapters as? Set<MangaChapter> else { return nil }
+        
+        let sort = SortDescriptor(\MangaChapter.position, order: .reverse)
+        
+        return chapters.sorted(using: sort).first { $0.status == .unread }
+    }
 }

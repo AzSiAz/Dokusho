@@ -48,7 +48,7 @@ struct MangaDetailView: View {
                                 .padding(.top, 5)
                                 .padding(.bottom, 15)
                             Divider()
-                            ChapterList(manga.chapters?.allObjects as? [MangaChapter] ?? [])
+                            ChapterList()
                                 .padding(.bottom)
                     }
 //                    .refreshable { await vm.fetchManga() }
@@ -119,6 +119,14 @@ struct MangaDetailView: View {
     
     fileprivate func Information(_ manga: Manga) -> some View {
         return VStack {
+            if let chapter = vm.manga?.nextUnreadChapter() {
+                Button(action: { vm.selectChapter(for: chapter) }) {
+                    Text("Read next unread chapter")
+                }
+                .padding()
+                .buttonStyle(.bordered)
+            }
+
             HStack(alignment: .center) {
                 Button(action: { addToCollection.toggle() }) {
                     VStack(alignment: .center, spacing: 1) {
@@ -187,8 +195,8 @@ struct MangaDetailView: View {
         }
     }
     
-    fileprivate func ChapterList(_ chapters: [MangaChapter]) -> some View {
-        return VStack {
+    fileprivate func ChapterList() -> some View {
+        return LazyVStack {
             HStack {
                 Text("Chapter List")
 
