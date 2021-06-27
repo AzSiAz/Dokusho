@@ -15,6 +15,7 @@ struct MangaDetailView: View {
 
     @State var imageWidth: CGFloat = 0
     @State var addToCollection = false
+    @State var showMoreDesc = false
     
     var body: some View {
         ZStack {
@@ -134,9 +135,19 @@ struct MangaDetailView: View {
             .padding(.bottom, 5)
             .padding(.horizontal)
             
-            Text(manga.desc!)
-                .padding(.horizontal)
-                .padding(.bottom)
+            VStack(spacing: 5) {
+                Text(manga.desc!)
+                    .lineLimit(showMoreDesc ? .max : 4)
+                
+                HStack {
+                    Spacer()
+                    Button(action: { showMoreDesc.toggle() }) {
+                        Text("Show \(!showMoreDesc ? "more" : "less")")
+                    }
+                }
+            }
+            .padding([.bottom, .horizontal])
+            
             
             FlexibleView(data: vm.genres(), spacing: 5, alignment: .leading) { genre in
                 Button(genre.name!, action: {})
