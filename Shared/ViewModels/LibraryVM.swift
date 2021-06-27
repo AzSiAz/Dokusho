@@ -50,6 +50,12 @@ class LibraryVM: ObservableObject {
         }
     }
     
+    func markMangaAsRead(for manga: Manga) {
+        (manga.chapters?.allObjects as? [MangaChapter])?.forEach { $0.status = .read }
+
+        libState.saveLibraryState()
+    }
+    
     func changeFilter(collection: MangaCollection, newFilterState: MangaCollection.Filter) {
         collection.filter = newFilterState
         

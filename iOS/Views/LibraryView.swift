@@ -50,6 +50,13 @@ struct LibraryView: View {
                                                     .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
                                             }
                                         }
+                                        .contextMenu {
+                                            if manga.unreadChapterCount() != 0 {
+                                                Button(action: { vm.markMangaAsRead(for: manga) }) {
+                                                    Text("Mark as read")
+                                                }
+                                            }
+                                        }
                                 }
                             }
                         }
