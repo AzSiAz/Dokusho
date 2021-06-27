@@ -56,6 +56,10 @@ struct ReaderView: View {
                         Image(systemName: "xmark")
                     }
                     Spacer()
+
+                    Text(vm.chapter.title!)
+
+                    Spacer()
                     Button(action: { showReaderDirectionChoice.toggle() }) {
                         Image(systemName: "slider.vertical.3")
                     }
