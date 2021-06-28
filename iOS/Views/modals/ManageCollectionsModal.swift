@@ -31,7 +31,7 @@ struct ManageCollectionsModal: View {
                 }
                 
                 List {
-                    ForEach(lib.collections) { col in
+                    ForEach(lib.collections, id: \.id) { col in
                         if (col.name != nil) {
                             HStack {
                                 Text(col.name!)

@@ -1,12 +1,25 @@
 //
-//  MangaChapter.swift
+//  MangaChapter+CD.swift
 //  Dokusho (iOS)
 //
-//  Created by Stephan Deumier on 21/06/2021.
+//  Created by Stephan Deumier on 28/06/2021.
 //
 
 import Foundation
 import CoreData
+
+@objc(Mangachapter)
+class MangaChapter: NSManagedObject {
+    @NSManaged var id: String?
+    @NSManaged var title: String?
+    @NSManaged var position: Int
+    @NSManaged var statusRaw: String?
+    @NSManaged var dateSourceUpload: Date?
+    
+    @NSManaged var manga: Manga?
+}
+
+extension MangaChapter: Identifiable {}
 
 extension MangaChapter {
     enum Status: String {
@@ -30,15 +43,13 @@ extension MangaChapter {
     }
     
     static func fromSource(chapters: [SourceChapter], manga: Manga, context ctx: NSManagedObjectContext) {
-        guard let oldChapters = manga.chapters?.allObjects as? [MangaChapter] else { return }
-        
         return chapters.enumerated().forEach { (index, chapter) in
-            let old = oldChapters.first { ($0.id == chapter.id) }
+            let old = manga.chapters?.first { ($0.id == chapter.id) }
             
             if let old = old {
                 old.title = chapter.name
                 old.id = chapter.id
-                old.position = Int64(index)
+                old.position = index
                 old.dateSourceUpload = chapter.dateUpload
             }
             else {
@@ -46,11 +57,12 @@ extension MangaChapter {
                 
                 c.title = chapter.name
                 c.id = chapter.id
-                c.position = Int64(index)
+                c.position = index
                 c.status = .unread
                 c.dateSourceUpload = chapter.dateUpload
                 
-                manga.addToChapters(c)
+                c.manga = manga
+                manga.chapters?.insert(c)
             }
         }
     }

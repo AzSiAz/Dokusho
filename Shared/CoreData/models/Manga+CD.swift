@@ -1,12 +1,34 @@
 //
-//  Model.swift
+//  Manga.swift
 //  Dokusho (iOS)
 //
-//  Created by Stephan Deumier on 21/06/2021.
+//  Created by Stephan Deumier on 28/06/2021.
 //
 
 import Foundation
 import CoreData
+
+@objc(Manga)
+class Manga: NSManagedObject, Identifiable {
+    @NSManaged var cover: String?
+    @NSManaged var desc: String?
+    @NSManaged var id: String?
+    @NSManaged var lastChapterUpdate: Date?
+    @NSManaged var source: Int16
+    @NSManaged var statusRaw: String?
+    @NSManaged var title: String?
+    @NSManaged var typeRaw: String?
+    
+    @NSManaged var alternateNames: Set<MangaAlternatesName>?
+    @NSManaged var authors: Set<MangaAuthor>?
+    @NSManaged var chapters: Set<MangaChapter>?
+    @NSManaged var collection: MangaCollection?
+    @NSManaged var genres: Set<MangaGenre>?
+    
+    static func fetchRequest() -> NSFetchRequest<Manga> {
+        return NSFetchRequest<Manga>(entityName: "Manga")
+    }
+}
 
 extension SourceMangaType {
     func getDefaultReadingDirection() -> ReadingDirection {
@@ -66,7 +88,7 @@ extension Manga {
         guard let found = maybeHere else {
             return Manga(context: ctx).updateFromSource(for: m, source: source, context: ctx)
         }
-
+        
         return found.updateFromSource(for: m, source: source, context: ctx)
     }
     
@@ -82,10 +104,10 @@ extension Manga {
         
         self.addToGenres(genres: m.genres, context: ctx)
         self.addToAuthors(authors: m.authors, context: ctx)
-        self.addToAlternateNames(alternateNames: m.alternateNames, context: ctx)
+        self.addToAlternatesNames(alternateNames: m.alternateNames, context: ctx)
         self.addToChapters(chapters: m.chapters, context: ctx)
         
-        let firstChapter: MangaChapter? = (self.chapters?.allObjects as? [MangaChapter])?.first { $0.position == 0 }
+        let firstChapter: MangaChapter? = self.chapters?.first { $0.position == 0 }
         
         self.lastChapterUpdate = firstChapter?.dateSourceUpload
         
@@ -93,30 +115,34 @@ extension Manga {
     }
     
     func addToGenres(genres: [String], context ctx: NSManagedObjectContext) {
-        self.addToGenres(NSSet(array: MangaGenre.fromSource(genres: genres, context: ctx)))
+        MangaGenre.fromSource(genres: genres, context: ctx).forEach {
+            $0.mangas?.insert(self)
+        }
     }
     
     func addToAuthors(authors: [String], context ctx: NSManagedObjectContext) {
-        self.addToAuthors(NSSet(array: MangaAuthor.fromSource(authors: authors, context: ctx)))
+        MangaAuthor.fromSource(authors: authors, context: ctx).forEach {
+            $0.mangas?.insert(self)
+        }
     }
     
     func addToChapters(chapters: [SourceChapter], context ctx: NSManagedObjectContext) {
         MangaChapter.fromSource(chapters: chapters, manga: self, context: ctx)
     }
     
-    func addToAlternateNames(alternateNames: [String], context ctx: NSManagedObjectContext) {
-        self.addToAlternateNames(
-            NSSet(array: MangaAlternatesName.fromSource(titles: alternateNames, context: ctx))
-        )
+    func addToAlternatesNames(alternateNames: [String], context ctx: NSManagedObjectContext) {
+        MangaAlternatesName.fromSource(titles: alternateNames, context: ctx).forEach {
+            $0.manga = self
+        }
     }
     
     func unreadChapterCount() -> Int {
-        guard let chapters = self.chapters as? Set<MangaChapter> else { return 0 }
+        guard let chapters = self.chapters else { return 0 }
         return chapters.filter { $0.status.isUnread() }.count
     }
     
     func nextUnreadChapter() -> MangaChapter? {
-        guard let chapters = self.chapters as? Set<MangaChapter> else { return nil }
+        guard let chapters = self.chapters else { return nil }
         
         let sort = SortDescriptor(\MangaChapter.position, order: .reverse)
         

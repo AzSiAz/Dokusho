@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19141.11" systemVersion="21A5248p" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Manga" representedClassName="Manga" syncable="YES" codeGenerationType="class">
+    <entity name="Manga" representedClassName=".Manga" syncable="YES">
         <attribute name="cover" optional="YES" attributeType="String"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
@@ -21,7 +21,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaAlternatesName" representedClassName="MangaAlternatesName" syncable="YES" codeGenerationType="class">
+    <entity name="MangaAlternatesName" representedClassName=".MangaAlternatesName" syncable="YES">
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Manga" inverseName="alternateNames" inverseEntity="Manga"/>
         <uniquenessConstraints>
@@ -30,7 +30,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaAuthor" representedClassName="MangaAuthor" syncable="YES" codeGenerationType="class">
+    <entity name="MangaAuthor" representedClassName=".MangaAuthor" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Manga" inverseName="authors" inverseEntity="Manga"/>
         <uniquenessConstraints>
@@ -39,7 +39,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaChapter" representedClassName="MangaChapter" syncable="YES" codeGenerationType="class">
+    <entity name="MangaChapter" representedClassName=".MangaChapter" syncable="YES">
         <attribute name="dateSourceUpload" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="position" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -52,7 +52,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaCollection" representedClassName="MangaCollection" syncable="YES" codeGenerationType="class">
+    <entity name="MangaCollection" representedClassName=".MangaCollection" syncable="YES">
         <attribute name="filterRaw" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -63,7 +63,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaGenre" representedClassName="MangaGenre" syncable="YES" codeGenerationType="class">
+    <entity name="MangaGenre" representedClassName=".MangaGenre" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Manga" inverseName="genres" inverseEntity="Manga"/>
         <uniquenessConstraints>
@@ -74,10 +74,10 @@
     </entity>
     <elements>
         <element name="Manga" positionX="-81.4453125" positionY="-18" width="146.4453125" height="224"/>
-        <element name="MangaAlternatesName" positionX="-306.03125" positionY="-45.5625" width="128" height="73"/>
-        <element name="MangaAuthor" positionX="-74.91796875" positionY="-144.19140625" width="128" height="73"/>
+        <element name="MangaAlternatesName" positionX="-306.03125" positionY="-45.5625" width="128" height="59"/>
+        <element name="MangaAuthor" positionX="-74.91796875" positionY="-144.19140625" width="128" height="59"/>
         <element name="MangaChapter" positionX="-303.76171875" positionY="86.30859375" width="128" height="119"/>
         <element name="MangaCollection" positionX="116.2421875" positionY="62.17578125" width="128" height="89"/>
-        <element name="MangaGenre" positionX="124.4609375" positionY="-81.7734375" width="128" height="73"/>
+        <element name="MangaGenre" positionX="124.4609375" positionY="-81.7734375" width="128" height="59"/>
     </elements>
 </model>

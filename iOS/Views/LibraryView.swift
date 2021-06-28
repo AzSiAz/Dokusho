@@ -34,7 +34,7 @@ struct LibraryView: View {
     var body: some View {
         NavigationView {
             TabView(selection: $selectedTab) {
-                ForEach(vm.libState.collections) { collection in
+                ForEach(vm.libState.collections, id: \.id) { collection in
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(vm.getMangas(collection: collection)) { manga in

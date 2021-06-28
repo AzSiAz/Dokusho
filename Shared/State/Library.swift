@@ -50,7 +50,7 @@ class LibraryState: ObservableObject {
         var found = false
         for collection in collections {
             collection.mangas?.forEach { m in
-                if ((m as? Manga)?.id == manga.id && (m as? Manga)?.source == manga.source) { found = true}
+                if (m.id == manga.id && m.source == manga.source) { found = true}
             }
         }
         
@@ -59,14 +59,14 @@ class LibraryState: ObservableObject {
     
     func isMangaInCollection(for manga: SourceSmallManga) -> Bool {
         return collections.contains { collection in
-            guard let mangas = collection.mangas as? Set<Manga> else { return false }
+            guard let mangas = collection.mangas else { return false }
             
             return mangas.contains { $0.id == manga.id }
         }
     }
     
     func addMangaToCollection(manga: Manga, collection: MangaCollection) {
-        collection.addToMangas(manga)
+        collection.addToCollection(manga)
         saveLibraryState()
     }
     
@@ -81,7 +81,7 @@ class LibraryState: ObservableObject {
     }
     
     func deleteMangaFromCollection(manga: Manga, collection: MangaCollection) {
-        collection.removeFromMangas(manga)
+        collection.removeFromCollection(manga)
         saveLibraryState()
     }
     
@@ -96,7 +96,7 @@ class LibraryState: ObservableObject {
     
     // TODO: Can crash sometimes, don't know why tought
     func refreshManga(for collection: MangaCollection) {
-        guard let mangas = collection.mangas?.allObjects as? [Manga] else { return }
+        guard let mangas = collection.mangas else { return }
         guard !mangas.isEmpty else { return }
         isRefreshing = true
         refreshCount = mangas.count

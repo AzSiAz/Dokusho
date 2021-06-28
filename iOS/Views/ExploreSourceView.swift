@@ -68,7 +68,7 @@ struct ExploreSourceView: View {
                                 }
                                 .contextMenu {
                                     if (!libState.isMangaInCollection(for: manga)) {
-                                        ForEach(libState.collections) { collection in
+                                        ForEach(libState.collections, id: \.id) { collection in
                                             Button(action: {
                                                 async {
                                                     await libState.addMangaToCollection(

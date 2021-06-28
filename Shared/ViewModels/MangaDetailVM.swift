@@ -95,7 +95,7 @@ class MangaDetailVM: ObservableObject {
         guard manga != nil else { return [] }
         guard manga!.chapters?.count != 0 else { return [] }
         
-        guard let chapters = manga?.chapters as? Set<MangaChapter> else { return [] }
+        guard let chapters = manga?.chapters else { return [] }
         
         let filteredChapters = chapters.filter { self.chapterFilter == .all ? true : $0.status.isUnread() }
         let orderedChapters = filteredChapters.sorted { $0.position < $1.position }
@@ -107,7 +107,7 @@ class MangaDetailVM: ObservableObject {
         guard manga != nil else { return [] }
         guard manga!.genres?.count != 0 else { return [] }
         
-        guard let genres = manga?.genres as? Set<MangaGenre> else { return [] }
+        guard let genres = manga?.genres else { return [] }
         return genres.sorted { $0.name! < $1.name! }
     }
     
@@ -115,7 +115,7 @@ class MangaDetailVM: ObservableObject {
         guard manga != nil else { return [] }
         guard manga!.authors?.count != 0 else { return [] }
         
-        guard let authors = manga?.authors as? Set<MangaAuthor> else { return [] }
+        guard let authors = manga?.authors else { return [] }
         return authors.sorted { $0.name! < $1.name! }
     }
     
@@ -141,7 +141,7 @@ class MangaDetailVM: ObservableObject {
     }
     
     func changePreviousChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
-        guard let rawChapters = manga?.chapters as? Set<MangaChapter> else { return }
+        guard let rawChapters = manga?.chapters else { return }
 
         rawChapters
             .sorted { $0.position < $1.position }
@@ -156,7 +156,7 @@ class MangaDetailVM: ObservableObject {
     }
     
     func hasPreviousUnreadChapter(for chapter: MangaChapter) -> Bool {
-        guard let chapters = manga?.chapters as? Set<MangaChapter> else { return false }
+        guard let chapters = manga?.chapters else { return false }
 
         return chapters
             .filter { chapter.position < $0.position }

@@ -97,7 +97,7 @@ struct MangaDetailView: View {
                     VStack(alignment: .center) {
                         if manga.authors?.count != 0 {
                             VStack {
-                                ForEach(vm.authors()) { author in
+                                ForEach(vm.authors(), id: \.name) { author in
                                     Text("\(author.name!) ")
                                         .font(.caption.italic())
                                 }

@@ -1,12 +1,20 @@
 //
-//  MangaGenre.swift
+//  MangaGenre+CD.swift
 //  Dokusho (iOS)
 //
-//  Created by Stephan Deumier on 21/06/2021.
+//  Created by Stephan Deumier on 28/06/2021.
 //
 
 import Foundation
 import CoreData
+
+@objc(MangaGenre)
+class MangaGenre: NSManagedObject {
+    @NSManaged var name: String?
+    
+    @NSManaged var mangas: Set<Manga>?
+}
+
 
 extension MangaGenre {
     static func fromSource(genres: [String], context ctx: NSManagedObjectContext) -> [MangaGenre] {

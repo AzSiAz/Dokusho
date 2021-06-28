@@ -19,7 +19,7 @@ class LibraryVM: ObservableObject {
     
     func getMangas(collection: MangaCollection) -> [Manga] {
         guard collection.mangas?.count != 0 else { return [] }
-        guard let mangas = collection.mangas as? Set<Manga> else { return [] }
+        guard let mangas = collection.mangas else { return [] }
         
         let sort = SortDescriptor(\Manga.lastChapterUpdate, order: .reverse)
         
@@ -31,27 +31,21 @@ class LibraryVM: ObservableObject {
                     .filter { manga in
                         guard let chapters = manga.chapters else { return false }
 
-                        return chapters.allSatisfy { rawChapter in
-                            guard let chapter = rawChapter as? MangaChapter else { return false }
-                            return !chapter.status.isUnread()
-                        }
+                        return chapters.allSatisfy { !$0.status.isUnread() }
                     }
                     .sorted(using: sort)
             case .unread:
                 return mangas
                     .filter { manga in
                         guard let chapters = manga.chapters else { return false }
-                        return chapters.contains { rawChapter in
-                            guard let chapter = rawChapter as? MangaChapter else { return false }
-                            return chapter.status.isUnread()
-                        }
+                        return chapters.contains { $0.status.isUnread() }
                     }
                     .sorted(using: sort)
         }
     }
     
     func markMangaAsRead(for manga: Manga) {
-        (manga.chapters?.allObjects as? [MangaChapter])?.forEach { $0.status = .read }
+        manga.chapters?.forEach { $0.status = .read }
 
         libState.saveLibraryState()
     }
