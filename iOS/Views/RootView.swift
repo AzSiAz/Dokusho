@@ -9,21 +9,19 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject var libState: LibraryState
-    @State var tabIndex = 0
+    @State var tabIndex = 2
     
     var body: some View {
         TabView(selection: $tabIndex) {
             LibraryView(vm: .init(libState: libState))
-                .tabItem {
-                    Label("Library", systemImage: "books.vertical")
-                }
+                .tabItem { Label("Library", systemImage: "books.vertical") }
                 .tag(0)
-            
             ExploreView()
-                .tabItem {
-                    Label("Explore", systemImage: "safari")
-                }
+                .tabItem { Label("Explore", systemImage: "safari") }
                 .tag(1)
+            SettingsView(vm: .init(libState: libState))
+                .tabItem { Label("Settings", systemImage: "gear") }
+                .tag(2)
         }
     }
 }

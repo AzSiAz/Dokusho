@@ -26,6 +26,8 @@ extension SourceMangaType {
 }
 
 extension Manga {
+    var unique: String { "\(self.source)@@\(self.id!)" }
+    
     var type: SourceMangaType {
         get {
             return .init(rawValue: self.typeRaw ?? "") ?? .unknown
@@ -46,10 +48,26 @@ extension Manga {
         }
     }
     
+    static func fetchOne(mangaId: String, sourceId: Int16, ctx: NSManagedObjectContext) -> Manga? {
+        let req = Manga.fetchRequest()
+        req.fetchLimit = 1
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "id = %@", mangaId),
+            NSPredicate(format: "source = %i", sourceId)
+        ])
+        let res = try? ctx.fetch(req)
+        
+        return res?.first
+    }
+    
     static func fromSource(for m: SourceManga, source: Source, context ctx: NSManagedObjectContext) -> Manga {
-        let manga = Manga(context: ctx)
+        let maybeHere = Manga.fetchOne(mangaId: m.id, sourceId: source.id, ctx: ctx)
+        
+        guard let found = maybeHere else {
+            return Manga(context: ctx).updateFromSource(for: m, source: source, context: ctx)
+        }
 
-        return manga.updateFromSource(for: m, source: source, context: ctx)
+        return found.updateFromSource(for: m, source: source, context: ctx)
     }
     
     func updateFromSource(for m: SourceManga, source: Source, context ctx: NSManagedObjectContext) -> Self {

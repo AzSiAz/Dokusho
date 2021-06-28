@@ -75,7 +75,7 @@ struct LibraryView: View {
 //            .searchable(text: $vm.searchText)
             .toolbar {
                 ToolbarItem {
-                    Image(systemName: "gear")
+                    Image(systemName: "list.bullet.rectangle")
                         .onTapGesture { showSettings.toggle() }
                 }
                 

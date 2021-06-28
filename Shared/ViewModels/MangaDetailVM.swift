@@ -59,20 +59,10 @@ class MangaDetailVM: ObservableObject {
     func fetchManga() async {
         self.error = false
 
-        do {
-            let req = Manga.fetchRequest()
-            req.fetchLimit = 1
-            req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-                NSPredicate(format: "id = %@", mangaId),
-                NSPredicate(format: "source = %i", src.id)
-            ])
-            let res = try ctx.fetch(req)
+        let res = Manga.fetchOne(mangaId: mangaId, sourceId: src.id, ctx: ctx)
 
-            if res.isEmpty { await fetchAndInsert() }
-            else { manga = res.first }
-        } catch {
-            self.error = true
-        }
+        if res == nil { await fetchAndInsert() }
+        else { manga = res }
     }
     
     func fetchAndInsert() async {

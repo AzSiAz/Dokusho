@@ -10,6 +10,10 @@
 		E20A03BD268752EA004CF038 /* ChapterListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20A03BC268752EA004CF038 /* ChapterListRow.swift */; };
 		E20A03C02687531A004CF038 /* ManageCollectionsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20A03BF2687531A004CF038 /* ManageCollectionsModal.swift */; };
 		E20A03C226877193004CF038 /* MangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20A03C126877193004CF038 /* MangaCollection.swift */; };
+		E20A03C62689C79B004CF038 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = E20A03C52689C79B004CF038 /* Disk */; };
+		E20A03C82689C7C5004CF038 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20A03C72689C7C5004CF038 /* SettingsView.swift */; };
+		E20A03CA2689D068004CF038 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20A03C92689D068004CF038 /* SettingsVM.swift */; };
+		E20A03CD2689E5C8004CF038 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E20A03CC2689E5C8004CF038 /* CloudKit.framework */; };
 		E2174BEF2680CC0A003573C5 /* Manga.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BEE2680CC0A003573C5 /* Manga.swift */; };
 		E2174BF32680D5CA003573C5 /* MangaAlternatesName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */; };
 		E2174BF52680D759003573C5 /* MangaAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2174BF42680D759003573C5 /* MangaAuthor.swift */; };
@@ -86,6 +90,10 @@
 		E20A03BF2687531A004CF038 /* ManageCollectionsModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCollectionsModal.swift; sourceTree = "<group>"; };
 		E20A03C126877193004CF038 /* MangaCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaCollection.swift; sourceTree = "<group>"; };
 		E20A03C32688ED9B004CF038 /* Dokusho.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dokusho.entitlements; sourceTree = "<group>"; };
+		E20A03C72689C7C5004CF038 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		E20A03C92689D068004CF038 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
+		E20A03CB2689D39F004CF038 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E20A03CC2689E5C8004CF038 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		E2174BEE2680CC0A003573C5 /* Manga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manga.swift; sourceTree = "<group>"; };
 		E2174BF22680D5CA003573C5 /* MangaAlternatesName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaAlternatesName.swift; sourceTree = "<group>"; };
 		E2174BF42680D759003573C5 /* MangaAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaAuthor.swift; sourceTree = "<group>"; };
@@ -133,7 +141,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E20A03CD2689E5C8004CF038 /* CloudKit.framework in Frameworks */,
 				E253BBF8266FAC0300A3368C /* Alamofire in Frameworks */,
+				E20A03C62689C79B004CF038 /* Disk in Frameworks */,
 				E253BBFB266FAC2400A3368C /* SwiftSoup in Frameworks */,
 				E253BBF5266FABEF00A3368C /* SwiftyJSON in Frameworks */,
 				E239620C266BBCAD00BA4833 /* NukeUI in Frameworks */,
@@ -183,6 +193,7 @@
 		E23961C82663E60C00BA4833 = {
 			isa = PBXGroup;
 			children = (
+				E20A03CB2689D39F004CF038 /* README.md */,
 				E20A03C32688ED9B004CF038 /* Dokusho.entitlements */,
 				E23961CD2663E60D00BA4833 /* Shared */,
 				E23961DA2663E60E00BA4833 /* iOS */,
@@ -241,6 +252,7 @@
 		E23961F82663F03100BA4833 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E20A03CC2689E5C8004CF038 /* CloudKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -255,6 +267,7 @@
 				E2396214266BCCD800BA4833 /* ExploreSourceView.swift */,
 				E2396224266D4FC100BA4833 /* MangaDetailView.swift */,
 				E2DE87A426780DCE00384FCA /* ReaderView.swift */,
+				E20A03C72689C7C5004CF038 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -287,6 +300,7 @@
 				E2DE87A0267794E000384FCA /* MangaDetailVM.swift */,
 				E2DE87A926781CB600384FCA /* ReaderVM.swift */,
 				E2174C092681D9F6003573C5 /* LibraryVM.swift */,
+				E20A03C92689D068004CF038 /* SettingsVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -367,6 +381,7 @@
 				E253BBF7266FAC0300A3368C /* Alamofire */,
 				E253BBFA266FAC2400A3368C /* SwiftSoup */,
 				E22B2DD8267FBB24000E5379 /* iPages */,
+				E20A03C52689C79B004CF038 /* Disk */,
 			);
 			productName = "Dokusho (iOS)";
 			productReference = E23961D82663E60E00BA4833 /* Dokusho.app */;
@@ -423,6 +438,7 @@
 				E253BBF6266FAC0300A3368C /* XCRemoteSwiftPackageReference "Alamofire" */,
 				E253BBF9266FAC2400A3368C /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				E22B2DD7267FBB24000E5379 /* XCRemoteSwiftPackageReference "iPages" */,
+				E20A03C42689C79B004CF038 /* XCRemoteSwiftPackageReference "Disk" */,
 			);
 			productRefGroup = E23961D92663E60E00BA4833 /* Products */;
 			projectDirPath = "";
@@ -469,6 +485,7 @@
 				E24EB5EE266FA65900BEDBF4 /* Date.swift in Sources */,
 				E20A03C02687531A004CF038 /* ManageCollectionsModal.swift in Sources */,
 				E2F3CCC8268741DA001D1124 /* RoundedCorner.swift in Sources */,
+				E20A03CA2689D068004CF038 /* SettingsVM.swift in Sources */,
 				E2174BF72680D827003573C5 /* MangaGenre.swift in Sources */,
 				E2396211266BC38D00BA4833 /* Fixflickering.swift in Sources */,
 				E2396222266D4F8600BA4833 /* NavigationLinkLazyView.swift in Sources */,
@@ -495,6 +512,7 @@
 				E2DE87A32677B00300384FCA /* FlexibleView.swift in Sources */,
 				E23961E62663E60E00BA4833 /* DokushoApp.swift in Sources */,
 				E2174BF52680D759003573C5 /* MangaAuthor.swift in Sources */,
+				E20A03C82689C7C5004CF038 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -662,7 +680,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
+				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
 				PRODUCT_NAME = Dokusho;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -686,7 +704,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
+				PRODUCT_BUNDLE_IDENTIFIER = azsiaz.tech.Dokusho;
 				PRODUCT_NAME = Dokusho;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -779,6 +797,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E20A03C42689C79B004CF038 /* XCRemoteSwiftPackageReference "Disk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/saoudrizwan/Disk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.4;
+			};
+		};
 		E22B2DD7267FBB24000E5379 /* XCRemoteSwiftPackageReference "iPages" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/benjaminsage/iPages.git";
@@ -822,6 +848,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E20A03C52689C79B004CF038 /* Disk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E20A03C42689C79B004CF038 /* XCRemoteSwiftPackageReference "Disk" */;
+			productName = Disk;
+		};
 		E22B2DD8267FBB24000E5379 /* iPages */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E22B2DD7267FBB24000E5379 /* XCRemoteSwiftPackageReference "iPages" */;

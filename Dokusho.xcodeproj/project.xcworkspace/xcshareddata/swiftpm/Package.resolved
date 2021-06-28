@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Disk",
+        "repositoryURL": "https://github.com/saoudrizwan/Disk",
+        "state": {
+          "branch": null,
+          "revision": "b0cb4fdf23e51849cc2460bdc6de795c3bcca99d",
+          "version": "0.6.4"
+        }
+      },
+      {
         "package": "Gifu",
         "repositoryURL": "https://github.com/kaishin/Gifu",
         "state": {
