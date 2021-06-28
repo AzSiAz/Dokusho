@@ -28,6 +28,7 @@ struct ExploreView: View {
             }
             .navigationTitle("Explore")
         }
+        .navigationViewStyle(.stack)
     }
 }
 
