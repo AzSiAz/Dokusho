@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 @MainActor
-class MangaDetailVM: ObservableObject {
+class MangaDetailVM: NSObject, ObservableObject {
     enum ChapterOrder {
         case base
         case reversed
@@ -39,40 +39,52 @@ class MangaDetailVM: ObservableObject {
     }
     
     let src: Source
+    let ctx = PersistenceController.shared.container.viewContext
     let mangaId: String
-    var ctx: NSManagedObjectContext
+    
+    private let mangaController: NSFetchedResultsController<Manga>
+    private let dataManager = DataManager.shared
 
     @Published var error = false
     @Published var manga: Manga?
     @Published var selectedChapter: MangaChapter?
     @Published var chapterOrder: ChapterOrder = .base
     @Published var chapterFilter: ChapterFilter = .all
-    @Published var libState: LibraryState
     
-    init(for source: Source, mangaId: String, context ctx: NSManagedObjectContext, libState: LibraryState) {
+    init(for source: Source, mangaId: String) {
+        self.mangaController = NSFetchedResultsController(
+            fetchRequest: Manga.mangaOneFetch(mangaId: mangaId, srcId: source.id),
+            managedObjectContext: PersistenceController.shared.container.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil)
         self.src = source
         self.mangaId = mangaId
-        self.ctx = ctx
-        self.libState = libState
+        
+        super.init()
+        
+        mangaController.delegate = self
     }
     
     func fetchManga() async {
         self.error = false
 
-        let res = Manga.fetchOne(mangaId: mangaId, sourceId: src.id, ctx: ctx)
+        try? self.mangaController.performFetch()
 
-        if res == nil { await fetchAndInsert() }
-        else { manga = res }
+        if manga == nil { await fetchAndInsert() }
     }
     
     func fetchAndInsert() async {
         self.error = false
         self.manga = nil
-        
+        // TODO: Fix
+
         do {
             let sourceManga = try await src.fetchMangaDetail(id: mangaId)
-            self.manga = Manga.fromSource(for: sourceManga, source: src, context: ctx)
-            try ctx.save()
+            
+            try await ctx.perform {
+                self.manga = Manga.createFromSource(for: sourceManga, source: self.src, context: self.ctx)
+                try self.ctx.save()
+            }
         } catch {
             self.error = true
         }
@@ -83,9 +95,10 @@ class MangaDetailVM: ObservableObject {
 
         do {
             let sourceManga = try await src.fetchMangaDetail(id: mangaId)
-            self.manga = self.manga?.updateFromSource(for: sourceManga, source: src, context: ctx)
-            try ctx.save()
-            libState.reloadCollection()
+            try await ctx.perform {
+                self.manga = self.manga?.updateFromSource(for: sourceManga, source: self.src, context: self.ctx)
+                try self.ctx.save()
+            }
         } catch {
             self.error = true
         }
@@ -134,24 +147,18 @@ class MangaDetailVM: ObservableObject {
     func changeChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
         chapter.status = status
         try? ctx.save()
-        
-        if libState.isMangaInCollection(for: manga!) {
-            libState.reloadCollection()
-        }
     }
     
     func changePreviousChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
         guard let rawChapters = manga?.chapters else { return }
 
-        rawChapters
-            .sorted { $0.position < $1.position }
-            .filter { chapter.position < $0.position }
-            .forEach { $0.status = status }
-        
-        try? ctx.save()
-        
-        if libState.isMangaInCollection(for: manga!) {
-            libState.reloadCollection()
+        ctx.perform {
+            rawChapters
+                .sorted { $0.position < $1.position }
+                .filter { chapter.position < $0.position }
+                .forEach { $0.status = status }
+            
+            try? self.ctx.save()
         }
     }
     
@@ -164,15 +171,25 @@ class MangaDetailVM: ObservableObject {
     }
     
     func resetCache() {
-        guard self.manga != nil else { return }
+        guard let m = self.manga else { return }
+        manga = nil
         
-        ctx.delete(manga!)
-        
-        self.manga = nil
-        libState.saveLibraryState()
+        ctx.perform {
+            self.ctx.delete(m)
+            try? self.ctx.save()
+        }
         
         async {
             await fetchAndInsert()
         }
     }
 }
+
+extension MangaDetailVM: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let mangas = controller.fetchedObjects as? [Manga] else { return }
+        
+        self.manga = mangas.first
+    }
+}
+

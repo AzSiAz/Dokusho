@@ -13,15 +13,48 @@ class MangaAuthor: NSManagedObject {
     @NSManaged var name: String?
     
     @NSManaged var mangas: Set<Manga>?
+    
+    convenience init(context ctx: NSManagedObjectContext, name: String) {
+        self.init(entity: Self.entity(), insertInto: ctx)
+        
+        self.name = name
+    }
+    
+    static func fetchRequest() -> NSFetchRequest<MangaAuthor> {
+        return NSFetchRequest<MangaAuthor>(entityName: "MangaAuthor")
+    }
 }
 
 extension MangaAuthor {
-    static func fromSource(authors: [String], context ctx: NSManagedObjectContext) -> [MangaAuthor] {
-        return authors.map { author in
-            let a = MangaAuthor(context: ctx)
-            a.name = author
+    static func fetchMany(names: [String], ctx: NSManagedObjectContext) -> [MangaAuthor]? {
+        let req = MangaAuthor.fetchRequest()
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "name IN %@", names),
+        ])
+        
+        return try? ctx.fetch(req)
+    }
+    
+    static func createFromSource(manga: Manga, names: [String], context ctx: NSManagedObjectContext) {
+        let alreadyInDB = Self.fetchMany(names: names, ctx: ctx)
+        
+        return names.forEach { raw in
+            guard let found = alreadyInDB?.first(where: { raw == $0.name }) else {
+                let author = MangaAuthor(context: ctx, name: raw)
+                
+                author.addToMangas(manga)
+                manga.addToAuthors(author)
+                return
+            }
             
-            return a
+            manga.addToAuthors(found)
+            found.addToMangas(manga)
         }
+    }
+    
+    func addToMangas(_ manga: Manga) {
+        guard self.mangas?.contains(manga) == false else { return }
+        
+        self.mangas?.insert(manga)
     }
 }

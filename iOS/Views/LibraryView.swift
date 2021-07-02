@@ -8,100 +8,64 @@
 import SwiftUI
 
 struct LibraryView: View {
-    @Environment(\.managedObjectContext) var coreDataCtx
     @EnvironmentObject var sourcesSvc: MangaSourceService
 
     @StateObject var vm: LibraryVM
 
-    @State var showSettings = false
-    @State var showChangeFilter = false
-    @State var selectedTab = 0
-    
-    var columns: [GridItem] {
-        var base = [
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-        ]
-        
-        if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
-            base = [GridItem(.adaptive(minimum: 180, maximum: 180))]
-        }
-        
-        return base
-    }
-    
     var body: some View {
         NavigationView {
-            TabView(selection: $selectedTab) {
-                ForEach(vm.libState.collections, id: \.id) { collection in
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 10) {
-                            ForEach(vm.getMangas(collection: collection)) { manga in
-                                NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: sourcesSvc.getSource(sourceId: manga.source)!, mangaId: manga.id!, context: coreDataCtx, libState: vm.libState))) {
-                                    ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
-                                        .frame(height: 180)
-                                        .overlay(alignment: .topTrailing) {
-                                            if manga.unreadChapterCount() > 0 {
-                                                Text(String(manga.unreadChapterCount()))
-                                                    .padding(2)
-                                                    .foregroundColor(.white)
-                                                    .background(Color.blue)
-                                                    .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
-                                            }
-                                        }
-                                        .contextMenu {
-                                            if manga.unreadChapterCount() != 0 {
-                                                Button(action: { vm.markMangaAsRead(for: manga) }) {
-                                                    Text("Mark as read")
-                                                }
-                                            }
-                                        }
+            TabView(selection: $vm.selectedTab) {
+                ForEach($vm.collections) { collection in
+                    MangaCollectionPage(vm: vm, collection: collection)
+                        .safeAreaInset(edge: .bottom, spacing: 0) {
+                            if let refresh = vm.refreshStatus[collection.wrappedValue] {
+                                VStack {
+                                    Text(refresh.refreshTitle)
+                                        .font(.caption)
+                                    ProgressView(value: Float(refresh.refreshProgress), total: Float(refresh.refreshCount))
+                                        .background(Color.gray)
+                                        .progressViewStyle(.linear)
                                 }
                             }
                         }
-                    }
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        if vm.libState.isRefreshing {
-                            ProgressView(value: Float(vm.libState.refreshProgress), total: Float(vm.libState.refreshCount))
-                                .background(Color.gray)
-                        }
-                    }
-                    .padding(.horizontal, 5)
-                    .navigationBarTitle("\(collection.name!) (\(vm.getMangas(collection: collection).count))", displayMode: .inline)
-                    .tag(vm.libState.collections.firstIndex(of: collection) ?? 0)
+                        .padding(.horizontal, 5)
+                        .navigationBarTitle("\(collection.wrappedValue.name!) (\(vm.getMangas(collection: collection.wrappedValue).count))", displayMode: .inline)
+                        .tag(vm.collections.firstIndex(of: collection.wrappedValue) ?? 0)
                 }
             }
-//            .searchable(text: $vm.searchText)
+            .searchable(text: $vm.searchText)
             .toolbar {
                 ToolbarItem {
                     Image(systemName: "list.bullet.rectangle")
-                        .onTapGesture { showSettings.toggle() }
+                        .onTapGesture { vm.showSettings.toggle() }
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { vm.libState.refreshManga(for: vm.libState.collections[selectedTab]) }) {
+                    // TODO: Cancel task when I know how it work^^
+                    Button(action: { vm.refreshLib(for: vm.collections[vm.selectedTab]) }) {
                         Image(systemName: "arrow.clockwise")
                     }
+                    .buttonStyle(.plain)
                 }
+                
                 ToolbarItem(placement: .navigationBarLeading) {
-                    if !vm.libState.collections.isEmpty {
-                        Button(action: { showChangeFilter.toggle() }) {
+                    if !vm.collections.isEmpty {
+                        Button(action: { vm.showChangeFilter.toggle() }) {
                             Image(systemName: "line.3.horizontal.decrease.circle")
-                                .symbolVariant(vm.libState.collections[selectedTab].filter.isNotAll() ? .fill : .none)
+                                .symbolVariant(vm.collections[vm.selectedTab].filter.isNotAll() ? .fill : .none)
                         }
                         .buttonStyle(.plain)
-                        .actionSheet(isPresented: $showChangeFilter) {
+                        .actionSheet(isPresented: $vm.showChangeFilter) {
                             ActionSheet(title: Text("Change Filter"), buttons: [
                                 .default(
                                     Text("All"),
-                                    action: { vm.changeFilter(collection: vm.libState.collections[selectedTab], newFilterState: .all) }),
+                                    action: { vm.changeFilter(collection: vm.collections[vm.selectedTab], newFilterState: .all) }),
                                 .default(
                                     Text("Only Read"),
-                                    action: { vm.changeFilter(collection: vm.libState.collections[selectedTab], newFilterState: .read) }),
+                                    action: { vm.changeFilter(collection: vm.collections[vm.selectedTab], newFilterState: .read) }),
                                 .default(
                                     Text("Only Unread"),
-                                    action: { vm.changeFilter(collection: vm.libState.collections[selectedTab], newFilterState: .unread) }),
+                                    action: { vm.changeFilter(collection: vm.collections[vm.selectedTab], newFilterState: .unread) }),
                                 .cancel()
                             ])
                         }
@@ -109,9 +73,8 @@ struct LibraryView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .sheet(isPresented: $showSettings) {
+            .sheet(isPresented: $vm.showSettings, onDismiss: { vm.showSettings = false }) {
                 ManageCollectionsModal()
-                    .environmentObject(vm.libState)
             }
         }
     }
@@ -119,6 +82,6 @@ struct LibraryView: View {
 
 struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
-        LibraryView(vm: .init(libState: LibraryState(context: PersistenceController.init(inMemory: true).container.viewContext)))
+        LibraryView(vm: .init())
     }
 }

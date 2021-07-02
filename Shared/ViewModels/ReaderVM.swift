@@ -9,9 +9,8 @@ import Foundation
 import CoreData
 
 class ReaderVM: ObservableObject {
-    var libState: LibraryState
     var src: Source
-    var ctx: NSManagedObjectContext
+    
     private var manga: Manga
     
     @Published var chapter: MangaChapter
@@ -20,11 +19,9 @@ class ReaderVM: ObservableObject {
     @Published var chapterImages: [SourceChapterImage]?
     @Published var error = false
 
-    init(for chapter: MangaChapter, with source: Source, manga: Manga, context ctx: NSManagedObjectContext, libState: LibraryState) {
+    init(for chapter: MangaChapter, with source: Source, manga: Manga) {
         self.src = source
         self.chapter = chapter
-        self.ctx = ctx
-        self.libState = libState
         self.manga = manga
     }
     
@@ -39,10 +36,7 @@ class ReaderVM: ObservableObject {
     
     func saveProgress(_ status: MangaChapter.Status) {
         chapter.status = status
-        try? ctx.save()
-        
-        if libState.isMangaInCollection(for: manga) {
-            libState.reloadCollection()
-        }
+        // TODO: Fix
+//        try? ctx.save()
     }
 }

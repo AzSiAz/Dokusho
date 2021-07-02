@@ -9,8 +9,8 @@ import SwiftUI
 import NukeUI
 
 struct MangaDetailView: View {
-    @EnvironmentObject var libState: LibraryState
-    
+    var dataManager = DataManager.shared
+
     @StateObject var vm: MangaDetailVM
 
     @State var imageWidth: CGFloat = 0
@@ -66,52 +66,50 @@ struct MangaDetailView: View {
         }
         .task { await vm.fetchManga() }
         .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: ReaderVM(for: chapter, with: vm.src, manga: vm.manga!, context: vm.ctx, libState: libState))
+            ReaderView(vm: ReaderVM(for: chapter, with: vm.src, manga: vm.manga!))
         }
     }
     
     fileprivate func Header(_ manga: Manga) -> some View {
-        return Group {
-            HStack(alignment: .top) {
-                LazyImage(source: manga.cover, resizingMode: .aspectFill)
-                    .onSuccess({ imageWidth = $0.image.size.width })
-                    .animation(nil)
-                    .frame(maxHeight: 180)
-                    .frame(width: imageWidth)
-                    .background(Color.red)
-                    .cornerRadius(10)
-                    .clipped()
-                    .padding(.leading, 10)
+        return HStack(alignment: .top) {
+            LazyImage(source: manga.cover, resizingMode: .aspectFill)
+                .onSuccess({ imageWidth = $0.image.size.width })
+                .animation(nil)
+                .frame(maxHeight: 180)
+                .frame(width: imageWidth)
+                .background(Color.red)
+                .cornerRadius(10)
+                .clipped()
+                .padding(.leading, 10)
+            
+            VStack(spacing: 0) {
+                VStack(alignment: .leading) {
+                    Text(manga.title!)
+                        .lineLimit(2)
+                        .font(.subheadline.bold())
+                }
+                .padding(.bottom, 5)
                 
-                VStack(spacing: 0) {
-                    VStack(alignment: .leading) {
-                        Text(manga.title!)
-                            .lineLimit(2)
-                            .font(.subheadline.bold())
-                    }
-                    .padding(.bottom, 5)
-                    
-                    Divider()
-                        .hidden()
-                    
-                    VStack(alignment: .center) {
-                        if manga.authors?.count != 0 {
-                            VStack {
-                                ForEach(vm.authors(), id: \.name) { author in
-                                    Text("\(author.name!) ")
-                                        .font(.caption.italic())
-                                }
+                Divider()
+                    .hidden()
+                
+                VStack(alignment: .center) {
+                    if manga.authors?.count != 0 {
+                        VStack {
+                            ForEach(vm.authors(), id: \.name) { author in
+                                Text("\(author.name!) ")
+                                    .font(.caption.italic())
                             }
-                            .padding(.bottom, 5)
                         }
-                        
-                        Text(manga.status.rawValue)
-                            .font(.callout.bold())
-                            .padding(.bottom, 5)
-                        
-                        Text(vm.getSourceName())
-                            .font(.callout.bold())
+                        .padding(.bottom, 5)
                     }
+                    
+                    Text(manga.status.rawValue)
+                        .font(.callout.bold())
+                        .padding(.bottom, 5)
+                    
+                    Text(vm.getSourceName())
+                        .font(.callout.bold())
                 }
             }
         }
@@ -131,7 +129,7 @@ struct MangaDetailView: View {
                 Button(action: { addToCollection.toggle() }) {
                     VStack(alignment: .center, spacing: 1) {
                         Image(systemName: "heart")
-                            .symbolVariant(vm.libState.isMangaInCollection(for: manga) ? .fill : .none)
+                            .symbolVariant(dataManager.isMangaInCollection(for: manga) ? .fill : .none)
                         Text("Favoris")
                     }
                 }
@@ -177,20 +175,23 @@ struct MangaDetailView: View {
         }
         .actionSheet(isPresented: $addToCollection) {
             var actions: [ActionSheet.Button] = []
-            actions.append(contentsOf: vm.libState.collections.map { col in
-                return ActionSheet.Button.default(
-                    Text(col.name!),
-                    action: { vm.libState.addMangaToCollection(manga: manga, collection: col) }
-                )
-            })
+
+            if let collections = dataManager.getCollections() {
+                collections.forEach { col in
+                        actions.append(.default(
+                            Text(col.name!),
+                            action: { dataManager.insertMangaInCollection(for: manga, in: col) }
+                        ))
+                }
+            }
             if manga.collection != nil {
-                actions.append(.destructive(Text("Remove from collection"), action: {
-                    vm.libState.deleteMangaFromCollection(manga: manga, collection: manga.collection!)
+                actions.append(.destructive(Text("Remove from \(manga.collection?.name ?? "")"), action: {
+                    dataManager.removeMangaFromCollection(for: manga, in: manga.collection!)
                 }))
             }
-            
+
             actions.append(.cancel())
-            
+
            return ActionSheet(title: Text("Choose collection"), buttons: actions)
         }
     }
@@ -220,19 +221,6 @@ struct MangaDetailView: View {
             }
             .padding(.horizontal, 10)
         }
-    }
-}
-
-struct MangaDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let ctx = PersistenceController(inMemory: true).container.viewContext
-        
-        MangaDetailView(vm: MangaDetailVM(
-            for: MangaSeeSource(),
-            mangaId: "Ookii-Kouhai-wa-Suki-Desu-ka",
-            context: ctx,
-            libState: .init(context: ctx)
-        ))
     }
 }
 

@@ -26,7 +26,6 @@ struct DokushoApp: App {
             }
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
             .environmentObject(MangaSourceService.shared)
-            .environmentObject(LibraryState(context: persistenceController.container.viewContext))
         }
     }
 }

@@ -9,8 +9,7 @@ import SwiftUI
 import NukeUI
 
 struct ExploreSourceView: View {
-    @Environment(\.managedObjectContext) var coreDataCtx
-    @EnvironmentObject var libState: LibraryState
+    var dataManager = DataManager.shared
     
     @StateObject var vm: ExploreSourceVM
     
@@ -51,13 +50,13 @@ struct ExploreSourceView: View {
             
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(vm: .init(for: vm.src, mangaId: manga.id, context: coreDataCtx, libState: libState))) {
-                            ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
+                    ForEach($vm.mangas) { manga in
+                        NavigationLink(destination: MangaDetailView(vm: .init(for: vm.src, mangaId: manga.wrappedValue.id))) {
+                            ImageWithTextOver(title: manga.wrappedValue.title, imageUrl: manga.wrappedValue.thumbnailUrl)
                                 .frame(height: 180)
-                                .task { await vm.fetchMoreIfPossible(for: manga) }
+                                .task { await vm.fetchMoreIfPossible(for: manga.wrappedValue) }
                                 .overlay(alignment: .topTrailing) {
-                                    if libState.isMangaInCollection(for: manga) {
+                                    if dataManager.isMangaInCollection(for: manga.wrappedValue, source: vm.src) {
                                         Image(systemName: "star")
                                             .symbolVariant(.fill)
                                             .padding(2)
@@ -67,19 +66,9 @@ struct ExploreSourceView: View {
                                     }
                                 }
                                 .contextMenu {
-                                    if (!libState.isMangaInCollection(for: manga)) {
-                                        ForEach(libState.collections, id: \.id) { collection in
-                                            Button(action: {
-                                                async {
-                                                    await libState.addMangaToCollection(
-                                                        smallManga: manga,
-                                                        source: vm.src,
-                                                        collection: collection
-                                                    )
-                                                }
-                                            }) {
-                                                Text("Add to \(collection.name!)")
-                                            }
+                                    if (!dataManager.isMangaInCollection(for: manga.wrappedValue, source: vm.src)) {
+                                        if let collections = dataManager.getCollections() {
+                                            ContextMenu(collections, manga: manga.wrappedValue)
                                         }
                                     }
                                 }
@@ -89,11 +78,28 @@ struct ExploreSourceView: View {
             }
         }
         .task { await vm.fetchList() }
-//        .refreshable { await vm.fetchList(clean: true) }
+        .refreshable { await vm.fetchList(clean: true) }
         .toolbar {
             ToolbarItem(placement: .principal) { Header() }
         }
         .navigationTitle(vm.getTitle())
+    }
+            
+    func ContextMenu(_ collections: [MangaCollection], manga: SourceSmallManga) -> some View {
+        ForEach(collections) { collection in
+            // TODO: AsyncButton
+            Button(action: {
+                async {
+                    await dataManager.insertManga(
+                        base: manga,
+                        source: vm.src,
+                        collection: collection
+                    )
+                }
+            }) {
+                Text("Add to \(collection.name!)")
+            }
+        }
     }
     
     func Header() -> some View {

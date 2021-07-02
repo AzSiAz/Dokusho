@@ -31,6 +31,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(vm: .init(libState: .init(context: PersistenceController.inMemory.container.viewContext)))
+        SettingsView(vm: .init())
     }
 }

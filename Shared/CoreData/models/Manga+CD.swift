@@ -70,19 +70,7 @@ extension Manga {
         }
     }
     
-    static func fetchOne(mangaId: String, sourceId: Int16, ctx: NSManagedObjectContext) -> Manga? {
-        let req = Manga.fetchRequest()
-        req.fetchLimit = 1
-        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-            NSPredicate(format: "id = %@", mangaId),
-            NSPredicate(format: "source = %i", sourceId)
-        ])
-        let res = try? ctx.fetch(req)
-        
-        return res?.first
-    }
-    
-    static func fromSource(for m: SourceManga, source: Source, context ctx: NSManagedObjectContext) -> Manga {
+    static func createFromSource(for m: SourceManga, source: Source, context ctx: NSManagedObjectContext) -> Manga {
         let maybeHere = Manga.fetchOne(mangaId: m.id, sourceId: source.id, ctx: ctx)
         
         guard let found = maybeHere else {
@@ -102,9 +90,9 @@ extension Manga {
         self.type = m.type
         self.status = m.status
         
-        self.addToGenres(genres: m.genres, context: ctx)
-        self.addToAuthors(authors: m.authors, context: ctx)
-        self.addToAlternatesNames(alternateNames: m.alternateNames, context: ctx)
+        self.addFromRawGenres(names: m.genres, context: ctx)
+        self.addFromRawAuthors(names: m.authors, context: ctx)
+        self.addFromRawAlternatesNames(alternateNames: m.alternateNames, context: ctx)
         self.addToChapters(chapters: m.chapters, context: ctx)
         
         let firstChapter: MangaChapter? = self.chapters?.first { $0.position == 0 }
@@ -114,30 +102,49 @@ extension Manga {
         return self
     }
     
-    func addToGenres(genres: [String], context ctx: NSManagedObjectContext) {
-        MangaGenre.fromSource(genres: genres, context: ctx).forEach {
-            $0.mangas?.insert(self)
-        }
+    func addFromRawGenres(names: [String], context ctx: NSManagedObjectContext) {
+        MangaGenre.createFromSource(manga: self, names: names, context: ctx)
     }
     
-    func addToAuthors(authors: [String], context ctx: NSManagedObjectContext) {
-        MangaAuthor.fromSource(authors: authors, context: ctx).forEach {
-            $0.mangas?.insert(self)
-        }
+    func addToGenres(_ genre: MangaGenre) {
+        guard self.genres?.contains(where: { $0.name == genre.name }) == false else { return }
+
+        self.genres?.insert(genre)
+    }
+    
+    func addFromRawAuthors(names: [String], context ctx: NSManagedObjectContext) {
+        MangaAuthor.createFromSource(manga: self, names: names, context: ctx)
+    }
+    
+    func addToAuthors(_ author: MangaAuthor) {
+        guard self.authors?.contains(where: { $0.name == author.name }) == false else { return }
+
+        self.authors?.insert(author)
     }
     
     func addToChapters(chapters: [SourceChapter], context ctx: NSManagedObjectContext) {
-        MangaChapter.fromSource(chapters: chapters, manga: self, context: ctx)
+        MangaChapter.createFromSource(manga: self, chapters: chapters, context: ctx)
     }
     
-    func addToAlternatesNames(alternateNames: [String], context ctx: NSManagedObjectContext) {
-        MangaAlternatesName.fromSource(titles: alternateNames, context: ctx).forEach {
-            $0.manga = self
-        }
+    func addToChapters(_ chapter: MangaChapter) {
+        guard self.chapters?.contains(chapter) == false else { return }
+
+        self.chapters?.insert(chapter)
     }
     
-    func unreadChapterCount() -> Int {
+    func addFromRawAlternatesNames(alternateNames: [String], context ctx: NSManagedObjectContext) {
+        MangaAlternatesName.createFromSource(manga: self, titles: alternateNames, context: ctx)
+    }
+    
+    func addToAlternatesNames(_ alternateName: MangaAlternatesName) {
+        guard self.alternateNames?.contains(where: { $0.title == alternateName.title }) == false else { return }
+        
+        self.alternateNames?.insert(alternateName)
+    }
+    
+    var unreadChapterCount: Int {
         guard let chapters = self.chapters else { return 0 }
+
         return chapters.filter { $0.status.isUnread() }.count
     }
     
@@ -145,7 +152,32 @@ extension Manga {
         guard let chapters = self.chapters else { return nil }
         
         let sort = SortDescriptor(\MangaChapter.position, order: .reverse)
-        
         return chapters.sorted(using: sort).first { $0.status == .unread }
+    }
+}
+
+extension Manga {
+    static func fetchOne(mangaId: String, sourceId: Int16, ctx: NSManagedObjectContext) -> Manga? {
+        let req = Manga.fetchRequest()
+        req.fetchLimit = 1
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "id = %@", mangaId),
+            NSPredicate(format: "source = %i", sourceId)
+        ])
+        let res = try? ctx.fetch(req)
+        
+        return res?.first
+    }
+    
+    static func mangaOneFetch(mangaId: String, srcId: Int16) -> NSFetchRequest<Manga> {
+        let req = Manga.fetchRequest()
+        req.fetchLimit = 1
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "id = %@", mangaId),
+            NSPredicate(format: "source = %i", srcId)
+        ])
+        req.sortDescriptors = []
+        
+        return req
     }
 }

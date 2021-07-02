@@ -8,20 +8,25 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject var libState: LibraryState
-    @State var tabIndex = 2
+    enum TabTag {
+        case library
+        case source
+        case settings
+    }
+    
+    @State var tabIndex: TabTag = .library
     
     var body: some View {
         TabView(selection: $tabIndex) {
-            LibraryView(vm: .init(libState: libState))
+            LibraryView(vm: .init())
                 .tabItem { Label("Library", systemImage: "books.vertical") }
-                .tag(0)
+                .tag(TabTag.library)
             ExploreView()
                 .tabItem { Label("Explore", systemImage: "safari") }
-                .tag(1)
-            SettingsView(vm: .init(libState: libState))
+                .tag(TabTag.source)
+            SettingsView(vm: .init())
                 .tabItem { Label("Settings", systemImage: "gear") }
-                .tag(2)
+                .tag(TabTag.settings)
         }
     }
 }
