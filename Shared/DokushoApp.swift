@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 @main
 struct DokushoApp: App {
     var persistenceController = PersistenceController.shared

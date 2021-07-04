@@ -7,12 +7,20 @@
 
 import CoreData
 import OSLog
+import Combine
 
 class PersistenceController {
     static var shared = PersistenceController(inMemory: false)
     static var inMemory = PersistenceController(inMemory: true)
 
     let container: NSPersistentCloudKitContainer
+    var subscriptions: Set<AnyCancellable> = []
+    
+    private lazy var historyQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "Dokusho")
@@ -46,5 +54,10 @@ class PersistenceController {
             self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
             self.container.viewContext.automaticallyMergesChangesFromParent = true
         }
+        
+        NotificationCenter.default
+            .publisher(for: .NSPersistentStoreRemoteChange)
+            .sink { notification in print(notification) }
+            .store(in: &self.subscriptions)
     }
 }

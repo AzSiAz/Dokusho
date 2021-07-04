@@ -35,13 +35,7 @@ struct MangaCollectionPage: View {
                         ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
                             .frame(height: 180)
                             .overlay(alignment: .topTrailing) {
-                                if manga.unreadChapterCount() > 0 {
-                                    Text(String(manga.unreadChapterCount()))
-                                        .padding(2)
-                                        .foregroundColor(.white)
-                                        .background(Color.blue)
-                                        .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
-                                }
+                                MangaUnreadCount(manga: manga)
                             }
                             .contextMenu {
                                 if manga.unreadChapterCount() != 0 {
