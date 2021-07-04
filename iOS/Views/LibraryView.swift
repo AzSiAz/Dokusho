@@ -78,8 +78,8 @@ struct LibraryView: View {
             .sheet(isPresented: $vm.showSettings, onDismiss: { vm.showSettings = false }) {
                 ManageCollectionsModal()
             }
-            .navigationViewStyle(.stack)
         }
+        .navigationViewStyle(.stack)
     }
 }
 

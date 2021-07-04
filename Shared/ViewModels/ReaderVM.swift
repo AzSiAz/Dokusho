@@ -10,6 +10,7 @@ import CoreData
 
 class ReaderVM: ObservableObject {
     private var srcSvc = MangaSourceService.shared
+    private var ctx = PersistenceController.shared.container.viewContext
     private var src: Source
     
     @Published var chapter: MangaChapter
@@ -33,8 +34,9 @@ class ReaderVM: ObservableObject {
     }
     
     func saveProgress(_ status: MangaChapter.Status) {
-        chapter.status = status
-        // TODO: Fix
-//        try? ctx.save()
+        ctx.performAndWait {
+            chapter.status = status
+            try? ctx.save()
+        }
     }
 }
