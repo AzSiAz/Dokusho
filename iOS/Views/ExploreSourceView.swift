@@ -53,6 +53,8 @@ struct ExploreSourceView: View {
                     ForEach($vm.mangas) { manga in
                         NavigationLink(destination: MangaDetailView(vm: .init(for: vm.src, mangaId: manga.wrappedValue.id))) {
                             ImageWithTextOver(title: manga.wrappedValue.title, imageUrl: manga.wrappedValue.thumbnailUrl)
+                                // TODO: Fix workaround
+                                .id("\(manga.wrappedValue.id)@@\(vm.isInLib[manga.wrappedValue.id] ?? false)")
                                 .frame(height: 180)
                                 .task { await vm.fetchMoreIfPossible(for: manga.wrappedValue) }
                                 .overlay(alignment: .topTrailing) {
@@ -95,6 +97,7 @@ struct ExploreSourceView: View {
                         source: vm.src,
                         collection: collection
                     )
+                    vm.isInLib[manga.id] = true
                 }
             }) {
                 Text("Add to \(collection.name!)")
