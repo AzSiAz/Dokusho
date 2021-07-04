@@ -180,4 +180,18 @@ extension Manga {
         
         return req
     }
+    
+    static func fetchMany(collection: MangaCollection) -> NSFetchRequest<Manga> {
+        let req = Self.fetchRequest()
+        
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "collection = %@", collection),
+        ])
+        
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Manga.lastChapterUpdate, ascending: false)
+        ]
+        
+        return req
+    }
 }

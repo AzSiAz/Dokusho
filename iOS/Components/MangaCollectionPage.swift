@@ -12,6 +12,8 @@ struct MangaCollectionPage: View {
 
     var vm: LibraryVM
     var collection: Binding<MangaCollection>
+    var fetchRequest: FetchRequest<Manga>
+    var mangas: FetchedResults<Manga> { fetchRequest.wrappedValue }
     
     var columns: [GridItem] {
         var base = [
@@ -27,10 +29,17 @@ struct MangaCollectionPage: View {
         return base
     }
     
+    init(vm: LibraryVM, collection: Binding<MangaCollection>) {
+        self.vm = vm
+        self.collection = collection
+        
+        self.fetchRequest = FetchRequest<Manga>(fetchRequest: Manga.fetchMany(collection: collection.wrappedValue))
+    }
+    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(vm.getMangas(collection: collection.wrappedValue)) { manga in
+                ForEach(vm.getMangas(mangas: Array(mangas), collection: collection.wrappedValue)) { manga in
                     NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: srcSVC.getSource(sourceId: manga.source)!, mangaId: manga.id!))) {
                         ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
                             .frame(height: 180)
@@ -38,21 +47,12 @@ struct MangaCollectionPage: View {
                                 MangaUnreadCount(manga: manga)
                             }
                             .contextMenu {
-                                if manga.unreadChapterCount() != 0 {
-                                    Button(action: { vm.markChaptersMangaAs(for: manga, status: .read) }) {
-                                        Text("Mark as read")
-                                    }
-                                }
-                                
-                                if manga.unreadChapterCount() == 0 {
-                                    Button(action: { vm.markChaptersMangaAs(for: manga, status: .unread) }) {
-                                        Text("Mark as unread")
-                                    }
-                                }
+                                MangaLibraryContextMenu(manga: manga, vm: vm)
                             }
                     }
                 }
             }
         }
+        .navigationBarTitle("\(collection.wrappedValue.name!) (\(vm.getMangas(mangas: Array(mangas), collection: collection.wrappedValue).count))", displayMode: .inline)
     }
 }

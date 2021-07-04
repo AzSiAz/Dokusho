@@ -51,10 +51,7 @@ class LibraryVM: NSObject, ObservableObject {
         }
     }
     
-    func getMangas(collection: MangaCollection) -> [Manga] {
-        guard collection.mangas?.count != 0 else { return [] }
-        guard let mangas = collection.mangas else { return [] }
-        
+    func getMangas(mangas: [Manga], collection: MangaCollection) -> [Manga] {
         let sort = SortDescriptor(\Manga.lastChapterUpdate, order: .reverse)
         
         switch collection.filter {

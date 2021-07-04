@@ -32,7 +32,6 @@ struct LibraryView: View {
                             }
                         }
                         .padding(.horizontal, 5)
-                        .navigationBarTitle("\(collection.wrappedValue.name!) (\(vm.getMangas(collection: collection.wrappedValue).count))", displayMode: .inline)
                         .tag(vm.collections.firstIndex(of: collection.wrappedValue) ?? 0)
                 }
             }
