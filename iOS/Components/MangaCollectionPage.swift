@@ -35,8 +35,8 @@ struct MangaCollectionPage: View {
                         ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
                             .frame(height: 180)
                             .overlay(alignment: .topTrailing) {
-                                if manga.unreadChapterCount > 0 {
-                                    Text(String(manga.unreadChapterCount))
+                                if manga.unreadChapterCount() > 0 {
+                                    Text(String(manga.unreadChapterCount()))
                                         .padding(2)
                                         .foregroundColor(.white)
                                         .background(Color.blue)
@@ -44,13 +44,13 @@ struct MangaCollectionPage: View {
                                 }
                             }
                             .contextMenu {
-                                if manga.unreadChapterCount != 0 {
+                                if manga.unreadChapterCount() != 0 {
                                     Button(action: { vm.markChaptersMangaAs(for: manga, status: .read) }) {
                                         Text("Mark as read")
                                     }
                                 }
                                 
-                                if manga.unreadChapterCount == 0 {
+                                if manga.unreadChapterCount() == 0 {
                                     Button(action: { vm.markChaptersMangaAs(for: manga, status: .unread) }) {
                                         Text("Mark as unread")
                                     }

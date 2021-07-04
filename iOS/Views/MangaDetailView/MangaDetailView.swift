@@ -48,7 +48,7 @@ struct MangaDetailView: View {
                                 .padding(.top, 5)
                                 .padding(.bottom, 15)
                             Divider()
-                            ChapterList()
+                            ChapterListView(vm: .init(mangaId: vm.mangaId))
                                 .padding(.bottom)
                     }
 //                    .refreshable { await vm.fetchManga() }
@@ -65,9 +65,6 @@ struct MangaDetailView: View {
             }
         }
         .task { await vm.fetchManga() }
-        .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: ReaderVM(for: chapter, with: vm.src, manga: vm.manga!))
-        }
     }
     
     fileprivate func Header(_ manga: Manga) -> some View {
@@ -117,14 +114,6 @@ struct MangaDetailView: View {
     
     fileprivate func Information(_ manga: Manga) -> some View {
         return VStack {
-            if let chapter = vm.manga?.nextUnreadChapter() {
-                Button(action: { vm.selectChapter(for: chapter) }) {
-                    Text("Read next unread chapter")
-                }
-                .padding()
-                .buttonStyle(.bordered)
-            }
-
             HStack(alignment: .center) {
                 Button(action: { addToCollection.toggle() }) {
                     VStack(alignment: .center, spacing: 1) {
@@ -193,33 +182,6 @@ struct MangaDetailView: View {
             actions.append(.cancel())
 
            return ActionSheet(title: Text("Choose collection"), buttons: actions)
-        }
-    }
-    
-    fileprivate func ChapterList() -> some View {
-        return LazyVStack {
-            HStack {
-                Text("Chapter List")
-
-                Spacer()
-                
-                Button(action: { vm.chapterFilter.toggle() }) {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .symbolVariant(vm.chapterFilter == .all ? .none : .fill)
-                }
-                .padding(.trailing, 5)
-                
-                Button(action: { vm.chapterOrder.toggle() }) {
-                    Image(systemName: "chevron.up.chevron.down")
-                }
-            }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 15)
-            
-            ForEach(vm.chapters(), id: \.id) { chapter in
-                ChapterListRow(vm: vm, chapter: chapter)
-            }
-            .padding(.horizontal, 10)
         }
     }
 }

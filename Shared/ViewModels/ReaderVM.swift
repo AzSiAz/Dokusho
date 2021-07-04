@@ -9,9 +9,8 @@ import Foundation
 import CoreData
 
 class ReaderVM: ObservableObject {
-    var src: Source
-    
-    private var manga: Manga
+    private var srcSvc = MangaSourceService.shared
+    private var src: Source
     
     @Published var chapter: MangaChapter
     @Published var tabIndex = 0
@@ -19,10 +18,9 @@ class ReaderVM: ObservableObject {
     @Published var chapterImages: [SourceChapterImage]?
     @Published var error = false
 
-    init(for chapter: MangaChapter, with source: Source, manga: Manga) {
-        self.src = source
+    init(for chapter: MangaChapter) {
+        self.src = srcSvc.getSource(sourceId: chapter.manga!.source)!
         self.chapter = chapter
-        self.manga = manga
     }
     
     func fetchChapter() async {

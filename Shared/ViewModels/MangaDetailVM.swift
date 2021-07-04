@@ -10,34 +10,6 @@ import CoreData
 
 @MainActor
 class MangaDetailVM: NSObject, ObservableObject {
-    enum ChapterOrder {
-        case base
-        case reversed
-        
-        mutating func toggle() {
-            if self == .reversed {
-                self = .base
-            }
-            else {
-                self = .reversed
-            }
-        }
-    }
-    
-    enum ChapterFilter {
-        case all
-        case unread
-        
-        mutating func toggle() {
-            if self == .all {
-                self = .unread
-            }
-            else {
-                self = .all
-            }
-        }
-    }
-    
     let src: Source
     let ctx = PersistenceController.shared.container.viewContext
     let mangaId: String
@@ -47,9 +19,6 @@ class MangaDetailVM: NSObject, ObservableObject {
 
     @Published var error = false
     @Published var manga: Manga?
-    @Published var selectedChapter: MangaChapter?
-    @Published var chapterOrder: ChapterOrder = .base
-    @Published var chapterFilter: ChapterFilter = .all
     
     init(for source: Source, mangaId: String) {
         self.mangaController = NSFetchedResultsController(
@@ -69,6 +38,7 @@ class MangaDetailVM: NSObject, ObservableObject {
         self.error = false
 
         try? self.mangaController.performFetch()
+        self.manga = mangaController.fetchedObjects?.first
 
         if manga == nil { await fetchAndInsert() }
     }
@@ -76,12 +46,11 @@ class MangaDetailVM: NSObject, ObservableObject {
     func fetchAndInsert() async {
         self.error = false
         self.manga = nil
-        // TODO: Fix
 
         do {
             let sourceManga = try await src.fetchMangaDetail(id: mangaId)
             
-            try await ctx.perform {
+            try ctx.performAndWait {
                 self.manga = Manga.createFromSource(for: sourceManga, source: self.src, context: self.ctx)
                 try self.ctx.save()
             }
@@ -104,18 +73,6 @@ class MangaDetailVM: NSObject, ObservableObject {
         }
     }
     
-    func chapters() -> [MangaChapter] {
-        guard manga != nil else { return [] }
-        guard manga!.chapters?.count != 0 else { return [] }
-        
-        guard let chapters = manga?.chapters else { return [] }
-        
-        let filteredChapters = chapters.filter { self.chapterFilter == .all ? true : $0.status.isUnread() }
-        let orderedChapters = filteredChapters.sorted { $0.position < $1.position }
-        
-        return chapterOrder == .reversed ? orderedChapters.reversed() : orderedChapters
-    }
-    
     func genres() -> [MangaGenre] {
         guard manga != nil else { return [] }
         guard manga!.genres?.count != 0 else { return [] }
@@ -132,10 +89,6 @@ class MangaDetailVM: NSObject, ObservableObject {
         return authors.sorted { $0.name! < $1.name! }
     }
     
-    func selectChapter(for chapter: MangaChapter) {
-        selectedChapter = chapter
-    }
-    
     func getMangaURL() -> URL {
         return self.src.mangaUrl(mangaId: self.mangaId)
     }
@@ -144,37 +97,11 @@ class MangaDetailVM: NSObject, ObservableObject {
         return src.name
     }
     
-    func changeChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
-        chapter.status = status
-        try? ctx.save()
-    }
-    
-    func changePreviousChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
-        guard let rawChapters = manga?.chapters else { return }
-
-        ctx.perform {
-            rawChapters
-                .sorted { $0.position < $1.position }
-                .filter { chapter.position < $0.position }
-                .forEach { $0.status = status }
-            
-            try? self.ctx.save()
-        }
-    }
-    
-    func hasPreviousUnreadChapter(for chapter: MangaChapter) -> Bool {
-        guard let chapters = manga?.chapters else { return false }
-
-        return chapters
-            .filter { chapter.position < $0.position }
-            .contains { $0.status == .unread }
-    }
-    
     func resetCache() {
         guard let m = self.manga else { return }
         manga = nil
         
-        ctx.perform {
+        ctx.performAndWait {
             self.ctx.delete(m)
             try? self.ctx.save()
         }

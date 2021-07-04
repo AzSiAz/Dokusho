@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 
 @objc(Mangachapter)
 class MangaChapter: NSManagedObject {
@@ -35,14 +36,10 @@ class MangaChapter: NSManagedObject {
 extension MangaChapter: Identifiable {}
 
 extension MangaChapter {
-    enum Status: String {
-        case reading
+    enum Status: String, CaseIterable {
         case unread
+        case reading
         case read
-        
-        func isUnread() -> Bool {
-            return self == .read ? false : true
-        }
     }
     
     var status: Status {
@@ -80,5 +77,41 @@ extension MangaChapter {
                 manga.addToChapters(c)
             }
         }
+    }
+}
+
+extension MangaChapter {
+    static func fetchRequest() -> NSFetchRequest<MangaChapter> {
+        return NSFetchRequest<MangaChapter>(entityName: "MangaChapter")
+    }
+    
+    enum StatusFilter {
+        case all
+        case unread
+        
+        mutating func toggle() {
+            if self == .all {
+                self = .unread
+            }
+            else {
+                self = .all
+            }
+        }
+
+    }
+    
+    static func fetchChaptersForManga(mangaId: String, status: StatusFilter = .all, ascending: Bool = true) -> NSFetchRequest<MangaChapter> {
+        let req = MangaChapter.fetchRequest()
+        
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "manga.id = %@", mangaId),
+            NSPredicate(format: "statusRaw IN %@", status == .all ? [Status.unread.rawValue, Status.reading.rawValue, Status.read.rawValue] : [Status.unread.rawValue])
+        ])
+        
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \MangaChapter.position, ascending: ascending)
+        ]
+        
+        return req
     }
 }

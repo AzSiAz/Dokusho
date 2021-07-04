@@ -142,10 +142,10 @@ extension Manga {
         self.alternateNames?.insert(alternateName)
     }
     
-    var unreadChapterCount: Int {
+    func unreadChapterCount() -> Int {
         guard let chapters = self.chapters else { return 0 }
 
-        return chapters.filter { $0.status.isUnread() }.count
+        return chapters.filter { $0.status == .unread }.count
     }
     
     func nextUnreadChapter() -> MangaChapter? {

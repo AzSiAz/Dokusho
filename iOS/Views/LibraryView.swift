@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LibraryView: View {
     @EnvironmentObject var sourcesSvc: MangaSourceService
+    @Environment(\.colorScheme) var colorScheme
 
     @StateObject var vm: LibraryVM
 
@@ -26,6 +27,8 @@ struct LibraryView: View {
                                         .background(Color.gray)
                                         .progressViewStyle(.linear)
                                 }
+                                .padding(.top, 10)
+                                .background(colorScheme == .dark ? Color.black : Color.white)
                             }
                         }
                         .padding(.horizontal, 5)
@@ -76,6 +79,7 @@ struct LibraryView: View {
             .sheet(isPresented: $vm.showSettings, onDismiss: { vm.showSettings = false }) {
                 ManageCollectionsModal()
             }
+            .navigationViewStyle(.stack)
         }
     }
 }

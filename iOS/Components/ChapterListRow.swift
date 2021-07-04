@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ChapterListRow: View {
-    @StateObject var vm: MangaDetailVM
+    @StateObject var vm: ChapterListVM
     
     var chapter: MangaChapter
+    var id: String { "\(chapter.id!)\(chapter.status.rawValue)" }
+    
     
     var body: some View {
         HStack {
@@ -37,7 +39,7 @@ struct ChapterListRow: View {
         }
         .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
         .contextMenu {
-            if chapter.status.isUnread() {
+            if chapter.status == .unread {
                 Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
                     Text("Mark as read")
                 }

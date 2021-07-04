@@ -65,14 +65,14 @@ class LibraryVM: NSObject, ObservableObject {
                     .filter { manga in
                         guard let chapters = manga.chapters else { return false }
 
-                        return chapters.allSatisfy { !$0.status.isUnread() }
+                        return chapters.allSatisfy { !($0.status == .unread) }
                     }
                     .sorted(using: sort)
             case .unread:
                 return mangas
                     .filter { manga in
                         guard let chapters = manga.chapters else { return false }
-                        return chapters.contains { $0.status.isUnread() }
+                        return chapters.contains { $0.status == .unread }
                     }
                     .sorted(using: sort)
         }
