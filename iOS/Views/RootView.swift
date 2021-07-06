@@ -18,13 +18,15 @@ struct RootView: View {
     
     var body: some View {
         TabView(selection: $tabIndex) {
-            LibraryView(vm: .init())
+            LibraryTabView(vm: .init())
                 .tabItem { Label("Library", systemImage: "books.vertical") }
                 .tag(TabTag.library)
-            ExploreView()
+            HistoryTabView()
+                .tabItem { Label("History", systemImage: "clock") }
+            ExploreTabView()
                 .tabItem { Label("Explore", systemImage: "safari") }
                 .tag(TabTag.source)
-            SettingsView(vm: .init())
+            SettingsTabView(vm: .init())
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(TabTag.settings)
         }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExploreView: View {
+struct ExploreTabView: View {
     @EnvironmentObject var sourcesSvc: MangaSourceService
     
     var body: some View {
@@ -32,8 +32,8 @@ struct ExploreView: View {
     }
 }
 
-struct ExploreView_Previews: PreviewProvider {
+struct ExploreTabView_Previews: PreviewProvider {
     static var previews: some View {
-        ExploreView()
+        ExploreTabView()
     }
 }

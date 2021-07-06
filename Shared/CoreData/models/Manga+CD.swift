@@ -192,6 +192,8 @@ extension Manga {
             NSSortDescriptor(keyPath: \Manga.lastChapterUpdate, ascending: false)
         ]
         
+        req.fetchBatchSize = 30
+        
         return req
     }
 }

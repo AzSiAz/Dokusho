@@ -215,7 +215,10 @@ struct DataManager {
     
     func markChaptersAllAs(for manga: Manga, status: MangaChapter.Status) {
         ctx.perform {
-            manga.chapters?.forEach { $0.status = status }
+            manga.chapters?.forEach {
+                $0.status = status
+                $0.readAt = .now
+            }
             saveChange()
         }
     }

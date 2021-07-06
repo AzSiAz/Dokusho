@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LibraryView: View {
+struct LibraryTabView: View {
     @EnvironmentObject var sourcesSvc: MangaSourceService
     @Environment(\.colorScheme) var colorScheme
 
@@ -83,8 +83,8 @@ struct LibraryView: View {
     }
 }
 
-struct LibraryView_Previews: PreviewProvider {
+struct LibraryTabView_Previews: PreviewProvider {
     static var previews: some View {
-        LibraryView(vm: .init())
+        LibraryTabView(vm: .init())
     }
 }

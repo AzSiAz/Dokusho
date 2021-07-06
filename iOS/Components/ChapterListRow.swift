@@ -22,6 +22,10 @@ struct ChapterListRow: View {
                         Text(chapter.title ?? "No Title")
                         Text(chapter.dateSourceUpload?.formatted() ?? "Unknown")
                             .font(.system(size: 12))
+                        if let readAt = chapter.readAt {
+                            Text("Read At: \(readAt.formatted())")
+                                .font(.system(size: 10))
+                        }
                     }
                 }
                 

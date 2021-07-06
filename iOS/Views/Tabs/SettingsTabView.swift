@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
+struct SettingsTabView: View {
     @StateObject var vm: SettingsVM
     
     var body: some View {
@@ -29,8 +29,8 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
+struct SettingsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(vm: .init())
+        SettingsTabView(vm: .init())
     }
 }

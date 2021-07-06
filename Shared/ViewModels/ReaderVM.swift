@@ -35,6 +35,8 @@ class ReaderVM: ObservableObject {
     
     func saveProgress(_ status: MangaChapter.Status) {
         ctx.performAndWait {
+            if status == .read { chapter.readAt = .now }
+
             chapter.status = status
             try? ctx.save()
         }

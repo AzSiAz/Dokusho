@@ -61,6 +61,9 @@ class ChapterListVM: NSObject, ObservableObject {
     
     func changeChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {
         ctx.performAndWait {
+            if status == .read { chapter.readAt = .now }
+            if status == .unread { chapter.readAt = nil }
+            
             chapter.status = status
             try? self.ctx.save()
         }
@@ -73,7 +76,12 @@ class ChapterListVM: NSObject, ObservableObject {
             self.chapters
                 .sorted { $0.position < $1.position }
                 .filter { chapter.position < $0.position }
-                .forEach { $0.status = status }
+                .forEach {
+                    if status == .read { $0.readAt = .now }
+                    if status == .unread { $0.readAt = nil }
+                    
+                    $0.status = status
+                }
             
             try? self.ctx.save()
         }

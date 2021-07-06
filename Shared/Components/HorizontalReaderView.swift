@@ -55,7 +55,7 @@ struct HorizontalReaderView: View {
     }
     
     func updateChapterStatus(index: Int) {
-        var status: MangaChapter.Status = .reading
+        var status: MangaChapter.Status = .unread
         
         if direction == .leftToRight && index == links.count - 1 {
             status = .read
@@ -65,13 +65,5 @@ struct HorizontalReaderView: View {
         }
         
         self.onProgress(status)
-    }
-}
-
-struct HorizontalReaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        HorizontalReaderView(direction: .leftToRight, links: [""], showToolbar: .constant(true), sliderProgress: .constant(0)) { status in
-            print(status)
-        }
     }
 }

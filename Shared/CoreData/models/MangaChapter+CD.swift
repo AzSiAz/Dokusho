@@ -16,6 +16,7 @@ class MangaChapter: NSManagedObject {
     @NSManaged var position: Int64
     @NSManaged var statusRaw: String?
     @NSManaged var dateSourceUpload: Date?
+    @NSManaged var readAt: Date?
     
     @NSManaged var manga: Manga?
     
@@ -38,7 +39,6 @@ extension MangaChapter: Identifiable {}
 extension MangaChapter {
     enum Status: String, CaseIterable {
         case unread
-        case reading
         case read
     }
     
@@ -105,12 +105,33 @@ extension MangaChapter {
         
         req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "manga.id = %@", mangaId),
-            NSPredicate(format: "statusRaw IN %@", status == .all ? [Status.unread.rawValue, Status.reading.rawValue, Status.read.rawValue] : [Status.unread.rawValue])
+            NSPredicate(format: "statusRaw IN %@", status == .all ? [Status.unread.rawValue, Status.read.rawValue] : [Status.unread.rawValue])
         ])
         
         req.sortDescriptors = [
             NSSortDescriptor(keyPath: \MangaChapter.position, ascending: ascending)
         ]
+        
+        return req
+    }
+    
+    static func fetchChaptersHistory() -> NSFetchRequest<MangaChapter>{
+        let req = MangaChapter.fetchRequest()
+        
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "statusRaw = %@", Status.read.rawValue),
+            NSPredicate(format: "manga != nil")
+        ])
+        
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \MangaChapter.readAt, ascending: false)
+        ]
+        
+//        req.relationshipKeyPathsForPrefetching = [
+//            #keyPath(MangaChapter.manga)
+//        ]
+        
+        req.fetchBatchSize = 50
         
         return req
     }
