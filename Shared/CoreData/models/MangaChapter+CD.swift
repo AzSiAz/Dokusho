@@ -40,6 +40,7 @@ extension MangaChapter {
     enum Status: String, CaseIterable {
         case unread
         case read
+        case reading
     }
     
     var status: Status {
@@ -78,6 +79,10 @@ extension MangaChapter {
             }
         }
     }
+    
+    var isUnread: Bool {
+        return status != .read
+    }
 }
 
 extension MangaChapter {
@@ -105,7 +110,7 @@ extension MangaChapter {
         
         req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "manga.id = %@", mangaId),
-            NSPredicate(format: "statusRaw IN %@", status == .all ? [Status.unread.rawValue, Status.read.rawValue] : [Status.unread.rawValue])
+            NSPredicate(format: "statusRaw IN %@", status == .all ? [Status.unread.rawValue, Status.read.rawValue, Status.reading.rawValue] : [Status.unread.rawValue])
         ])
         
         req.sortDescriptors = [

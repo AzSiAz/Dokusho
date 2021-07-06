@@ -14,7 +14,7 @@ struct UnreadChapterObs<Content: View>: View {
     
     init(manga: Manga, @ViewBuilder content: @escaping (_ count: Int) -> Content) {
         self.content = content
-        self.count = manga.chapters?.filter({ $0.status == .unread }).count ?? 0
+        self.count = manga.chapters?.filter({ $0.isUnread }).count ?? 0
     }
     
     var body: some View {
