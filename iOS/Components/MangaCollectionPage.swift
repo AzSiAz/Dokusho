@@ -59,29 +59,3 @@ struct MangaCollectionPage: View {
         .navigationBarTitle("\(collection.name!) \(mangas.getFiltered(filter: collection.filter).count))", displayMode: .inline)
     }
 }
-
-extension FetchedResults where Element == Manga {
-    func getFiltered(filter: MangaCollection.Filter) -> [Element] {
-        let sort = SortDescriptor(\Manga.lastChapterUpdate, order: .reverse)
-        
-        switch filter {
-            case .all:
-                return self.sorted(using: sort)
-            case .read:
-                return self
-                    .filter { manga in
-                        guard let chapters = manga.chapters else { return false }
-                        
-                        return chapters.allSatisfy { !($0.status == .unread) }
-                    }
-                    .sorted(using: sort)
-            case .unread:
-                return self
-                    .filter { manga in
-                        guard let chapters = manga.chapters else { return false }
-                        return chapters.contains { $0.status == .unread }
-                    }
-                    .sorted(using: sort)
-        }
-    }
-}
