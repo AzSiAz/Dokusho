@@ -39,26 +39,32 @@ struct HorizontalReaderView: View {
                     RefreshableImageView(url: link, size: proxy.size)
                         .aspectRatio(contentMode: .fit)
                         .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
-                        .onAppear {
-                            if direction == .leftToRight { sliderProgress = Double(links.firstIndex(of: link) ?? 0) + 1 }
-                            else { sliderProgress = Double(links.reversed().firstIndex(of: link) ?? 0) + 1 }
-                        }
                 }
             }
         }
         .hideDots(true)
         .onChange(of: index, perform: { newValue in
-            var status: MangaChapter.Status = .reading
-            
-            if direction == .leftToRight && newValue == links.count - 1 {
-                status = .read
-            }
-            else if direction == .rightToLeft && newValue == 0 {
-                status = .read
-            }
-            
-            self.onProgress(status)
+            updateProgressBar(index: newValue)
+            updateChapterStatus(index: newValue)
         })
+    }
+    
+    func updateProgressBar(index: Int) {
+        if direction == .leftToRight { sliderProgress = Double(links.firstIndex(of: links[index]) ?? 0) + 1 }
+        else { sliderProgress = Double(links.reversed().firstIndex(of: links[index]) ?? 0) + 1 }
+    }
+    
+    func updateChapterStatus(index: Int) {
+        var status: MangaChapter.Status = .reading
+        
+        if direction == .leftToRight && index == links.count - 1 {
+            status = .read
+        }
+        else if direction == .rightToLeft && index == 0 {
+            status = .read
+        }
+        
+        self.onProgress(status)
     }
 }
 

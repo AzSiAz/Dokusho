@@ -18,9 +18,10 @@ enum ReadingDirection: String, CaseIterable {
 
 struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
+
     @StateObject var vm: ReaderVM
     @State var direction: ReadingDirection = .vertical
-    @State var progress: Double = 0
+    @State var progress: Double = 1
     @State var showReaderDirectionChoice = false
     
     var body: some View {

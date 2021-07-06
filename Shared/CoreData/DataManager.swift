@@ -198,7 +198,7 @@ struct DataManager {
             guard let src = srcSvc.getSource(sourceId: manga.source) else { continue }
             guard let sourceManga = try? await src.fetchMangaDetail(id: manga.id!) else { continue }
             
-            await ctx.perform {
+            ctx.performAndWait {
                 let _ = manga.updateFromSource(for: sourceManga, source: src, context: ctx)
                 saveChange()
             }

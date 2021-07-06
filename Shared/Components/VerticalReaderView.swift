@@ -24,10 +24,8 @@ struct VerticalReaderView: View {
                         RefreshableImageView(url: link, size: CGSize(width: proxy.size.width, height: UIScreen.main.bounds.height))
                             .aspectRatio(contentMode: .fit)
                             .frame(width: proxy.size.width)
-                            .id(links.firstIndex { $0 == link })
-                            .onAppear {
-                                sliderProgress = Double(links.firstIndex { $0 == link } ?? 0) + 1
-                            }
+                            .id(links.firstIndex(of: link))
+                            .onAppear { updateProgressBar(link: link) }
                     }
                     LazyVStack {
                         Color.clear
@@ -36,5 +34,9 @@ struct VerticalReaderView: View {
                 }
             }
         }
+    }
+    
+    func updateProgressBar(link: String) {
+        sliderProgress = Double(links.firstIndex { $0 == link } ?? 0) + 1
     }
 }

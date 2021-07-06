@@ -55,9 +55,9 @@ class PersistenceController {
             self.container.viewContext.automaticallyMergesChangesFromParent = true
         }
         
-        NotificationCenter.default
-            .publisher(for: .NSPersistentStoreRemoteChange)
-            .sink { notification in print(notification) }
-            .store(in: &self.subscriptions)
+//        NotificationCenter.default
+//            .publisher(for: .NSPersistentStoreRemoteChange)
+//            .sink { notification in print(notification) }
+//            .store(in: &self.subscriptions)
     }
 }
