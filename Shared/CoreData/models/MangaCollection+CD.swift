@@ -87,7 +87,7 @@ extension MangaCollection {
         request.sortDescriptors = [
             NSSortDescriptor(keyPath: \MangaCollection.position, ascending: true),
         ]
-        
+
         return request
     }
 }

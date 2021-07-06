@@ -127,9 +127,9 @@ extension MangaChapter {
             NSSortDescriptor(keyPath: \MangaChapter.readAt, ascending: false)
         ]
         
-//        req.relationshipKeyPathsForPrefetching = [
-//            #keyPath(MangaChapter.manga)
-//        ]
+        req.relationshipKeyPathsForPrefetching = [
+            #keyPath(MangaChapter.manga)
+        ]
         
         req.fetchBatchSize = 50
         

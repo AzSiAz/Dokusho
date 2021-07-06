@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 
 class ChapterListVM: NSObject, ObservableObject {
     private let dataManager = DataManager.shared
@@ -65,6 +66,8 @@ class ChapterListVM: NSObject, ObservableObject {
             if status == .unread { chapter.readAt = nil }
             
             chapter.status = status
+            chapter.manga?.lastUserAction = .now
+
             try? self.ctx.save()
         }
         
@@ -81,6 +84,7 @@ class ChapterListVM: NSObject, ObservableObject {
                     if status == .unread { $0.readAt = nil }
                     
                     $0.status = status
+                    $0.manga?.lastUserAction = .now
                 }
             
             try? self.ctx.save()

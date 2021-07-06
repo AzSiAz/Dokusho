@@ -10,16 +10,17 @@ import SwiftUI
 struct LibraryTabView: View {
     @EnvironmentObject var sourcesSvc: MangaSourceService
     @Environment(\.colorScheme) var colorScheme
+    @FetchRequest(fetchRequest: MangaCollection.collectionFetchRequest) var collections: FetchedResults<MangaCollection>
 
     @StateObject var vm: LibraryVM
 
     var body: some View {
         NavigationView {
             TabView(selection: $vm.selectedTab) {
-                ForEach($vm.collections) { collection in
+                ForEach(collections) { collection in
                     MangaCollectionPage(vm: vm, collection: collection)
                         .safeAreaInset(edge: .bottom, spacing: 0) {
-                            if let refresh = vm.refreshStatus[collection.wrappedValue] {
+                            if let refresh = vm.refreshStatus[collection] {
                                 VStack {
                                     Text(refresh.refreshTitle)
                                         .font(.caption)
@@ -32,7 +33,7 @@ struct LibraryTabView: View {
                             }
                         }
                         .padding(.horizontal, 5)
-                        .tag(vm.collections.firstIndex(of: collection.wrappedValue) ?? 0)
+                        .tag(collections.firstIndex(of: collection) ?? 0)
                 }
             }
             .searchable(text: $vm.searchText)
@@ -44,30 +45,30 @@ struct LibraryTabView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     // TODO: Cancel task when I know how it work^^
-                    Button(action: { vm.refreshLib(for: vm.collections[vm.selectedTab]) }) {
+                    Button(action: { vm.refreshLib(for: collections[vm.selectedTab]) }) {
                         Image(systemName: "arrow.clockwise")
                     }
                     .buttonStyle(.plain)
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    if !vm.collections.isEmpty {
+                    if !collections.isEmpty {
                         Button(action: { vm.showChangeFilter.toggle() }) {
                             Image(systemName: "line.3.horizontal.decrease.circle")
-                                .symbolVariant(vm.collections[vm.selectedTab].filter.isNotAll() ? .fill : .none)
+                                .symbolVariant(collections[vm.selectedTab].filter.isNotAll() ? .fill : .none)
                         }
                         .buttonStyle(.plain)
                         .actionSheet(isPresented: $vm.showChangeFilter) {
                             ActionSheet(title: Text("Change Filter"), buttons: [
                                 .default(
                                     Text("All"),
-                                    action: { vm.changeFilter(collection: vm.collections[vm.selectedTab], newFilterState: .all) }),
+                                    action: { vm.changeFilter(collection: collections[vm.selectedTab], newFilterState: .all) }),
                                 .default(
                                     Text("Only Read"),
-                                    action: { vm.changeFilter(collection: vm.collections[vm.selectedTab], newFilterState: .read) }),
+                                    action: { vm.changeFilter(collection: collections[vm.selectedTab], newFilterState: .read) }),
                                 .default(
                                     Text("Only Unread"),
-                                    action: { vm.changeFilter(collection: vm.collections[vm.selectedTab], newFilterState: .unread) }),
+                                    action: { vm.changeFilter(collection: collections[vm.selectedTab], newFilterState: .unread) }),
                                 .cancel()
                             ])
                         }

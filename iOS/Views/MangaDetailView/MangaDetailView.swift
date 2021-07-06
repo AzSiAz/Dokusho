@@ -48,7 +48,7 @@ struct MangaDetailView: View {
                                 .padding(.top, 5)
                                 .padding(.bottom, 15)
                             Divider()
-                            ChapterListView(vm: .init(mangaId: vm.mangaId))
+                        ChapterListView(vm: .init(mangaId: vm.mangaId))
                                 .padding(.bottom)
                     }
 //                    .refreshable { await vm.fetchManga() }

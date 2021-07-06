@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct MangaUnreadCount: View {
-    var fetchRequest: FetchRequest<MangaChapter>
-    var count: Int { fetchRequest.wrappedValue.count }
+    var count: Int
     
-    init(manga: Manga) {
-        self.fetchRequest = FetchRequest<MangaChapter>(fetchRequest: MangaChapter.fetchChaptersForManga(mangaId: manga.id!, status: .unread))
+    init(count: Int) {
+        self.count = count
     }
     
     var body: some View {

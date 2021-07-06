@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 
 class ReaderVM: ObservableObject {
     private var srcSvc = MangaSourceService.shared
@@ -38,6 +39,8 @@ class ReaderVM: ObservableObject {
             if status == .read { chapter.readAt = .now }
 
             chapter.status = status
+            chapter.manga?.lastUserAction = .now
+
             try? ctx.save()
         }
     }

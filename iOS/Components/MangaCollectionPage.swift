@@ -10,8 +10,9 @@ import SwiftUI
 struct MangaCollectionPage: View {
     var srcSVC = MangaSourceService.shared
 
+    @State var collection: MangaCollection
+    
     var vm: LibraryVM
-    var collection: Binding<MangaCollection>
     var fetchRequest: FetchRequest<Manga>
     var mangas: FetchedResults<Manga> { fetchRequest.wrappedValue }
     
@@ -29,30 +30,58 @@ struct MangaCollectionPage: View {
         return base
     }
     
-    init(vm: LibraryVM, collection: Binding<MangaCollection>) {
-        self.vm = vm
-        self.collection = collection
+    init(vm: LibraryVM, collection: MangaCollection) {
+        self._collection = .init(wrappedValue: collection)
         
-        self.fetchRequest = FetchRequest<Manga>(fetchRequest: Manga.fetchMany(collection: collection.wrappedValue))
+        self.vm = vm
+        self.fetchRequest = FetchRequest<Manga>(fetchRequest: Manga.fetchMany(collection: collection))
     }
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(vm.getMangas(mangas: Array(mangas), collection: collection.wrappedValue)) { manga in
+                ForEach(mangas.getFiltered(filter: collection.filter)) { manga in
                     NavigationLink(destination: MangaDetailView(vm: MangaDetailVM(for: srcSVC.getSource(sourceId: manga.source)!, mangaId: manga.id!))) {
-                        ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
-                            .frame(height: 180)
-                            .overlay(alignment: .topTrailing) {
-                                MangaUnreadCount(manga: manga)
-                            }
-                            .contextMenu {
-                                MangaLibraryContextMenu(manga: manga, vm: vm)
-                            }
+                        UnreadChapterObs(manga: manga) { count in
+                            ImageWithTextOver(title: manga.title!, imageUrl: manga.cover!)
+                                .frame(height: 180)
+                                .overlay(alignment: .topTrailing) {
+                                    MangaUnreadCount(count: count)
+                                }
+                                .contextMenu {
+                                    MangaLibraryContextMenu(manga: manga, vm: vm, count: count)
+                                }
+                        }
                     }
                 }
             }
         }
-        .navigationBarTitle("\(collection.wrappedValue.name!) (\(vm.getMangas(mangas: Array(mangas), collection: collection.wrappedValue).count))", displayMode: .inline)
+        .navigationBarTitle("\(collection.name!) \(mangas.getFiltered(filter: collection.filter).count))", displayMode: .inline)
+    }
+}
+
+extension FetchedResults where Element == Manga {
+    func getFiltered(filter: MangaCollection.Filter) -> [Element] {
+        let sort = SortDescriptor(\Manga.lastChapterUpdate, order: .reverse)
+        
+        switch filter {
+            case .all:
+                return self.sorted(using: sort)
+            case .read:
+                return self
+                    .filter { manga in
+                        guard let chapters = manga.chapters else { return false }
+                        
+                        return chapters.allSatisfy { !($0.status == .unread) }
+                    }
+                    .sorted(using: sort)
+            case .unread:
+                return self
+                    .filter { manga in
+                        guard let chapters = manga.chapters else { return false }
+                        return chapters.contains { $0.status == .unread }
+                    }
+                    .sorted(using: sort)
+        }
     }
 }

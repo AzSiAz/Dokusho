@@ -18,6 +18,7 @@ class Manga: NSManagedObject, Identifiable {
     @NSManaged var statusRaw: String?
     @NSManaged var title: String?
     @NSManaged var typeRaw: String?
+    @NSManaged var lastUserAction: Date?
     
     @NSManaged var alternateNames: Set<MangaAlternatesName>?
     @NSManaged var authors: Set<MangaAuthor>?
@@ -190,6 +191,10 @@ extension Manga {
         
         req.sortDescriptors = [
             NSSortDescriptor(keyPath: \Manga.lastChapterUpdate, ascending: false)
+        ]
+        
+        req.relationshipKeyPathsForPrefetching = [
+            #keyPath(Manga.chapters)
         ]
         
         req.fetchBatchSize = 30
