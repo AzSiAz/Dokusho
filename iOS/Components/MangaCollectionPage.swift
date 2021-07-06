@@ -56,6 +56,6 @@ struct MangaCollectionPage: View {
                 }
             }
         }
-        .navigationBarTitle("\(collection.name!) \(mangas.getFiltered(filter: collection.filter).count))", displayMode: .inline)
+        .navigationBarTitle("\(collection.name!) (\(mangas.getFiltered(filter: collection.filter).count))", displayMode: .inline)
     }
 }
