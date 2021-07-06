@@ -9,22 +9,26 @@ import SwiftUI
 import NukeUI
 
 struct HistoryTabView: View {
+    private var dataManager = DataManager.shared
     @FetchRequest(fetchRequest: MangaChapter.fetchChaptersHistory()) var chapters: FetchedResults<MangaChapter>
     
     var body: some View {
         NavigationView {
-            List(chapters, id: \.self) { chapter in
-                HStack {
-                    RemoteImageCacheView(url: try! chapter.manga!.cover!.asURL(), contentMode: .fit)
-                        .frame(width: 80)
-
-                    VStack(alignment: .leading) {
-                        Text(chapter.manga!.title!)
-                        Text(chapter.title ?? "No title...")
-                        Text(chapter.readAt?.formatted() ?? "No date...")
+            List {
+                ForEach(chapters, id: \.self) { chapter in
+                    HStack {
+                        RemoteImageCacheView(url: try! chapter.manga!.cover!.asURL(), contentMode: .fit)
+                            .frame(width: 80)
+                        
+                        VStack(alignment: .leading) {
+                            Text(chapter.manga!.title!)
+                            Text(chapter.title ?? "No title...")
+                            Text(chapter.readAt?.formatted() ?? "No date...")
+                        }
                     }
+                    .frame(height: 120, alignment: .leading)
                 }
-                .frame(height: 120, alignment: .leading)
+                .onDelete { dataManager.markChapterAs(chapter: chapters[$0.first!], status: .unread) }
             }
             .toolbar { EditButton() }
             .listStyle(.plain)

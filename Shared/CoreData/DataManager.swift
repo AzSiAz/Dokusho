@@ -223,6 +223,17 @@ struct DataManager {
         }
     }
     
+    func markChapterAs(chapter: MangaChapter, status: MangaChapter.Status) {
+        ctx.perform {
+            if status == .read { chapter.readAt = .now }
+            if status == .unread { chapter.readAt = nil }
+            
+            chapter.status = status
+            
+            saveChange()
+        }
+    }
+    
     func saveChange() {
         do {
             try ctx.save()

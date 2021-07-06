@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import NukeUI
 
 struct ImageWithTextOver: View {
     var title: String
@@ -14,29 +13,20 @@ struct ImageWithTextOver: View {
     
     var body: some View {
         GeometryReader { proxy in
-            LazyImage(source: imageUrl) { state in
-                if state.isLoading {
-                    ProgressView()
-                }
-                if let image = state.image {
-                    image
-                        .resizingMode(.aspectFill)
-                }
-            }
-            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .bottomLeading)
-            .animation(.none, value: 1)
-            .overlay(
-                ZStack {
-                    Text(title)
-                        .lineLimit(2)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.leading)
-                        .clipped()
-                }
-                    .frame(width: proxy.size.width)
-                .background(Color(.systemGray).opacity(0.8))
-                , alignment: .bottomLeading)
-            .cornerRadius(10)
+            RemoteImageCacheView(url: try! imageUrl.asURL(), contentMode: .fill)
+                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height, alignment: .bottomLeading)
+                .overlay(
+                    ZStack {
+                        Text(title)
+                            .lineLimit(2)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
+                            .clipped()
+                    }
+                        .frame(width: proxy.size.width)
+                    .background(Color(.systemGray).opacity(0.8))
+                    , alignment: .bottomLeading)
+                .cornerRadius(10)
         }
     }
 }
