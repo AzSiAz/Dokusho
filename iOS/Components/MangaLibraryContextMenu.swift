@@ -11,11 +11,9 @@ struct MangaLibraryContextMenu: View {
     var dataManager = DataManager.shared
     
     var count: Int
-    var vm: LibraryVM
     var manga: Manga
     
-    init(manga: Manga, vm: LibraryVM, count: Int) {
-        self.vm = vm
+    init(manga: Manga, count: Int) {
         self.manga = manga
         self.count = count
     }

@@ -10,37 +10,25 @@ import CoreData
 import SwiftUI
 
 @MainActor
-class MangaDetailVM: NSObject, ObservableObject {
-    let src: Source
+class MangaDetailVM: ObservableObject {
     let ctx = PersistenceController.shared.container.viewContext
-    let mangaId: String
-    
-    private let mangaController: NSFetchedResultsController<Manga>
     private let dataManager = DataManager.shared
-
+    
+    let src: Source
+    let mangaId: String
     @Published var error = false
     @Published var manga: Manga?
     
     init(for source: Source, mangaId: String) {
-        self.mangaController = NSFetchedResultsController(
-            fetchRequest: Manga.mangaOneFetch(mangaId: mangaId, srcId: source.id),
-            managedObjectContext: PersistenceController.shared.container.viewContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil)
         self.src = source
         self.mangaId = mangaId
-        
-        super.init()
-        
-        mangaController.delegate = self
     }
     
     func fetchManga() async {
         self.error = false
-
-        try? self.mangaController.performFetch()
-        self.manga = mangaController.fetchedObjects?.first
-
+        
+        self.manga = Manga.fetchOne(mangaId: mangaId, sourceId: src.id, ctx: ctx)
+        
         if manga == nil { await fetchAndInsert() }
     }
     
@@ -110,14 +98,6 @@ class MangaDetailVM: NSObject, ObservableObject {
         async {
             await fetchAndInsert()
         }
-    }
-}
-
-extension MangaDetailVM: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard let mangas = controller.fetchedObjects as? [Manga] else { return }
-        
-        self.manga = mangas.first
     }
 }
 

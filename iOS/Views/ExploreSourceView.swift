@@ -12,19 +12,33 @@ struct ExploreSourceView: View {
     var dataManager = DataManager.shared
     
     @StateObject var vm: ExploreSourceVM
+    @State var selectedManga: SourceSmallManga?
+    
+    var fetchRequest: FetchRequest<Manga>
+    var mangaInCollection: FetchedResults<Manga> { self.fetchRequest.wrappedValue }
     
     var columns: [GridItem] {
         var base = [
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-            GridItem(.flexible()),
+            GridItem(.fixed(120)),
+            GridItem(.fixed(120)),
+            GridItem(.fixed(120)),
         ]
         
         if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
-            base = [GridItem(.adaptive(minimum: 180, maximum: 180))]
+            base.append(contentsOf: base)
+            base.append(contentsOf: [
+                GridItem(.fixed(120)),
+                GridItem(.fixed(120)),
+                GridItem(.fixed(120)),
+            ])
         }
         
         return base
+    }
+    
+    init(vm: ExploreSourceVM) {
+        self._vm = .init(wrappedValue: vm)
+        self.fetchRequest = FetchRequest<Manga>(fetchRequest: Manga.fetchAllMangaInCollectionForSource(for: vm.src))
     }
     
     var body: some View {
@@ -51,14 +65,13 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach($vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(vm: .init(for: vm.src, mangaId: manga.wrappedValue.id))) {
+                        Button(action: { selectedManga = manga.wrappedValue }) {
                             ImageWithTextOver(title: manga.wrappedValue.title, imageUrl: manga.wrappedValue.thumbnailUrl)
-                                // TODO: Fix workaround
-                                .id("\(manga.wrappedValue.id)@@\(vm.isInLib[manga.wrappedValue.id] ?? false)")
+//                                .id("\(manga.wrappedValue.id)@@\(vm.isInLib[manga.wrappedValue.id] ?? false)")
                                 .frame(height: 180)
                                 .task { await vm.fetchMoreIfPossible(for: manga.wrappedValue) }
                                 .overlay(alignment: .topTrailing) {
-                                    if dataManager.isMangaInCollection(for: manga.wrappedValue, source: vm.src) {
+                                    if mangaInCollection.first { $0.id == manga.id } != nil {
                                         Image(systemName: "star")
                                             .symbolVariant(.fill)
                                             .padding(2)
@@ -68,7 +81,7 @@ struct ExploreSourceView: View {
                                     }
                                 }
                                 .contextMenu {
-                                    if (!dataManager.isMangaInCollection(for: manga.wrappedValue, source: vm.src)) {
+                                    if mangaInCollection.first { $0.id == manga.id } == nil {
                                         if let collections = dataManager.getCollections() {
                                             ContextMenu(collections, manga: manga.wrappedValue)
                                         }
@@ -77,7 +90,11 @@ struct ExploreSourceView: View {
                         }
                     }
                 }
+                .padding(.horizontal, 5)
             }
+        }
+        .sheetSizeAware(item: $selectedManga) { manga in
+            MangaDetailView(vm: .init(for: vm.src, mangaId: manga.id))
         }
         .task { await vm.fetchList() }
         .refreshable { await vm.fetchList(clean: true) }
@@ -97,7 +114,7 @@ struct ExploreSourceView: View {
                         source: vm.src,
                         collection: collection
                     )
-                    vm.isInLib[manga.id] = true
+//                    vm.isInLib[manga.id] = true
                 }
             }) {
                 Text("Add to \(collection.name!)")

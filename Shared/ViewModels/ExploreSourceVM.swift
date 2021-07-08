@@ -15,7 +15,7 @@ class ExploreSourceVM: ObservableObject {
     var nextPage = 1
 
     @Published var mangas: [SourceSmallManga] = []
-    @Published var isInLib: [String: Bool] = [:]
+//    @Published var isInLib: [String: Bool] = [:]
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     

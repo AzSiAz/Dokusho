@@ -7,10 +7,9 @@
 
 import SwiftUI
 import NukeUI
-import iPages
 
-struct HorizontalReaderView: View {    
-    @State var index = 0
+struct HorizontalReaderView: View {
+    @State var index: String
     @GestureState var scale: CGFloat = 1.0
     @Binding var showToolbar: Bool
     @Binding var sliderProgress: Double
@@ -28,42 +27,46 @@ struct HorizontalReaderView: View {
         
         if direction == .rightToLeft {
             self.links = links.reversed()
-            self._index = .init(initialValue: self.links.count - 1)
+            self._index = .init(wrappedValue: self.links.last!)
+        }
+        else {
+            self._index = .init(wrappedValue: self.links.first!)
         }
     }
 
     var body: some View {
-        iPages(selection: $index) {
+        TabView(selection: $index) {
             ForEach(self.links, id: \.self) { link in
                 GeometryReader { proxy in
                     RefreshableImageView(url: link, size: proxy.size)
                         .aspectRatio(contentMode: .fit)
-                        .frame(minWidth: proxy.size.width, minHeight: proxy.size.height)
+                        .frame(minWidth: UIScreen.isLargeScreen() ? proxy.size.width / 2: proxy.size.width, minHeight: proxy.size.height)
+                        .background(Color.black)
+                        .tag(link)
                 }
             }
         }
-        .hideDots(true)
+        .tabViewStyle(.page(indexDisplayMode: .never))
         .onChange(of: index, perform: { newValue in
-            updateProgressBar(index: newValue)
-            updateChapterStatus(index: newValue)
+            updateProgressBar(link: newValue)
+            updateChapterStatus(link: newValue)
         })
+        .background(Color.black)
     }
     
-    func updateProgressBar(index: Int) {
-        if direction == .leftToRight { sliderProgress = Double(links.firstIndex(of: links[index]) ?? 0) + 1 }
-        else { sliderProgress = Double(links.reversed().firstIndex(of: links[index]) ?? 0) + 1 }
+    func updateProgressBar(link: String) {
+        if direction == .leftToRight { sliderProgress = Double(links.firstIndex(of: link) ?? 0) + 1 }
+        else { sliderProgress = Double(links.reversed().firstIndex(of: link) ?? 0) + 1 }
     }
     
-    func updateChapterStatus(index: Int) {
-        var status: MangaChapter.Status = .unread
-        
-        if direction == .leftToRight && index == links.count - 1 {
-            status = .read
+    func updateChapterStatus(link: String) {
+        if direction == .leftToRight && link == links.last {
+            let status: MangaChapter.Status = .read
+            self.onProgress(status)
         }
-        else if direction == .rightToLeft && index == 0 {
-            status = .read
+        else if direction == .rightToLeft && link == links.first {
+            let status: MangaChapter.Status = .read
+            self.onProgress(status)
         }
-        
-        self.onProgress(status)
     }
 }

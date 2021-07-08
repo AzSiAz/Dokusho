@@ -15,7 +15,7 @@ class ChapterListVM: NSObject, ObservableObject {
     
     var mangaId: String
     @Published var chapters: [MangaChapter] = []
-    @Published var selectedChapter: MangaChapter?
+    @Published var selectedChapter: String?
     @Published var filter: MangaChapter.StatusFilter
     @Published var ascendingOrder: Bool
     @Published var error: Error?
@@ -57,7 +57,7 @@ class ChapterListVM: NSObject, ObservableObject {
     }
     
     func selectChapter(for chapter: MangaChapter) {
-        selectedChapter = chapter
+        selectedChapter = chapter.id
     }
     
     func changeChapterStatus(for chapter: MangaChapter, status: MangaChapter.Status) {

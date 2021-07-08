@@ -20,6 +20,7 @@ struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
 
     @StateObject var vm: ReaderVM
+
     @State var direction: ReadingDirection = .vertical
     @State var progress: Double = 1
     @State var showReaderDirectionChoice = false
@@ -46,6 +47,8 @@ struct ReaderView: View {
                 }
             }
         }
+        .background(Color.black)
+        .navigationBarHidden(true)
         .onAppear { self.direction = self.vm.chapter.manga?.type.getDefaultReadingDirection() ?? .vertical }
         .onTapGesture { withAnimation { vm.showToolBar.toggle() } }
         .task { await vm.fetchChapter() }

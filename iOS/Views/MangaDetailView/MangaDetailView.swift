@@ -9,6 +9,8 @@ import SwiftUI
 import NukeUI
 
 struct MangaDetailView: View {
+    @Environment(\.dismiss) var dismiss
+
     var dataManager = DataManager.shared
 
     @StateObject var vm: MangaDetailVM
@@ -16,55 +18,64 @@ struct MangaDetailView: View {
     @State var imageWidth: CGFloat = 0
     @State var addToCollection = false
     @State var showMoreDesc = false
+    @State var selectedChapter: MangaChapter?
     
     var body: some View {
-        ZStack {
-            if vm.error {
-                VStack {
-                    Text("Something weird happened, try again")
-                    Button(action: {
-                        async {
-                            await vm.fetchManga()
+        NavigationView {
+            ScrollView {
+                if vm.error {
+                    VStack {
+                        Text("Something weird happened, try again")
+                        Button(action: {
+                            async {
+                                await vm.fetchManga()
+                            }
+                        }) {
+                            Image(systemName: "arrow.counterclockwise")
                         }
-                    }) {
-                        Image(systemName: "arrow.counterclockwise")
+                    }
+                }
+                
+                if !vm.error && vm.manga == nil {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .frame(maxWidth: .infinity)
+                }
+                
+                if !vm.error {
+                    if let manga = vm.manga {
+                        Header(manga)
+                            .padding(.bottom)
+                        Information(manga)
+                            .padding(.top, 5)
+                            .padding(.bottom, 15)
+                        Divider()
+                        ChapterListView(vm: .init(mangaId: vm.mangaId), selectedChapter: $selectedChapter)
+                                .padding(.bottom)
+                    }
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: dismiss.callAsFunction) {
+                        Image(systemName: "chevron.down")
+                    }
+                    .buttonStyle(.plain)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Link(destination: self.vm.getMangaURL()) {
+                        Image(systemName: "safari")
                     }
                 }
             }
-            
-            if !vm.error && vm.manga == nil {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity)
-            }
-            
-            if !vm.error {
-                if let manga = vm.manga {
-                    ScrollView {
-                            Header(manga)
-                                .padding(.bottom)
-//                            Divider()
-                            Information(manga)
-                                .padding(.top, 5)
-                                .padding(.bottom, 15)
-                            Divider()
-                        ChapterListView(vm: .init(mangaId: vm.mangaId))
-                                .padding(.bottom)
-                    }
-//                    .refreshable { await vm.fetchManga() }
-                }
+            .refreshable { await vm.fetchManga() }
+            // TODO: Fix when .task is working as expected
+            .onAppear { async { await vm.fetchManga() } }
+            .fullScreenCover(item: $selectedChapter) { chapter in
+                ReaderView(vm: .init(for: chapter))
             }
         }
-        .navigationBarTitle(vm.manga?.title ?? "Loading", displayMode: .large)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Link(destination: self.vm.getMangaURL()) {
-                    Image(systemName: "safari")
-                        .resizable()
-                }
-            }
-        }
-        .task { await vm.fetchManga() }
     }
     
     fileprivate func Header(_ manga: Manga) -> some View {
@@ -169,13 +180,21 @@ struct MangaDetailView: View {
                 collections.forEach { col in
                         actions.append(.default(
                             Text(col.name!),
-                            action: { dataManager.insertMangaInCollection(for: manga, in: col) }
+                            action: {
+                                dataManager.insertMangaInCollection(for: manga, in: col)
+                                async {
+                                    await vm.fetchManga()
+                                }
+                            }
                         ))
                 }
             }
             if manga.collection != nil {
                 actions.append(.destructive(Text("Remove from \(manga.collection?.name ?? "")"), action: {
                     dataManager.removeMangaFromCollection(for: manga, in: manga.collection!)
+                    async {
+                        await vm.fetchManga()
+                    }
                 }))
             }
 

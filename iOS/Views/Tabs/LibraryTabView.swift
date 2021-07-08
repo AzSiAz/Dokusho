@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LibraryTabView: View {
-    @EnvironmentObject var sourcesSvc: MangaSourceService
     @Environment(\.colorScheme) var colorScheme
     @FetchRequest(fetchRequest: MangaCollection.collectionFetchRequest) var collections: FetchedResults<MangaCollection>
 
@@ -18,12 +17,20 @@ struct LibraryTabView: View {
         NavigationView {
             TabView(selection: $vm.selectedTab) {
                 ForEach(collections) { collection in
-                    MangaCollectionPage(vm: vm, collection: collection)
+                    MangaCollectionPage(collection: collection)
                         .safeAreaInset(edge: .bottom, spacing: 0) {
                             if let refresh = vm.refreshStatus[collection] {
                                 VStack {
-                                    Text(refresh.refreshTitle)
-                                        .font(.caption)
+                                    HStack {
+                                        Text("\(refresh.refreshProgress)/\(refresh.refreshCount)")
+                                            .font(.caption)
+                                        Text(" - ")
+                                            .font(.caption)
+                                        Text(refresh.refreshTitle)
+                                            .font(.caption)
+                                            .lineLimit(1)
+                                    }
+                                    .frame(minWidth: UIScreen.main.bounds.width, alignment: .leading)
                                     ProgressView(value: Float(refresh.refreshProgress), total: Float(refresh.refreshCount))
                                         .background(Color.gray)
                                         .progressViewStyle(.linear)

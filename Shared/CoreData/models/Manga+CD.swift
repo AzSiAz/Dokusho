@@ -182,6 +182,23 @@ extension Manga {
         return req
     }
     
+    static func fetchAllMangaInCollectionForSource(for source: Source) -> NSFetchRequest<Manga> {
+        let req = Self.fetchRequest()
+        
+        req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "collection != nil"),
+            NSPredicate(format: "source = %i", source.id)
+        ])
+        
+        req.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Manga.lastChapterUpdate, ascending: false)
+        ]
+        
+        req.fetchBatchSize = 30
+        
+        return req
+    }
+    
     static func fetchMany(collection: MangaCollection) -> NSFetchRequest<Manga> {
         let req = Self.fetchRequest()
         

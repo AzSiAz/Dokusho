@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChapterListRow: View {
     @StateObject var vm: ChapterListVM
+    @Binding var selectedChapter: MangaChapter?
     
     var chapter: MangaChapter
     var id: String { "\(chapter.id!)\(chapter.status.rawValue)" }
@@ -16,7 +17,7 @@ struct ChapterListRow: View {
     
     var body: some View {
         HStack {
-            Button(action: { vm.selectChapter(for: chapter) }) {
+            Button(action: { selectedChapter = chapter }) {
                 HStack {
                     VStack(alignment: .leading) {
                         Text(chapter.title ?? "No Title")
@@ -37,9 +38,6 @@ struct ChapterListRow: View {
             }
             .buttonStyle(.plain)
             .padding(.vertical, 5)
-            
-            Divider()
-                .padding(.leading, 15)
         }
         .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
         .contextMenu {

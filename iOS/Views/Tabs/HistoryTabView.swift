@@ -9,8 +9,12 @@ import SwiftUI
 import NukeUI
 
 struct HistoryTabView: View {
+    @EnvironmentObject var sourcesSvc: MangaSourceService
+    
     private var dataManager = DataManager.shared
+    
     @FetchRequest(fetchRequest: MangaChapter.fetchChaptersHistory()) var chapters: FetchedResults<MangaChapter>
+    @State var selectedManga: Manga?
     
     var body: some View {
         NavigationView {
@@ -19,6 +23,7 @@ struct HistoryTabView: View {
                     HStack {
                         RemoteImageCacheView(url: try! chapter.manga!.cover!.asURL(), contentMode: .fit)
                             .frame(width: 80)
+                            .onTapGesture { selectedManga = chapter.manga }
                         
                         VStack(alignment: .leading) {
                             Text(chapter.manga!.title!)
@@ -29,6 +34,9 @@ struct HistoryTabView: View {
                     .frame(height: 120, alignment: .leading)
                 }
                 .onDelete { dataManager.markChapterAs(chapter: chapters[$0.first!], status: .unread) }
+            }
+            .sheetSizeAware(item: $selectedManga) { manga in
+                MangaDetailView(vm: .init(for: sourcesSvc.getSource(sourceId: manga.source)!, mangaId: manga.id!))
             }
             .toolbar { EditButton() }
             .listStyle(.plain)

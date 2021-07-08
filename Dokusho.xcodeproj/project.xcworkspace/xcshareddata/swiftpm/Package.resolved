@@ -11,30 +11,12 @@
         }
       },
       {
-        "package": "Disk",
-        "repositoryURL": "https://github.com/saoudrizwan/Disk",
-        "state": {
-          "branch": null,
-          "revision": "b0cb4fdf23e51849cc2460bdc6de795c3bcca99d",
-          "version": "0.6.4"
-        }
-      },
-      {
         "package": "Gifu",
         "repositoryURL": "https://github.com/kaishin/Gifu",
         "state": {
           "branch": null,
           "revision": "51f2eab32903e336f590c013267cfa4d7f8b06c4",
           "version": "3.3.1"
-        }
-      },
-      {
-        "package": "iPages",
-        "repositoryURL": "https://github.com/benjaminsage/iPages.git",
-        "state": {
-          "branch": null,
-          "revision": "f57e3cba2cf4bd0a689236254cde361e54315720",
-          "version": "0.0.13"
         }
       },
       {

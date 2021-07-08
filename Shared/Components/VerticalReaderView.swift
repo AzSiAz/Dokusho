@@ -26,6 +26,7 @@ struct VerticalReaderView: View {
                             .frame(width: proxy.size.width)
                             .id(links.firstIndex(of: link))
                             .onAppear { updateProgressBar(link: link) }
+                            .background(Color.black)
                     }
                     LazyVStack {
                         Color.clear
