@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Nuke",
+        "repositoryURL": "https://github.com/kean/Nuke",
+        "state": {
+          "branch": "master",
+          "revision": "3bd3a1765bdf62d561d4c2e10e1c4fc7a010f44e",
+          "version": null
+        }
+      },
+      {
+        "package": "SwiftSoup",
+        "repositoryURL": "https://github.com/scinfu/SwiftSoup",
+        "state": {
+          "branch": "master",
+          "revision": "05eec922678a28b308c55c745dd1da88de0faa9f",
+          "version": null
+        }
+      },
+      {
+        "package": "SwiftyJSON",
+        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON",
+        "state": {
+          "branch": "master",
+          "revision": "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
