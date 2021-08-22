@@ -28,4 +28,13 @@ class PersistenceController {
             self.container.viewContext.automaticallyMergesChangesFromParent = true
         }
     }
+    
+    func backgroundCtx() -> NSManagedObjectContext {
+        let ctx = container.newBackgroundContext()
+        
+        ctx.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        ctx.automaticallyMergesChangesFromParent = true
+        
+        return ctx
+    }
 }

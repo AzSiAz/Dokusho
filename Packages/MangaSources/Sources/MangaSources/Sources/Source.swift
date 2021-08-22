@@ -57,6 +57,11 @@ public struct SourceChapterImage: Identifiable, Equatable, Hashable {
     
     public var index: Int
     public var imageUrl: String
+    
+    public init(index: Int, imageUrl: String) {
+        self.index = index
+        self.imageUrl = imageUrl
+    }
 }
 
 public struct SourceSmallManga: Identifiable, Equatable, Hashable {

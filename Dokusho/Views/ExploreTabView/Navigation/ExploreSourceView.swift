@@ -63,10 +63,7 @@ struct ExploreSourceView: View {
             }
         }
         .sheetSizeAware(item: $vm.selectedManga) { manga in
-            EmptyView()
-//            MangaDetailView(vm: .init(for: vm.src, mangaId: manga.id, realm: realm))
-//                .environment(\.realm, realm)
-//                .environment(\.realmConfiguration, Realm.Configuration.defaultConfiguration)
+            MangaDetailView(mangaId: manga.id, src: vm.src)
         }
         .navigationTitle(vm.getTitle())
     }

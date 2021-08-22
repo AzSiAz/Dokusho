@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19197" systemVersion="21A5304g" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AlternateTitlesEntity" representedClassName="AlternateTitlesEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="key" optional="YES" attributeType="String"/>
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="alternateTitles" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="key"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="AuthorAndArtistEntity" representedClassName="AuthorAndArtistEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="typeRaw" attributeType="String"/>
+        <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="authorsAndArtists" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ChapterEntity" representedClassName="ChapterEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="chapterId" attributeType="String"/>
+        <attribute name="dateSourceUpload" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="key" attributeType="String"/>
+        <attribute name="position" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="readAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="statusRaw" optional="YES" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="chapters" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="key"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="GenreEntity" representedClassName="GenreEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="genres" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="MangaEntity" representedClassName="MangaEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="cover" attributeType="URI"/>
+        <attribute name="mangaId" attributeType="String"/>
+        <attribute name="statusRaw" optional="YES" attributeType="String"/>
+        <attribute name="synopsis" attributeType="String" defaultValueString=""/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="typeRaw" optional="YES" attributeType="String"/>
+        <relationship name="alternateTitles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlternateTitlesEntity" inverseName="manga" inverseEntity="AlternateTitlesEntity"/>
+        <relationship name="authorsAndArtists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AuthorAndArtistEntity" inverseName="mangas" inverseEntity="AuthorAndArtistEntity"/>
+        <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChapterEntity" inverseName="manga" inverseEntity="ChapterEntity"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="mangas" inverseEntity="GenreEntity"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" ordered="YES" destinationEntity="SourceEntity" inverseName="mangas" inverseEntity="SourceEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="mangaId"/>
+                <constraint value="source"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="SourceEntity" representedClassName="SourceEntity" syncable="YES" codeGenerationType="class">
         <attribute name="active" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -8,6 +71,7 @@
         <attribute name="name" attributeType="String"/>
         <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sourceId" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="source" inverseEntity="MangaEntity"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="name"/>
@@ -16,6 +80,11 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="SourceEntity" positionX="-45" positionY="0" width="128" height="134"/>
+        <element name="SourceEntity" positionX="-1576.33203125" positionY="-851" width="98.72265625" height="163"/>
+        <element name="MangaEntity" positionX="-1417.8984375" positionY="-965.15625" width="98.859375" height="208"/>
+        <element name="AlternateTitlesEntity" positionX="-1206.10546875" positionY="-926.0234375" width="128" height="88"/>
+        <element name="GenreEntity" positionX="-1600.05859375" positionY="-960.765625" width="128" height="73"/>
+        <element name="AuthorAndArtistEntity" positionX="-1157.22265625" positionY="-769.4296875" width="128" height="88"/>
+        <element name="ChapterEntity" positionX="-1390.50390625" positionY="-670.42578125" width="128" height="163"/>
     </elements>
 </model>
