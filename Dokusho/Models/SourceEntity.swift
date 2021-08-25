@@ -40,6 +40,16 @@ extension SourceEntity {
             try? ctx.save()
         }
     }
+    
+    static func fetchOne(sourceId: Int, ctx: NSManagedObjectContext) -> SourceEntity? {
+        let req = Self.fetchRequest()
+        
+        req.predicate = NSPredicate(format: "%K = %i", #keyPath(SourceEntity.sourceId), sourceId)
+        req.fetchLimit = 1
+
+        let res = try? ctx.fetch(req)
+        return res?.first
+    }
 }
 
 extension SourceEntity {

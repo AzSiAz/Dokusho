@@ -50,6 +50,11 @@ extension ChapterEntity {
         
         self.statusRaw = newStatus.rawValue
     }
+    
+    func updateFromBackup(chapterBackup: ChapterBackup) {
+        self.readAt = chapterBackup.readAt
+        self.statusRaw = ChapterStatus.read.rawValue
+    }
 }
 
 extension ChapterEntity {

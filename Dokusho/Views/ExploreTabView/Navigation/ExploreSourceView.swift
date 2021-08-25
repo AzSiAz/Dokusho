@@ -9,6 +9,10 @@ import SwiftUI
 import MangaSources
 
 struct ExploreSourceView: View {
+    @FetchRequest var mangas: FetchedResults<MangaEntity>
+    @FetchRequest(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default)
+    var collections: FetchedResults<CollectionEntity>
+    
     @StateObject var vm: ExploreSourceVM
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
@@ -33,21 +37,22 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
+                        let isInCollection = mangas.first { $0.mangaId == manga.id } != nil
                         ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                             .frame(height: 180)
                             .onTapGesture { vm.selectedManga = manga }
-//                            .contextMenu { ContextMenu(manga: manga) }
+                            .contextMenu { ContextMenu(manga: manga) }
                             .task { await vm.fetchMoreIfPossible(for: manga) }
-//                            .overlay(alignment: .topTrailing) {
-//                                if isInCollection {
-//                                    Image(systemName: "star")
-//                                        .symbolVariant(.fill)
-//                                        .padding(2)
-//                                        .foregroundColor(.white)
-//                                        .background(Color.blue)
-//                                        .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
-//                                }
-//                            }
+                            .overlay(alignment: .topTrailing) {
+                                if isInCollection {
+                                    Image(systemName: "star")
+                                        .symbolVariant(.fill)
+                                        .padding(2)
+                                        .foregroundColor(.white)
+                                        .background(Color.blue)
+                                        .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+                                }
+                            }
                     }
                 }
             }
@@ -83,16 +88,11 @@ struct ExploreSourceView: View {
         }
     }
     
-//    func ContextMenu(manga: SourceSmallManga) -> some View {
-//        ForEach(collections) { collection in
-//                // TODO: AsyncButton
-//            AsyncButton(action: {
-//                await vm.addToCollection(
-//                    smallManga: manga, collection: collection
-//                )
-//            }) {
-//                Text("Add to \(collection.name)")
-//            }
-//        }
-//    }
+    func ContextMenu(manga: SourceSmallManga) -> some View {
+        ForEach(collections) { collection in
+            AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection.objectID) }) {
+                Text("Add to \(collection.name ?? "")")
+            }
+        }
+    }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChapterCollection: View {
-    @FetchRequest(sortDescriptors: [ChapterEntity.positionOrder()], predicate: nil, animation: .default)
+    @FetchRequest
     var chapters: FetchedResults<ChapterEntity>
     
     @Binding var selectedChapter: ChapterEntity?

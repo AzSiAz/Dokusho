@@ -16,7 +16,11 @@ struct HorizontalReaderView: View {
                 GeometryReader { proxy in
                     RefreshableImageView(url: image.imageUrl, size: proxy.size)
                         .aspectRatio(contentMode: .fit)
-                        .frame(minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2: proxy.size.width, minHeight: proxy.size.height)
+                        .frame(
+                            minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2: proxy.size.width,
+                            minHeight: proxy.size.height,
+                            alignment: .center
+                        )
                         .background(Color.black)
                         .tag(image)
                 }

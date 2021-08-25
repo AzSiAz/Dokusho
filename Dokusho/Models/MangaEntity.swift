@@ -58,6 +58,10 @@ extension MangaEntity {
         ])
     }
     
+    static func sourcePredicate(source: SourceEntity) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
+    }
+    
     static func updateFromSource(ctx: NSManagedObjectContext, data: SourceManga, source: SourceEntity) -> MangaEntity {
         let manga = MangaEntity.fetchOne(ctx: ctx, mangaId: data.id, source: source) ?? MangaEntity(ctx: ctx, sourceId: source.objectID, data: data)
         
@@ -94,16 +98,28 @@ extension MangaEntity {
         
         data.chapters
             .enumerated()
-            .forEach { (index, chapter) in
+            .map { (index, chapter) -> ChapterEntity in
                 let c = ChapterEntity(ctx: ctx, data: chapter, position: Int32(index), source: source)
                 if let found = readDico[c.chapterId!] {
                     c.readAt = found
                     c.statusRaw = ChapterStatus.read.rawValue
                 }
-                ctx.insert(c)
-                manga.addToChapters(c)
+                return c
             }
-        
+            .forEach {
+                ctx.insert($0)
+                manga.addToChapters($0)
+            }
+
         return manga
+    }
+    
+    func importChapterBackup(chaptersBackup: [ChapterBackup]) {
+        let chapters = self.chapters.asSet(of: ChapterEntity.self)
+        
+        chapters.forEach { chapter in
+            guard let foundBackup = chaptersBackup.first(where: { $0.id == chapter.chapterId }) else { return }
+            chapter.updateFromBackup(chapterBackup: foundBackup)
+        }
     }
 }

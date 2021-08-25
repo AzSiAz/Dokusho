@@ -25,6 +25,9 @@ struct RootView: View {
             ExploreTabView()
                 .tabItem { Label("Explore", systemImage: "safari") }
                 .tag(ActiveTab.explore)
+            SettingsTabView()
+                .tabItem { Label("Settings", systemImage: "gear") }
+                .tag(ActiveTab.settings)
         }
         .task(priority: .high) {
             await SourceEntity.importFromService(sources: MangaSourceService.shared.list)

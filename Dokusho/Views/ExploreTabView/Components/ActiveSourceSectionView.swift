@@ -22,7 +22,12 @@ struct ActiveSourceSectionView: View {
             if swipe {
                 SourceRowWithSwipeView(source: src)
             } else {
-                NavigationLink(destination: ExploreSourceView(vm: .init(for: src))) {
+                NavigationLink(
+                    destination: ExploreSourceView(
+                        mangas: .init(sortDescriptors: [], predicate: MangaEntity.sourcePredicate(source: src), animation: .default),
+                        vm: .init(for: src)
+                    )
+                ) {
                     SourceRowView(source: src)
                 }
             }
