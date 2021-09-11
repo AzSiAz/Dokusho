@@ -51,36 +51,6 @@ extension MangaEntity {
 }
 
 extension MangaEntity {
-    static func mangaIdAndSourcePredicate(mangaId: String, source: SourceEntity) -> NSPredicate {
-        return NSCompoundPredicate(andPredicateWithSubpredicates: [
-            NSPredicate(format: "%K = %@", #keyPath(MangaEntity.mangaId), mangaId),
-            NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
-        ])
-    }
-    
-    static func sourcePredicate(source: SourceEntity) -> NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
-    }
-    
-    static func collectionPredicate(collection: CollectionEntity) -> NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.collection), collection)
-    }
-    
-    static func inCollectionForSource(source: SourceEntity) -> NSPredicate {
-        return NSCompoundPredicate(andPredicateWithSubpredicates: [
-            NSPredicate(format: "%K != nil", #keyPath(MangaEntity.collection)),
-            Self.sourcePredicate(source: source)
-        ])
-    }
-    
-    static var nameOrder: SortDescriptor<MangaEntity> {
-        return SortDescriptor<MangaEntity>(\.title, order: .forward)
-    }
-    
-    static var lastUpdate: SortDescriptor<MangaEntity> {
-        return SortDescriptor<MangaEntity>(\.lastChapterUploadDate, order: .reverse)
-    }
-    
     static func updateFromSource(ctx taskCtx: NSManagedObjectContext, data: SourceManga, source: SourceEntity) throws -> MangaEntity {
         let manga: MangaEntity
         if let found = MangaEntity.fetchOne(ctx: taskCtx, mangaId: data.id, source: source) {
@@ -153,4 +123,47 @@ extension MangaEntity {
             chapter.updateFromBackup(chapterBackup: foundBackup)
         }
     }
+}
+
+extension MangaEntity {
+    static func mangaIdAndSourcePredicate(mangaId: String, source: SourceEntity) -> NSPredicate {
+        return NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "%K = %@", #keyPath(MangaEntity.mangaId), mangaId),
+            NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
+        ])
+    }
+    
+    static func sourcePredicate(source: SourceEntity) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
+    }
+    
+    static func collectionPredicate(collection: CollectionEntity) -> NSPredicate {
+        var predicate = [NSPredicate(format: "%K = %@", #keyPath(MangaEntity.collection), collection)]
+
+        switch collection.filter {
+            case .all: break
+            case .read:
+                predicate.append(NSPredicate(format: "SUBQUERY(%K, $chapter, $chapter.%K = %@).@count == 0", #keyPath(MangaEntity.chapters), #keyPath(ChapterEntity.statusRaw), ChapterStatus.unread.rawValue))
+            case .unread:
+                predicate.append(NSPredicate(format: "ANY %K.%K = %@", #keyPath(MangaEntity.chapters), #keyPath(ChapterEntity.statusRaw), ChapterStatus.unread.rawValue))
+        }
+        
+        return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
+    }
+    
+    static func inCollectionForSource(source: SourceEntity) -> NSPredicate {
+        return NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "%K != nil", #keyPath(MangaEntity.collection)),
+            Self.sourcePredicate(source: source)
+        ])
+    }
+    
+    static var nameOrder: SortDescriptor<MangaEntity> {
+        return SortDescriptor<MangaEntity>(\.title, order: .forward)
+    }
+    
+    static var lastUpdate: SortDescriptor<MangaEntity> {
+        return SortDescriptor<MangaEntity>(\.lastChapterUploadDate, order: .reverse)
+    }
+
 }

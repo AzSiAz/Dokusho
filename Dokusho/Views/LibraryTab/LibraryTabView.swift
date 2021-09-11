@@ -23,7 +23,7 @@ struct LibraryTabView: View {
                 }
             }
             .toolbar(content: { AddButton(onTapGesture: { print("test") }) })
-            .navigationTitle(Text("Collections"))
+            .navigationTitle("Collections")
         }
         .navigationViewStyle(.stack)
     }
@@ -31,21 +31,31 @@ struct LibraryTabView: View {
 
 struct CollectionPage: View {
     @ObservedObject var collection: CollectionEntity
+    @FetchRequest var mangas: FetchedResults<MangaEntity>
+    @State var selectedManga: MangaEntity?
+    @State var showFilter = false
     
-    @FetchRequest
-    var mangas: FetchedResults<MangaEntity>
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
     init(collection: CollectionEntity) {
         self._collection = .init(wrappedValue: collection)
-        self._mangas = .init(sortDescriptors: [MangaEntity.lastUpdate], predicate: MangaEntity.collectionPredicate(collection: collection), animation: .default)
+        self._mangas = .init(sortDescriptors: [MangaEntity.lastUpdate], predicate: MangaEntity.collectionPredicate(collection: collection), animation: .easeIn)
     }
     
     var body: some View {
-        List {
-            ForEach(mangas) { manga in
-                Text(manga.title!)
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                ForEach(mangas) { manga in
+                    MangaCardView(manga: manga)
+                        .onTapGesture { selectedManga = manga }
+                }
             }
         }
-        .navigationTitle(collection.getName())
+        .sheetSizeAware(item: $selectedManga, content: { manga in
+            MangaDetailView(mangaId: manga.mangaId!, src: manga.source!)
+        })
+        .toolbar { LibraryToolbarView(collection: collection, showFilter: $showFilter) }
+        .navigationTitle("\(collection.name ?? "No name") (\(mangas.count))")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

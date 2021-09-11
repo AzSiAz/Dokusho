@@ -48,6 +48,8 @@ class ReaderVM: ObservableObject {
             try? ctx.performAndWait {
                 guard let chapter = self.ctx.object(with: self.chapter.objectID) as? ChapterEntity else { return }
                 chapter.markAs(newStatus: .read)
+                chapter.manga?.lastUserAction = .now
+
                 try self.ctx.save()
             }
         }

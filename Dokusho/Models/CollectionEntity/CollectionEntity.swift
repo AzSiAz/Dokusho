@@ -8,16 +8,6 @@
 import Foundation
 import CoreData
 
-enum CollectionEntityFilter: String, CaseIterable {
-    case all = "All"
-    case read = "Only Read"
-    case unread = "Only Reading"
-    
-    func isNotAll() -> Bool {
-        return self != .all
-    }
-}
-
 extension CollectionEntity {
     convenience init(ctx: NSManagedObjectContext, name: String, position: Int, uuid: UUID = UUID()) {
         self.init(entity: Self.entity(), insertInto: ctx)

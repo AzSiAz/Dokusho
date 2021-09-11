@@ -24,7 +24,7 @@ struct ExploreTabView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem {
                     Label("Manage Source", systemImage: "globe")
                         .onTapGesture {
                             withAnimation {

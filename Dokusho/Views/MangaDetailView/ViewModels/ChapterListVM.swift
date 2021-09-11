@@ -23,6 +23,8 @@ class ChapterListVM: ObservableObject {
     func changeChapterStatus(for chapter: ChapterEntity, status: ChapterStatus) {
         try? ctx.performAndWait {
             chapter.markAs(newStatus: status)
+            manga.lastUserAction = .now
+
             try ctx.save()
         }
     }
@@ -38,6 +40,8 @@ class ChapterListVM: ObservableObject {
                 .filter { chapter.position < $0.position }
                 .forEach { $0.markAs(newStatus: status) }
             
+            manga.lastUserAction = .now
+
             try ctx.save()
         }
     }
