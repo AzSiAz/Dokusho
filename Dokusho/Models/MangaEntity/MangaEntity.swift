@@ -124,10 +124,12 @@ extension MangaEntity {
             .enumerated()
             .map { (index, chapter) -> ChapterEntity in
                 let c = ChapterEntity(ctx: taskCtx, data: chapter, position: Int32(index), source: source)
+                c.markAs(newStatus: .unread)
+
                 if let found = readDico[c.chapterId!] {
-                    c.readAt = found
-                    c.statusRaw = ChapterStatus.read.rawValue
+                    c.markAs(newStatus: .read, date: found)
                 }
+                
                 return c
             }
             .forEach {

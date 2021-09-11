@@ -14,10 +14,10 @@ struct ChapterCollection: View {
     @Binding var selectedChapter: ChapterEntity?
     @StateObject var vm: ChapterListVM
     
-    init(manga: NSManagedObjectID, selectedChaper: Binding<ChapterEntity?>, ascendingOrder: Bool) {
+    init(manga: NSManagedObjectID, selectedChaper: Binding<ChapterEntity?>, ascendingOrder: Bool, filter: ChapterStatusFilter) {
         self._selectedChapter = selectedChaper
         self._vm = .init(wrappedValue: .init(mangaOId: manga))
-        self._chapters = .init(sortDescriptors: [ChapterEntity.positionOrder(order: ascendingOrder ? .forward : .reverse)], predicate: ChapterEntity.forMangaPredicate(manga: manga))
+        self._chapters = .init(sortDescriptors: [ChapterEntity.positionOrder(order: ascendingOrder ? .forward : .reverse)], predicate: ChapterEntity.chaptersListForMangaPredicate(manga: manga, filter: filter))
     }
     
     var body: some View {

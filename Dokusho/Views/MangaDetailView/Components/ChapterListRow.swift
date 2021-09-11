@@ -37,6 +37,6 @@ struct ChapterListRow: View {
             .buttonStyle(.plain)
             .padding(.vertical, 5)
         }
-        .foregroundColor(chapter.statusRaw == ChapterStatus.read.rawValue ? Color.gray : Color.blue)
+        .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
     }
 }

@@ -9,11 +9,6 @@ import Foundation
 import CoreData
 import MangaScraper
 
-enum ChapterStatus: String, CaseIterable {
-    case unread = "Unread"
-    case read = "Read"
-}
-
 enum ChapterStatusFilter {
     case all
     case unread
@@ -31,7 +26,7 @@ enum ChapterStatusFilter {
 
 extension ChapterEntity {
     var isUnread: Bool {
-        return statusRaw != ChapterStatus.read.rawValue
+        return status != .read
     }
     
     convenience init(ctx: NSManagedObjectContext, data: SourceChapter, position: Int32, source: SourceEntity) {
@@ -44,16 +39,16 @@ extension ChapterEntity {
         self.title = data.name
     }
     
-    func markAs(newStatus: ChapterStatus) {
-        if newStatus == .read { self.readAt = .now }
+    func markAs(newStatus: ChapterStatus, date: Date = .now) {
+        if newStatus == .read { self.readAt = date }
         if newStatus == .unread { self.readAt = nil }
         
-        self.statusRaw = newStatus.rawValue
+        self.status = newStatus
     }
     
     func updateFromBackup(chapterBackup: ChapterBackup) {
         self.readAt = chapterBackup.readAt
-        self.statusRaw = ChapterStatus.read.rawValue
+        self.status = .read
     }
 }
 
@@ -66,15 +61,11 @@ extension ChapterEntity {
         return try! ctx.fetch(req)
     }
     
-    static func chaptersForManga(manga: NSManagedObjectID, ascendingOrder: Bool) -> NSFetchRequest<ChapterEntity> {
-        let req = Self.fetchRequest()
+    static func chaptersListForMangaPredicate(manga: NSManagedObjectID, filter: ChapterStatusFilter = .all) -> NSPredicate {
+        var predicate: [NSPredicate] = [forMangaPredicate(manga: manga)]
+        if filter != .all { predicate.append(forChapterStatusPredicate(filter: filter)) }
         
-        req.predicate = ChapterEntity.forMangaPredicate(manga: manga)
-        req.sortDescriptors = [NSSortDescriptor(keyPath: \ChapterEntity.position, ascending: ascendingOrder)]
-        req.fetchLimit = 0
-        req.fetchBatchSize = 0
-        
-        return req
+        return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
     }
 }
 
@@ -85,6 +76,10 @@ extension ChapterEntity {
     
     static func forSourcePredicate(source: SourceEntity) -> NSPredicate {
         return NSPredicate(format: "%K = %i", #keyPath(ChapterEntity.manga.source), source)
+    }
+    
+    static func forChapterStatusPredicate(filter: ChapterStatusFilter) -> NSPredicate {
+        return NSPredicate(format: "%K IN %@", #keyPath(ChapterEntity.statusRaw), filter == .all ? [ChapterStatus.read.rawValue, ChapterStatus.unread.rawValue] : [ChapterStatus.unread.rawValue])
     }
     
     static func positionOrder(order: SortOrder = .forward) -> SortDescriptor<ChapterEntity> {

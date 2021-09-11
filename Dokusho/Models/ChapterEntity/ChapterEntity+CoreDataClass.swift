@@ -9,6 +9,12 @@
 import Foundation
 import CoreData
 
+enum ChapterStatus: String, CaseIterable {
+    case unread = "Unread"
+    case read = "Read"
+}
+
+
 @objc(ChapterEntity)
 public class ChapterEntity: NSManagedObject {}
 
@@ -30,3 +36,15 @@ extension ChapterEntity {
 }
 
 extension ChapterEntity : Identifiable {}
+
+extension ChapterEntity {
+    var status: ChapterStatus {
+        get {
+            return .init(rawValue: self.statusRaw ?? "") ?? .unread
+        }
+        
+        set {
+            self.statusRaw = newValue.rawValue
+        }
+    }
+}

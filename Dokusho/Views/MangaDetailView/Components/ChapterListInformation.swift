@@ -46,7 +46,7 @@ struct ChapterListInformation: View {
             Divider()
                 .padding(.horizontal, 5)
             
-            ChapterCollection(manga: manga.objectID, selectedChaper: $selectedChapter, ascendingOrder: ascendingOrder)
+            ChapterCollection(manga: manga.objectID, selectedChaper: $selectedChapter, ascendingOrder: ascendingOrder, filter: filter)
                 .padding(.horizontal, 10)
         }
     }
