@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MangaDetailInformation: View {
     @ObservedObject var vm: MangaDetailVM
-//    @FetchRequest(fetchRequest: MangaCollection.collectionFetchRequest) var collections: FetchedResults<MangaCollection>
+    @FetchRequest(sortDescriptors: [], predicate: nil, animation: nil)
+    var collections: FetchedResults<CollectionEntity>
     
     var body: some View {
         VStack {
@@ -18,7 +19,7 @@ struct MangaDetailInformation: View {
                     Button(action: { vm.addToCollection.toggle() }) {
                         VStack(alignment: .center, spacing: 1) {
                             Image(systemName: "heart")
-//                                .symbolVariant(manga.collection != nil ? .fill : .none)
+                                .symbolVariant(manga.collection != nil ? .fill : .none)
                             Text("Favoris")
                         }
                     }
@@ -67,29 +68,34 @@ struct MangaDetailInformation: View {
                 }
             }
         }
-//        .actionSheet(isPresented: $vm.addToCollection) {
-//            var actions: [ActionSheet.Button] = []
-//            
-//            collections.forEach { col in
-//                actions.append(.default(
-//                    Text(col.name!),
-//                    action: {
+        .actionSheet(isPresented: $vm.addToCollection) {
+            var actions: [ActionSheet.Button] = []
+            
+            collections.forEach { col in
+                actions.append(.default(
+                    Text(col.name!),
+                    action: {
+                        vm.insertMangaInCollection(collectionId: col.objectID)
 //                        DataManager.shared.insertMangaInCollection(for: vm.manga!, in: col)
 //                        Task { await vm.fetchManga() }
-//                    }
-//                ))
-//            }
-//
-//            if vm.manga!.collection != nil {
-//                actions.append(.destructive(Text("Remove from \(vm.manga!.collection?.name ?? "")"), action: {
+                    }
+                ))
+            }
+
+            if vm.manga!.collection != nil {
+                actions.append(.destructive(
+                    Text("Remove from \(vm.manga!.collection?.name ?? "")"),
+                    action: {
+                        vm.removeMangaFromCollection()
 //                    DataManager.shared.removeMangaFromCollection(for: vm.manga!, in: vm.manga!.collection!)
 //                    Task { await vm.fetchManga() }
-//                }))
-//            }
-//            
-//            actions.append(.cancel())
-//            
-//            return ActionSheet(title: Text("Choose collection"), buttons: actions)
-//        }
+                    }
+                ))
+            }
+            
+            actions.append(.cancel())
+            
+            return ActionSheet(title: Text("Choose collection"), buttons: actions)
+        }
     }
 }
