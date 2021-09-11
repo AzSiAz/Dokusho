@@ -7,7 +7,7 @@
 
 import Foundation
 import CoreData
-import MangaSources
+import MangaScraper
 
 enum ChapterStatus: String, CaseIterable {
     case unread = "Unread"
@@ -58,29 +58,33 @@ extension ChapterEntity {
 }
 
 extension ChapterEntity {
-    static func chaptersForManga(ctx: NSManagedObjectContext, manga: MangaEntity, source: SourceEntity) -> [ChapterEntity] {
+    static func chaptersForManga(ctx: NSManagedObjectContext, manga: NSManagedObjectID, source: NSManagedObjectID) -> [ChapterEntity] {
         let req = Self.fetchRequest()
         
-        req.predicate = ChapterEntity.forMangaAndSourcePredicate(mangaId: manga.mangaId!, sourceId: source.sourceId)
+        req.predicate = ChapterEntity.forMangaPredicate(manga: manga)
         
         return try! ctx.fetch(req)
+    }
+    
+    static func chaptersForManga(manga: NSManagedObjectID, ascendingOrder: Bool) -> NSFetchRequest<ChapterEntity> {
+        let req = Self.fetchRequest()
+        
+        req.predicate = ChapterEntity.forMangaPredicate(manga: manga)
+        req.sortDescriptors = [NSSortDescriptor(keyPath: \ChapterEntity.position, ascending: ascendingOrder)]
+        req.fetchLimit = 0
+        req.fetchBatchSize = 0
+        
+        return req
     }
 }
 
 extension ChapterEntity {
-    static func forMangaAndSourcePredicate(mangaId: String, sourceId: Int32) -> NSPredicate {
-        return NSCompoundPredicate(andPredicateWithSubpredicates: [
-            ChapterEntity.forMangaPredicate(mangaId: mangaId),
-            ChapterEntity.forSourcePredicate(sourceId: sourceId)
-        ])
+    static func forMangaPredicate(manga: NSManagedObjectID) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", #keyPath(ChapterEntity.manga), manga)
     }
     
-    static func forMangaPredicate(mangaId: String) -> NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(ChapterEntity.manga.mangaId), mangaId)
-    }
-    
-    static func forSourcePredicate(sourceId: Int32) -> NSPredicate {
-        return NSPredicate(format: "%K = %i", #keyPath(ChapterEntity.manga.source.sourceId), sourceId)
+    static func forSourcePredicate(source: SourceEntity) -> NSPredicate {
+        return NSPredicate(format: "%K = %i", #keyPath(ChapterEntity.manga.source), source)
     }
     
     static func positionOrder(order: SortOrder = .forward) -> SortDescriptor<ChapterEntity> {

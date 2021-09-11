@@ -46,13 +46,7 @@ struct ChapterListInformation: View {
             Divider()
                 .padding(.horizontal, 5)
             
-            ChapterCollection(chapters: .init(
-                                    sortDescriptors: [ChapterEntity.positionOrder(order: ascendingOrder ? .forward : .reverse)],
-                                    predicate: ChapterEntity.forMangaAndSourcePredicate(mangaId: manga.mangaId!, sourceId: manga.source!.sourceId),
-                                    animation: .default
-                                ),
-                              selectedChapter: $selectedChapter,
-                              vm: .init(manga: manga))
+            ChapterCollection(manga: manga.objectID, selectedChaper: $selectedChapter, ascendingOrder: ascendingOrder)
                 .padding(.horizontal, 10)
         }
     }

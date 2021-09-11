@@ -2,26 +2,35 @@
   "object": {
     "pins": [
       {
+        "package": "MangaScraper",
+        "repositoryURL": "https://github.com/AzSiAz/MangaScraper",
+        "state": {
+          "branch": "main",
+          "revision": "d3560401dbf8befa70756d57fc80519eb1f28824",
+          "version": null
+        }
+      },
+      {
         "package": "Nuke",
         "repositoryURL": "https://github.com/kean/Nuke",
         "state": {
           "branch": "master",
-          "revision": "3bd3a1765bdf62d561d4c2e10e1c4fc7a010f44e",
+          "revision": "1d30442ed464c11e6f395bf364a8de57243c9480",
           "version": null
         }
       },
       {
         "package": "SwiftSoup",
-        "repositoryURL": "https://github.com/scinfu/SwiftSoup",
+        "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
         "state": {
           "branch": "master",
-          "revision": "05eec922678a28b308c55c745dd1da88de0faa9f",
+          "revision": "02c63b7be50bda384f22c56c64d347231754a07e",
           "version": null
         }
       },
       {
         "package": "SwiftyJSON",
-        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON",
+        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
         "state": {
           "branch": "master",
           "revision": "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07",

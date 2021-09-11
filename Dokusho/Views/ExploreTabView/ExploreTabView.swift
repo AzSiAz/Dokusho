@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import MangaSources
+import MangaScraper
 
 struct ExploreTabView: View {
     @State var showManageSource: Bool = false

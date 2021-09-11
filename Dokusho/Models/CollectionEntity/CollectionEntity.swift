@@ -34,6 +34,10 @@ extension CollectionEntity {
     func updatePosition(newPosition: Int) {
         self.position = Int16(newPosition)
     }
+    
+    func getName() -> String {
+        return self.name ?? "No title for collection"
+    }
 }
 
 extension CollectionEntity {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import MangaSources
+import MangaScraper
 import CoreData
 
 extension SourceEntity {
@@ -20,7 +20,7 @@ extension SourceEntity {
     }
     
     func getSource() throws -> Source {
-        guard let source = MangaSourceService.shared.getSource(sourceId: Int(self.sourceId)) else {
+        guard let source = MangaScraperService.shared.getSource(sourceId: Int(self.sourceId)) else {
             throw "Source not found, it's not normal"
         }
         
@@ -29,7 +29,7 @@ extension SourceEntity {
 }
 
 extension SourceEntity {
-    static func importFromService(sources: [Source]) async {
+    static func importAtAppStart(sources: [Source]) async {
         let ctx = PersistenceController.shared.container.newBackgroundContext()
         
         await ctx.perform {

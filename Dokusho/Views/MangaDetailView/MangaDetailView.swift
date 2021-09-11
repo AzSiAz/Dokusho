@@ -14,7 +14,7 @@ struct MangaDetailView: View {
     @State var selectedChapter: ChapterEntity?
     
     init(mangaId: String, src: SourceEntity) {
-        self._vm = .init(wrappedValue: .init(for: src, mangaId: mangaId))
+        self._vm = .init(wrappedValue: .init(for: src.objectID, mangaId: mangaId))
     }
     
     var body: some View {
@@ -23,11 +23,7 @@ struct MangaDetailView: View {
                 if vm.error {
                     VStack {
                         Text("Something weird happened, try again")
-                        Button(action: {
-                            Task {
-                                await vm.update()
-                            }
-                        }) {
+                        AsyncButton(action: { await vm.update() }) {
                             Image(systemName: "arrow.counterclockwise")
                         }
                     }
@@ -66,8 +62,7 @@ struct MangaDetailView: View {
                     }
                 }
             }
-            .refreshable { await vm.fetchManga() }
-            .task { await vm.fetchManga() }
+            .task(priority: .userInitiated) { await vm.fetchManga() }
             .fullScreenCover(item: $selectedChapter) { chapter in
                 ReaderView(vm: .init(for: chapter))
             }

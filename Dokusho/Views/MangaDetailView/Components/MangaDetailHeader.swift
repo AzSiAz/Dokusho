@@ -32,7 +32,7 @@ struct MangaDetailHeader: View {
                     
                     VStack(alignment: .center) {
                         VStack {
-                            ForEach(vm.manga?.authorsAndArtists?.allObjects as? [AuthorAndArtistEntity] ?? [] , id: \.self) { author in
+                            ForEach(vm.manga?.authorsAndArtists?.shuffled() ?? [], id: \.self) { author in
                                 Text("\(author.name ?? "")")
                                     .font(.caption.italic())
                             }

@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 
+@MainActor
 class MangaDetailVM: ObservableObject {
     private var ctx = PersistenceController.shared.backgroundCtx()
     let src: SourceEntity
@@ -20,37 +21,38 @@ class MangaDetailVM: ObservableObject {
     @Published var addToCollection = false
     @Published var refreshing = false
     
-    init(for source: SourceEntity, mangaId: String) {
-        self.src = source
+    init(for source: NSManagedObjectID, mangaId: String) {
+        self.src = ctx.object(with: source) as! SourceEntity
         self.mangaId = mangaId
+
+        withAnimation {
+            self.manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, source: src, includeChapters: true)
+        }
     }
     
-    @MainActor
     func fetchManga() async {
-        self.error = false
-
-        manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, source: src)
-
         if manga == nil { await update() }
     }
     
     @MainActor
     func update() async {
-        self.manga = nil
         self.error = false
         self.refreshing = true
 
         do {
-            let sourceManga = try await src.getSource().fetchMangaDetail(id: mangaId)
+            guard let sourceManga = try? await src.getSource().fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
+            guard let saved = try? MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src) else { throw "Error updating/fetching manga" }
+            try ctx.save()
 
-            try! ctx.performAndWait {
-                self.manga = MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src)
-                try self.ctx.save()
+            withAnimation {
+                self.manga = saved
+                self.refreshing = false
             }
-
-            self.refreshing = false
         } catch {
-            self.error = true
+            withAnimation {
+                self.error = true
+                self.refreshing = false
+            }
         }
     }
     

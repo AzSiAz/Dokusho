@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19197" systemVersion="21A5304g" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="AlternateTitlesEntity" representedClassName="AlternateTitlesEntity" syncable="YES" codeGenerationType="class">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19197" systemVersion="21A5506j" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AlternateTitlesEntity" representedClassName="AlternateTitlesEntity" syncable="YES">
         <attribute name="key" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="alternateTitles" inverseEntity="MangaEntity"/>
@@ -10,7 +10,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="AuthorAndArtistEntity" representedClassName="AuthorAndArtistEntity" syncable="YES" codeGenerationType="class">
+    <entity name="AuthorAndArtistEntity" representedClassName="AuthorAndArtistEntity" syncable="YES">
         <attribute name="name" attributeType="String"/>
         <attribute name="typeRaw" attributeType="String"/>
         <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="authorsAndArtists" inverseEntity="MangaEntity"/>
@@ -20,7 +20,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="ChapterEntity" representedClassName="ChapterEntity" syncable="YES" codeGenerationType="class">
+    <entity name="ChapterEntity" representedClassName="ChapterEntity" syncable="YES">
         <attribute name="chapterId" attributeType="String"/>
         <attribute name="dateSourceUpload" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="key" attributeType="String"/>
@@ -35,7 +35,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="CollectionEntity" representedClassName="CollectionEntity" syncable="YES" codeGenerationType="class">
+    <entity name="CollectionEntity" representedClassName="CollectionEntity" syncable="YES">
         <attribute name="filterRaw" optional="YES" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -47,7 +47,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="GenreEntity" representedClassName="GenreEntity" syncable="YES" codeGenerationType="class">
+    <entity name="GenreEntity" representedClassName="GenreEntity" syncable="YES">
         <attribute name="name" attributeType="String"/>
         <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="genres" inverseEntity="MangaEntity"/>
         <uniquenessConstraints>
@@ -56,8 +56,9 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaEntity" representedClassName="MangaEntity" syncable="YES" codeGenerationType="class">
+    <entity name="MangaEntity" representedClassName="MangaEntity" syncable="YES">
         <attribute name="cover" attributeType="URI"/>
+        <attribute name="lastChapterUploadDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="mangaId" attributeType="String"/>
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="synopsis" attributeType="String" defaultValueString=""/>
@@ -76,7 +77,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="SourceEntity" representedClassName="SourceEntity" syncable="YES" codeGenerationType="class">
+    <entity name="SourceEntity" representedClassName="SourceEntity" syncable="YES">
         <attribute name="active" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="icon" attributeType="URI"/>
@@ -93,12 +94,12 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="AlternateTitlesEntity" positionX="-1206.10546875" positionY="-926.0234375" width="128" height="88"/>
-        <element name="AuthorAndArtistEntity" positionX="-1157.22265625" positionY="-769.4296875" width="128" height="88"/>
-        <element name="ChapterEntity" positionX="-1390.50390625" positionY="-670.42578125" width="128" height="163"/>
-        <element name="GenreEntity" positionX="-1600.05859375" positionY="-960.765625" width="128" height="73"/>
-        <element name="MangaEntity" positionX="-1417.8984375" positionY="-965.15625" width="98.859375" height="209"/>
-        <element name="SourceEntity" positionX="-1576.33203125" positionY="-851" width="98.72265625" height="163"/>
+        <element name="AlternateTitlesEntity" positionX="-1206.10546875" positionY="-926.0234375" width="128" height="74"/>
+        <element name="AuthorAndArtistEntity" positionX="-1157.22265625" positionY="-769.4296875" width="128" height="74"/>
+        <element name="ChapterEntity" positionX="-1390.50390625" positionY="-670.42578125" width="128" height="149"/>
         <element name="CollectionEntity" positionX="-1395" positionY="-801" width="128" height="104"/>
+        <element name="GenreEntity" positionX="-1600.05859375" positionY="-960.765625" width="128" height="59"/>
+        <element name="MangaEntity" positionX="-1417.8984375" positionY="-965.15625" width="98.859375" height="224"/>
+        <element name="SourceEntity" positionX="-1576.33203125" positionY="-851" width="98.72265625" height="149"/>
     </elements>
 </model>

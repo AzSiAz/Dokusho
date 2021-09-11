@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import CoreData
-import MangaSources
+import MangaScraper
 
 class ExploreSourceVM: ObservableObject {
     private let ctx = PersistenceController.shared.backgroundCtx()
@@ -59,27 +59,14 @@ class ExploreSourceVM: ObservableObject {
     
     func addToCollection(smallManga: SourceSmallManga, collection collectionId: NSManagedObjectID) async {
         guard let sourceManga = try? await src.getSource().fetchMangaDetail(id: smallManga.id) else { return }
-//        await Manga.upsertFromSource(sourceData: sourceManga, source: src)
+
         try! await ctx.perform {
-            let manga = MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src)
+            guard let manga = try? MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src) else { return }
             guard let collection = self.ctx.object(with: collectionId) as? CollectionEntity else { return }
             
             collection.addToMangas(manga)
             
             try self.ctx.save()
         }
-        
-//        try? autoreleasepool {
-//            let realm = try Realm()
-//
-//            try? realm.write {
-//                guard let manga = realm.object(ofType: Manga.self, forPrimaryKey: Manga.getPrimaryKey(sourceId: src.sourceId, mangaId: sourceManga.id)) else {
-//                    return
-//                }
-//                guard let collection = realm.resolve(trc) else { return }
-//
-//                collection.mangas.insert(manga)
-//            }
-//        }
     }
 }

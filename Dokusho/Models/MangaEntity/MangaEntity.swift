@@ -7,13 +7,14 @@
 
 import Foundation
 import CoreData
-import MangaSources
+import MangaScraper
 
 extension MangaEntity {
-    convenience init(ctx: NSManagedObjectContext, sourceId: NSManagedObjectID, data: SourceManga) {
+    convenience init(ctx: NSManagedObjectContext, sourceId: NSManagedObjectID, data: SourceManga) throws {
         self.init(entity: Self.entity(), insertInto: ctx)
         
-        self.source = ctx.object(with: sourceId) as! SourceEntity?
+        guard let source = ctx.object(with: sourceId) as? SourceEntity else { throw "Source \(sourceId) not found" }
+        self.source = source
         self.mangaId = data.id
         self.title = data.title
         self.cover = URL(string: data.cover)
@@ -39,14 +40,13 @@ extension MangaEntity {
 }
 
 extension MangaEntity {
-    static func fetchOne(ctx: NSManagedObjectContext, mangaId: String, source: SourceEntity) -> MangaEntity? {
+    static func fetchOne(ctx: NSManagedObjectContext, mangaId: String, source: SourceEntity, includeChapters: Bool = false) -> MangaEntity? {
         let req = Self.fetchRequest()
         
         req.fetchLimit = 1
         req.predicate = Self.mangaIdAndSourcePredicate(mangaId: mangaId, source: source)
-        let res = try? ctx.fetch(req)
-
-        return res?.first
+        
+        return try? ctx.fetch(req).first
     }
 }
 
@@ -62,31 +62,55 @@ extension MangaEntity {
         return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
     }
     
-    static func updateFromSource(ctx: NSManagedObjectContext, data: SourceManga, source: SourceEntity) -> MangaEntity {
-        let manga = MangaEntity.fetchOne(ctx: ctx, mangaId: data.id, source: source) ?? MangaEntity(ctx: ctx, sourceId: source.objectID, data: data)
+    static func collectionPredicate(collection: CollectionEntity) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.collection), collection)
+    }
+    
+    static func inCollectionForSource(source: SourceEntity) -> NSPredicate {
+        return NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "%K != nil", #keyPath(MangaEntity.collection)),
+            Self.sourcePredicate(source: source)
+        ])
+    }
+    
+    static var nameOrder: SortDescriptor<MangaEntity> {
+        return SortDescriptor<MangaEntity>(\.title, order: .forward)
+    }
+    
+    static var lastUpdate: SortDescriptor<MangaEntity> {
+        return SortDescriptor<MangaEntity>(\.lastChapterUploadDate, order: .reverse)
+    }
+    
+    static func updateFromSource(ctx taskCtx: NSManagedObjectContext, data: SourceManga, source: SourceEntity) throws -> MangaEntity {
+        let manga: MangaEntity
+        if let found = MangaEntity.fetchOne(ctx: taskCtx, mangaId: data.id, source: source) {
+            manga = found
+        } else {
+            manga = try MangaEntity(ctx: taskCtx, sourceId: source.objectID, data: data)
+        }
         
         data.alternateNames
-            .map { AlternateTitlesEntity(ctx: ctx, title: $0, sourceId: Int(source.sourceId)) }
+            .map { AlternateTitlesEntity(ctx: taskCtx, title: $0, sourceId: Int(source.sourceId)) }
             .forEach {
-                ctx.insert($0)
+                taskCtx.insert($0)
                 manga.addToAlternateTitles($0)
             }
         
         data.genres
-            .map { GenreEntity(ctx: ctx, name: $0) }
+            .map { GenreEntity(ctx: taskCtx, name: $0) }
             .forEach {
-                ctx.insert($0)
+                taskCtx.insert($0)
                 manga.addToGenres($0)
             }
         
         data.authors
-            .map { AuthorAndArtistEntity(ctx: ctx, name: $0, type: .author) }
+            .map { AuthorAndArtistEntity(ctx: taskCtx, name: $0, type: .author) }
             .forEach {
-                ctx.insert($0)
+                taskCtx.insert($0)
                 manga.addToAuthorsAndArtists($0)
             }
         
-        let oldChapters = ChapterEntity.chaptersForManga(ctx: ctx, manga: manga, source: source)
+        let oldChapters = ChapterEntity.chaptersForManga(ctx: taskCtx, manga: manga.objectID, source: source.objectID)
         
         let readDico: [String:Date] = oldChapters
             .filter { $0.readAt != nil }
@@ -94,12 +118,12 @@ extension MangaEntity {
                 return $0[$1.chapterId!] = $1.readAt!
             }
         
-        oldChapters.forEach { ctx.delete($0) }
+        oldChapters.forEach { taskCtx.delete($0) }
         
         data.chapters
             .enumerated()
             .map { (index, chapter) -> ChapterEntity in
-                let c = ChapterEntity(ctx: ctx, data: chapter, position: Int32(index), source: source)
+                let c = ChapterEntity(ctx: taskCtx, data: chapter, position: Int32(index), source: source)
                 if let found = readDico[c.chapterId!] {
                     c.readAt = found
                     c.statusRaw = ChapterStatus.read.rawValue
@@ -107,16 +131,21 @@ extension MangaEntity {
                 return c
             }
             .forEach {
-                ctx.insert($0)
+                taskCtx.insert($0)
                 manga.addToChapters($0)
             }
+        
+        manga.lastChapterUploadDate = manga
+            .chapters?
+            .first(where: { $0.position == 0 })?
+            .dateSourceUpload
 
         return manga
     }
     
     func importChapterBackup(chaptersBackup: [ChapterBackup]) {
-        let chapters = self.chapters.asSet(of: ChapterEntity.self)
-        
+        guard let chapters = self.chapters else { return }
+
         chapters.forEach { chapter in
             guard let foundBackup = chaptersBackup.first(where: { $0.id == chapter.chapterId }) else { return }
             chapter.updateFromBackup(chapterBackup: foundBackup)

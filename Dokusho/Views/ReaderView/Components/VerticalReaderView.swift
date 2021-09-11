@@ -19,7 +19,8 @@ struct VerticalReaderView: View {
                         RefreshableImageView(url: image.imageUrl, size: CGSize(width: proxy.size.width, height: UIScreen.main.bounds.height))
                             .aspectRatio(contentMode: .fit)
                             .frame(width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width, alignment: .center)
-                            .id(image)
+                            .id(image.id)
+                            .tag(image)
                             .onAppear { vm.tabIndex = image }
                             .background(Color.black)
                     }

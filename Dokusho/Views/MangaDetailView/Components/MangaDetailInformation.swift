@@ -61,7 +61,7 @@ struct MangaDetailInformation: View {
                 }
                 .padding([.bottom, .horizontal])
 
-                FlexibleView(data: vm.manga?.genres as? Set<GenreEntity> ?? [], spacing: 5, alignment: .leading) { genre in
+                FlexibleView(data: vm.manga?.genres ?? [], spacing: 5, alignment: .leading) { genre in
                     Button(genre.name ?? "", action: {})
                         .buttonStyle(.bordered)
                 }

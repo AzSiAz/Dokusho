@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import MangaSources
+import MangaScraper
 
 struct RootView: View {
     enum ActiveTab {
@@ -18,19 +18,20 @@ struct RootView: View {
     
     var body: some View {
         TabView {
-//            LibraryTabView()
-//                .tabItem { Label("Library", systemImage: "books.vertical") }
-//                .tag(ActiveTab.library)
+            LibraryTabView()
+                .tabItem { Label("Library", systemImage: "books.vertical") }
+                .tag(ActiveTab.library)
 
             ExploreTabView()
                 .tabItem { Label("Explore", systemImage: "safari") }
                 .tag(ActiveTab.explore)
+
             SettingsTabView()
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(ActiveTab.settings)
         }
         .task(priority: .high) {
-            await SourceEntity.importFromService(sources: MangaSourceService.shared.list)
+            await SourceEntity.importAtAppStart(sources: MangaScraperService.shared.list)
         }
     }
 }

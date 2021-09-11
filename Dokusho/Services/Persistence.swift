@@ -7,7 +7,7 @@
 
 import CoreData
 import OSLog
-import MangaSources
+import MangaScraper
 
 struct ChapterBackup: Codable {
     var id: String
@@ -27,9 +27,8 @@ struct CollectionBackup: Codable {
     var mangas: [MangaBackup]
 }
 
+
 struct BackupTask {
-    var source: SourceEntity
-    var mangaSource: SourceManga
     var mangaBackup: MangaBackup
     var collection: CollectionEntity
 }
@@ -72,8 +71,8 @@ class PersistenceController {
         let collections = CollectionEntity.fetchMany(ctx: ctx)
         
         return collections.map { collection -> CollectionBackup in
-            let mangaBackup: [MangaBackup] = collection.mangas.asSet(of: MangaEntity.self).map { manga in
-                let chapterBackup: [ChapterBackup] = manga.chapters.asSet(of: ChapterEntity.self).filter { !$0.isUnread }.map { chapter in
+            let mangaBackup: [MangaBackup] = collection.mangas!.map { manga in
+                let chapterBackup: [ChapterBackup] = manga.chapters!.filter { !$0.isUnread }.map { chapter in
                     return ChapterBackup(id: chapter.chapterId!, readAt: chapter.readAt ?? chapter.dateSourceUpload ?? .now)
                 }
                 return MangaBackup(id: manga.mangaId!, sourceId: Int(manga.source!.sourceId), readChapter: chapterBackup)
@@ -89,13 +88,11 @@ class PersistenceController {
         await withTaskGroup(of: BackupResult.self) { group in
             for collectionBackup in backup {
                 let collection = CollectionEntity.fromBackup(info: collectionBackup, ctx: ctx)
-
+                try? ctx.save()
+                
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
-                        guard let source = SourceEntity.fetchOne(sourceId: mangaBackup.sourceId, ctx: ctx) else { return  BackupResult.failure("Source not found") }
-                        
-                        guard let sourceInfo = try? await source.getSource().fetchMangaDetail(id: mangaBackup.id) else { return .failure("Failed getting manga info with id: \(mangaBackup.id)") }
-                        return .success(BackupTask(source: source, mangaSource: sourceInfo, mangaBackup: mangaBackup, collection: collection))
+                        return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
                     }
                 }
             }
@@ -105,13 +102,18 @@ class PersistenceController {
                     case .failure(let error):
                         Logger.backup.error("\(error.localizedDescription)")
                     case .success(let task):
-                        Logger.backup.info("Restoring \(task.mangaSource.title)")
+                        Logger.backup.info("Restoring \(task.mangaBackup.id)")
                         
-                        let manga = MangaEntity.updateFromSource(ctx: ctx, data: task.mangaSource, source: task.source)
+                        guard let source = SourceEntity.fetchOne(sourceId: task.mangaBackup.sourceId, ctx: ctx) else { continue }
+                        
+                        guard let sourceInfo = try? await source.getSource().fetchMangaDetail(id: task.mangaBackup.id) else { continue }
+                        
+                        guard let manga = try? MangaEntity.updateFromSource(ctx: ctx, data: sourceInfo, source: source) else { continue }
+                        
                         manga.importChapterBackup(chaptersBackup: task.mangaBackup.readChapter)
                         task.collection.addToMangas(manga)
                         
-                        try! ctx.save()
+                        try? ctx.save()
                 }
             }
         }

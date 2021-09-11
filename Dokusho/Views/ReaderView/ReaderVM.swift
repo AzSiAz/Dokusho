@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 import OSLog
-import MangaSources
+import MangaScraper
 
 class ReaderVM: ObservableObject {
     private var src: SourceEntity

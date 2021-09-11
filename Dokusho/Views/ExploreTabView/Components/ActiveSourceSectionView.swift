@@ -24,7 +24,7 @@ struct ActiveSourceSectionView: View {
             } else {
                 NavigationLink(
                     destination: ExploreSourceView(
-                        mangas: .init(sortDescriptors: [], predicate: MangaEntity.sourcePredicate(source: src), animation: .default),
+                        mangas: .init(sortDescriptors: [], predicate: MangaEntity.inCollectionForSource(source: src), animation: .default),
                         vm: .init(for: src)
                     )
                 ) {

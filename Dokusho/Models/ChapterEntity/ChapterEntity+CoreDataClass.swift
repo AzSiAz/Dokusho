@@ -1,0 +1,32 @@
+//
+//  ChapterEntity+CoreDataClass.swift
+//  ChapterEntity
+//
+//  Created by Stephan Deumier on 04/09/2021.
+//
+//
+
+import Foundation
+import CoreData
+
+@objc(ChapterEntity)
+public class ChapterEntity: NSManagedObject {}
+
+extension ChapterEntity {
+    
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<ChapterEntity> {
+        return NSFetchRequest<ChapterEntity>(entityName: "ChapterEntity")
+    }
+    
+    @NSManaged public var chapterId: String?
+    @NSManaged public var dateSourceUpload: Date?
+    @NSManaged public var key: String?
+    @NSManaged public var position: Int32
+    @NSManaged public var readAt: Date?
+    @NSManaged public var statusRaw: String?
+    @NSManaged public var title: String?
+    @NSManaged public var manga: MangaEntity?
+    
+}
+
+extension ChapterEntity : Identifiable {}

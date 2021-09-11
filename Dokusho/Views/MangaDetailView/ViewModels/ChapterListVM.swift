@@ -10,30 +10,28 @@ import CoreData
 import SwiftUI
 
 class ChapterListVM: ObservableObject {
-    private var ctx = PersistenceController.shared.backgroundCtx()
+    private var ctx = PersistenceController.shared.container.viewContext
     
     var manga: MangaEntity
     
     @Published var error: Error?
 
-    init(manga: MangaEntity) {
-        self.manga = manga
+    init(mangaOId: NSManagedObjectID) {
+        self.manga = ctx.object(with: mangaOId) as! MangaEntity
     }
 
-    func changeChapterStatus(for chapterId: NSManagedObjectID, status: ChapterStatus) {
+    func changeChapterStatus(for chapter: ChapterEntity, status: ChapterStatus) {
         try? ctx.performAndWait {
-            guard let chapter = ctx.object(with: chapterId) as? ChapterEntity else { return }
             chapter.markAs(newStatus: status)
             try ctx.save()
         }
     }
 
-    func changePreviousChapterStatus(for chapterId: NSManagedObjectID, status: ChapterStatus) {
+    func changePreviousChapterStatus(for chapter: ChapterEntity, status: ChapterStatus, in: FetchedResults<ChapterEntity>) {
         guard let source = manga.source else { return }
         
         try? ctx.performAndWait {
-            guard let chapter = ctx.object(with: chapterId) as? ChapterEntity else { return }
-            let chapters = ChapterEntity.chaptersForManga(ctx: ctx, manga: manga, source: source)
+            let chapters = ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID, source: source.objectID)
             
             chapters
                 .filter { status == .unread ? !$0.isUnread : $0.isUnread }
@@ -44,18 +42,16 @@ class ChapterListVM: ObservableObject {
         }
     }
 
-    func hasPreviousUnreadChapter(for chapter: ChapterEntity) -> Bool {
+    func hasPreviousUnreadChapter(for chapter: ChapterEntity, chapters: FetchedResults<ChapterEntity>) -> Bool {
         guard let source = manga.source else { return false }
-
-        return ChapterEntity.chaptersForManga(ctx: ctx, manga: manga, source: source)
+        
+        return ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID, source: source.objectID)
             .filter { chapter.position < $0.position }
             .contains { $0.isUnread }
     }
 
-    func nextUnreadChapter() -> ChapterEntity? {
-        guard let source = manga.source else { return nil }
-        
-        return ChapterEntity.chaptersForManga(ctx: ctx, manga: manga, source: source)
+    func nextUnreadChapter(chapters: FetchedResults<ChapterEntity>) -> ChapterEntity? {       
+        return chapters
             .sorted(using: SortDescriptor(\ChapterEntity.position, order: .reverse))
             .first { $0.isUnread }
     }

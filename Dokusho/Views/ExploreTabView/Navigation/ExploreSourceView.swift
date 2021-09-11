@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
-import MangaSources
+import MangaScraper
 
 struct ExploreSourceView: View {
     @FetchRequest var mangas: FetchedResults<MangaEntity>
+    
     @FetchRequest(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default)
     var collections: FetchedResults<CollectionEntity>
     
@@ -69,6 +70,7 @@ struct ExploreSourceView: View {
         }
         .sheetSizeAware(item: $vm.selectedManga) { manga in
             MangaDetailView(mangaId: manga.id, src: vm.src)
+                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
         }
         .navigationTitle(vm.getTitle())
     }
