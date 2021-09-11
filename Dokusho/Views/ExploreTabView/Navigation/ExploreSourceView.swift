@@ -90,6 +90,7 @@ struct ExploreSourceView: View {
         }
     }
     
+    @ViewBuilder
     func ContextMenu(manga: SourceSmallManga) -> some View {
         ForEach(collections) { collection in
             AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection.objectID) }) {

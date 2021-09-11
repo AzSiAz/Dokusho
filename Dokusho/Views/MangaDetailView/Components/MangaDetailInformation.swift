@@ -76,8 +76,6 @@ struct MangaDetailInformation: View {
                     Text(col.name!),
                     action: {
                         vm.insertMangaInCollection(collectionId: col.objectID)
-//                        DataManager.shared.insertMangaInCollection(for: vm.manga!, in: col)
-//                        Task { await vm.fetchManga() }
                     }
                 ))
             }
@@ -87,8 +85,6 @@ struct MangaDetailInformation: View {
                     Text("Remove from \(vm.manga!.collection?.name ?? "")"),
                     action: {
                         vm.removeMangaFromCollection()
-//                    DataManager.shared.removeMangaFromCollection(for: vm.manga!, in: vm.manga!.collection!)
-//                    Task { await vm.fetchManga() }
                     }
                 ))
             }
