@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CoreData
 import UniformTypeIdentifiers
+import Nuke
 
 struct Backup: FileDocument {
     static var readableContentTypes = [UTType.json]
@@ -63,4 +64,9 @@ class SettingsVM: ObservableObject {
     }
     
     func cleanOrphanData(ctx: NSManagedObjectContext) {}
+    
+    func clearImageCache() {
+        Nuke.DataLoader.sharedUrlCache.removeAllCachedResponses()
+        Nuke.ImageCache.shared.removeAll()
+    }
 }

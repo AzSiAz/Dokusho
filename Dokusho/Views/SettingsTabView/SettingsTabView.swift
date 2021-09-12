@@ -27,6 +27,12 @@ struct SettingsTabView: View {
                         Text("Clean orphan data")
                     }
                 }
+                
+                Section("Cache") {
+                    Button(action: { vm.clearImageCache() }) {
+                        Text("Clear image cache")
+                    }
+                }
             }
             .fileExporter(isPresented: $vm.showExportfile, document: vm.file, contentType: .json, defaultFilename: vm.fileName) { res in
                 vm.showExportfile.toggle()
