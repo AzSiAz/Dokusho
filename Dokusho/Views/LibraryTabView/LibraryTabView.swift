@@ -25,7 +25,6 @@ struct LibraryTabView: View {
             .toolbar(content: { AddButton(onTapGesture: { print("test") }) })
             .navigationTitle("Collections")
         }
-        .navigationViewStyle(.stack)
     }
 }
 

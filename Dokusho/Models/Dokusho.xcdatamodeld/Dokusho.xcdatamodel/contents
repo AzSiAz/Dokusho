@@ -29,6 +29,9 @@
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="chapters" inverseEntity="MangaEntity"/>
+        <fetchIndex name="byPropertyIndex">
+            <fetchIndexElement property="readAt" type="Binary" order="descending"/>
+        </fetchIndex>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="key"/>

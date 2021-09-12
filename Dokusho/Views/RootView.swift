@@ -21,6 +21,10 @@ struct RootView: View {
             LibraryTabView()
                 .tabItem { Label("Library", systemImage: "books.vertical") }
                 .tag(ActiveTab.library)
+            
+            HistoryTabView()
+                .tabItem { Label("History", systemImage: "clock") }
+                .tag(ActiveTab.history)
 
             ExploreTabView()
                 .tabItem { Label("Explore", systemImage: "safari") }

@@ -43,6 +43,7 @@
 		E2187ED426CC625C009604A9 /* NavigationLinkLazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECD26CC625C009604A9 /* NavigationLinkLazyView.swift */; };
 		E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */; };
 		E2187ED626CC625C009604A9 /* RefreshableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECF26CC625C009604A9 /* RefreshableImageView.swift */; };
+		E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23AD6F426EE069E0042453A /* HistoryTabView.swift */; };
 		E26662BA26CC36830054868A /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662B926CC36830054868A /* DokushoApp.swift */; };
 		E26662C326CC36840054868A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662C226CC36840054868A /* Persistence.swift */; };
 		E26662C626CC36840054868A /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E26662C426CC36840054868A /* Dokusho.xcdatamodeld */; };
@@ -116,6 +117,7 @@
 		E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaUnreadCount.swift; sourceTree = "<group>"; };
 		E2187ECF26CC625C009604A9 /* RefreshableImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshableImageView.swift; sourceTree = "<group>"; };
 		E2187ED726CC69C4009604A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E23AD6F426EE069E0042453A /* HistoryTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTabView.swift; sourceTree = "<group>"; };
 		E26662B626CC36830054868A /* Dokusho.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dokusho.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E26662B926CC36830054868A /* DokushoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokushoApp.swift; sourceTree = "<group>"; };
 		E26662C226CC36840054868A /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -280,7 +282,8 @@
 		E2187EAB26CC5E5B009604A9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E2DA94DC26D667FE0083F2F7 /* LibraryTab */,
+				E23AD6F326EE067E0042453A /* HistoryTabView */,
+				E2DA94DC26D667FE0083F2F7 /* LibraryTabView */,
 				E2DA94D726D645E40083F2F7 /* SettingsTabView */,
 				E2CB129626CD4EB7007837D1 /* ReaderView */,
 				E2CB127926CD0559007837D1 /* MangaDetailView */,
@@ -350,6 +353,14 @@
 				E2187ECF26CC625C009604A9 /* RefreshableImageView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		E23AD6F326EE067E0042453A /* HistoryTabView */ = {
+			isa = PBXGroup;
+			children = (
+				E23AD6F426EE069E0042453A /* HistoryTabView.swift */,
+			);
+			path = HistoryTabView;
 			sourceTree = "<group>";
 		};
 		E26662AD26CC36830054868A = {
@@ -473,7 +484,7 @@
 			path = SettingsTabView;
 			sourceTree = "<group>";
 		};
-		E2DA94DC26D667FE0083F2F7 /* LibraryTab */ = {
+		E2DA94DC26D667FE0083F2F7 /* LibraryTabView */ = {
 			isa = PBXGroup;
 			children = (
 				E2DA94DE26D667FE0083F2F7 /* Components */,
@@ -481,7 +492,7 @@
 				E2DA94E826D668170083F2F7 /* LibraryVM.swift */,
 				E2DA94DD26D667FE0083F2F7 /* LibraryTabView.swift */,
 			);
-			path = LibraryTab;
+			path = LibraryTabView;
 			sourceTree = "<group>";
 		};
 		E2DA94DE26D667FE0083F2F7 /* Components */ = {
@@ -619,6 +630,7 @@
 				E2187EC726CC6243009604A9 /* ExploreTabView.swift in Sources */,
 				E2187EA826CC5D9E009604A9 /* Array.swift in Sources */,
 				E2DA94E526D667FE0083F2F7 /* LibraryToolbarView.swift in Sources */,
+				E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */,
 				E2CB128626CD0559007837D1 /* ChapterCollection.swift in Sources */,
 				E2DA94E726D667FE0083F2F7 /* MangaCardView.swift in Sources */,
 				E2187EA726CC5D9E009604A9 /* View.swift in Sources */,

@@ -63,7 +63,7 @@ extension ChapterEntity {
     
     static func chaptersListForMangaPredicate(manga: NSManagedObjectID, filter: ChapterStatusFilter = .all) -> NSPredicate {
         var predicate: [NSPredicate] = [forMangaPredicate(manga: manga)]
-        if filter != .all { predicate.append(forChapterStatusPredicate(filter: filter)) }
+        if filter != .all { predicate.append(forChapterStatusFilterPredicate(filter: filter)) }
         
         return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
     }
@@ -78,11 +78,19 @@ extension ChapterEntity {
         return NSPredicate(format: "%K = %i", #keyPath(ChapterEntity.manga.source), source)
     }
     
-    static func forChapterStatusPredicate(filter: ChapterStatusFilter) -> NSPredicate {
+    static func forChapterStatusFilterPredicate(filter: ChapterStatusFilter) -> NSPredicate {
         return NSPredicate(format: "%K IN %@", #keyPath(ChapterEntity.statusRaw), filter == .all ? [ChapterStatus.read.rawValue, ChapterStatus.unread.rawValue] : [ChapterStatus.unread.rawValue])
+    }
+    
+    static func forChapterStatusPredicate(status: [ChapterStatus]) -> NSPredicate {
+        return NSPredicate(format: "%K in %@", #keyPath(ChapterEntity.statusRaw), status.map { $0.rawValue })
     }
     
     static func positionOrder(order: SortOrder = .forward) -> SortDescriptor<ChapterEntity> {
         return SortDescriptor<ChapterEntity>(\.position, order: order)
+    }
+    
+    static func readAtOrder(order: SortOrder = .reverse) -> SortDescriptor<ChapterEntity> {
+        return SortDescriptor<ChapterEntity>(\.readAt, order: order)
     }
 }
