@@ -24,6 +24,10 @@ enum ChapterStatusFilter {
     
 }
 
+enum ChapterStatusHistory: String {
+    case all = "All", read = "Read"
+}
+
 extension ChapterEntity {
     var isUnread: Bool {
         return status != .read
@@ -66,6 +70,30 @@ extension ChapterEntity {
         if filter != .all { predicate.append(forChapterStatusFilterPredicate(filter: filter)) }
         
         return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
+    }
+    
+    static func chapterHistoryPredicate(status: ChapterStatusHistory = .read, searchTerm: String = "") -> NSPredicate {
+        let statusFilter = (status == .all ? [ChapterStatus.read, ChapterStatus.unread] : [ChapterStatus.read]).map { $0.rawValue }
+        
+        var predicate: [NSPredicate] = [
+            NSPredicate(format: "%K != nil", #keyPath(ChapterEntity.manga.collection)),
+            NSPredicate(format: "%K IN %@", #keyPath(ChapterEntity.statusRaw), statusFilter)
+        ]
+
+        if !searchTerm.isEmpty {
+            predicate.append(NSCompoundPredicate(orPredicateWithSubpredicates: [
+                NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(ChapterEntity.manga.title), searchTerm),
+                NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(ChapterEntity.manga.alternateTitles.title), searchTerm)
+            ]))
+        }
+
+        return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
+    }
+    
+    static func chapterHistoryOrder(status: ChapterStatusHistory = .read) -> [SortDescriptor<ChapterEntity>] {
+        return [
+            SortDescriptor<ChapterEntity>(status == .read ? \.readAt : \.dateSourceUpload, order: .reverse)
+        ]
     }
 }
 

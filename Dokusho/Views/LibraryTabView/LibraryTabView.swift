@@ -51,7 +51,7 @@ struct CollectionPage: View {
             }
         }
         .sheetSizeAware(item: $selectedManga, content: { manga in
-            MangaDetailView(mangaId: manga.mangaId!, src: manga.source!)
+            MangaDetailView(mangaId: manga.mangaId!, src: Int(manga.source!.sourceId))
         })
         .toolbar { LibraryToolbarView(collection: collection, showFilter: $showFilter) }
         .navigationTitle("\(collection.name ?? "No name") (\(mangas.count))")

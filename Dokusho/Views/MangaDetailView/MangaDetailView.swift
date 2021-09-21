@@ -13,8 +13,8 @@ struct MangaDetailView: View {
     @StateObject var vm: MangaDetailVM
     @State var selectedChapter: ChapterEntity?
     
-    init(mangaId: String, src: SourceEntity) {
-        self._vm = .init(wrappedValue: .init(for: src.objectID, mangaId: mangaId))
+    init(mangaId: String, src: Int) {
+        self._vm = .init(wrappedValue: .init(for: src, mangaId: mangaId))
     }
     
     var body: some View {

@@ -11,7 +11,7 @@ import SwiftUI
 
 @MainActor
 class MangaDetailVM: ObservableObject {
-    private var ctx = PersistenceController.shared.backgroundCtx()
+    private var ctx = PersistenceController.shared.container.viewContext
     let src: SourceEntity
     let mangaId: String
     
@@ -21,8 +21,8 @@ class MangaDetailVM: ObservableObject {
     @Published var addToCollection = false
     @Published var refreshing = false
     
-    init(for source: NSManagedObjectID, mangaId: String) {
-        self.src = ctx.object(with: source) as! SourceEntity
+    init(for source: Int, mangaId: String) {
+        self.src = SourceEntity.fetchOne(sourceId: source, ctx: ctx)!
         self.mangaId = mangaId
 
         withAnimation {

@@ -67,19 +67,24 @@ class PersistenceController {
     
     func createBackup() -> [CollectionBackup] {
         let ctx = self.backgroundCtx()
-
-        let collections = CollectionEntity.fetchMany(ctx: ctx)
+        var backup = [CollectionBackup]()
         
-        return collections.map { collection -> CollectionBackup in
-            let mangaBackup: [MangaBackup] = collection.mangas!.map { manga in
-                let chapterBackup: [ChapterBackup] = manga.chapters!.filter { !$0.isUnread }.map { chapter in
-                    return ChapterBackup(id: chapter.chapterId!, readAt: chapter.readAt ?? chapter.dateSourceUpload ?? .now)
-                }
-                return MangaBackup(id: manga.mangaId!, sourceId: Int(manga.source!.sourceId), readChapter: chapterBackup)
-            }
+        ctx.performAndWait {
+            let collections = CollectionEntity.fetchMany(ctx: ctx)
             
-            return CollectionBackup(id: collection.uuid!, name: collection.name!, position: Int(collection.position), mangas: mangaBackup)
+            backup = collections.map { collection -> CollectionBackup in
+                let mangaBackup: [MangaBackup] = collection.mangas!.map { manga in
+                    let chapterBackup: [ChapterBackup] = manga.chapters!.filter { !$0.isUnread }.map { chapter in
+                        return ChapterBackup(id: chapter.chapterId!, readAt: chapter.readAt ?? chapter.dateSourceUpload ?? .now)
+                    }
+                    return MangaBackup(id: manga.mangaId!, sourceId: Int(manga.source!.sourceId), readChapter: chapterBackup)
+                }
+                
+                return CollectionBackup(id: collection.uuid!, name: collection.name!, position: Int(collection.position), mangas: mangaBackup)
+            }
         }
+        
+        return backup
     }
     
     func importBackup(backup: [CollectionBackup]) async {

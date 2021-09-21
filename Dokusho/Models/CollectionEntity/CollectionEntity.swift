@@ -48,15 +48,13 @@ extension CollectionEntity {
         req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "%K = %@", #keyPath(CollectionEntity.uuid), collectionId.uuidString),
         ])
-        let res = try? ctx.fetch(req)
         
-        return res?.first
+        return try? ctx.fetch(req).first
     }
     
     static func fetchMany(ctx: NSManagedObjectContext) -> [CollectionEntity] {
-        let results = try! ctx.fetch(CollectionEntity.collectionFetchRequest)
-        
-        return results.isEmpty ? [] : results
+        guard let res = try? ctx.fetch(CollectionEntity.collectionFetchRequest) else { return [] }
+        return res
     }
     
     static var collectionFetchRequest: NSFetchRequest<CollectionEntity> {

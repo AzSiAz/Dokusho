@@ -23,7 +23,7 @@ extension SourceEntity {
         guard let source = MangaScraperService.shared.getSource(sourceId: Int(self.sourceId)) else {
             throw "Source not found, it's not normal"
         }
-        
+
         return source
     }
 }
@@ -47,8 +47,7 @@ extension SourceEntity {
         req.predicate = NSPredicate(format: "%K = %i", #keyPath(SourceEntity.sourceId), sourceId)
         req.fetchLimit = 1
 
-        let res = try? ctx.fetch(req)
-        return res?.first
+        return try? ctx.fetch(req).first
     }
 }
 

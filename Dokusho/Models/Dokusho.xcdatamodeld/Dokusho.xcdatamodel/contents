@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19197" systemVersion="21A5506j" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="AlternateTitlesEntity" representedClassName="AlternateTitlesEntity" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19206" systemVersion="21A5506j" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AlternateTitlesEntity" representedClassName="AlternateTitlesEntity" versionHashModifier="Add title index" syncable="YES">
         <attribute name="key" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
         <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="alternateTitles" inverseEntity="MangaEntity"/>
+        <fetchIndex name="byTitleASC">
+            <fetchIndexElement property="title" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byTitleDESC">
+            <fetchIndexElement property="title" type="Binary" order="descending"/>
+        </fetchIndex>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="key"/>
@@ -20,7 +26,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="ChapterEntity" representedClassName="ChapterEntity" syncable="YES">
+    <entity name="ChapterEntity" representedClassName="ChapterEntity" versionHashModifier="add statusRaw index" syncable="YES">
         <attribute name="chapterId" attributeType="String"/>
         <attribute name="dateSourceUpload" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="key" attributeType="String"/>
@@ -29,8 +35,23 @@
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="chapters" inverseEntity="MangaEntity"/>
-        <fetchIndex name="byPropertyIndex">
+        <fetchIndex name="readAtASC">
+            <fetchIndexElement property="readAt" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="readAtDESC">
             <fetchIndexElement property="readAt" type="Binary" order="descending"/>
+        </fetchIndex>
+        <fetchIndex name="dateSourceUploadDESC">
+            <fetchIndexElement property="dateSourceUpload" type="Binary" order="descending"/>
+        </fetchIndex>
+        <fetchIndex name="dateSourceUploadASC">
+            <fetchIndexElement property="dateSourceUpload" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byStatusRawASC">
+            <fetchIndexElement property="statusRaw" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byStatusRawDESC">
+            <fetchIndexElement property="statusRaw" type="Binary" order="descending"/>
         </fetchIndex>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -59,7 +80,7 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="MangaEntity" representedClassName="MangaEntity" syncable="YES">
+    <entity name="MangaEntity" representedClassName="MangaEntity" versionHashModifier="add collection index" syncable="YES">
         <attribute name="cover" attributeType="URI"/>
         <attribute name="lastChapterUploadDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUserAction" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -74,6 +95,18 @@
         <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CollectionEntity" inverseName="mangas" inverseEntity="CollectionEntity"/>
         <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="mangas" inverseEntity="GenreEntity"/>
         <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" ordered="YES" destinationEntity="SourceEntity" inverseName="mangas" inverseEntity="SourceEntity"/>
+        <fetchIndex name="byTitleASC">
+            <fetchIndexElement property="title" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byTitleDESC">
+            <fetchIndexElement property="title" type="Binary" order="descending"/>
+        </fetchIndex>
+        <fetchIndex name="byCollectionNotNilASC" partialIndexPredicate="collection != nil">
+            <fetchIndexElement property="collection" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byCollectionNotNilDESC" partialIndexPredicate="collection != nilc">
+            <fetchIndexElement property="collection" type="Binary" order="descending"/>
+        </fetchIndex>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="mangaId"/>

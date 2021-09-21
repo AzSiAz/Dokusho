@@ -8,47 +8,56 @@
 import SwiftUI
 
 struct HistoryTabView: View {
-    @FetchRequest var chapters: FetchedResults<ChapterEntity>
     @State var searchTitle: String = ""
-    @State var chapterStatus: ChapterStatus = .read
-    
-    init() {
-        self._chapters = .init(sortDescriptors: [ChapterEntity.readAtOrder(), ChapterEntity.positionOrder()], predicate: ChapterEntity.forChapterStatusPredicate(status: [.read]), animation: .easeIn)
-    }
+    @State var status: ChapterStatusHistory = .read
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(chapters) { chapter in
-//                    NavigationLink(destination: MangaDetailView(manga: chapter.manga!)) {
-                        ChapterRow(chapter: chapter)
-//                    }
-                }
-                .onDelete { offsets in
-                    let toDelete = offsets.map { chapters[$0] }
-//                    Task {
-//                        await DataManager.shared.markChaptersAs(for: toDelete, status: .unread)
-//                    }
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Picker("Chapter Status", selection: $chapterStatus) {
-                        Text(ChapterStatus.read.rawValue).tag(ChapterStatus.read)
-                        Text("All").tag(ChapterStatus.unread)
+            FilteredHistoryView(searchTerm: searchTitle, status: status)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Picker("Chapter Status", selection: $status) {
+                            Text(ChapterStatusHistory.read.rawValue).tag(ChapterStatusHistory.read)
+                            Text(ChapterStatusHistory.all.rawValue).tag(ChapterStatusHistory.all)
+                        }
+                        .frame(maxWidth: 150)
+                        .pickerStyle(.segmented)
                     }
-                    .frame(maxWidth: 150)
-                    .pickerStyle(.segmented)
-                }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
+                    }
+                }
+                .listStyle(.plain)
+                .searchable(text: $searchTitle)
+                .navigationBarTitle("Reading History", displayMode: .large)
+        }
+    }
+}
+
+struct FilteredHistoryView: View {
+    @FetchRequest var chapters: FetchedResults<ChapterEntity>
+    
+    var status: ChapterStatusHistory
+    
+    init(searchTerm: String, status: ChapterStatusHistory) {
+        self.status = status
+        self._chapters = .init(
+            sortDescriptors: ChapterEntity.chapterHistoryOrder(status: status),
+            predicate: ChapterEntity.chapterHistoryPredicate(status: status, searchTerm: searchTerm),
+            animation: .none
+        )
+    }
+    
+    var body: some View {
+        List {
+            ForEach(chapters) { chapter in
+                NavigationLink(destination: MangaDetailView(mangaId: chapter.manga!.mangaId!, src: Int(chapter.manga!.source!.sourceId))) {
+                    ChapterRow(chapter: chapter)
                 }
             }
-            .listStyle(.plain)
-            .searchable(text: $searchTitle)
-            .navigationBarTitle("Reading History", displayMode: .large)
         }
+        .id(UUID())
     }
     
     @ViewBuilder
@@ -62,17 +71,10 @@ struct HistoryTabView: View {
                 Text(chapter.manga!.title!)
                 Text(chapter.title ?? "No title...")
                 
-                if chapterStatus == .read { Text("Read at: \(chapter.readAt?.formatted() ?? "No date...")") }
-                if chapterStatus == .unread { Text("Uploaded at: \(chapter.dateSourceUpload?.formatted() ?? "No date...")") }
+                if status == .read { Text("Read at: \(chapter.readAt?.formatted() ?? "No date...")") }
+                if status == .all { Text("Uploaded at: \(chapter.dateSourceUpload?.formatted() ?? "No date...")") }
             }
         }
         .frame(minHeight: 120)
     }
 }
-
-//struct FilteredHistoryView: View {
-//
-//    var body: some View {
-//
-//    }
-//}

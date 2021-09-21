@@ -69,7 +69,7 @@ struct ExploreSourceView: View {
             }
         }
         .sheetSizeAware(item: $vm.selectedManga) { manga in
-            MangaDetailView(mangaId: manga.id, src: vm.src)
+            MangaDetailView(mangaId: manga.id, src: Int(vm.src.sourceId))
                 .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
         }
         .navigationTitle(vm.getTitle())

@@ -49,6 +49,7 @@
 		E26662C626CC36840054868A /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E26662C426CC36840054868A /* Dokusho.xcdatamodeld */; };
 		E26662CE26CC53DA0054868A /* SourceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662CD26CC53DA0054868A /* SourceEntity.swift */; };
 		E26662D126CC58160054868A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E26662D026CC58160054868A /* Assets.xcassets */; };
+		E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2BD651326F22AE200BE5CD7 /* CloudKit.framework */; };
 		E2CB127826CD021C007837D1 /* MangaEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127726CD021C007837D1 /* MangaEntity.swift */; };
 		E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127B26CD0559007837D1 /* ChapterListVM.swift */; };
 		E2CB128526CD0559007837D1 /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */; };
@@ -125,6 +126,7 @@
 		E26662CD26CC53DA0054868A /* SourceEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEntity.swift; sourceTree = "<group>"; };
 		E26662CF26CC57800054868A /* Dokusho.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dokusho.entitlements; sourceTree = "<group>"; };
 		E26662D026CC58160054868A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E2BD651326F22AE200BE5CD7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E2CB127726CD021C007837D1 /* MangaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaEntity.swift; sourceTree = "<group>"; };
 		E2CB127B26CD0559007837D1 /* ChapterListVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListVM.swift; sourceTree = "<group>"; };
 		E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailVM.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */,
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 			);
@@ -296,6 +299,7 @@
 		E2187EAF26CC5EA1009604A9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E2BD651326F22AE200BE5CD7 /* CloudKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
