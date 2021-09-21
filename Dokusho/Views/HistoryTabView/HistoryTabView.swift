@@ -52,7 +52,13 @@ struct FilteredHistoryView: View {
     var body: some View {
         List {
             ForEach(chapters) { chapter in
-                NavigationLink(destination: MangaDetailView(mangaId: chapter.manga!.mangaId!, src: Int(chapter.manga!.source!.sourceId))) {
+                NavigationLink(
+                    destination: MangaDetailView(
+                        mangaId: chapter.manga!.mangaId!,
+                        src: Int(chapter.manga!.source!.sourceId),
+                        showDismiss: false
+                    )
+                ) {
                     ChapterRow(chapter: chapter)
                 }
             }

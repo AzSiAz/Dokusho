@@ -14,16 +14,19 @@ class MangaDetailVM: ObservableObject {
     private var ctx = PersistenceController.shared.container.viewContext
     let src: SourceEntity
     let mangaId: String
+    let showDismiss: Bool
     
     @Published var error = false
     @Published var manga: MangaEntity?
     @Published var showMoreDesc = false
     @Published var addToCollection = false
     @Published var refreshing = false
+    @Published var selectedChapter: ChapterEntity?
     
-    init(for source: Int, mangaId: String) {
+    init(for source: Int, mangaId: String, showDismiss: Bool) {
         self.src = SourceEntity.fetchOne(sourceId: source, ctx: ctx)!
         self.mangaId = mangaId
+        self.showDismiss = showDismiss
 
         withAnimation {
             self.manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, source: src, includeChapters: true)
