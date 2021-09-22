@@ -43,8 +43,10 @@ class PersistenceController {
     init() {
         container = NSPersistentContainer(name: "Dokusho")
         
-        container.persistentStoreDescriptions.first!.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-        
+        guard let storeDescription = container.persistentStoreDescriptions.first else { fatalError("Failed to open first persistentStoreDescription") }
+        storeDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+        storeDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
                 Logger.persistence.error("Unresolved error \(error) with \(error.userInfo)")
