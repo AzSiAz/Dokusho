@@ -59,25 +59,28 @@ extension MangaEntity {
             manga = try MangaEntity(ctx: taskCtx, sourceId: source.objectID, data: data)
         }
         
+        manga.title = data.title
+        manga.synopsis = data.synopsis
+        manga.cover = URL(string: data.cover)
+        manga.statusRaw = data.status.rawValue
+        manga.typeRaw = data.type.rawValue
+        
         data.alternateNames
-            .map { AlternateTitlesEntity(ctx: taskCtx, title: $0, sourceId: Int(source.sourceId)) }
+            .map { AlternateTitlesEntity.fromSourceSource(ctx: taskCtx, title: $0, sourceId: Int(source.sourceId), manga: manga) }
             .forEach {
                 taskCtx.insert($0)
-                manga.addToAlternateTitles($0)
             }
         
         data.genres
-            .map { GenreEntity(ctx: taskCtx, name: $0) }
+            .map { GenreEntity.fromSourceSource(ctx: taskCtx, name: $0, manga: manga) }
             .forEach {
                 taskCtx.insert($0)
-                manga.addToGenres($0)
             }
         
         data.authors
-            .map { AuthorAndArtistEntity(ctx: taskCtx, name: $0, type: .author) }
+            .map { AuthorAndArtistEntity.fromSourceSource(ctx: taskCtx, name: $0, type: .author, manga: manga) }
             .forEach {
                 taskCtx.insert($0)
-                manga.addToAuthorsAndArtists($0)
             }
         
         let oldChapters = ChapterEntity.chaptersForManga(ctx: taskCtx, manga: manga.objectID, source: source.objectID)

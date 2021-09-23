@@ -19,6 +19,13 @@ extension SourceEntity {
         self.icon = URL(string: source.icon)
     }
     
+    func updateFromSource(data: Source) {
+        self.sourceId = Int32(data.id)
+        self.name = data.name
+        self.language = data.lang.rawValue
+        self.icon = URL(string: data.icon)
+    }
+    
     func getSource() throws -> Source {
         guard let source = MangaScraperService.shared.getSource(sourceId: Int(self.sourceId)) else {
             throw "Source not found, it's not normal"
@@ -29,12 +36,24 @@ extension SourceEntity {
 }
 
 extension SourceEntity {
+    static func fetchMany(ctx: NSManagedObjectContext) -> [SourceEntity] {
+        guard let res = try? ctx.fetch(SourceEntity.sourceFetchRequest) else { return [] }
+        return res
+    }
+    
     static func importAtAppStart(sources: [Source]) async {
         let ctx = PersistenceController.shared.container.newBackgroundContext()
         
+        let sourcesAlreadyHere = Self.fetchMany(ctx: ctx)
+        
         await ctx.perform {
             sources.forEach { src in
-                ctx.insert(SourceEntity(ctx: ctx, source: src))
+                guard let found = sourcesAlreadyHere.first(where: { $0.sourceId == Int32(src.id) }) else {
+                    ctx.insert(SourceEntity(ctx: ctx, source: src))
+                    return
+                }
+                
+                found.updateFromSource(data: src)
             }
             
             try? ctx.save()
@@ -52,6 +71,15 @@ extension SourceEntity {
 }
 
 extension SourceEntity {
+    static var sourceFetchRequest: NSFetchRequest<SourceEntity> {
+        let request = SourceEntity.fetchRequest()
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \SourceEntity.position, ascending: true),
+        ]
+        
+        return request
+    }
+    
     static var onlyFavoriteOrActive: NSPredicate {
         return NSCompoundPredicate(orPredicateWithSubpredicates: [
             favoritePredicate,

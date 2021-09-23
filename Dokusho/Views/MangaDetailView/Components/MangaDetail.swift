@@ -179,6 +179,10 @@ struct MangaDetail: View {
                 Text(manga.synopsis ?? "...")
                     .lineLimit(showMoreDesc ? .max : 4)
                 
+                if showMoreDesc {
+                    Text("Alternate titles: \(manga.alternateTitles?.count ?? 0)")
+                }
+                
                 HStack {
                     Spacer()
                     Button(action: { withAnimation {

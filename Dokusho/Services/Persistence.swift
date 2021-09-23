@@ -38,10 +38,10 @@ typealias BackupResult = Result<BackupTask, Error>
 class PersistenceController {
     static let shared = PersistenceController()
 
-    let container: NSPersistentContainer
+    let container: NSPersistentCloudKitContainer
 
     init() {
-        container = NSPersistentContainer(name: "Dokusho")
+        container = NSPersistentCloudKitContainer(name: "Dokusho")
         
         guard let storeDescription = container.persistentStoreDescriptions.first else { fatalError("Failed to open first persistentStoreDescription") }
         storeDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
