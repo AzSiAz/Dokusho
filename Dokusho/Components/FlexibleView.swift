@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {
-    let availableWidth: CGFloat = UIScreen.main.bounds.width
     let data: Data
+    let availableWidth: CGFloat
     let spacing: CGFloat
     let alignment: HorizontalAlignment
     let content: (Data.Element) -> Content

@@ -29,7 +29,7 @@ struct MangaDetailView: View {
     
     @ViewBuilder
     func Content() -> some View {
-        ScrollView {
+        Group {
             if vm.error {
                 VStack {
                     Text("Something weird happened, try again")
@@ -46,14 +46,15 @@ struct MangaDetailView: View {
             }
             
             if !vm.error && vm.manga != nil {
-                MangaDetailHeader(vm: vm)
-                    .padding(.bottom)
-                MangaDetailInformation(vm: vm)
-                    .padding(.top, 5)
-                    .padding(.bottom, 15)
-                Divider()
-                ChapterListInformation(manga: vm.manga!, selectedChapter: $vm.selectedChapter)
-                    .padding(.bottom)
+                MangaDetail(
+                    manga: vm.manga!,
+                    selectedChapter: $vm.selectedChapter,
+                    forceCompact: !vm.showDismiss,
+                    update: vm.update,
+                    resetCache: vm.resetCache,
+                    insertMangaInCollection: vm.insertMangaInCollection,
+                    removeMangaFromCollection: vm.removeMangaFromCollection
+                )
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -80,4 +81,3 @@ struct MangaDetailView: View {
         }
     }
 }
-

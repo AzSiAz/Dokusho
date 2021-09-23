@@ -49,15 +49,17 @@
 		E26662C626CC36840054868A /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E26662C426CC36840054868A /* Dokusho.xcdatamodeld */; };
 		E26662CE26CC53DA0054868A /* SourceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662CD26CC53DA0054868A /* SourceEntity.swift */; };
 		E26662D126CC58160054868A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E26662D026CC58160054868A /* Assets.xcassets */; };
+		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
+		E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */; };
+		E27A5DD326FCC69600F95361 /* DeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */; };
+		E27A5DD526FCCE7700F95361 /* MangaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD426FCCE7700F95361 /* MangaDetail.swift */; };
 		E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2BD651326F22AE200BE5CD7 /* CloudKit.framework */; };
 		E2CB127826CD021C007837D1 /* MangaEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127726CD021C007837D1 /* MangaEntity.swift */; };
 		E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127B26CD0559007837D1 /* ChapterListVM.swift */; };
 		E2CB128526CD0559007837D1 /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */; };
 		E2CB128626CD0559007837D1 /* ChapterCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127E26CD0559007837D1 /* ChapterCollection.swift */; };
-		E2CB128726CD0559007837D1 /* MangaDetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127F26CD0559007837D1 /* MangaDetailHeader.swift */; };
 		E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128026CD0559007837D1 /* ChapterListRow.swift */; };
 		E2CB128926CD0559007837D1 /* ChapterListInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128126CD0559007837D1 /* ChapterListInformation.swift */; };
-		E2CB128A26CD0559007837D1 /* MangaDetailInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128226CD0559007837D1 /* MangaDetailInformation.swift */; };
 		E2CB128B26CD0559007837D1 /* MangaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128326CD0559007837D1 /* MangaDetailView.swift */; };
 		E2CB128D26CD14B4007837D1 /* AlternateTitlesEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128C26CD14B4007837D1 /* AlternateTitlesEntity.swift */; };
 		E2CB128F26CD1B27007837D1 /* GenreEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128E26CD1B27007837D1 /* GenreEntity.swift */; };
@@ -126,15 +128,16 @@
 		E26662CD26CC53DA0054868A /* SourceEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEntity.swift; sourceTree = "<group>"; };
 		E26662CF26CC57800054868A /* Dokusho.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dokusho.entitlements; sourceTree = "<group>"; };
 		E26662D026CC58160054868A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveStack.swift; sourceTree = "<group>"; };
+		E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceOrientation.swift; sourceTree = "<group>"; };
+		E27A5DD426FCCE7700F95361 /* MangaDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetail.swift; sourceTree = "<group>"; };
 		E2BD651326F22AE200BE5CD7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E2CB127726CD021C007837D1 /* MangaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaEntity.swift; sourceTree = "<group>"; };
 		E2CB127B26CD0559007837D1 /* ChapterListVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListVM.swift; sourceTree = "<group>"; };
 		E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailVM.swift; sourceTree = "<group>"; };
 		E2CB127E26CD0559007837D1 /* ChapterCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterCollection.swift; sourceTree = "<group>"; };
-		E2CB127F26CD0559007837D1 /* MangaDetailHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailHeader.swift; sourceTree = "<group>"; };
 		E2CB128026CD0559007837D1 /* ChapterListRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListRow.swift; sourceTree = "<group>"; };
 		E2CB128126CD0559007837D1 /* ChapterListInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListInformation.swift; sourceTree = "<group>"; };
-		E2CB128226CD0559007837D1 /* MangaDetailInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailInformation.swift; sourceTree = "<group>"; };
 		E2CB128326CD0559007837D1 /* MangaDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailView.swift; sourceTree = "<group>"; };
 		E2CB128C26CD14B4007837D1 /* AlternateTitlesEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlternateTitlesEntity.swift; sourceTree = "<group>"; };
 		E2CB128E26CD1B27007837D1 /* GenreEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreEntity.swift; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 				E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */,
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
+				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				E26662C226CC36840054868A /* Persistence.swift */,
+				E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -355,6 +360,7 @@
 				E2187ECD26CC625C009604A9 /* NavigationLinkLazyView.swift */,
 				E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */,
 				E2187ECF26CC625C009604A9 /* RefreshableImageView.swift */,
+				E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -442,10 +448,9 @@
 			isa = PBXGroup;
 			children = (
 				E2CB127E26CD0559007837D1 /* ChapterCollection.swift */,
-				E2CB127F26CD0559007837D1 /* MangaDetailHeader.swift */,
 				E2CB128026CD0559007837D1 /* ChapterListRow.swift */,
 				E2CB128126CD0559007837D1 /* ChapterListInformation.swift */,
-				E2CB128226CD0559007837D1 /* MangaDetailInformation.swift */,
+				E27A5DD426FCCE7700F95361 /* MangaDetail.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -528,6 +533,7 @@
 			packageProductDependencies = (
 				E2187E9126CC5ACC009604A9 /* Nuke */,
 				E203B9C826ECFED700F4B749 /* MangaScraper */,
+				E27A5DCE26FBA77700F95361 /* SwiftUIX */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -560,6 +566,7 @@
 			packageReferences = (
 				E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */,
 				E203B9C726ECFDF000F4B749 /* XCRemoteSwiftPackageReference "MangaScraper" */,
+				E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -591,6 +598,7 @@
 			files = (
 				E26662C326CC36840054868A /* Persistence.swift in Sources */,
 				E2187EA626CC5D9E009604A9 /* Date.swift in Sources */,
+				E27A5DD326FCC69600F95361 /* DeviceOrientation.swift in Sources */,
 				E2187EC326CC6243009604A9 /* SourceRowView.swift in Sources */,
 				E26662C626CC36840054868A /* Dokusho.xcdatamodeld in Sources */,
 				E20837D026E3C6E100E6DCEE /* AuthorAndArtistEntity+CoreDataClass.swift in Sources */,
@@ -602,6 +610,7 @@
 				E20837B826E3C0C700E6DCEE /* MangaEntity+CoreDataClass.swift in Sources */,
 				E2187EBF26CC6243009604A9 /* ExploreSourceVM.swift in Sources */,
 				E2DA94D926D645F30083F2F7 /* SettingsVM.swift in Sources */,
+				E27A5DD526FCCE7700F95361 /* MangaDetail.swift in Sources */,
 				E2187EA526CC5D9E009604A9 /* RoundedCorner.swift in Sources */,
 				E2CB128D26CD14B4007837D1 /* AlternateTitlesEntity.swift in Sources */,
 				E2187EC626CC6243009604A9 /* FavoriteSourceSectionView.swift in Sources */,
@@ -612,8 +621,8 @@
 				E2DA94EB26D6689F0083F2F7 /* ManageCollectionsModal.swift in Sources */,
 				E2DA94D326D63F140083F2F7 /* CollectionEntity.swift in Sources */,
 				E2187ED426CC625C009604A9 /* NavigationLinkLazyView.swift in Sources */,
-				E2CB128A26CD0559007837D1 /* MangaDetailInformation.swift in Sources */,
 				E26662BA26CC36830054868A /* DokushoApp.swift in Sources */,
+				E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */,
 				E2187EC026CC6243009604A9 /* ManagerSourceView.swift in Sources */,
 				E2187ED626CC625C009604A9 /* RefreshableImageView.swift in Sources */,
 				E20837BE26E3C65900E6DCEE /* SourceEntity+CoreDataClass.swift in Sources */,
@@ -623,7 +632,6 @@
 				E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */,
 				E2DA94E926D668170083F2F7 /* LibraryVM.swift in Sources */,
 				E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */,
-				E2CB128726CD0559007837D1 /* MangaDetailHeader.swift in Sources */,
 				E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */,
 				E2CB12A226CD4EB7007837D1 /* BottomOverlayView.swift in Sources */,
 				E2DA94E326D667FE0083F2F7 /* LibraryTabView.swift in Sources */,
@@ -791,10 +799,12 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Dokusho/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Dokusho;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -827,10 +837,12 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Dokusho/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Dokusho;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -889,6 +901,14 @@
 				kind = branch;
 			};
 		};
+		E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -901,6 +921,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
+		};
+		E27A5DCE26FBA77700F95361 /* SwiftUIX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
+			productName = SwiftUIX;
 		};
 /* End XCSwiftPackageProductDependency section */
 

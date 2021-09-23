@@ -74,7 +74,7 @@ class MangaDetailVM: ObservableObject {
 //        await fetchAndInsert()
     }
     
-    func insertMangaInCollection(collectionId: NSManagedObjectID) {
+    func insertMangaInCollection(_ collectionId: NSManagedObjectID) {
         guard let collection = ctx.object(with: collectionId) as? CollectionEntity else { return }
         try? ctx.performAndWait {
             self.manga?.collection = collection
