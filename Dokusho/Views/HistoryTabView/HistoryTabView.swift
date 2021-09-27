@@ -63,7 +63,7 @@ struct FilteredHistoryView: View {
         NavigationLink(
             destination: MangaDetailView(
                 mangaId: chapter.manga!.mangaId!,
-                src: Int(chapter.manga!.source!.sourceId),
+                src: chapter.manga!.sourceId,
                 showDismiss: false
             ),
             label: {

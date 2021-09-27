@@ -9,14 +9,14 @@ import Foundation
 import CoreData
 
 extension AlternateTitlesEntity {
-    convenience init(ctx: NSManagedObjectContext, title: String, sourceId: Int) {
+    convenience init(ctx: NSManagedObjectContext, title: String, sourceId: UUID) {
         self.init(entity: Self.entity(), insertInto: ctx)
         
         self.title = title
         self.key = Self.generateKey(title: title, sourceId: sourceId)
     }
     
-    static func fetchOne(ctx: NSManagedObjectContext, title: String, sourceId: Int) -> AlternateTitlesEntity? {
+    static func fetchOne(ctx: NSManagedObjectContext, title: String, sourceId: UUID) -> AlternateTitlesEntity? {
         let req = Self.fetchRequest()
         
         req.fetchLimit = 1
@@ -25,7 +25,7 @@ extension AlternateTitlesEntity {
         return try? ctx.fetch(req).first
     }
     
-    static func fromSourceSource(ctx: NSManagedObjectContext, title: String, sourceId: Int, manga: MangaEntity) -> AlternateTitlesEntity {
+    static func fromSourceSource(ctx: NSManagedObjectContext, title: String, sourceId: UUID, manga: MangaEntity) -> AlternateTitlesEntity {
         let d: AlternateTitlesEntity
         if let found = Self.fetchOne(ctx: ctx, title: title, sourceId: sourceId) {
             d = found
@@ -40,7 +40,7 @@ extension AlternateTitlesEntity {
 }
 
 extension AlternateTitlesEntity {
-    static func keyPredicate(title: String, sourceId: Int) -> NSPredicate {
+    static func keyPredicate(title: String, sourceId: UUID) -> NSPredicate {
         return NSPredicate(format: "%K = %@", #keyPath(AlternateTitlesEntity.key), Self.generateKey(title: title, sourceId: sourceId))
     }
 }

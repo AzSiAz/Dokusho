@@ -313,7 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				E2187EB326CC6243009604A9 /* ViewModels */,
-				E2187EB526CC6243009604A9 /* Navigation */,
+				E2187EB526CC6243009604A9 /* Pages */,
 				E2187EB826CC6243009604A9 /* Components */,
 				E2187EBE26CC6243009604A9 /* ExploreTabView.swift */,
 			);
@@ -328,13 +328,13 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		E2187EB526CC6243009604A9 /* Navigation */ = {
+		E2187EB526CC6243009604A9 /* Pages */ = {
 			isa = PBXGroup;
 			children = (
 				E2187EB626CC6243009604A9 /* ManagerSourceView.swift */,
 				E2187EB726CC6243009604A9 /* ExploreSourceView.swift */,
 			);
-			path = Navigation;
+			path = Pages;
 			sourceTree = "<group>";
 		};
 		E2187EB826CC6243009604A9 /* Components */ = {

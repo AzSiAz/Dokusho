@@ -103,7 +103,7 @@ struct MangaDetail: View {
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     
-                    Text(manga.source?.name ?? "Unknown")
+                    Text(manga.getSource().name)
                         .font(.callout.bold())
                 }
             }

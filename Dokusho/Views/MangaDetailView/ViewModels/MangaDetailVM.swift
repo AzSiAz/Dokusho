@@ -8,11 +8,12 @@
 import Foundation
 import CoreData
 import SwiftUI
+import MangaScraper
 
 @MainActor
 class MangaDetailVM: ObservableObject {
     private var ctx = PersistenceController.shared.container.viewContext
-    let src: SourceEntity
+    let src: Source
     let mangaId: String
     let showDismiss: Bool
     
@@ -23,13 +24,13 @@ class MangaDetailVM: ObservableObject {
     @Published var refreshing = false
     @Published var selectedChapter: ChapterEntity?
     
-    init(for source: Int, mangaId: String, showDismiss: Bool) {
-        self.src = SourceEntity.fetchOne(sourceId: source, ctx: ctx)!
+    init(for sourceId: UUID, mangaId: String, showDismiss: Bool) {
+        self.src = MangaScraperService.shared.getSource(sourceId: sourceId)!
         self.mangaId = mangaId
         self.showDismiss = showDismiss
 
         withAnimation {
-            self.manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, source: src, includeChapters: true)
+            self.manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, sourceId: src.id, includeChapters: true)
         }
     }
     
@@ -43,7 +44,7 @@ class MangaDetailVM: ObservableObject {
         self.refreshing = true
 
         do {
-            guard let sourceManga = try? await src.getSource().fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
+            guard let sourceManga = try? await src.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
             guard let saved = try? MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src) else { throw "Error updating/fetching manga" }
             try ctx.save()
 
@@ -60,11 +61,11 @@ class MangaDetailVM: ObservableObject {
     }
     
     func getMangaURL() -> URL {
-        return try! self.src.getSource().mangaUrl(mangaId: self.mangaId)
+        return self.src.mangaUrl(mangaId: self.mangaId)
     }
     
     func getSourceName() -> String {
-        return src.name ?? ""
+        return src.name
     }
     
     // TODO: Rework reset cache to avoid deleting chapter read/unread info

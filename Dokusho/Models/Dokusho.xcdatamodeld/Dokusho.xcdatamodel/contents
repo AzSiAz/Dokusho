@@ -60,6 +60,7 @@
         <attribute name="lastChapterUploadDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUserAction" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="mangaId" optional="YES" attributeType="String"/>
+        <attribute name="sourceId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="synopsis" attributeType="String" defaultValueString=""/>
         <attribute name="title" optional="YES" attributeType="String"/>
@@ -69,7 +70,6 @@
         <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ChapterEntity" inverseName="manga" inverseEntity="ChapterEntity"/>
         <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CollectionEntity" inverseName="mangas" inverseEntity="CollectionEntity"/>
         <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GenreEntity" inverseName="mangas" inverseEntity="GenreEntity"/>
-        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SourceEntity" inverseName="mangas" inverseEntity="SourceEntity"/>
         <fetchIndex name="byTitleASC">
             <fetchIndexElement property="title" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -86,12 +86,8 @@
     <entity name="SourceEntity" representedClassName="SourceEntity" syncable="YES">
         <attribute name="active" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="icon" optional="YES" attributeType="URI"/>
-        <attribute name="language" optional="YES" attributeType="String"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="sourceId" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="source" inverseEntity="MangaEntity"/>
+        <attribute name="sourceId" attributeType="UUID" usesScalarValueType="NO"/>
     </entity>
     <elements>
         <element name="AlternateTitlesEntity" positionX="-1206.10546875" positionY="-926.0234375" width="128" height="74"/>
@@ -100,6 +96,6 @@
         <element name="CollectionEntity" positionX="-1395" positionY="-801" width="128" height="104"/>
         <element name="GenreEntity" positionX="-1600.05859375" positionY="-960.765625" width="128" height="59"/>
         <element name="MangaEntity" positionX="-1417.8984375" positionY="-965.15625" width="98.859375" height="239"/>
-        <element name="SourceEntity" positionX="-1576.33203125" positionY="-851" width="98.72265625" height="149"/>
+        <element name="SourceEntity" positionX="-1576.33203125" positionY="-851" width="98.72265625" height="89"/>
     </elements>
 </model>

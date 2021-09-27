@@ -34,8 +34,5 @@ struct RootView: View {
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(ActiveTab.settings)
         }
-        .task(priority: .high) {
-            await SourceEntity.importAtAppStart(sources: MangaScraperService.shared.list)
-        }
     }
 }

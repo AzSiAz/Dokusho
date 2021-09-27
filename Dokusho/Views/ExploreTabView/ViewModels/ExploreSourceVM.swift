@@ -13,7 +13,7 @@ import MangaScraper
 class ExploreSourceVM: ObservableObject {
     private let ctx = PersistenceController.shared.backgroundCtx()
     
-    let src: SourceEntity
+    let src: Source
     
     @Published var nextPage = 1
     @Published var mangas: [SourceSmallManga] = []
@@ -22,7 +22,7 @@ class ExploreSourceVM: ObservableObject {
     @Published var selectedManga: SourceSmallManga?
     
     init(for source: SourceEntity) {
-        self.src = source
+        self.src = try! source.getSource()
     }
     
     @MainActor
@@ -36,8 +36,8 @@ class ExploreSourceVM: ObservableObject {
         
         do {
             let newManga = try await type == .latest
-                ? src.getSource().fetchLatestUpdates(page: nextPage)
-                : src.getSource().fetchPopularManga(page: nextPage)
+                ? src.fetchLatestUpdates(page: nextPage)
+                : src.fetchPopularManga(page: nextPage)
 
             self.mangas += newManga.mangas
             self.nextPage += 1
@@ -54,11 +54,11 @@ class ExploreSourceVM: ObservableObject {
     }
     
     func getTitle() -> String {
-        return "\(src.name ?? "") - \(type.rawValue)"
+        return "\(src.name) - \(type.rawValue)"
     }
     
     func addToCollection(smallManga: SourceSmallManga, collection collectionId: NSManagedObjectID) async {
-        guard let sourceManga = try? await src.getSource().fetchMangaDetail(id: smallManga.id) else { return }
+        guard let sourceManga = try? await src.fetchMangaDetail(id: smallManga.id) else { return }
 
         try! await ctx.perform {
             guard let manga = try? MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src) else { return }

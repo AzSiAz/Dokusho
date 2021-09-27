@@ -12,7 +12,7 @@ struct MangaDetailView: View {
 
     @StateObject var vm: MangaDetailVM
     
-    init(mangaId: String, src: Int, showDismiss: Bool = true) {
+    init(mangaId: String, src: UUID, showDismiss: Bool = true) {
         self._vm = .init(wrappedValue: .init(for: src, mangaId: mangaId, showDismiss: showDismiss))
     }
     

@@ -12,7 +12,7 @@ import OSLog
 import MangaScraper
 
 class ReaderVM: ObservableObject {
-    private var src: SourceEntity
+    private var src: Source
     private var ctx = PersistenceController.shared.backgroundCtx()
     
     @Published var chapter: ChapterEntity
@@ -24,7 +24,7 @@ class ReaderVM: ObservableObject {
     @Published var showReaderDirectionChoice = false
 
     init(for chapter: ChapterEntity) {
-        self.src = chapter.manga!.source!
+        self.src = chapter.manga!.getSource()
         self.chapter = chapter
         self.direction = chapter.manga!.getDefaultReadingDirection()
     }
@@ -32,7 +32,7 @@ class ReaderVM: ObservableObject {
     @MainActor
     func fetchChapter() async {
         do {
-            images = try await src.getSource().fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
+            images = try await src.fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
             tabIndex = images.first!
         } catch {
             Logger.reader.info("Error loading chapter \(self.chapter): \(error.localizedDescription)")

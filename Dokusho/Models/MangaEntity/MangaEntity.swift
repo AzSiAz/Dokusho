@@ -10,11 +10,17 @@ import CoreData
 import MangaScraper
 
 extension MangaEntity {
-    convenience init(ctx: NSManagedObjectContext, sourceId: NSManagedObjectID, data: SourceManga) throws {
+    func getSource() -> Source {
+        return MangaScraperService.shared.getSource(sourceId: self.sourceId)!
+    }
+}
+
+
+extension MangaEntity {
+    convenience init(ctx: NSManagedObjectContext, sourceId: UUID, data: SourceManga) throws {
         self.init(entity: Self.entity(), insertInto: ctx)
         
-        guard let source = ctx.object(with: sourceId) as? SourceEntity else { throw "Source \(sourceId) not found" }
-        self.source = source
+        self.sourceId = sourceId
         self.mangaId = data.id
         self.title = data.title
         self.cover = URL(string: data.cover)
@@ -40,23 +46,23 @@ extension MangaEntity {
 }
 
 extension MangaEntity {
-    static func fetchOne(ctx: NSManagedObjectContext, mangaId: String, source: SourceEntity, includeChapters: Bool = false) -> MangaEntity? {
+    static func fetchOne(ctx: NSManagedObjectContext, mangaId: String, sourceId: UUID, includeChapters: Bool = false) -> MangaEntity? {
         let req = Self.fetchRequest()
         
         req.fetchLimit = 1
-        req.predicate = Self.mangaIdAndSourcePredicate(mangaId: mangaId, source: source)
+        req.predicate = Self.mangaIdAndSourcePredicate(mangaId: mangaId, sourceId: sourceId)
         
         return try? ctx.fetch(req).first
     }
 }
 
 extension MangaEntity {
-    static func updateFromSource(ctx taskCtx: NSManagedObjectContext, data: SourceManga, source: SourceEntity) throws -> MangaEntity {
+    static func updateFromSource(ctx taskCtx: NSManagedObjectContext, data: SourceManga, source: Source) throws -> MangaEntity {
         let manga: MangaEntity
-        if let found = MangaEntity.fetchOne(ctx: taskCtx, mangaId: data.id, source: source) {
+        if let found = MangaEntity.fetchOne(ctx: taskCtx, mangaId: data.id, sourceId: source.id) {
             manga = found
         } else {
-            manga = try MangaEntity(ctx: taskCtx, sourceId: source.objectID, data: data)
+            manga = try MangaEntity(ctx: taskCtx, sourceId: source.id, data: data)
         }
         
         manga.title = data.title
@@ -66,7 +72,7 @@ extension MangaEntity {
         manga.typeRaw = data.type.rawValue
         
         data.alternateNames
-            .map { AlternateTitlesEntity.fromSourceSource(ctx: taskCtx, title: $0, sourceId: Int(source.sourceId), manga: manga) }
+            .map { AlternateTitlesEntity.fromSourceSource(ctx: taskCtx, title: $0, sourceId: source.id, manga: manga) }
             .forEach {
                 taskCtx.insert($0)
             }
@@ -83,7 +89,7 @@ extension MangaEntity {
                 taskCtx.insert($0)
             }
         
-        let oldChapters = ChapterEntity.chaptersForManga(ctx: taskCtx, manga: manga.objectID, source: source.objectID)
+        let oldChapters = ChapterEntity.chaptersForManga(ctx: taskCtx, manga: manga.objectID)
         
         let readDico: [String:Date] = oldChapters
             .filter { $0.readAt != nil }
@@ -96,7 +102,7 @@ extension MangaEntity {
         data.chapters
             .enumerated()
             .map { (index, chapter) -> ChapterEntity in
-                let c = ChapterEntity(ctx: taskCtx, data: chapter, position: Int32(index), source: source)
+                let c = ChapterEntity(ctx: taskCtx, data: chapter, position: Int32(index), sourceId: source.id)
                 c.markAs(newStatus: .unread)
 
                 if let found = readDico[c.chapterId!] {
@@ -129,15 +135,15 @@ extension MangaEntity {
 }
 
 extension MangaEntity {
-    static func mangaIdAndSourcePredicate(mangaId: String, source: SourceEntity) -> NSPredicate {
+    static func mangaIdAndSourcePredicate(mangaId: String, sourceId: UUID) -> NSPredicate {
         return NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "%K = %@", #keyPath(MangaEntity.mangaId), mangaId),
-            NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
+            sourcePredicate(sourceId: sourceId)
         ])
     }
     
-    static func sourcePredicate(source: SourceEntity) -> NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.source), source)
+    static func sourcePredicate(sourceId: UUID) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.sourceId), sourceId.uuidString)
     }
     
     static func collectionPredicate(collection: CollectionEntity) -> NSPredicate {
@@ -154,10 +160,10 @@ extension MangaEntity {
         return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
     }
     
-    static func inCollectionForSource(source: SourceEntity) -> NSPredicate {
+    static func inCollectionForSource(sourceId: UUID) -> NSPredicate {
         return NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "%K != nil", #keyPath(MangaEntity.collection)),
-            Self.sourcePredicate(source: source)
+            Self.sourcePredicate(sourceId: sourceId)
         ])
     }
     

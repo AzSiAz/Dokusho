@@ -16,7 +16,7 @@ struct ChapterBackup: Codable {
 
 struct MangaBackup: Codable {
     var id: String
-    var sourceId: Int
+    var sourceId: UUID
     var readChapter: [ChapterBackup]
 }
 
@@ -79,7 +79,7 @@ class PersistenceController {
                     let chapterBackup: [ChapterBackup] = manga.chapters!.filter { !$0.isUnread }.map { chapter in
                         return ChapterBackup(id: chapter.chapterId!, readAt: chapter.readAt ?? chapter.dateSourceUpload ?? .now)
                     }
-                    return MangaBackup(id: manga.mangaId!, sourceId: Int(manga.source!.sourceId), readChapter: chapterBackup)
+                    return MangaBackup(id: manga.mangaId!, sourceId: manga.sourceId, readChapter: chapterBackup)
                 }
                 
                 return CollectionBackup(id: collection.uuid!, name: collection.name!, position: Int(collection.position), mangas: mangaBackup)
@@ -111,9 +111,9 @@ class PersistenceController {
                     case .success(let task):
                         Logger.backup.info("Restoring \(task.mangaBackup.id)")
                         
-                        guard let source = SourceEntity.fetchOne(sourceId: task.mangaBackup.sourceId, ctx: ctx) else { continue }
+                        guard let source = MangaScraperService.shared.getSource(sourceId: task.mangaBackup.sourceId) else { continue }
                         
-                        guard let sourceInfo = try? await source.getSource().fetchMangaDetail(id: task.mangaBackup.id) else { continue }
+                        guard let sourceInfo = try? await source.fetchMangaDetail(id: task.mangaBackup.id) else { continue }
                         
                         guard let manga = try? MangaEntity.updateFromSource(ctx: ctx, data: sourceInfo, source: source) else { continue }
                         

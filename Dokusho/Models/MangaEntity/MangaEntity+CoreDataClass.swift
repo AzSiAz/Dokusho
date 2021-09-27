@@ -26,8 +26,8 @@ extension MangaEntity {
     @NSManaged public var typeRaw: String?
     @NSManaged public var lastChapterUploadDate: Date?
     @NSManaged public var lastUserAction: Date?
-    
-    @NSManaged public var source: SourceEntity?
+    @NSManaged public var sourceId: UUID
+
     @NSManaged public var collection: CollectionEntity?
     @NSManaged public var alternateTitles: Set<AlternateTitlesEntity>?
     @NSManaged public var authorsAndArtists: Set<AuthorAndArtistEntity>?

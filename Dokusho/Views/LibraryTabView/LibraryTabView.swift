@@ -18,7 +18,6 @@ struct LibraryTabView: View {
 
     @State var editMode: EditMode = .inactive
     @State var newCollectionName = ""
-    @FocusState var newCollectionFocus: Bool
     
     var body: some View {
         NavigationView {
@@ -33,7 +32,6 @@ struct LibraryTabView: View {
                 
                 if editMode.isEditing {
                     TextField(text: $newCollectionName)
-                        .focused($newCollectionFocus)
                         .submitLabel(.done)
                         .onSubmit(saveNewCollection)
                 }

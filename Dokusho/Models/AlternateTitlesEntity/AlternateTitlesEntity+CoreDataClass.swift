@@ -22,8 +22,8 @@ extension AlternateTitlesEntity {
     @NSManaged public var title: String?
     @NSManaged public var manga: MangaEntity?
     
-    static func generateKey(title: String, sourceId: Int) -> String {
-        return "\(sourceId)%%\(title)"
+    static func generateKey(title: String, sourceId: UUID) -> String {
+        return "\(sourceId.uuidString)%%\(title)"
     }
     
 }

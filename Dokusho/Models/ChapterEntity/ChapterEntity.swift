@@ -33,10 +33,10 @@ extension ChapterEntity {
         return status != .read
     }
     
-    convenience init(ctx: NSManagedObjectContext, data: SourceChapter, position: Int32, source: SourceEntity) {
+    convenience init(ctx: NSManagedObjectContext, data: SourceChapter, position: Int32, sourceId: UUID) {
         self.init(entity: Self.entity(), insertInto: ctx)
         
-        self.key = "\(source.sourceId)%%\(data.id)"
+        self.key = "\(sourceId.uuidString)%%\(data.id)"
         self.chapterId = data.id
         self.dateSourceUpload = data.dateUpload
         self.position = position
@@ -57,7 +57,7 @@ extension ChapterEntity {
 }
 
 extension ChapterEntity {
-    static func chaptersForManga(ctx: NSManagedObjectContext, manga: NSManagedObjectID, source: NSManagedObjectID) -> [ChapterEntity] {
+    static func chaptersForManga(ctx: NSManagedObjectContext, manga: NSManagedObjectID) -> [ChapterEntity] {
         let req = Self.fetchRequest()
         
         req.predicate = ChapterEntity.forMangaPredicate(manga: manga)
@@ -102,8 +102,8 @@ extension ChapterEntity {
         return NSPredicate(format: "%K = %@", #keyPath(ChapterEntity.manga), manga)
     }
     
-    static func forSourcePredicate(source: SourceEntity) -> NSPredicate {
-        return NSPredicate(format: "%K = %i", #keyPath(ChapterEntity.manga.source), source)
+    static func forSourcePredicate(sourceId: UUID) -> NSPredicate {
+        return NSPredicate(format: "%K = %@", #keyPath(ChapterEntity.manga.sourceId), sourceId.uuidString)
     }
     
     static func forChapterStatusFilterPredicate(filter: ChapterStatusFilter) -> NSPredicate {

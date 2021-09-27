@@ -21,16 +21,17 @@ struct FavoriteSourceSectionView: View {
         ForEach(sources) { src in
             if swipe {
                 SourceRowWithSwipeView(source: src)
-            } else {
-                NavigationLink(
-                    destination: ExploreSourceView(
-                        mangas: .init(sortDescriptors: [], predicate: MangaEntity.inCollectionForSource(source: src), animation: .default),
-                        vm: .init(for: src)
-                    )
-                ) {
-                    SourceRowView(source: src)
-                }
             }
+//            else {
+//                NavigationLink(
+//                    destination: ExploreSourceView(
+//                        mangas: .init(sortDescriptors: [], predicate: MangaEntity.inCollectionForSource(source: src), animation: .default),
+//                        vm: .init(for: src)
+//                    )
+//                ) {
+//                    SourceRowView(source: src)
+//                }
+//            }
         }
     }
 }

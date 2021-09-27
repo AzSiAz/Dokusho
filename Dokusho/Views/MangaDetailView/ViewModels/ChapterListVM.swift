@@ -30,10 +30,8 @@ class ChapterListVM: ObservableObject {
     }
 
     func changePreviousChapterStatus(for chapter: ChapterEntity, status: ChapterStatus, in: FetchedResults<ChapterEntity>) {
-        guard let source = manga.source else { return }
-        
         try? ctx.performAndWait {
-            let chapters = ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID, source: source.objectID)
+            let chapters = ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID)
             
             chapters
                 .filter { status == .unread ? !$0.isUnread : $0.isUnread }
@@ -47,9 +45,7 @@ class ChapterListVM: ObservableObject {
     }
 
     func hasPreviousUnreadChapter(for chapter: ChapterEntity, chapters: FetchedResults<ChapterEntity>) -> Bool {
-        guard let source = manga.source else { return false }
-        
-        return ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID, source: source.objectID)
+        return ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID)
             .filter { chapter.position < $0.position }
             .contains { $0.isUnread }
     }
