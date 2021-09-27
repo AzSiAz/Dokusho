@@ -33,9 +33,9 @@ struct LibraryTabView: View {
                 
                 if editMode.isEditing {
                     TextField(text: $newCollectionName)
+                        .padding(.vertical)
                         .submitLabel(.done)
                         .onSubmit(saveNewCollection)
-                        .padding(.vertical)
                 }
             }
             .id(editMode)
