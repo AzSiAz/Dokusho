@@ -38,13 +38,15 @@ struct MangaDetail: View {
     @ViewBuilder
     func LargeBody() -> some View {
         HStack(alignment: .top, spacing: 5) {
-            VStack {
-                HeaderRow()
-                ActionRow()
-                SynopsisRow()
+            ScrollView {
+                VStack {
+                    HeaderRow()
+                    ActionRow()
+                    SynopsisRow(isLarge: true)
+                }
+                .frame(maxWidth: 500, alignment: .leading)
+                .id("Detail")
             }
-            .frame(maxWidth: 500, alignment: .leading)
-            .id("Detail")
             
             Divider()
             
@@ -62,7 +64,7 @@ struct MangaDetail: View {
         ScrollView {
             HeaderRow()
             ActionRow()
-            SynopsisRow()
+            SynopsisRow(isLarge: false)
             ChapterListInformation(manga: manga, selectedChapter: $selectedChapter)
                 .padding(.bottom)
         }
@@ -173,7 +175,7 @@ struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func SynopsisRow() -> some View {
+    func SynopsisRow(isLarge: Bool) -> some View {
         VStack {
             VStack(spacing: 5) {
                 Text(manga.synopsis ?? "...")
@@ -195,7 +197,7 @@ struct MangaDetail: View {
             .padding([.bottom, .horizontal])
 
             VStack {
-                FlexibleView(data: manga.genres ?? [], availableWidth: 490, spacing: 5, alignment: .center) { genre in
+                FlexibleView(data: manga.genres ?? [], availableWidth: isLarge ? 490 : UIScreen.main.bounds.width, spacing: 5, alignment: .center) { genre in
                     Button(genre.name ?? "Unknown", action: {})
                         .buttonStyle(.bordered)
                 }
