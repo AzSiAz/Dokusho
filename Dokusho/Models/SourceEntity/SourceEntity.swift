@@ -45,7 +45,7 @@ extension SourceEntity {
     static func fetchOne(sourceId: UUID, ctx: NSManagedObjectContext) -> SourceEntity? {
         let req = Self.fetchRequest()
         
-        req.predicate = NSPredicate(format: "%K = %@", #keyPath(SourceEntity.sourceId), sourceId.uuidString)
+        req.predicate = NSPredicate(format: "%K = %@", #keyPath(SourceEntity.sourceId), sourceId as NSUUID)
         req.fetchLimit = 1
 
         return try? ctx.fetch(req).first

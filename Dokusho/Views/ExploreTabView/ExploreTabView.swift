@@ -98,18 +98,20 @@ struct ExploreTabView: View {
     
     @ViewBuilder
     func SourceRow(src: Source) -> some View {
-        HStack {
-            RemoteImageCacheView(url: src.icon, contentMode: .fit)
-                .frame(width: 32, height: 32)
-                .padding(.trailing)
-            
-            VStack(alignment: .leading) {
-                Text(src.name)
-                Text(src.lang.rawValue)
+        NavigationLink(destination: ExploreSourceView(source: src)) {
+            HStack {
+                RemoteImageCacheView(url: src.icon, contentMode: .fit)
+                    .frame(width: 32, height: 32)
+                    .padding(.trailing)
+                
+                VStack(alignment: .leading) {
+                    Text(src.name)
+                    Text(src.lang.rawValue)
+                }
+                .padding(.leading, 8)
             }
-            .padding(.leading, 8)
+            .padding(.vertical)
         }
-        .padding(.vertical)
     }
 
     func toogleActive(source: Source) {

@@ -25,6 +25,10 @@ class ExploreSourceVM: ObservableObject {
         self.src = try! source.getSource()
     }
     
+    init(for source: Source) {
+        self.src = source
+    }
+    
     @MainActor
     func fetchList(clean: Bool = false) async {
         if clean {

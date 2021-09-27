@@ -46,7 +46,7 @@ extension CollectionEntity {
         let req = CollectionEntity.fetchRequest()
         req.fetchLimit = 1
         req.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-            NSPredicate(format: "%K = %@", #keyPath(CollectionEntity.uuid), collectionId.uuidString),
+            NSPredicate(format: "%K = %@", #keyPath(CollectionEntity.uuid), collectionId as NSUUID),
         ])
         
         return try? ctx.fetch(req).first

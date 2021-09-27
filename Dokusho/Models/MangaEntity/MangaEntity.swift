@@ -143,7 +143,7 @@ extension MangaEntity {
     }
     
     static func sourcePredicate(sourceId: UUID) -> NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.sourceId), sourceId.uuidString)
+        return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.sourceId), sourceId as NSUUID)
     }
     
     static func collectionPredicate(collection: CollectionEntity) -> NSPredicate {

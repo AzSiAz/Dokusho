@@ -25,6 +25,7 @@ struct LibraryTabView: View {
                 ForEach(collections) { collection in
                     NavigationLink(destination: CollectionPage(collection: collection)) {
                         Label("\(collection.getName()) (\(collection.mangas?.count ?? 0))", systemImage: "square.grid.2x2")
+                            .padding(.vertical)
                     }
                 }
                 .onDelete(perform: onDelete)
@@ -34,6 +35,7 @@ struct LibraryTabView: View {
                     TextField(text: $newCollectionName)
                         .submitLabel(.done)
                         .onSubmit(saveNewCollection)
+                        .padding(.vertical)
                 }
             }
             .id(editMode)

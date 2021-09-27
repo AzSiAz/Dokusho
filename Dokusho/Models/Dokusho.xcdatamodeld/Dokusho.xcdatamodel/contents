@@ -60,7 +60,7 @@
         <attribute name="lastChapterUploadDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUserAction" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="mangaId" optional="YES" attributeType="String"/>
-        <attribute name="sourceId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sourceId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="synopsis" attributeType="String" defaultValueString=""/>
         <attribute name="title" optional="YES" attributeType="String"/>

@@ -103,7 +103,7 @@ extension ChapterEntity {
     }
     
     static func forSourcePredicate(sourceId: UUID) -> NSPredicate {
-        return NSPredicate(format: "%K = %@", #keyPath(ChapterEntity.manga.sourceId), sourceId.uuidString)
+        return NSPredicate(format: "%K = %@", #keyPath(ChapterEntity.manga.sourceId), sourceId as NSUUID)
     }
     
     static func forChapterStatusFilterPredicate(filter: ChapterStatusFilter) -> NSPredicate {

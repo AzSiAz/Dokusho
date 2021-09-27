@@ -18,6 +18,14 @@ struct ExploreSourceView: View {
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
+    init(source: Source) {
+        self._vm = .init(wrappedValue: .init(for: source))
+        self._mangas = .init(
+            sortDescriptors: [],
+            predicate: MangaEntity.inCollectionForSource(sourceId: source.id), animation: .none
+        )
+    }
+    
     var body: some View {
         ScrollView {
             if vm.error {
