@@ -70,10 +70,10 @@ struct LibraryTabView: View {
     
     func onMove(_ offsets: IndexSet, _ position: Int) {
         try? ctx.performAndWait {
-            var revisedItems: [ CollectionEntity ] = collections.map{ $0 }
+            var revisedItems: [CollectionEntity] = collections.map{ $0 }
 
             // change the order of the items in the array
-            revisedItems.move(fromOffsets: offsets, toOffset: position )
+            revisedItems.move(fromOffsets: offsets, toOffset: position)
 
             // update the userOrder attribute in revisedItems to
             // persist the new order. This is done in reverse order

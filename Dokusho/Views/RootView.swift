@@ -17,7 +17,7 @@ struct RootView: View {
     @State var tab: ActiveTab = .explore
     
     var body: some View {
-        TabView {
+        TabView(selection: $tab) {
             LibraryTabView()
                 .tabItem { Label("Library", systemImage: "books.vertical") }
                 .tag(ActiveTab.library)

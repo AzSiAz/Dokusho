@@ -23,6 +23,17 @@ extension SourceEntity {
 
         return source
     }
+    
+    static func createFromSource(ctx: NSManagedObjectContext, source: Source) -> SourceEntity {
+        let entity: SourceEntity
+        if let found = SourceEntity.fetchOne(sourceId: source.id, ctx: ctx) {
+            entity = found
+        } else {
+            entity = SourceEntity(ctx: ctx, source: source)
+        }
+        
+        return entity
+    }
 }
 
 extension SourceEntity {
@@ -31,10 +42,10 @@ extension SourceEntity {
         return res
     }
     
-    static func fetchOne(sourceId: Int, ctx: NSManagedObjectContext) -> SourceEntity? {
+    static func fetchOne(sourceId: UUID, ctx: NSManagedObjectContext) -> SourceEntity? {
         let req = Self.fetchRequest()
         
-        req.predicate = NSPredicate(format: "%K = %i", #keyPath(SourceEntity.sourceId), sourceId)
+        req.predicate = NSPredicate(format: "%K = %@", #keyPath(SourceEntity.sourceId), sourceId.uuidString)
         req.fetchLimit = 1
 
         return try? ctx.fetch(req).first
