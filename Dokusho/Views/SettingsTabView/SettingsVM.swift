@@ -54,13 +54,20 @@ class SettingsVM: ObservableObject {
     }
     
     func importBackup(url: URL, ctx: NSManagedObjectContext) async {
-        actionInProgress.toggle()
-        let data = try! Data(contentsOf: url)
-        let backup = try! JSONDecoder().decode([CollectionBackup].self, from: data)
+        do {
+            CFURLStartAccessingSecurityScopedResource(url as CFURL)
+            actionInProgress.toggle()
+            let data = try Data(contentsOf: url)
+            let backup = try JSONDecoder().decode([CollectionBackup].self, from: data)
+            CFURLStopAccessingSecurityScopedResource(url as CFURL)
 
-        await PersistenceController.shared.importBackup(backup: backup)
+            await PersistenceController.shared.importBackup(backup: backup)
 
-        self.actionInProgress.toggle()
+            self.actionInProgress.toggle()
+        } catch {
+            print(error)
+            self.actionInProgress.toggle()
+        }
     }
     
     func cleanOrphanData(ctx: NSManagedObjectContext) {}
