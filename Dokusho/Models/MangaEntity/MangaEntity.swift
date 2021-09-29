@@ -152,8 +152,15 @@ extension MangaEntity {
         return NSPredicate(format: "%K = %@", #keyPath(MangaEntity.sourceId), sourceId as NSUUID)
     }
     
-    static func collectionPredicate(collection: CollectionEntity) -> NSPredicate {
+    static func collectionPredicate(collection: CollectionEntity, searchTerm: String = "") -> NSPredicate {
         var predicate = [NSPredicate(format: "%K = %@", #keyPath(MangaEntity.collection), collection)]
+        
+        if !searchTerm.isEmpty {
+            predicate.append(NSCompoundPredicate(orPredicateWithSubpredicates: [
+                NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(MangaEntity.title), searchTerm),
+                NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(MangaEntity.alternateTitles.title), searchTerm)
+            ]))
+        }
 
         switch collection.filter {
             case .all: break
