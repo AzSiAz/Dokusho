@@ -46,7 +46,7 @@ extension AuthorAndArtistEntity {
     
     static func byNameAndTypePredicate(name: String, type: AuthorAndArtistType) -> NSPredicate {
         return NSCompoundPredicate(andPredicateWithSubpredicates: [
-            NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(AuthorAndArtistEntity.name), name),
+            NSPredicate(format: "%K = %@", #keyPath(AuthorAndArtistEntity.name), name),
             NSPredicate(format: "%K = %@", #keyPath(AuthorAndArtistEntity.typeRaw), type.rawValue)
         ])
     }

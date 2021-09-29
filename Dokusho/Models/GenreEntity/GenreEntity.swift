@@ -38,6 +38,6 @@ extension GenreEntity {
     }
     
     static func namePredicate(name: String) -> NSPredicate {
-        return NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(GenreEntity.name), name)
+        return NSPredicate(format: "%K = %@", #keyPath(GenreEntity.name), name)
     }
 }
