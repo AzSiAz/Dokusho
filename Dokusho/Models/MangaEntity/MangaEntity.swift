@@ -99,9 +99,7 @@ extension MangaEntity {
         
         let readDico: [String:Date] = oldChapters
             .filter { $0.readAt != nil }
-            .reduce(into: [:]) {
-                return $0[$1.chapterId!] = $1.readAt!
-            }
+            .reduce(into: [:]) { return $0[$1.chapterId!] = $1.readAt! }
         
         oldChapters.forEach { taskCtx.delete($0) }
         
@@ -111,16 +109,12 @@ extension MangaEntity {
                 let c = ChapterEntity(ctx: taskCtx, data: chapter, position: Int32(index), sourceId: source.id)
                 c.markAs(newStatus: .unread)
 
-                if let found = readDico[c.chapterId!] {
-                    c.markAs(newStatus: .read, date: found)
-                }
+                if let found = readDico[c.chapterId!] { c.markAs(newStatus: .read, date: found) }
                 
                 return c
             }
             .forEach {
-                if $0.position == 0 {
-                    manga.lastChapterUploadDate = $0.dateSourceUpload
-                }
+                if $0.position == 0 { manga.lastChapterUploadDate = $0.dateSourceUpload }
                 
                 taskCtx.insert($0)
                 manga.addToChapters($0)
