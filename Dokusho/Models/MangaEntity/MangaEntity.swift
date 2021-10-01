@@ -118,14 +118,13 @@ extension MangaEntity {
                 return c
             }
             .forEach {
+                if $0.position == 0 {
+                    manga.lastChapterUploadDate = $0.dateSourceUpload
+                }
+                
                 taskCtx.insert($0)
                 manga.addToChapters($0)
             }
-        
-        manga.lastChapterUploadDate = manga
-            .chapters?
-            .first(where: { $0.position == 0 })?
-            .dateSourceUpload
 
         return manga
     }
