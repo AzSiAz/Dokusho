@@ -14,9 +14,9 @@ struct MangaUnreadCount: View {
         if count != 0 {
             Text(String(count))
                 .padding(2)
-                .foregroundColor(.white)
-                .background(Color.blue)
-                .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+                .foregroundColor(.primary)
+                .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+//                .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
         }
     }
 }

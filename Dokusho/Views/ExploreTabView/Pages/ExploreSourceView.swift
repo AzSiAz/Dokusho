@@ -57,9 +57,8 @@ struct ExploreSourceView: View {
                                     Image(systemName: "star")
                                         .symbolVariant(.fill)
                                         .padding(2)
-                                        .foregroundColor(.white)
-                                        .background(Color.blue)
-                                        .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+                                        .foregroundColor(.primary)
+                                        .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]) )
                                 }
                             }
                     }
