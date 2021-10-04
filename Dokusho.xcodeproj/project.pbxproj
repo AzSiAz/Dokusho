@@ -359,10 +359,9 @@
 		E2263A5226FF28B000833CC8 /* Pages */ = {
 			isa = PBXGroup;
 			children = (
+				E26D7E72270B4FCE0003C6C1 /* DynamicCollection */,
 				E2DA94EA26D6689F0083F2F7 /* CollectionPage.swift */,
-				E26D7E6C270B46540003C6C1 /* BySourceListPage.swift */,
 				E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */,
-				E26D7E70270B46810003C6C1 /* ByGenreListPage.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -441,6 +440,15 @@
 				E2DA94E826D668170083F2F7 /* LibraryVM.swift */,
 			);
 			path = VM;
+			sourceTree = "<group>";
+		};
+		E26D7E72270B4FCE0003C6C1 /* DynamicCollection */ = {
+			isa = PBXGroup;
+			children = (
+				E26D7E6C270B46540003C6C1 /* BySourceListPage.swift */,
+				E26D7E70270B46810003C6C1 /* ByGenreListPage.swift */,
+			);
+			path = DynamicCollection;
 			sourceTree = "<group>";
 		};
 		E2CB127926CD0559007837D1 /* MangaDetailView */ = {
