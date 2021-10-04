@@ -40,4 +40,8 @@ extension GenreEntity {
     static func namePredicate(name: String) -> NSPredicate {
         return NSPredicate(format: "%K = %@", #keyPath(GenreEntity.name), name)
     }
+    
+    static var nameSort: SortDescriptor<GenreEntity> {
+        SortDescriptor<GenreEntity>(\.name, order: .forward)
+    }
 }

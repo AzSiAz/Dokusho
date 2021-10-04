@@ -23,11 +23,13 @@ class MangaDetailVM: ObservableObject {
     @Published var addToCollection = false
     @Published var refreshing = false
     @Published var selectedChapter: ChapterEntity?
+    @Published var isInCollectionPage: Bool
     
-    init(for sourceId: UUID, mangaId: String, showDismiss: Bool) {
+    init(for sourceId: UUID, mangaId: String, showDismiss: Bool, isInCollectionPage: Bool = false) {
         self.src = MangaScraperService.shared.getSource(sourceId: sourceId)!
         self.mangaId = mangaId
         self.showDismiss = showDismiss
+        self.isInCollectionPage = isInCollectionPage
 
         withAnimation {
             self.manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, sourceId: src.id, includeChapters: true)

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SwiftUIX
+import MangaScraper
 
 struct LibraryTabView: View {
     @Environment(\.managedObjectContext) var ctx
@@ -22,22 +22,35 @@ struct LibraryTabView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(collections) { collection in
-                    NavigationLink(destination: CollectionPage(collection: collection)) {
-                        Label("\(collection.getName()) (\(collection.mangas?.count ?? 0))", systemImage: "square.grid.2x2")
+                Section("User Collection") {
+                    ForEach(collections) { collection in
+                        NavigationLink(destination: CollectionPage(collection: collection)) {
+                            Label("\(collection.getName()) (\(collection.mangas?.count ?? 0))", systemImage: "square.grid.2x2")
+                                .padding(.vertical)
+                        }
+                    }
+                    .onDelete(perform: onDelete)
+                    .onMove(perform: onMove)
+                    
+                    if editMode.isEditing {
+                        TextField("New collection name", text: $newCollectionName)
                             .padding(.vertical)
+                            .submitLabel(.done)
+                            .onSubmit(saveNewCollection)
                     }
                 }
-                .onDelete(perform: onDelete)
-                .onMove(perform: onMove)
                 
-                if editMode.isEditing {
-                    TextField(text: $newCollectionName)
-                        .padding(.vertical)
-                        .submitLabel(.done)
-                        .onSubmit(saveNewCollection)
+                Section("Dynamic Collection") {
+                    NavigationLink(destination: ByGenreListPage()) {
+                        Text("By Genres")
+                    }
+                    
+                    NavigationLink(destination: BySourceListPage()) {
+                        Text("By Source List")
+                    }
                 }
             }
+            .listStyle(.sidebar)
             .id(editMode)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

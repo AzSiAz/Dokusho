@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "ImageScrollView",
+        "repositoryURL": "https://github.com/huynguyencong/ImageScrollView.git",
+        "state": {
+          "branch": "master",
+          "revision": "3b5bf7e1bf719facb736e43bda9403c0c661fae6",
+          "version": null
+        }
+      },
+      {
         "package": "MangaScraper",
         "repositoryURL": "https://github.com/AzSiAz/MangaScraper",
         "state": {
@@ -17,6 +26,15 @@
           "branch": "master",
           "revision": "1d30442ed464c11e6f395bf364a8de57243c9480",
           "version": null
+        }
+      },
+      {
+        "package": "SFSafeSymbols",
+        "repositoryURL": "https://github.com/piknotech/SFSafeSymbols.git",
+        "state": {
+          "branch": null,
+          "revision": "c61de7a6e9eb1520d32316b06d5932accd974e70",
+          "version": "2.1.3"
         }
       },
       {

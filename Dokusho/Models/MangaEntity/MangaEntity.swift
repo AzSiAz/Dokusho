@@ -181,4 +181,7 @@ extension MangaEntity {
         return SortDescriptor<MangaEntity>(\.lastChapterUploadDate, order: .reverse)
     }
 
+    static func forGenres(genre: GenreEntity) -> NSPredicate {
+        return NSPredicate(format: "ANY %K.%K = %@", #keyPath(MangaEntity.genres), #keyPath(GenreEntity.name), genre.name!)
+    }
 }

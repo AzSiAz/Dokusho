@@ -12,8 +12,8 @@ struct MangaDetailView: View {
 
     @StateObject var vm: MangaDetailVM
     
-    init(mangaId: String, src: UUID, showDismiss: Bool = true) {
-        self._vm = .init(wrappedValue: .init(for: src, mangaId: mangaId, showDismiss: showDismiss))
+    init(mangaId: String, src: UUID, showDismiss: Bool = true, isInCollectionPage: Bool = false) {
+        self._vm = .init(wrappedValue: .init(for: src, mangaId: mangaId, showDismiss: showDismiss, isInCollectionPage: isInCollectionPage))
     }
     
     var body: some View {
@@ -49,6 +49,7 @@ struct MangaDetailView: View {
                 MangaDetail(
                     manga: vm.manga!,
                     selectedChapter: $vm.selectedChapter,
+                    isInCollectionPage: vm.isInCollectionPage,
                     forceCompact: !vm.showDismiss,
                     update: vm.update,
                     resetCache: vm.resetCache,

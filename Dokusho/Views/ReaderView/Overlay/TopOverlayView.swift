@@ -21,6 +21,7 @@ struct TopOverlayView: View {
                 Spacer()
                 
                 Text(vm.chapter.title!)
+                    .foregroundColor(.white)
                 
                 Spacer()
                 Button(action: { vm.showReaderDirectionChoice.toggle() }) {

@@ -44,6 +44,13 @@
 		E26662CE26CC53DA0054868A /* SourceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662CD26CC53DA0054868A /* SourceEntity.swift */; };
 		E26662D126CC58160054868A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E26662D026CC58160054868A /* Assets.xcassets */; };
 		E26D7E592704D47E0003C6C1 /* FilteredCollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E582704D47E0003C6C1 /* FilteredCollectionPage.swift */; };
+		E26D7E5E27080E9A0003C6C1 /* ChapterImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E5D27080E9A0003C6C1 /* ChapterImage.swift */; };
+		E26D7E612708123B0003C6C1 /* ImageScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = E26D7E602708123B0003C6C1 /* ImageScrollView */; };
+		E26D7E64270B30770003C6C1 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = E26D7E63270B30770003C6C1 /* SFSafeSymbols */; };
+		E26D7E6A270B3C530003C6C1 /* MangaInCollectionForGenre.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E69270B3C530003C6C1 /* MangaInCollectionForGenre.swift */; };
+		E26D7E6D270B46540003C6C1 /* BySourceListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E6C270B46540003C6C1 /* BySourceListPage.swift */; };
+		E26D7E6F270B466A0003C6C1 /* MangaForSourcePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */; };
+		E26D7E71270B46810003C6C1 /* ByGenreListPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E70270B46810003C6C1 /* ByGenreListPage.swift */; };
 		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
 		E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */; };
 		E27A5DD326FCC69600F95361 /* DeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */; };
@@ -118,6 +125,11 @@
 		E26662CF26CC57800054868A /* Dokusho.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dokusho.entitlements; sourceTree = "<group>"; };
 		E26662D026CC58160054868A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E26D7E582704D47E0003C6C1 /* FilteredCollectionPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredCollectionPage.swift; sourceTree = "<group>"; };
+		E26D7E5D27080E9A0003C6C1 /* ChapterImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterImage.swift; sourceTree = "<group>"; };
+		E26D7E69270B3C530003C6C1 /* MangaInCollectionForGenre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaInCollectionForGenre.swift; sourceTree = "<group>"; };
+		E26D7E6C270B46540003C6C1 /* BySourceListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BySourceListPage.swift; sourceTree = "<group>"; };
+		E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaForSourcePage.swift; sourceTree = "<group>"; };
+		E26D7E70270B46810003C6C1 /* ByGenreListPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByGenreListPage.swift; sourceTree = "<group>"; };
 		E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveStack.swift; sourceTree = "<group>"; };
 		E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceOrientation.swift; sourceTree = "<group>"; };
 		E27A5DD426FCCE7700F95361 /* MangaDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetail.swift; sourceTree = "<group>"; };
@@ -157,10 +169,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E26D7E64270B30770003C6C1 /* SFSafeSymbols in Frameworks */,
 				E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */,
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
+				E26D7E612708123B0003C6C1 /* ImageScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +294,7 @@
 		E2187EAB26CC5E5B009604A9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E26D7E68270B3C3C0003C6C1 /* MangaForGenre */,
 				E23AD6F326EE067E0042453A /* HistoryTabView */,
 				E2DA94DC26D667FE0083F2F7 /* LibraryTabView */,
 				E2DA94D726D645E40083F2F7 /* SettingsTabView */,
@@ -345,6 +360,9 @@
 			isa = PBXGroup;
 			children = (
 				E2DA94EA26D6689F0083F2F7 /* CollectionPage.swift */,
+				E26D7E6C270B46540003C6C1 /* BySourceListPage.swift */,
+				E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */,
+				E26D7E70270B46810003C6C1 /* ByGenreListPage.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -409,6 +427,22 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		E26D7E68270B3C3C0003C6C1 /* MangaForGenre */ = {
+			isa = PBXGroup;
+			children = (
+				E26D7E69270B3C530003C6C1 /* MangaInCollectionForGenre.swift */,
+			);
+			path = MangaForGenre;
+			sourceTree = "<group>";
+		};
+		E26D7E6B270B3D020003C6C1 /* VM */ = {
+			isa = PBXGroup;
+			children = (
+				E2DA94E826D668170083F2F7 /* LibraryVM.swift */,
+			);
+			path = VM;
+			sourceTree = "<group>";
+		};
 		E2CB127926CD0559007837D1 /* MangaDetailView */ = {
 			isa = PBXGroup;
 			children = (
@@ -455,6 +489,7 @@
 			children = (
 				E2CB129926CD4EB7007837D1 /* VerticalReaderView.swift */,
 				E2CB129A26CD4EB7007837D1 /* HorizontalReaderView.swift */,
+				E26D7E5D27080E9A0003C6C1 /* ChapterImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -480,9 +515,9 @@
 		E2DA94DC26D667FE0083F2F7 /* LibraryTabView */ = {
 			isa = PBXGroup;
 			children = (
+				E26D7E6B270B3D020003C6C1 /* VM */,
 				E2263A5226FF28B000833CC8 /* Pages */,
 				E2DA94DE26D667FE0083F2F7 /* Components */,
-				E2DA94E826D668170083F2F7 /* LibraryVM.swift */,
 				E2DA94DD26D667FE0083F2F7 /* LibraryTabView.swift */,
 			);
 			path = LibraryTabView;
@@ -519,6 +554,8 @@
 				E2187E9126CC5ACC009604A9 /* Nuke */,
 				E203B9C826ECFED700F4B749 /* MangaScraper */,
 				E27A5DCE26FBA77700F95361 /* SwiftUIX */,
+				E26D7E602708123B0003C6C1 /* ImageScrollView */,
+				E26D7E63270B30770003C6C1 /* SFSafeSymbols */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -552,6 +589,8 @@
 				E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */,
 				E203B9C726ECFDF000F4B749 /* XCRemoteSwiftPackageReference "MangaScraper" */,
 				E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
+				E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */,
+				E26D7E62270B30770003C6C1 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -607,9 +646,11 @@
 				E26662BA26CC36830054868A /* DokushoApp.swift in Sources */,
 				E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */,
 				E2187ED626CC625C009604A9 /* RefreshableImageView.swift in Sources */,
+				E26D7E6F270B466A0003C6C1 /* MangaForSourcePage.swift in Sources */,
 				E20837BE26E3C65900E6DCEE /* SourceEntity+CoreDataClass.swift in Sources */,
 				E2187ED226CC625C009604A9 /* RemoteImageCacheView.swift in Sources */,
 				E20837CC26E3C6E100E6DCEE /* GenreEntity+CoreDataClass.swift in Sources */,
+				E26D7E5E27080E9A0003C6C1 /* ChapterImage.swift in Sources */,
 				E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */,
 				E26D7E592704D47E0003C6C1 /* FilteredCollectionPage.swift in Sources */,
 				E2DA94E926D668170083F2F7 /* LibraryVM.swift in Sources */,
@@ -631,17 +672,20 @@
 				E2CB127826CD021C007837D1 /* MangaEntity.swift in Sources */,
 				E20837D226E3C6E100E6DCEE /* ChapterEntity+CoreDataClass.swift in Sources */,
 				E2CB129E26CD4EB7007837D1 /* ReaderView.swift in Sources */,
+				E26D7E71270B46810003C6C1 /* ByGenreListPage.swift in Sources */,
 				E2CB128926CD0559007837D1 /* ChapterListInformation.swift in Sources */,
 				E2DA94DB26D64DF00083F2F7 /* URL.swift in Sources */,
 				E20837CA26E3C6E100E6DCEE /* CollectionEntity+CoreDataClass.swift in Sources */,
 				E20837CE26E3C6E100E6DCEE /* AlternateTitlesEntity+CoreDataClass.swift in Sources */,
 				E2CB129326CD1FF6007837D1 /* AuthorAndArtistEntity.swift in Sources */,
 				E2CB129126CD1C8A007837D1 /* NSSet.swift in Sources */,
+				E26D7E6A270B3C530003C6C1 /* MangaInCollectionForGenre.swift in Sources */,
 				E26662CE26CC53DA0054868A /* SourceEntity.swift in Sources */,
 				E2187EAA26CC5D9E009604A9 /* UIScreen.swift in Sources */,
 				E2187ED026CC625C009604A9 /* FlexibleView.swift in Sources */,
 				E2CB12A026CD4EB7007837D1 /* HorizontalReaderView.swift in Sources */,
 				E2CB128F26CD1B27007837D1 /* GenreEntity.swift in Sources */,
+				E26D7E6D270B46540003C6C1 /* BySourceListPage.swift in Sources */,
 				E2187EAE26CC5E7D009604A9 /* RootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -881,6 +925,22 @@
 				kind = branch;
 			};
 		};
+		E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huynguyencong/ImageScrollView.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		E26D7E62270B30770003C6C1 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/piknotech/SFSafeSymbols.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX.git";
@@ -901,6 +961,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
+		};
+		E26D7E602708123B0003C6C1 /* ImageScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */;
+			productName = ImageScrollView;
+		};
+		E26D7E63270B30770003C6C1 /* SFSafeSymbols */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E26D7E62270B30770003C6C1 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
+			productName = SFSafeSymbols;
 		};
 		E27A5DCE26FBA77700F95361 /* SwiftUIX */ = {
 			isa = XCSwiftPackageProductDependency;

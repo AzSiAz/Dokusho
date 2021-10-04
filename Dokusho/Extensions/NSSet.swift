@@ -22,3 +22,16 @@ extension Optional where Wrapped == NSSet {
         return [T]()
     }
 }
+
+extension Optional where Wrapped: Sequence {
+    func sorted<T: Comparable>(by keyPath: KeyPath<Wrapped.Element, T>) -> [Wrapped.Element] {
+        if let self = self {
+            return self.sorted { a, b in
+                return a[keyPath: keyPath] < b[keyPath: keyPath]
+            }
+        }
+        
+        return [Wrapped.Element]()
+    }
+}
+

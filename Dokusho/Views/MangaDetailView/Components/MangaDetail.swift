@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import SFSafeSymbols
 
 struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var sizeClass
@@ -20,7 +21,9 @@ struct MangaDetail: View {
 
     @State var addToCollection = false
     @State var showMoreDesc = false
+    @State var selectedGenre: GenreEntity?
     
+    let isInCollectionPage: Bool
     var forceCompact: Bool
     var update: () async -> Void
     var resetCache: () async -> Void
@@ -176,14 +179,12 @@ struct MangaDetail: View {
     
     @ViewBuilder
     func SynopsisRow(isLarge: Bool) -> some View {
+        let availableWidth = isLarge ? 490 : UIScreen.main.bounds.width
+        
         VStack {
             VStack(spacing: 5) {
                 Text(manga.synopsis ?? "...")
                     .lineLimit(showMoreDesc ? .max : 4)
-                
-                if showMoreDesc {
-                    Text("Alternate titles: \(manga.alternateTitles?.count ?? 0)")
-                }
                 
                 HStack {
                     Spacer()
@@ -196,13 +197,27 @@ struct MangaDetail: View {
             }
             .padding([.bottom, .horizontal])
 
-            VStack {
-                FlexibleView(data: manga.genres ?? [], availableWidth: isLarge ? 490 : UIScreen.main.bounds.width, spacing: 5, alignment: .center) { genre in
-                    Button(genre.name ?? "Unknown", action: {})
-                        .buttonStyle(.bordered)
+            HStack {
+                Text("Genres:")
+                Spacer()
+            }
+            .padding(.horizontal)
+            
+            FlexibleView(data: manga.genres.sorted(by: \.name!), availableWidth: availableWidth, spacing: 5, alignment: .center) { genre in
+                Button(genre.name ?? "Unknown", action: { selectedGenre = genre })
+                    .buttonStyle(.bordered)
+            }
+            .sheetSizeAware(item: $selectedGenre) { genre in
+                if isInCollectionPage {
+                    MangaInCollectionForGenre(genre: genre)
+                } else {
+                    ScrollView {
+                        Text(selectedGenre?.name ?? "Genre")
+                    }
                 }
             }
         }
     }
 }
+
 

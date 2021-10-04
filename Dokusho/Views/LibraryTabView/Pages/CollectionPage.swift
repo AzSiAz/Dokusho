@@ -25,7 +25,7 @@ struct CollectionPage: View {
             FilteredCollectionPage(collection: collection, selectedManga: $selectedManga, searchTerm: searchTerm)
         }
         .sheetSizeAware(item: $selectedManga, content: { manga in
-            MangaDetailView(mangaId: manga.mangaId!, src: manga.sourceId)
+            MangaDetailView(mangaId: manga.mangaId!, src: manga.sourceId, isInCollectionPage: true)
         })
         .searchable(text: $searchTerm)
         .toolbar { LibraryToolbarView(collection: collection, showFilter: $showFilter) }
