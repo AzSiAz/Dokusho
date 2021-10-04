@@ -19,12 +19,12 @@ struct ImageWithTextOver: View {
                     ZStack {
                         Text(title)
                             .lineLimit(2)
-                            .foregroundColor(.white)
+                            .foregroundColor(.primary)
                             .multilineTextAlignment(.leading)
                             .clipped()
                     }
                         .frame(width: proxy.size.width)
-                    .background(Color(.systemGray).opacity(0.8))
+                        .background(.ultraThinMaterial)
                     , alignment: .bottomLeading)
                 .cornerRadius(10)
         }
