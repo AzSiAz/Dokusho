@@ -31,7 +31,7 @@ struct RefreshableImageView: View {
                     .frame(height: size.height)
                 default:
                     ProgressView()
-                        .frame(UIScreen.main.bounds.size, alignment: .center)
+                        .frame(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height, alignment: .center)
                         .scaleEffect(3)
             }
         }
