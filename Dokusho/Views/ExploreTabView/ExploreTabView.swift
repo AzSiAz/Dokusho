@@ -11,19 +11,19 @@ import MangaScraper
 struct ExploreTabView: View {
     @Environment(\.managedObjectContext) var ctx
     
-    @FetchRequest(
+    @FetchRequest<SourceEntity>(
         sortDescriptors: [SourceEntity.positionOrder],
         predicate: SourceEntity.onlyActiveAndNotFavorite,
         animation: .default
     )
-    var activeSources: FetchedResults<SourceEntity>
+    var activeSources
     
-    @FetchRequest(
+    @FetchRequest<SourceEntity>(
         sortDescriptors: [SourceEntity.positionOrder],
         predicate: SourceEntity.onlyFavoriteAndActive,
         animation: .default
     )
-    var favoriteSources: FetchedResults<SourceEntity>
+    var favoriteSources
     
     @State var searchText: String = ""
     

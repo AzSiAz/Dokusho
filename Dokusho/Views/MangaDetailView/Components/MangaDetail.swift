@@ -12,8 +12,7 @@ import SFSafeSymbols
 struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var sizeClass
     
-    @FetchRequest(sortDescriptors: [], predicate: nil, animation: nil)
-    var collections: FetchedResults<CollectionEntity>
+    @FetchRequest<CollectionEntity>(sortDescriptors: [], predicate: nil, animation: nil) var collections
 
     @StateObject var orientation: DeviceOrientation = DeviceOrientation()
     @ObservedObject var manga: MangaEntity

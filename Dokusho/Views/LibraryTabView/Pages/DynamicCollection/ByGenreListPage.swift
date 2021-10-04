@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ByGenreListPage: View {
-    @FetchRequest(sortDescriptors: [GenreEntity.nameSort], animation: .easeIn) var genres: FetchedResults<GenreEntity>
+    @FetchRequest<GenreEntity>(sortDescriptors: [GenreEntity.nameSort], animation: .easeIn) var genres
     
     var body: some View {
         List(genres) { genre in

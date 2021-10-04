@@ -11,8 +11,7 @@ import MangaScraper
 struct ExploreSourceView: View {
     @FetchRequest var mangas: FetchedResults<MangaEntity>
     
-    @FetchRequest(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default)
-    var collections: FetchedResults<CollectionEntity>
+    @FetchRequest<CollectionEntity>(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default) var collections
     
     @StateObject var vm: ExploreSourceVM
     
