@@ -19,19 +19,19 @@ struct RootView: View {
     var body: some View {
         TabView(selection: $tab) {
             LibraryTabView()
-                .tabItem { Label("Library", systemImage: "books.vertical") }
+                .tabItem { Label("Library", systemSymbol: .booksVertical) }
                 .tag(ActiveTab.library)
             
             HistoryTabView()
-                .tabItem { Label("History", systemImage: "clock") }
+                .tabItem { Label("History", systemSymbol: .clock) }
                 .tag(ActiveTab.history)
 
             ExploreTabView()
-                .tabItem { Label("Explore", systemImage: "safari") }
+                .tabItem { Label("Explore", systemSymbol: .safari) }
                 .tag(ActiveTab.explore)
 
             SettingsTabView()
-                .tabItem { Label("Settings", systemImage: "gear") }
+                .tabItem { Label("Settings", systemSymbol: .gear) }
                 .tag(ActiveTab.settings)
         }
     }

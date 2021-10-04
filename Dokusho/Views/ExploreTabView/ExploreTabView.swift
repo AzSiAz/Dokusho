@@ -61,7 +61,7 @@ struct ExploreTabView: View {
         SourceRow(src: src)
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: src) }) {
-                    Label("Activate", systemImage: "checkmark")
+                    Label("Activate", systemSymbol: .checkmark)
                 }.tint(.purple)
             }
     }
@@ -71,12 +71,12 @@ struct ExploreTabView: View {
         SourceRow(src: try! source.getSource())
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: source) }) {
-                    Label("Deactivate", systemImage: "xmark")
+                    Label("Deactivate", systemSymbol: .xmark)
                 }.tint(.purple)
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: { toogleFavorite(source: source) }) {
-                    Label("Favorite", systemImage: "hand.thumbsup")
+                    Label("Favorite", systemSymbol: .handThumbsup)
                 }.tint(.blue)
             }
     }
@@ -86,12 +86,12 @@ struct ExploreTabView: View {
         SourceRow(src: try! source.getSource())
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: source) }) {
-                    Label("Deactivate", systemImage: "xmark")
+                    Label("Deactivate", systemSymbol: .xmark)
                 }.tint(.purple)
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: { toogleFavorite(source: source) }) {
-                    Label("UnFavorite", systemImage: "hand.thumbsdown")
+                    Label("UnFavorite", systemSymbol: .handThumbsdown)
                 }.tint(.blue)
             }
     }

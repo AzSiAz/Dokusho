@@ -11,8 +11,8 @@ import MangaScraper
 struct LibraryTabView: View {
     @Environment(\.managedObjectContext) var ctx
     
-    @FetchRequest(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default)
-    var collections: FetchedResults<CollectionEntity>
+    @FetchRequest<CollectionEntity>(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default)
+    var collections
 
     @StateObject var vm: LibraryVM = .init()
 
@@ -25,7 +25,7 @@ struct LibraryTabView: View {
                 Section("User Collection") {
                     ForEach(collections) { collection in
                         NavigationLink(destination: CollectionPage(collection: collection)) {
-                            Label("\(collection.getName()) (\(collection.mangas?.count ?? 0))", systemImage: "square.grid.2x2")
+                            Label("\(collection.getName()) (\(collection.mangas?.count ?? 0))", systemSymbol: .squareGrid2x2)
                                 .padding(.vertical)
                         }
                     }

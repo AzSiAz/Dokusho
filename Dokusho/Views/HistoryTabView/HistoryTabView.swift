@@ -65,23 +65,22 @@ struct FilteredHistoryView: View {
                 mangaId: chapter.manga!.mangaId!,
                 src: chapter.manga!.sourceId,
                 showDismiss: false
-            ),
-            label: {
-                HStack {
-                    RemoteImageCacheView(url: chapter.manga!.cover!, contentMode: .fit)
-                        .frame(width: 80)
-                        .id(chapter.key)
+            )
+        ) {
+            HStack {
+                RemoteImageCacheView(url: chapter.manga!.cover!, contentMode: .fit)
+                    .frame(width: 80)
+                    .id(chapter.key)
+                
+                VStack(alignment: .leading) {
+                    Text(chapter.manga!.title!)
+                    Text(chapter.title ?? "No title...")
                     
-                    VStack(alignment: .leading) {
-                        Text(chapter.manga!.title!)
-                        Text(chapter.title ?? "No title...")
-                        
-                        if status == .read { Text("Read at: \(chapter.readAt?.formatted() ?? "No date...")") }
-                        if status == .all { Text("Uploaded at: \(chapter.dateSourceUpload?.formatted() ?? "No date...")") }
-                    }
+                    if status == .read { Text("Read at: \(chapter.readAt?.formatted() ?? "No date...")") }
+                    if status == .all { Text("Uploaded at: \(chapter.dateSourceUpload?.formatted() ?? "No date...")") }
                 }
-                .frame(minHeight: 120)
             }
-        )
+            .frame(minHeight: 120)
+        }
     }
 }

@@ -65,7 +65,7 @@
 		E2CB128B26CD0559007837D1 /* MangaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128326CD0559007837D1 /* MangaDetailView.swift */; };
 		E2CB128D26CD14B4007837D1 /* AlternateTitlesEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128C26CD14B4007837D1 /* AlternateTitlesEntity.swift */; };
 		E2CB128F26CD1B27007837D1 /* GenreEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128E26CD1B27007837D1 /* GenreEntity.swift */; };
-		E2CB129126CD1C8A007837D1 /* NSSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129026CD1C8A007837D1 /* NSSet.swift */; };
+		E2CB129126CD1C8A007837D1 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129026CD1C8A007837D1 /* Optional.swift */; };
 		E2CB129326CD1FF6007837D1 /* AuthorAndArtistEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129226CD1FF6007837D1 /* AuthorAndArtistEntity.swift */; };
 		E2CB129526CD24E9007837D1 /* ChapterEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129426CD24E9007837D1 /* ChapterEntity.swift */; };
 		E2CB129E26CD4EB7007837D1 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129726CD4EB7007837D1 /* ReaderView.swift */; };
@@ -143,7 +143,7 @@
 		E2CB128326CD0559007837D1 /* MangaDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailView.swift; sourceTree = "<group>"; };
 		E2CB128C26CD14B4007837D1 /* AlternateTitlesEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlternateTitlesEntity.swift; sourceTree = "<group>"; };
 		E2CB128E26CD1B27007837D1 /* GenreEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreEntity.swift; sourceTree = "<group>"; };
-		E2CB129026CD1C8A007837D1 /* NSSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSSet.swift; sourceTree = "<group>"; };
+		E2CB129026CD1C8A007837D1 /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		E2CB129226CD1FF6007837D1 /* AuthorAndArtistEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorAndArtistEntity.swift; sourceTree = "<group>"; };
 		E2CB129426CD24E9007837D1 /* ChapterEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterEntity.swift; sourceTree = "<group>"; };
 		E2CB129726CD4EB7007837D1 /* ReaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
@@ -269,12 +269,12 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		E2187E9D26CC5D9E009604A9 /* Shape */ = {
+		E2187E9D26CC5D9E009604A9 /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
 				E2187E9E26CC5D9E009604A9 /* RoundedCorner.swift */,
 			);
-			path = Shape;
+			path = Shapes;
 			sourceTree = "<group>";
 		};
 		E2187E9F26CC5D9E009604A9 /* Extensions */ = {
@@ -285,7 +285,7 @@
 				E2187EA226CC5D9E009604A9 /* Array.swift */,
 				E2187EA326CC5D9E009604A9 /* Logger.swift */,
 				E2187EA426CC5D9E009604A9 /* UIScreen.swift */,
-				E2CB129026CD1C8A007837D1 /* NSSet.swift */,
+				E2CB129026CD1C8A007837D1 /* Optional.swift */,
 				E2DA94DA26D64DF00083F2F7 /* URL.swift */,
 			);
 			path = Extensions;
@@ -400,7 +400,7 @@
 				E2187EC826CC625C009604A9 /* Components */,
 				E2187EAB26CC5E5B009604A9 /* Views */,
 				E2187E9F26CC5D9E009604A9 /* Extensions */,
-				E2187E9D26CC5D9E009604A9 /* Shape */,
+				E2187E9D26CC5D9E009604A9 /* Shapes */,
 				E2187E8F26CC586E009604A9 /* Services */,
 				E26662CC26CC538A0054868A /* Models */,
 				E26662D026CC58160054868A /* Assets.xcassets */,
@@ -686,7 +686,7 @@
 				E20837CA26E3C6E100E6DCEE /* CollectionEntity+CoreDataClass.swift in Sources */,
 				E20837CE26E3C6E100E6DCEE /* AlternateTitlesEntity+CoreDataClass.swift in Sources */,
 				E2CB129326CD1FF6007837D1 /* AuthorAndArtistEntity.swift in Sources */,
-				E2CB129126CD1C8A007837D1 /* NSSet.swift in Sources */,
+				E2CB129126CD1C8A007837D1 /* Optional.swift in Sources */,
 				E26D7E6A270B3C530003C6C1 /* MangaInCollectionForGenre.swift in Sources */,
 				E26662CE26CC53DA0054868A /* SourceEntity.swift in Sources */,
 				E2187EAA26CC5D9E009604A9 /* UIScreen.swift in Sources */,
