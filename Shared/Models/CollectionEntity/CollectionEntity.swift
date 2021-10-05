@@ -65,6 +65,16 @@ extension CollectionEntity {
         
         return request
     }
+    
+    static func searchCollection(searchTerm: String?) -> NSFetchRequest<CollectionEntity> {
+        let request = Self.collectionFetchRequest
+        
+        if !(searchTerm ?? "").isEmpty {
+            request.predicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(CollectionEntity.name), searchTerm!)
+        }
+        
+        return request
+    }
 }
 
 extension CollectionEntity {

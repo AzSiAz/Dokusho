@@ -37,13 +37,26 @@ typealias BackupResult = Result<BackupTask, Error>
 
 class PersistenceController {
     static let shared = PersistenceController()
+    
+    var container: NSPersistentContainer
+    let group = "group.tech.azsiaz.Dokusho"
+    var groupStoreURL: URL {
+        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group)
 
-    let container: NSPersistentContainer
+        if !FileManager.default.fileExists(atPath: url!.path) {
+            try? FileManager.default.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
+        }
+
+        return url!.appendingPathComponent("Dokusho.sqlite")
+    }
 
     init() {
         container = NSPersistentContainer(name: "Dokusho")
         
         guard let storeDescription = container.persistentStoreDescriptions.first else { fatalError("Failed to open first persistentStoreDescription") }
+        
+        storeDescription.url = groupStoreURL
+        
         storeDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
         storeDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
 

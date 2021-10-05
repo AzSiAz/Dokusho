@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import SwiftUI
 import MangaScraper
+import WidgetKit
 
 @MainActor
 class MangaDetailVM: ObservableObject {
@@ -53,6 +54,10 @@ class MangaDetailVM: ObservableObject {
             withAnimation {
                 self.manga = saved
                 self.refreshing = false
+            }
+            
+            Task(priority: .low) {
+                WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.latestMangaWidget.rawValue)
             }
         } catch {
             withAnimation {

@@ -59,6 +59,16 @@ extension MangaEntity {
         
         return try? ctx.fetch(req).first
     }
+    
+    static func fetchLatestUpdate(ctx: NSManagedObjectContext, collectionUUID: String, limit: Int = 6) -> [MangaEntity] {
+        let req = Self.fetchRequest()
+        
+        req.fetchLimit = limit
+        req.predicate = NSPredicate(format: "%K = %@", #keyPath(MangaEntity.collection.uuid), collectionUUID)
+        req.sortDescriptors = [NSSortDescriptor(MangaEntity.lastUpdate)]
+        
+        return (try? ctx.fetch(req)) ?? []
+    }
 }
 
 extension MangaEntity {
