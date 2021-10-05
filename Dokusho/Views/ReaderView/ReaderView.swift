@@ -9,12 +9,6 @@ import SwiftUI
 
 typealias OnProgress = (_ status: ChapterStatus) -> Void
 
-enum ReadingDirection: String, CaseIterable {
-    case rightToLeft = "Right to Left (Manga)"
-    case leftToRight = "Left to Right (Manhua)"
-    case vertical = "Vertical (Webtoon, no gaps)"
-}
-
 struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var vm: ReaderVM

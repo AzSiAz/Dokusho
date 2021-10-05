@@ -7,6 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E203414F270C4F9E00990F80 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E203414E270C4F9E00990F80 /* WidgetKit.framework */; };
+		E2034151270C4F9E00990F80 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2034150270C4F9E00990F80 /* SwiftUI.framework */; };
+		E2034154270C4F9E00990F80 /* DokushoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2034153270C4F9E00990F80 /* DokushoWidget.swift */; };
+		E2034157270C4F9F00990F80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2034156270C4F9F00990F80 /* Assets.xcassets */; };
+		E2034159270C4F9F00990F80 /* DokushoWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E2034155270C4F9E00990F80 /* DokushoWidget.intentdefinition */; };
+		E203415A270C4F9F00990F80 /* DokushoWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E2034155270C4F9E00990F80 /* DokushoWidget.intentdefinition */; };
+		E203415D270C4F9F00990F80 /* DokushoWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E203414D270C4F9E00990F80 /* DokushoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E2034164270C543300990F80 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662C226CC36840054868A /* Persistence.swift */; };
+		E2034165270C544900990F80 /* ChapterEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837C826E3C6E100E6DCEE /* ChapterEntity+CoreDataClass.swift */; };
+		E2034166270C544B00990F80 /* ChapterEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129426CD24E9007837D1 /* ChapterEntity.swift */; };
+		E2034167270C544F00990F80 /* AuthorAndArtistEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837C626E3C6E100E6DCEE /* AuthorAndArtistEntity+CoreDataClass.swift */; };
+		E2034169270C545200990F80 /* AuthorAndArtistEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129226CD1FF6007837D1 /* AuthorAndArtistEntity.swift */; };
+		E203416A270C545700990F80 /* CollectionEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837C026E3C6E100E6DCEE /* CollectionEntity+CoreDataClass.swift */; };
+		E203416B270C545900990F80 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94D226D63F140083F2F7 /* CollectionEntity.swift */; };
+		E203416C270C545E00990F80 /* GenreEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837C226E3C6E100E6DCEE /* GenreEntity+CoreDataClass.swift */; };
+		E203416D270C546000990F80 /* GenreEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128E26CD1B27007837D1 /* GenreEntity.swift */; };
+		E203416E270C546600990F80 /* AlternateTitlesEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837C426E3C6E100E6DCEE /* AlternateTitlesEntity+CoreDataClass.swift */; };
+		E203416F270C546900990F80 /* AlternateTitlesEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128C26CD14B4007837D1 /* AlternateTitlesEntity.swift */; };
+		E2034170270C546D00990F80 /* SourceEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837BC26E3C65900E6DCEE /* SourceEntity+CoreDataClass.swift */; };
+		E2034171270C546F00990F80 /* SourceEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662CD26CC53DA0054868A /* SourceEntity.swift */; };
+		E2034172270C547300990F80 /* MangaEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127726CD021C007837D1 /* MangaEntity.swift */; };
+		E2034173270C547500990F80 /* MangaEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20837B626E3C0C700E6DCEE /* MangaEntity+CoreDataClass.swift */; };
+		E2034174270C547A00990F80 /* Dokusho.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E26662C426CC36840054868A /* Dokusho.xcdatamodeld */; };
+		E2034175270C555A00990F80 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EA026CC5D9E009604A9 /* Date.swift */; };
+		E2034176270C555C00990F80 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EA126CC5D9E009604A9 /* View.swift */; };
+		E2034177270C555F00990F80 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EA226CC5D9E009604A9 /* Array.swift */; };
+		E2034178270C556100990F80 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EA326CC5D9E009604A9 /* Logger.swift */; };
+		E2034179270C556300990F80 /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EA426CC5D9E009604A9 /* UIScreen.swift */; };
+		E203417A270C556600990F80 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129026CD1C8A007837D1 /* Optional.swift */; };
+		E203417B270C556800990F80 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94DA26D64DF00083F2F7 /* URL.swift */; };
+		E203417D270C561100990F80 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E203417C270C561100990F80 /* MangaScraper */; };
+		E203417F270C563300990F80 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = E203417E270C563300990F80 /* Nuke */; };
 		E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E203B9C826ECFED700F4B749 /* MangaScraper */; };
 		E20837B426E3BF2000E6DCEE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E20837B226E3BF2000E6DCEE /* README.md */; };
 		E20837B526E3BF2000E6DCEE /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E20837B326E3BF2000E6DCEE /* LICENSE */; };
@@ -86,7 +118,39 @@
 		E2DA94EB26D6689F0083F2F7 /* CollectionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94EA26D6689F0083F2F7 /* CollectionPage.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E203415B270C4F9F00990F80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E26662AE26CC36830054868A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E203414C270C4F9E00990F80;
+			remoteInfo = DokushoWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E203415F270C4F9F00990F80 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E203415D270C4F9F00990F80 /* DokushoWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		E203414D270C4F9E00990F80 /* DokushoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DokushoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E203414E270C4F9E00990F80 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		E2034150270C4F9E00990F80 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		E2034153270C4F9E00990F80 /* DokushoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokushoWidget.swift; sourceTree = "<group>"; };
+		E2034155270C4F9E00990F80 /* DokushoWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = DokushoWidget.intentdefinition; sourceTree = "<group>"; };
+		E2034156270C4F9F00990F80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E2034158270C4F9F00990F80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E203415E270C4F9F00990F80 /* DokushoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DokushoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		E20837B226E3BF2000E6DCEE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E20837B326E3BF2000E6DCEE /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		E20837B626E3C0C700E6DCEE /* MangaEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MangaEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -165,6 +229,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E203414A270C4F9E00990F80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E203417D270C561100990F80 /* MangaScraper in Frameworks */,
+				E2034151270C4F9E00990F80 /* SwiftUI.framework in Frameworks */,
+				E203414F270C4F9E00990F80 /* WidgetKit.framework in Frameworks */,
+				E203417F270C563300990F80 /* Nuke in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E26662B326CC36830054868A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -181,6 +256,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E2034152270C4F9E00990F80 /* DokushoWidget */ = {
+			isa = PBXGroup;
+			children = (
+				E2034153270C4F9E00990F80 /* DokushoWidget.swift */,
+				E2034155270C4F9E00990F80 /* DokushoWidget.intentdefinition */,
+				E2034156270C4F9F00990F80 /* Assets.xcassets */,
+				E2034158270C4F9F00990F80 /* Info.plist */,
+			);
+			path = DokushoWidget;
+			sourceTree = "<group>";
+		};
+		E2034163270C540600990F80 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E2187E9F26CC5D9E009604A9 /* Extensions */,
+				E2187E8F26CC586E009604A9 /* Services */,
+				E26662CC26CC538A0054868A /* Models */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		E20837BA26E3C4E400E6DCEE /* MangaEntity */ = {
 			isa = PBXGroup;
 			children = (
@@ -310,6 +406,8 @@
 			isa = PBXGroup;
 			children = (
 				E2BD651326F22AE200BE5CD7 /* CloudKit.framework */,
+				E203414E270C4F9E00990F80 /* WidgetKit.framework */,
+				E2034150270C4F9E00990F80 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -377,8 +475,11 @@
 		E26662AD26CC36830054868A = {
 			isa = PBXGroup;
 			children = (
+				E203415E270C4F9F00990F80 /* DokushoWidgetExtension.entitlements */,
 				E2187E8C26CC5850009604A9 /* Preview Content */,
+				E2034163270C540600990F80 /* Shared */,
 				E26662B826CC36830054868A /* Dokusho */,
+				E2034152270C4F9E00990F80 /* DokushoWidget */,
 				E26662B726CC36830054868A /* Products */,
 				E2187EAF26CC5EA1009604A9 /* Frameworks */,
 				E20837B326E3BF2000E6DCEE /* LICENSE */,
@@ -390,6 +491,7 @@
 			isa = PBXGroup;
 			children = (
 				E26662B626CC36830054868A /* Dokusho.app */,
+				E203414D270C4F9E00990F80 /* DokushoWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -399,10 +501,7 @@
 			children = (
 				E2187EC826CC625C009604A9 /* Components */,
 				E2187EAB26CC5E5B009604A9 /* Views */,
-				E2187E9F26CC5D9E009604A9 /* Extensions */,
 				E2187E9D26CC5D9E009604A9 /* Shapes */,
-				E2187E8F26CC586E009604A9 /* Services */,
-				E26662CC26CC538A0054868A /* Models */,
 				E26662D026CC58160054868A /* Assets.xcassets */,
 				E2187ED726CC69C4009604A9 /* Info.plist */,
 				E26662CF26CC57800054868A /* Dokusho.entitlements */,
@@ -545,6 +644,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		E203414C270C4F9E00990F80 /* DokushoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2034162270C4F9F00990F80 /* Build configuration list for PBXNativeTarget "DokushoWidgetExtension" */;
+			buildPhases = (
+				E2034149270C4F9E00990F80 /* Sources */,
+				E203414A270C4F9E00990F80 /* Frameworks */,
+				E203414B270C4F9E00990F80 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DokushoWidgetExtension;
+			packageProductDependencies = (
+				E203417C270C561100990F80 /* MangaScraper */,
+				E203417E270C563300990F80 /* Nuke */,
+			);
+			productName = DokushoWidgetExtension;
+			productReference = E203414D270C4F9E00990F80 /* DokushoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		E26662B526CC36830054868A /* Dokusho */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E26662C926CC36840054868A /* Build configuration list for PBXNativeTarget "Dokusho" */;
@@ -552,10 +672,12 @@
 				E26662B226CC36830054868A /* Sources */,
 				E26662B326CC36830054868A /* Frameworks */,
 				E26662B426CC36830054868A /* Resources */,
+				E203415F270C4F9F00990F80 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E203415C270C4F9F00990F80 /* PBXTargetDependency */,
 			);
 			name = Dokusho;
 			packageProductDependencies = (
@@ -579,6 +701,9 @@
 				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
+					E203414C270C4F9E00990F80 = {
+						CreatedOnToolsVersion = 13.0;
+					};
 					E26662B526CC36830054868A = {
 						CreatedOnToolsVersion = 13.0;
 					};
@@ -605,11 +730,20 @@
 			projectRoot = "";
 			targets = (
 				E26662B526CC36830054868A /* Dokusho */,
+				E203414C270C4F9E00990F80 /* DokushoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E203414B270C4F9E00990F80 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2034157270C4F9F00990F80 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E26662B426CC36830054868A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -624,6 +758,38 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E2034149270C4F9E00990F80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E203416C270C545E00990F80 /* GenreEntity+CoreDataClass.swift in Sources */,
+				E2034178270C556100990F80 /* Logger.swift in Sources */,
+				E2034166270C544B00990F80 /* ChapterEntity.swift in Sources */,
+				E203416F270C546900990F80 /* AlternateTitlesEntity.swift in Sources */,
+				E2034173270C547500990F80 /* MangaEntity+CoreDataClass.swift in Sources */,
+				E203416E270C546600990F80 /* AlternateTitlesEntity+CoreDataClass.swift in Sources */,
+				E2034174270C547A00990F80 /* Dokusho.xcdatamodeld in Sources */,
+				E2034169270C545200990F80 /* AuthorAndArtistEntity.swift in Sources */,
+				E2034179270C556300990F80 /* UIScreen.swift in Sources */,
+				E2034171270C546F00990F80 /* SourceEntity.swift in Sources */,
+				E203416B270C545900990F80 /* CollectionEntity.swift in Sources */,
+				E2034177270C555F00990F80 /* Array.swift in Sources */,
+				E2034165270C544900990F80 /* ChapterEntity+CoreDataClass.swift in Sources */,
+				E2034167270C544F00990F80 /* AuthorAndArtistEntity+CoreDataClass.swift in Sources */,
+				E2034170270C546D00990F80 /* SourceEntity+CoreDataClass.swift in Sources */,
+				E203417B270C556800990F80 /* URL.swift in Sources */,
+				E2034176270C555C00990F80 /* View.swift in Sources */,
+				E203416A270C545700990F80 /* CollectionEntity+CoreDataClass.swift in Sources */,
+				E203416D270C546000990F80 /* GenreEntity.swift in Sources */,
+				E2034164270C543300990F80 /* Persistence.swift in Sources */,
+				E2034172270C547300990F80 /* MangaEntity.swift in Sources */,
+				E2034175270C555A00990F80 /* Date.swift in Sources */,
+				E2034159270C4F9F00990F80 /* DokushoWidget.intentdefinition in Sources */,
+				E2034154270C4F9E00990F80 /* DokushoWidget.swift in Sources */,
+				E203417A270C556600990F80 /* Optional.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E26662B226CC36830054868A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -680,6 +846,7 @@
 				E2CB127826CD021C007837D1 /* MangaEntity.swift in Sources */,
 				E20837D226E3C6E100E6DCEE /* ChapterEntity+CoreDataClass.swift in Sources */,
 				E2CB129E26CD4EB7007837D1 /* ReaderView.swift in Sources */,
+				E203415A270C4F9F00990F80 /* DokushoWidget.intentdefinition in Sources */,
 				E26D7E71270B46810003C6C1 /* ByGenreListPage.swift in Sources */,
 				E2CB128926CD0559007837D1 /* ChapterListInformation.swift in Sources */,
 				E2DA94DB26D64DF00083F2F7 /* URL.swift in Sources */,
@@ -700,7 +867,75 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E203415C270C4F9F00990F80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E203414C270C4F9E00990F80 /* DokushoWidgetExtension */;
+			targetProxy = E203415B270C4F9F00990F80 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		E2034160270C4F9F00990F80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = DokushoWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 33;
+				DEVELOPMENT_TEAM = 27U585A9E3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DokushoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DokushoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho.DokushoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
+			};
+			name = Debug;
+		};
+		E2034161270C4F9F00990F80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = DokushoWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 33;
+				DEVELOPMENT_TEAM = 27U585A9E3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DokushoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DokushoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho.DokushoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
+			};
+			name = Release;
+		};
 		E26662C726CC36840054868A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -820,6 +1055,7 @@
 		E26662CA26CC36840054868A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
@@ -858,6 +1094,7 @@
 		E26662CB26CC36840054868A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
@@ -896,6 +1133,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E2034162270C4F9F00990F80 /* Build configuration list for PBXNativeTarget "DokushoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2034160270C4F9F00990F80 /* Debug */,
+				E2034161270C4F9F00990F80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E26662B126CC36830054868A /* Build configuration list for PBXProject "Dokusho" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -960,6 +1206,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E203417C270C561100990F80 /* MangaScraper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E203B9C726ECFDF000F4B749 /* XCRemoteSwiftPackageReference "MangaScraper" */;
+			productName = MangaScraper;
+		};
+		E203417E270C563300990F80 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
 		E203B9C826ECFED700F4B749 /* MangaScraper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E203B9C726ECFDF000F4B749 /* XCRemoteSwiftPackageReference "MangaScraper" */;
