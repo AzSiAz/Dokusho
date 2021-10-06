@@ -30,7 +30,7 @@ struct Provider: IntentTimelineProvider {
 
         let entries: [SimpleEntry] = [entry]
 
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let timeline = Timeline(entries: entries, policy: .never)
         completion(timeline)
     }
 }
