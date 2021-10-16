@@ -6,41 +6,62 @@
 //
 
 import SwiftUI
+import Nuke
 
-struct RefreshableImageView: View {
-    @State var url: String
-    @State var size: CGSize
+struct ChapterImageView: View {
+    @StateObject private var image: FetchImage
     @State var id = UUID()
     
+    let url: URL
+    let contentMode: ContentMode
+    let size: CGSize
+    
+    init(url: URL?, contentMode: ContentMode, size: CGSize) {
+        self.url = url ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.contentMode = contentMode
+        self.size = size
+        
+        let image = FetchImage()
+        image.pipeline = ImagePipeline { $0.imageCache =  ImageCache() }
+        self._image = .init(wrappedValue: image)
+    }
+    
+    init(url: String?, contentMode: ContentMode, size: CGSize) {
+        self.contentMode = contentMode
+        self.url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.size = size
+        
+        let image = FetchImage()
+        image.pipeline = ImagePipeline { $0.imageCache =  ImageCache() }
+        self._image = .init(wrappedValue: image)
+    }
+    
     var body: some View {
-        AsyncImage(url: URL(string: url)) { state in
-            switch state {
-                case .success(let image):
-                    image
+        Group {
+            switch image.result {
+            case .success(let res):
+                    Image(uiImage: res.image)
                         .resizable()
-                case .failure(let err as NSError):
+                        .aspectRatio(contentMode: contentMode)
+            case .failure(let err):
                     VStack {
                         Button(action: { id = UUID() }) {
                             Image(systemName: "arrow.clockwise")
                                 .resizable()
                                 .frame(width: 32, height: 32)
                         }
-                        
-                        Text("Error: \(err)")
+
+                        Text("Error: \(err.localizedDescription)")
                     }
                     .frame(height: size.height)
-                default:
-                    ProgressView()
-                        .frame(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height, alignment: .center)
-                        .scaleEffect(3)
+            default:
+                ProgressView()
+                    .scaleEffect(3)
+                    .frame(width: size.width, height: size.height)
             }
         }
         .id(id)
-    }
-}
-
-struct RefreshableImageView_Previews: PreviewProvider {
-    static var previews: some View {
-        RefreshableImageView(url: "", size: CGSize(width: 100, height: 100))
+        .onAppear { image.priority = .high; image.load(url) }
+        .onDisappear { image.priority = .low }
     }
 }

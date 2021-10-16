@@ -30,5 +30,6 @@ struct ReaderView: View {
         .onChange(of: vm.tabIndex, perform: { image in
             vm.updateChapterStatus(image: image)
         })
+        .preferredColorScheme(.dark)
     }
 }

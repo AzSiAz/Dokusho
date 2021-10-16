@@ -34,6 +34,8 @@ class ReaderVM: ObservableObject {
         do {
             images = try await src.fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
             tabIndex = images.first!
+            
+            print(images)
         } catch {
             Logger.reader.info("Error loading chapter \(self.chapter): \(error.localizedDescription)")
         }
@@ -45,12 +47,14 @@ class ReaderVM: ObservableObject {
 
     func updateChapterStatus(image: SourceChapterImage) {
         if images.last == image {
-            try? ctx.performAndWait {
-                guard let chapter = self.ctx.object(with: self.chapter.objectID) as? ChapterEntity else { return }
-                chapter.markAs(newStatus: .read)
-                chapter.manga?.lastUserAction = .now
+            Task {
+                try? await ctx.perform {
+                    guard let chapter = self.ctx.object(with: self.chapter.objectID) as? ChapterEntity else { return }
+                    chapter.markAs(newStatus: .read)
+                    chapter.manga?.lastUserAction = .now
 
-                try self.ctx.save()
+                    try self.ctx.save()
+                }
             }
         }
     }

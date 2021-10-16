@@ -362,13 +362,13 @@
 		E2034163270C540600990F80 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				E2187E9D26CC5D9E009604A9 /* Shapes */,
-				E2187EC826CC625C009604A9 /* Components */,
-				E2034155270C4F9E00990F80 /* DokushoWidget.intentdefinition */,
-				E2034180270C6F7000990F80 /* Config */,
-				E2187E9F26CC5D9E009604A9 /* Extensions */,
-				E2187E8F26CC586E009604A9 /* Services */,
 				E26662CC26CC538A0054868A /* Models */,
+				E2187E8F26CC586E009604A9 /* Services */,
+				E2187E9F26CC5D9E009604A9 /* Extensions */,
+				E2034180270C6F7000990F80 /* Config */,
+				E2187EC826CC625C009604A9 /* Components */,
+				E2187E9D26CC5D9E009604A9 /* Shapes */,
+				E2034155270C4F9E00990F80 /* DokushoWidget.intentdefinition */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

@@ -15,7 +15,7 @@
         "repositoryURL": "https://github.com/AzSiAz/MangaScraper",
         "state": {
           "branch": "main",
-          "revision": "b2699800bbdfb4cac36fcbb1ee46d7a58afb847a",
+          "revision": "e14d74dc484535912c2cdc7d97cea4a1cec0931b",
           "version": null
         }
       },
@@ -24,7 +24,7 @@
         "repositoryURL": "https://github.com/kean/Nuke",
         "state": {
           "branch": "master",
-          "revision": "1d30442ed464c11e6f395bf364a8de57243c9480",
+          "revision": "526315eca05be91d5faf54760181a43995f4ebe9",
           "version": null
         }
       },
@@ -51,7 +51,7 @@
         "repositoryURL": "https://github.com/SwiftUIX/SwiftUIX.git",
         "state": {
           "branch": "master",
-          "revision": "8d4f844945dbb9bddac790273dda8057cef7ae97",
+          "revision": "ef3639d5e501f987cb1a95d193876d18e41f2a59",
           "version": null
         }
       },

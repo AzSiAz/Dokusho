@@ -18,7 +18,7 @@ struct BottomOverlayView: View {
             }
             .frame(height: 50, alignment: .center)
             .padding(.horizontal)
-            .background(Color.black)
+            .background(.thickMaterial)
         }
     }
 }

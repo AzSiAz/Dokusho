@@ -14,19 +14,17 @@ struct HorizontalReaderView: View {
         TabView(selection: $vm.tabIndex) {
             ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
                 GeometryReader { proxy in
-                    RefreshableImageView(url: image.imageUrl, size: proxy.size)
-                        .aspectRatio(contentMode: .fit)
+                    ChapterImageView(url: image.imageUrl, contentMode: .fit, size: proxy.size)
                         .frame(
                             minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2: proxy.size.width,
                             minHeight: proxy.size.height,
                             alignment: .center
                         )
-                        .background(Color.black)
-                        .tag(image)
+                        .id(image.id)
+                        .tag(image.id)
                 }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .background(Color.black)
     }
 }
