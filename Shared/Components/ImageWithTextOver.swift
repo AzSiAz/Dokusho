@@ -19,7 +19,6 @@ struct ImageWithTextOver: View {
                     ZStack {
                         Text(title)
                             .lineLimit(2)
-                            .foregroundColor(.primary)
                             .multilineTextAlignment(.leading)
                             .clipped()
                     }
