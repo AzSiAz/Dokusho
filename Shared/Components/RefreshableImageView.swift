@@ -8,6 +8,7 @@
 import SwiftUI
 import Nuke
 
+
 struct ChapterImageView: View {
     @StateObject private var image: FetchImage
     @State var id = UUID()
@@ -22,7 +23,7 @@ struct ChapterImageView: View {
         self.size = size
         
         let image = FetchImage()
-        image.pipeline = ImagePipeline { $0.imageCache =  ImageCache() }
+        image.pipeline = ImagePipeline.inMemory
         self._image = .init(wrappedValue: image)
     }
     
@@ -32,7 +33,7 @@ struct ChapterImageView: View {
         self.size = size
         
         let image = FetchImage()
-        image.pipeline = ImagePipeline { $0.imageCache =  ImageCache() }
+        image.pipeline = ImagePipeline.inMemory
         self._image = .init(wrappedValue: image)
     }
     
