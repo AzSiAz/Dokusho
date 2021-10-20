@@ -10,6 +10,7 @@ import CoreData
 import SwiftUI
 import OSLog
 import MangaScraper
+import Nuke
 
 class ReaderVM: ObservableObject {
     private var src: Source
@@ -35,7 +36,7 @@ class ReaderVM: ObservableObject {
             images = try await src.fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
             tabIndex = images.first!
             
-            print(images)
+            images.forEach { ImagePipeline.inMemory.loadImage(with: $0.imageUrl, completion: { _ in }) }
         } catch {
             Logger.reader.info("Error loading chapter \(self.chapter): \(error.localizedDescription)")
         }
