@@ -16,10 +16,8 @@ struct ReaderView: View {
     
     var body: some View {
         Group {
-            if !vm.images.isEmpty {
-                if vm.direction == .vertical { VerticalReaderView(vm: vm) }
-                else { HorizontalReaderView(vm: vm) }
-            }
+            if vm.direction == .vertical { VerticalReaderView(vm: vm) }
+            else { HorizontalReaderView(vm: vm) }
         }
         .background(Color.black)
         .navigationBarHidden(true)
@@ -32,6 +30,6 @@ struct ReaderView: View {
             vm.updateChapterStatus(image: image)
         })
         .preferredColorScheme(.dark)
-        .edgesIgnoringSafeArea(vm.direction == .vertical ? [.bottom, .top] : [])
+        .edgesIgnoringSafeArea([.bottom, .top])
     }
 }

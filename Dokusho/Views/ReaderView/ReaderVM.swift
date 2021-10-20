@@ -35,7 +35,7 @@ class ReaderVM: ObservableObject {
         do {
             images = try await src.fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
             tabIndex = images.first!
-            
+
             images.forEach { ImagePipeline.inMemory.loadImage(with: $0.imageUrl, completion: { _ in }) }
         } catch {
             Logger.reader.info("Error loading chapter \(self.chapter): \(error.localizedDescription)")

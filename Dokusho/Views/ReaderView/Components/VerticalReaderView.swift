@@ -24,8 +24,8 @@ struct VerticalReaderView: View {
                                 width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                                 alignment: .center
                             )
-                            .id(image.id)
-                            .tag(image.id)
+                            .id(image)
+                            .tag(image)
                             .onAppear { vm.tabIndex = image }
                     }
                 }

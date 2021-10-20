@@ -20,8 +20,8 @@ struct HorizontalReaderView: View {
                             minHeight: proxy.size.height,
                             alignment: .center
                         )
-                        .id(image.id)
-                        .tag(image.id)
+                        .id(image)
+                        .tag(image)
                 }
             }
         }
