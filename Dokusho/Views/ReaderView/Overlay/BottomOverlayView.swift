@@ -19,6 +19,8 @@ struct BottomOverlayView: View {
             .frame(height: 50, alignment: .center)
             .padding(.horizontal)
             .background(.thickMaterial)
+            .offset(x: 0, y: vm.showToolBar ? 0 : 150)
+            .transition(.move(edge: vm.showToolBar ? .bottom : .top))
         }
     }
 }

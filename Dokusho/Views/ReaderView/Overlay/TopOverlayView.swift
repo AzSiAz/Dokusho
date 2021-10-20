@@ -41,8 +41,10 @@ struct TopOverlayView: View {
                 }
             }
             .frame(height: 50, alignment: .center)
+            .offset(x: 0, y: vm.showToolBar ? 0 : -150)
             .padding(.horizontal)
             .background(.thickMaterial)
+            .transition(.move(edge: vm.showToolBar ? .top : .bottom))
         }
     }
 }
