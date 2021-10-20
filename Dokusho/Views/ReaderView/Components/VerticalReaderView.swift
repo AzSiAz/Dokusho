@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct VerticalReaderView: View {
+    @Environment(\.safeAreaInsets) var inset
     @ObservedObject var vm: ReaderVM
     
     var body: some View {
@@ -28,6 +29,8 @@ struct VerticalReaderView: View {
                             .onAppear { vm.tabIndex = image }
                     }
                 }
+                .padding(.top, inset.top)
+                .padding(.bottom, inset.bottom)
             }
         }
     }

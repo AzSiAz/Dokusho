@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2006E892720544A00BE6907 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2006E882720544A00BE6907 /* EnvironmentValues.swift */; };
 		E203414F270C4F9E00990F80 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E203414E270C4F9E00990F80 /* WidgetKit.framework */; };
 		E2034151270C4F9E00990F80 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2034150270C4F9E00990F80 /* SwiftUI.framework */; };
 		E2034154270C4F9E00990F80 /* DokushoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2034153270C4F9E00990F80 /* DokushoWidget.swift */; };
@@ -216,6 +217,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E2006E882720544A00BE6907 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		E203414D270C4F9E00990F80 /* DokushoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DokushoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E203414E270C4F9E00990F80 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E2034150270C4F9E00990F80 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -352,6 +354,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E2006E8C2720548700BE6907 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E2006E882720544A00BE6907 /* EnvironmentValues.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		E2034152270C4F9E00990F80 /* DokushoWidget */ = {
 			isa = PBXGroup;
 			children = (
@@ -621,6 +631,7 @@
 		E26662B826CC36830054868A /* Dokusho */ = {
 			isa = PBXGroup;
 			children = (
+				E2006E8C2720548700BE6907 /* Extensions */,
 				E2187EAB26CC5E5B009604A9 /* Views */,
 				E26662D026CC58160054868A /* Assets.xcassets */,
 				E2187ED726CC69C4009604A9 /* Info.plist */,
@@ -984,6 +995,7 @@
 				E20837D026E3C6E100E6DCEE /* AuthorAndArtistEntity+CoreDataClass.swift in Sources */,
 				E2187ED126CC625C009604A9 /* ImageWithTextOver.swift in Sources */,
 				E2187EC126CC6243009604A9 /* ExploreSourceView.swift in Sources */,
+				E2006E892720544A00BE6907 /* EnvironmentValues.swift in Sources */,
 				E2CB12A426CD4EDF007837D1 /* ReaderVM.swift in Sources */,
 				E2CB128526CD0559007837D1 /* MangaDetailVM.swift in Sources */,
 				E2DA94E626D667FE0083F2F7 /* MangaLibraryContextMenu.swift in Sources */,
