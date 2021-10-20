@@ -176,6 +176,10 @@ extension MangaEntity {
                 predicate.append(NSPredicate(format: "SUBQUERY(%K, $chapter, $chapter.%K = %@).@count == 0", #keyPath(MangaEntity.chapters), #keyPath(ChapterEntity.statusRaw), ChapterStatus.unread.rawValue))
             case .unread:
                 predicate.append(NSPredicate(format: "ANY %K.%K = %@", #keyPath(MangaEntity.chapters), #keyPath(ChapterEntity.statusRaw), ChapterStatus.unread.rawValue))
+            case .completed:
+                predicate.append(NSPredicate(format: "%K = %@", #keyPath(MangaEntity.statusRaw), SourceMangaCompletion.complete.rawValue))
+            case .ongoing:
+                predicate.append(NSPredicate(format: "%K = %@", #keyPath(MangaEntity.statusRaw), SourceMangaCompletion.ongoing.rawValue))
         }
         
         return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)

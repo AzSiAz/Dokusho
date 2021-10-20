@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2000CEF272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
+		E2000CF0272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
+		E2000CF1272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
 		E203414F270C4F9E00990F80 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E203414E270C4F9E00990F80 /* WidgetKit.framework */; };
 		E2034151270C4F9E00990F80 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2034150270C4F9E00990F80 /* SwiftUI.framework */; };
 		E2034154270C4F9E00990F80 /* DokushoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2034153270C4F9E00990F80 /* DokushoWidget.swift */; };
@@ -213,6 +216,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePipeline.swift; sourceTree = "<group>"; };
 		E203414D270C4F9E00990F80 /* DokushoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DokushoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E203414E270C4F9E00990F80 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E2034150270C4F9E00990F80 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -497,6 +501,7 @@
 				E2187EA426CC5D9E009604A9 /* UIScreen.swift */,
 				E2CB129026CD1C8A007837D1 /* Optional.swift */,
 				E2DA94DA26D64DF00083F2F7 /* URL.swift */,
+				E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -932,6 +937,7 @@
 				E2034173270C547500990F80 /* MangaEntity+CoreDataClass.swift in Sources */,
 				E203416E270C546600990F80 /* AlternateTitlesEntity+CoreDataClass.swift in Sources */,
 				E2034174270C547A00990F80 /* Dokusho.xcdatamodeld in Sources */,
+				E2000CF0272002C2000EA6C2 /* ImagePipeline.swift in Sources */,
 				E2034169270C545200990F80 /* AuthorAndArtistEntity.swift in Sources */,
 				E2C24F24270CCC1F00A7D6C5 /* AdaptiveStack.swift in Sources */,
 				E2C24F1E270CCC1F00A7D6C5 /* RefreshableImageView.swift in Sources */,
@@ -1021,6 +1027,7 @@
 				E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */,
 				E2CB128626CD0559007837D1 /* ChapterCollection.swift in Sources */,
 				E2DA94E726D667FE0083F2F7 /* MangaCardView.swift in Sources */,
+				E2000CEF272002C2000EA6C2 /* ImagePipeline.swift in Sources */,
 				E2187EA726CC5D9E009604A9 /* View.swift in Sources */,
 				E2CB127826CD021C007837D1 /* MangaEntity.swift in Sources */,
 				E20837D226E3C6E100E6DCEE /* ChapterEntity+CoreDataClass.swift in Sources */,
@@ -1065,6 +1072,7 @@
 				E2C24F08270CC24700A7D6C5 /* CollectionEntity.swift in Sources */,
 				E2C24F19270CC25800A7D6C5 /* Optional.swift in Sources */,
 				E2C24F06270CC24700A7D6C5 /* AuthorAndArtistEntity.swift in Sources */,
+				E2000CF1272002C2000EA6C2 /* ImagePipeline.swift in Sources */,
 				E2C24F11270CC25000A7D6C5 /* Persistence.swift in Sources */,
 				E2C24F03270CC24700A7D6C5 /* ChapterEntity+CoreDataClass.swift in Sources */,
 				E2C24F2A270CCC2000A7D6C5 /* FlexibleView.swift in Sources */,

@@ -9,14 +9,25 @@
 import Foundation
 import CoreData
 
-enum CollectionEntityFilter: String, CaseIterable {
+enum CollectionEntityFilter: String, CaseIterable, Identifiable {
+    public var id: Self { self }
+    
     case all = "All"
-    case read = "Only Read"
-    case unread = "Only Reading"
+    case read = "Only Read Chapter"
+    case unread = "Only Unread Chapter"
+    case completed = "Only Completed"
+    case ongoing = "Only On Going"
     
     func isNotAll() -> Bool {
         return self != .all
     }
+}
+
+enum CollectionOrderBy: String, CaseIterable, Identifiable {
+    public var id: Self { self }
+    
+    case latestChapter = "Latest Chapter update"
+    case title = "Title"
 }
 
 @objc(CollectionEntity)
@@ -29,6 +40,7 @@ extension CollectionEntity {
     }
     
     @NSManaged public var filterRaw: String?
+    @NSManaged public var orderByRaw: String?
     @NSManaged public var name: String?
     @NSManaged public var position: Int16
     @NSManaged public var uuid: UUID?
@@ -63,6 +75,16 @@ extension CollectionEntity {
         
         set {
             self.filterRaw = newValue.rawValue
+        }
+    }
+    
+    var orderBy: CollectionOrderBy {
+        get {
+            return .init(rawValue: self.orderByRaw ?? "") ?? .latestChapter
+        }
+        
+        set {
+            self.orderByRaw = newValue.rawValue
         }
     }
 }

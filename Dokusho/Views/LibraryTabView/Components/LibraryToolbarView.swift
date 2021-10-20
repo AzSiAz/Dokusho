@@ -26,27 +26,56 @@ struct LibraryToolbarView: ToolbarContent {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                         .symbolVariant(collection.filter.isNotAll() ? .fill : .none)
                 }
-                .buttonStyle(.plain)
-                .actionSheet(isPresented: $showFilter) {
-                    ActionSheet(title: Text("Change Filter"), buttons: [
-                        .default(
-                            Text("All"),
-                            action: { updateCollectionFilter(newFilter: .all) }),
-                        .default(
-                            Text("Only Read"),
-                            action: { updateCollectionFilter(newFilter: .read) }),
-                        .default(
-                            Text("Only Unread"),
-                            action: { updateCollectionFilter(newFilter: .unread) }),
-                        .cancel()
-                    ])
+                .sheet(isPresented: $showFilter, onDismiss: saveCtx) {
+                    NavigationView {
+                        List {
+                            Section("Filter") {
+                                Picker("Change collection filter", selection: $collection.filter) {
+                                    ForEach(CollectionEntityFilter.allCases) { filter in
+                                        Text(filter.rawValue).tag(filter)
+                                    }
+                                }
+                                .id(collection.filter)
+                            }
+                            
+                            Section("Order") {
+                                
+                            }
+                        }
+                        .navigationTitle(Text("Modify Filter"))
+                    }
                 }
+//                .buttonStyle(.plain)
+//                .actionSheet(isPresented: $showFilter) {
+//                    ActionSheet(title: Text("Change Filter"), buttons: [
+//                        .default(
+//                            Text("All"),
+//                            action: { updateCollectionFilter(newFilter: .all) }),
+//                        .default(
+//                            Text("Only Read"),
+//                            action: { updateCollectionFilter(newFilter: .read) }),
+//                        .default(
+//                            Text("Only Unread"),
+//                            action: { updateCollectionFilter(newFilter: .unread) }),
+//                        .cancel()
+//                    ])
+//                }
             }
         }
     }
     
+    func saveCtx() {
+        if collection.managedObjectContext?.hasChanges != nil {
+            collection.managedObjectContext?.perform({
+                try? collection.managedObjectContext?.save()
+            })
+        }
+    }
+    
     func updateCollectionFilter(newFilter: CollectionEntityFilter) {
-        collection.filter = newFilter
-        try? collection.managedObjectContext?.save()
+        collection.managedObjectContext?.perform({
+            collection.filter = newFilter
+            try? collection.managedObjectContext?.save()
+        })
     }
 }
