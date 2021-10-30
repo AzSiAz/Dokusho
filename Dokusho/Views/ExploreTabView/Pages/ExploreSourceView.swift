@@ -49,7 +49,6 @@ struct ExploreSourceView: View {
                         NavigationLink(destination: MangaDetailView(mangaId: manga.id, src: vm.src.id, showDismiss: false)) {
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)
-//                                .onTapGesture { vm.selectedManga = manga }
                                 .contextMenu { ContextMenu(manga: manga) }
                                 .task { await vm.fetchMoreIfPossible(for: manga) }
                                 .overlay(alignment: .topTrailing) {
@@ -77,10 +76,6 @@ struct ExploreSourceView: View {
                 })
             }
         }
-//        .sheetSizeAware(item: $vm.selectedManga) { manga in
-//            MangaDetailView(mangaId: manga.id, src: vm.src.id)
-//                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
-//        }
         .navigationTitle(vm.getTitle())
     }
     
