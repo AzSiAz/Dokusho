@@ -88,9 +88,7 @@ struct ExploreSourceView: View {
         .pickerStyle(.segmented)
         .frame(maxWidth: 160)
         .onChange(of: vm.type) { _ in
-            Task {
-                await vm.fetchList(clean: true)
-            }
+            Task { await vm.fetchList(clean: true) }
         }
     }
     

@@ -114,14 +114,16 @@ struct MangaDetail: View {
     
     @ViewBuilder
     func ActionRow() -> some View {
-        HStack(alignment: .center) {
-            Button(action: { withAnimation {
-                addToCollection.toggle()
-            } }) {
+        ControlGroup {
+            Button(action: {
+                withAnimation {
+                    addToCollection.toggle()
+                }
+            }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
                         .symbolVariant(manga.collection != nil ? .fill : .none)
-                    Text("Favoris")
+                    Text(manga.collection?.name ?? "Favoris")
                 }
             }
             .buttonStyle(.plain)
@@ -171,6 +173,7 @@ struct MangaDetail: View {
                 }
             }
         }
+        .controlGroupStyle(.navigation)
         .frame(height: 50)
         .padding(.bottom, 5)
         .padding(.horizontal)
