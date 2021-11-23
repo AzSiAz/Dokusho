@@ -16,7 +16,8 @@ struct BySourceListPage: View {
             ForEach(sources) { source in
                 NavigationLink(destination: MangaForSourcePage(sourceId: source.id)) {
                     let name = MangaScraperService.shared.getSource(sourceId: source.id)?.name
-                    Text("\(name ?? "No name") (\(source.count))")
+                    Text(name ?? "No name, weird")
+                        .badge(source.count)
                 }
             }
         }

@@ -46,20 +46,22 @@ struct ExploreSourceView: View {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
                         let isInCollection = mangas.first { $0.mangaId == manga.id } != nil
-                        ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
-                            .frame(height: 180)
-                            .onTapGesture { vm.selectedManga = manga }
-                            .contextMenu { ContextMenu(manga: manga) }
-                            .task { await vm.fetchMoreIfPossible(for: manga) }
-                            .overlay(alignment: .topTrailing) {
-                                if isInCollection {
-                                    Image(systemName: "star")
-                                        .symbolVariant(.fill)
-                                        .padding(2)
-                                        .foregroundColor(.primary)
-                                        .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]) )
+                        NavigationLink(destination: MangaDetailView(mangaId: manga.id, src: vm.src.id, showDismiss: false)) {
+                            ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
+                                .frame(height: 180)
+                                .contextMenu { ContextMenu(manga: manga) }
+                                .task { await vm.fetchMoreIfPossible(for: manga) }
+                                .overlay(alignment: .topTrailing) {
+                                    if isInCollection {
+                                        Image(systemName: "star")
+                                            .symbolVariant(.fill)
+                                            .padding(2)
+                                            .foregroundColor(.primary)
+                                            .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]) )
+                                    }
                                 }
-                            }
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -74,10 +76,6 @@ struct ExploreSourceView: View {
                 })
             }
         }
-        .sheetSizeAware(item: $vm.selectedManga) { manga in
-            MangaDetailView(mangaId: manga.id, src: vm.src.id)
-                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
-        }
         .navigationTitle(vm.getTitle())
     }
     
@@ -90,9 +88,7 @@ struct ExploreSourceView: View {
         .pickerStyle(.segmented)
         .frame(maxWidth: 160)
         .onChange(of: vm.type) { _ in
-            Task {
-                await vm.fetchList(clean: true)
-            }
+            Task { await vm.fetchList(clean: true) }
         }
     }
     

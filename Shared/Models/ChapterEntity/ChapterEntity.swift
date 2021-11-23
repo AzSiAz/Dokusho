@@ -86,6 +86,13 @@ extension ChapterEntity {
                 NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(ChapterEntity.manga.alternateTitles.title), searchTerm)
             ]))
         }
+        
+        let key = status != .all ? #keyPath(ChapterEntity.readAt) : #keyPath(ChapterEntity.dateSourceUpload)
+        let last30days = Calendar.current.date(byAdding: .day, value: -31, to: Date())
+
+        predicate.append(
+            NSPredicate(format: "%K >= %@", key, (last30days ?? Date(timeIntervalSince1970: 1)) as CVarArg)
+        )
 
         return NSCompoundPredicate(andPredicateWithSubpredicates: predicate)
     }
