@@ -17,15 +17,12 @@ struct BottomOverlayView: View {
                 HStack {
                     // TODO: Add a custom slider to be able to update tabIndex value
                     ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
+                    Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
+                        .padding(.leading)
                 }
-                .padding(.vertical)
-                .padding(.top, 10)
-
-                HStack {}
-                    .frame(height: inset)
             }
-//            .frame(height: 50+inset, alignment: .center)
-            .padding(.horizontal)
+            .padding(.all)
+            .padding(.bottom, 20)
             .background(.thickMaterial)
             .offset(x: 0, y: vm.showToolBar ? 0 : 150)
             .transition(.move(edge: vm.showToolBar ? .bottom : .top))
