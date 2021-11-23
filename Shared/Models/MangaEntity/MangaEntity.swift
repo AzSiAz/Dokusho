@@ -116,21 +116,24 @@ extension MangaEntity {
             .filter { $0.readAt != nil }
             .reduce(into: [:]) { return $0[$1.chapterId!] = $1.readAt! }
         
+        
+        /// Clean old removed chapters
         oldChapters.forEach { taskCtx.delete($0) }
         
+        /// Add chapter
         data.chapters
             .enumerated()
             .map { (index, chapter) -> ChapterEntity in
                 let c = ChapterEntity(ctx: taskCtx, data: chapter, position: Int32(index), sourceId: source.id)
-                c.markAs(newStatus: .unread)
 
                 if let found = readDico[c.chapterId!] { c.markAs(newStatus: .read, date: found) }
-                
+                else { c.markAs(newStatus: .unread) }
+
                 return c
             }
             .forEach {
                 if $0.position == 0 { manga.lastChapterUploadDate = $0.dateSourceUpload }
-                
+
                 taskCtx.insert($0)
                 manga.addToChapters($0)
             }

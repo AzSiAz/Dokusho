@@ -23,6 +23,7 @@ struct MangaDetail: View {
     @State var selectedGenre: GenreEntity?
     
     let isInCollectionPage: Bool
+    let refreshing: Bool
     var forceCompact: Bool
     var update: () async -> Void
     var resetCache: () async -> Void
@@ -53,7 +54,7 @@ struct MangaDetail: View {
             Divider()
             
             ScrollView {
-                ChapterListInformation(manga: manga, selectedChapter: $selectedChapter)
+                ChapterListInformation(manga: manga, selectedChapter: $selectedChapter, refreshing: refreshing)
                     .padding(.bottom)
             }
             .id("Chapter")
@@ -67,7 +68,7 @@ struct MangaDetail: View {
             HeaderRow()
             ActionRow()
             SynopsisRow(isLarge: false)
-            ChapterListInformation(manga: manga, selectedChapter: $selectedChapter)
+            ChapterListInformation(manga: manga, selectedChapter: $selectedChapter, refreshing: refreshing)
                 .padding(.bottom)
         }
     }
@@ -114,14 +115,16 @@ struct MangaDetail: View {
     
     @ViewBuilder
     func ActionRow() -> some View {
-        HStack(alignment: .center) {
-            Button(action: { withAnimation {
-                addToCollection.toggle()
-            } }) {
+        ControlGroup {
+            Button(action: {
+                withAnimation {
+                    addToCollection.toggle()
+                }
+            }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
                         .symbolVariant(manga.collection != nil ? .fill : .none)
-                    Text("Favoris")
+                    Text(manga.collection?.name ?? "Favoris")
                 }
             }
             .buttonStyle(.plain)
@@ -171,6 +174,7 @@ struct MangaDetail: View {
                 }
             }
         }
+        .controlGroupStyle(.navigation)
         .frame(height: 50)
         .padding(.bottom, 5)
         .padding(.horizontal)

@@ -50,6 +50,7 @@ struct MangaDetailView: View {
                     manga: vm.manga!,
                     selectedChapter: $vm.selectedChapter,
                     isInCollectionPage: vm.isInCollectionPage,
+                    refreshing: vm.refreshing,
                     forceCompact: !vm.showDismiss,
                     update: vm.update,
                     resetCache: vm.resetCache,

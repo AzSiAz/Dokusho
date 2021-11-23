@@ -25,8 +25,10 @@ Alternative to consider:
 - Backup/Restore
 
 ## Working On
-- iCloud Sync
 - Save reader direction for manga/webtoon/etc.
+
+## Depend on Apple
+- iCloud Sync with `NSPersistentCloudKitContainer` (broken since iOS 15.0 beta 4, [maybe for iOS 15.2 🤞](https://developer.apple.com/forums/thread/687877?answerId=694468022#694468022))
 
 ## Planned
 - Tracker (maybe, I don't use them anymore)

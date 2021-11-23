@@ -25,7 +25,8 @@ struct LibraryTabView: View {
                 Section("User Collection") {
                     ForEach(collections) { collection in
                         NavigationLink(destination: CollectionPage(collection: collection)) {
-                            Label("\(collection.getName()) (\(collection.mangas?.count ?? 0))", systemSymbol: .squareGrid2x2)
+                            Label("\(collection.getName())", systemSymbol: .squareGrid2x2)
+                                .badge(collection.mangas?.count ?? 0)
                                 .padding(.vertical)
                         }
                     }

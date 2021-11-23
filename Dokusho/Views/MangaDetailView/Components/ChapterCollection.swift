@@ -14,10 +14,13 @@ struct ChapterCollection: View {
     @Binding var selectedChapter: ChapterEntity?
     @StateObject var vm: ChapterListVM
     
-    init(manga: NSManagedObjectID, selectedChaper: Binding<ChapterEntity?>, ascendingOrder: Bool, filter: ChapterStatusFilter) {
+    var refreshing: Bool
+    
+    init(manga: NSManagedObjectID, selectedChaper: Binding<ChapterEntity?>, ascendingOrder: Bool, filter: ChapterStatusFilter, refreshing: Bool) {
         self._selectedChapter = selectedChaper
         self._vm = .init(wrappedValue: .init(mangaOId: manga))
         self._chapters = .init(sortDescriptors: [ChapterEntity.positionOrder(order: ascendingOrder ? .forward : .reverse)], predicate: ChapterEntity.chaptersListForMangaPredicate(manga: manga, filter: filter))
+        self.refreshing = refreshing
     }
     
     var body: some View {
@@ -29,6 +32,7 @@ struct ChapterCollection: View {
             .buttonStyle(.bordered)
             .controlSize(.large)
             .padding(.horizontal)
+            .disabled(refreshing)
         }
 
         ForEach(chapters) { chapter in
@@ -56,6 +60,7 @@ struct ChapterCollection: View {
                         }
                     }
                 }
+                .disabled(self.refreshing)
         }
     }
 }

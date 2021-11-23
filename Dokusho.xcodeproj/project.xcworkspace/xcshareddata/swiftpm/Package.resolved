@@ -24,7 +24,7 @@
         "repositoryURL": "https://github.com/kean/Nuke",
         "state": {
           "branch": "master",
-          "revision": "472a03c15f39592007d94f25abe554350bc8aa2b",
+          "revision": "63f10a8d97f9e9b06606131ac85298e859dfa1fa",
           "version": null
         }
       },
@@ -51,7 +51,7 @@
         "repositoryURL": "https://github.com/SwiftUIX/SwiftUIX.git",
         "state": {
           "branch": "master",
-          "revision": "62be458951eaa937ca4b945f192834fcaf3edb8a",
+          "revision": "e5ad3d85eafd5cd65e78cf6db23ff3acb0fea82d",
           "version": null
         }
       },

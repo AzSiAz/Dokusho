@@ -43,8 +43,10 @@ class MangaDetailVM: ObservableObject {
     
     @MainActor
     func update() async {
-        self.error = false
-        self.refreshing = true
+        withAnimation {
+            self.error = false
+            self.refreshing = true
+        }
 
         do {
             guard let sourceManga = try? await src.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
