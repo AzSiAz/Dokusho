@@ -49,6 +49,7 @@ struct ReaderView: View {
     func BottomOverlay() -> some View {
         if vm.showToolBar {
             HStack {
+                Spacer()
                 if vm.images.isEmpty {
                     Text("Loading...")
                 } else {
@@ -57,6 +58,7 @@ struct ReaderView: View {
                     Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
                         .padding(.leading)
                 }
+                Spacer()
             }
             .padding(.all)
             .background(.thickMaterial)
