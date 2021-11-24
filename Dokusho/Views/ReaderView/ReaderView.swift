@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftFX
 
 typealias OnProgress = (_ status: ChapterStatus) -> Void
 
@@ -15,14 +14,6 @@ struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject var vm: ReaderVM
-    
-    var attributes: AttributeContainer {
-        var container = AttributeContainer()
-        container.strokeColor = .black
-        container.strokeWidth = 3.0
-        
-        return container
-    }
     
     var body: some View {
         Group {

@@ -29,8 +29,6 @@ struct VerticalReaderView: View {
                             .onAppear { vm.tabIndex = image }
                     }
                 }
-                .padding(.top, inset.top)
-                .padding(.bottom, inset.bottom)
             }
         }
     }
