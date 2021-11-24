@@ -20,4 +20,8 @@ extension View {
             })
         }
     }
+
+    func glowBorder(color: Color, lineWidth: Int) -> some View {
+        self.modifier(GlowBorder(color: color, lineWidth: lineWidth))
+    }
 }

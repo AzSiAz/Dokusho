@@ -95,6 +95,9 @@
 		E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */; };
 		E27A5DD326FCC69600F95361 /* DeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */; };
 		E27A5DD526FCCE7700F95361 /* MangaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD426FCCE7700F95361 /* MangaDetail.swift */; };
+		E2B96CD3274DB9BD002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
+		E2B96CD4274DB9EE002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
+		E2B96CD5274DB9EF002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
 		E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2BD651326F22AE200BE5CD7 /* CloudKit.framework */; };
 		E2C24EC1270C871700A7D6C5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C24EC0270C871700A7D6C5 /* Model.swift */; };
 		E2C24EF1270CC15200A7D6C5 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C24EF0270CC15200A7D6C5 /* Intents.framework */; };
@@ -169,8 +172,6 @@
 		E2CB129E26CD4EB7007837D1 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129726CD4EB7007837D1 /* ReaderView.swift */; };
 		E2CB129F26CD4EB7007837D1 /* VerticalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129926CD4EB7007837D1 /* VerticalReaderView.swift */; };
 		E2CB12A026CD4EB7007837D1 /* HorizontalReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129A26CD4EB7007837D1 /* HorizontalReaderView.swift */; };
-		E2CB12A126CD4EB7007837D1 /* TopOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129C26CD4EB7007837D1 /* TopOverlayView.swift */; };
-		E2CB12A226CD4EB7007837D1 /* BottomOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB129D26CD4EB7007837D1 /* BottomOverlayView.swift */; };
 		E2CB12A426CD4EDF007837D1 /* ReaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB12A326CD4EDF007837D1 /* ReaderVM.swift */; };
 		E2DA94D326D63F140083F2F7 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94D226D63F140083F2F7 /* CollectionEntity.swift */; };
 		E2DA94D526D645CE0083F2F7 /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94D426D645CE0083F2F7 /* SettingsTabView.swift */; };
@@ -276,6 +277,7 @@
 		E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveStack.swift; sourceTree = "<group>"; };
 		E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceOrientation.swift; sourceTree = "<group>"; };
 		E27A5DD426FCCE7700F95361 /* MangaDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetail.swift; sourceTree = "<group>"; };
+		E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowBorder.swift; sourceTree = "<group>"; };
 		E2BD651326F22AE200BE5CD7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E2C24EC0270C871700A7D6C5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E2C24EEF270CC15200A7D6C5 /* DokushoIntentHandler.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DokushoIntentHandler.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -298,8 +300,6 @@
 		E2CB129726CD4EB7007837D1 /* ReaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderView.swift; sourceTree = "<group>"; };
 		E2CB129926CD4EB7007837D1 /* VerticalReaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalReaderView.swift; sourceTree = "<group>"; };
 		E2CB129A26CD4EB7007837D1 /* HorizontalReaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalReaderView.swift; sourceTree = "<group>"; };
-		E2CB129C26CD4EB7007837D1 /* TopOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopOverlayView.swift; sourceTree = "<group>"; };
-		E2CB129D26CD4EB7007837D1 /* BottomOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomOverlayView.swift; sourceTree = "<group>"; };
 		E2CB12A326CD4EDF007837D1 /* ReaderVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderVM.swift; sourceTree = "<group>"; };
 		E2DA94D226D63F140083F2F7 /* CollectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEntity.swift; sourceTree = "<group>"; };
 		E2DA94D426D645CE0083F2F7 /* SettingsTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
@@ -376,6 +376,7 @@
 		E2034163270C540600990F80 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E2B96CD1274DB9B3002F66BD /* ViewModifier */,
 				E26662CC26CC538A0054868A /* Models */,
 				E2187E8F26CC586E009604A9 /* Services */,
 				E2187E9F26CC5D9E009604A9 /* Extensions */,
@@ -681,6 +682,14 @@
 			path = DynamicCollection;
 			sourceTree = "<group>";
 		};
+		E2B96CD1274DB9B3002F66BD /* ViewModifier */ = {
+			isa = PBXGroup;
+			children = (
+				E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */,
+			);
+			path = ViewModifier;
+			sourceTree = "<group>";
+		};
 		E2C24EF2270CC15200A7D6C5 /* DokushoIntentHandler */ = {
 			isa = PBXGroup;
 			children = (
@@ -724,7 +733,6 @@
 		E2CB129626CD4EB7007837D1 /* ReaderView */ = {
 			isa = PBXGroup;
 			children = (
-				E2CB129B26CD4EB7007837D1 /* Overlay */,
 				E2CB129826CD4EB7007837D1 /* Components */,
 				E2CB129726CD4EB7007837D1 /* ReaderView.swift */,
 				E2CB12A326CD4EDF007837D1 /* ReaderVM.swift */,
@@ -740,15 +748,6 @@
 				E26D7E5D27080E9A0003C6C1 /* ChapterImage.swift */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-		E2CB129B26CD4EB7007837D1 /* Overlay */ = {
-			isa = PBXGroup;
-			children = (
-				E2CB129C26CD4EB7007837D1 /* TopOverlayView.swift */,
-				E2CB129D26CD4EB7007837D1 /* BottomOverlayView.swift */,
-			);
-			path = Overlay;
 			sourceTree = "<group>";
 		};
 		E2DA94D726D645E40083F2F7 /* SettingsTabView */ = {
@@ -946,6 +945,7 @@
 				E2034166270C544B00990F80 /* ChapterEntity.swift in Sources */,
 				E203416F270C546900990F80 /* AlternateTitlesEntity.swift in Sources */,
 				E2034173270C547500990F80 /* MangaEntity+CoreDataClass.swift in Sources */,
+				E2B96CD4274DB9EE002F66BD /* GlowBorder.swift in Sources */,
 				E203416E270C546600990F80 /* AlternateTitlesEntity+CoreDataClass.swift in Sources */,
 				E2034174270C547A00990F80 /* Dokusho.xcdatamodeld in Sources */,
 				E27367E1272004AB00DBB3B1 /* ImagePipeline.swift in Sources */,
@@ -1007,12 +1007,12 @@
 				E2187EA526CC5D9E009604A9 /* RoundedCorner.swift in Sources */,
 				E2CB128D26CD14B4007837D1 /* AlternateTitlesEntity.swift in Sources */,
 				E2CB129F26CD4EB7007837D1 /* VerticalReaderView.swift in Sources */,
-				E2CB12A126CD4EB7007837D1 /* TopOverlayView.swift in Sources */,
 				E2187EA926CC5D9E009604A9 /* Logger.swift in Sources */,
 				E2CB129526CD24E9007837D1 /* ChapterEntity.swift in Sources */,
 				E2DA94EB26D6689F0083F2F7 /* CollectionPage.swift in Sources */,
 				E2DA94D326D63F140083F2F7 /* CollectionEntity.swift in Sources */,
 				E2187ED426CC625C009604A9 /* NavigationLinkLazyView.swift in Sources */,
+				E2B96CD3274DB9BD002F66BD /* GlowBorder.swift in Sources */,
 				E26662BA26CC36830054868A /* DokushoApp.swift in Sources */,
 				E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */,
 				E2187ED626CC625C009604A9 /* RefreshableImageView.swift in Sources */,
@@ -1026,7 +1026,6 @@
 				E2DA94E926D668170083F2F7 /* LibraryVM.swift in Sources */,
 				E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */,
 				E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */,
-				E2CB12A226CD4EB7007837D1 /* BottomOverlayView.swift in Sources */,
 				E2DA94E326D667FE0083F2F7 /* LibraryTabView.swift in Sources */,
 				E2DA94D526D645CE0083F2F7 /* SettingsTabView.swift in Sources */,
 				E20837DB26E8BBA800E6DCEE /* AddButton.swift in Sources */,
@@ -1100,6 +1099,7 @@
 				E2C24F27270CCC2000A7D6C5 /* RefreshableImageView.swift in Sources */,
 				E2C24F01270CC21D00A7D6C5 /* DokushoWidget.intentdefinition in Sources */,
 				E2C24F16270CC25800A7D6C5 /* Array.swift in Sources */,
+				E2B96CD5274DB9EF002F66BD /* GlowBorder.swift in Sources */,
 				E2C24F1B270CC25C00A7D6C5 /* WidgetKind.swift in Sources */,
 				E2C24F15270CC25800A7D6C5 /* URL.swift in Sources */,
 				E2C24F0F270CC24700A7D6C5 /* MangaEntity.swift in Sources */,

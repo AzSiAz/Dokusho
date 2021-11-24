@@ -63,4 +63,8 @@ class ReaderVM: ObservableObject {
     func getImagesOrderForDirection() -> [SourceChapterImage] {
         return direction == .rightToLeft ? images.reversed() : images
     }
+    
+    func toggleToolbar() {
+        withAnimation { showToolBar.toggle() }
+    }
 }
