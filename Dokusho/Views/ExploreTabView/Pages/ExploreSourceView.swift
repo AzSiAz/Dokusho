@@ -45,16 +45,16 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
-                        let isInCollection = mangas.first { $0.mangaId == manga.id } != nil
                         NavigationLink(destination: MangaDetailView(mangaId: manga.id, src: vm.src.id, showDismiss: false)) {
+                            let found = mangas.first { $0.mangaId == manga.id }
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)
                                 .contextMenu { ContextMenu(manga: manga) }
                                 .task { await vm.fetchMoreIfPossible(for: manga) }
                                 .overlay(alignment: .topTrailing) {
-                                    if isInCollection {
-                                        Image(systemName: "star")
-                                            .symbolVariant(.fill)
+                                    if found != nil {
+                                        Text(found?.collection?.name ?? "No Name")
+                                            .lineLimit(1)
                                             .padding(2)
                                             .foregroundColor(.primary)
                                             .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]) )
