@@ -24,7 +24,7 @@
         "repositoryURL": "https://github.com/kean/Nuke",
         "state": {
           "branch": "master",
-          "revision": "63f10a8d97f9e9b06606131ac85298e859dfa1fa",
+          "revision": "c059f4fb3edd10f5375a56a85bb7c527e480057f",
           "version": null
         }
       },
@@ -42,7 +42,7 @@
         "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
         "state": {
           "branch": "master",
-          "revision": "02c63b7be50bda384f22c56c64d347231754a07e",
+          "revision": "3fa09f4d79e5172b14cb50e02f1d5f115a2bbaef",
           "version": null
         }
       },
@@ -51,7 +51,7 @@
         "repositoryURL": "https://github.com/SwiftUIX/SwiftUIX.git",
         "state": {
           "branch": "master",
-          "revision": "a0276d28e713988d231f9a012830ac84f6be6b35",
+          "revision": "46a914827cae85ee8b0f967148881e0717d66e69",
           "version": null
         }
       },

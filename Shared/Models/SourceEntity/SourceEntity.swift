@@ -17,7 +17,7 @@ extension SourceEntity {
     }
     
     func getSource() throws -> Source {
-        guard let source = MangaScraperService.shared.getSource(sourceId: self.sourceId) else {
+        guard let source = MangaScraperService.shared.getSource(sourceId: self.sourceId!) else {
             throw "Source not found, it's not normal"
         }
 

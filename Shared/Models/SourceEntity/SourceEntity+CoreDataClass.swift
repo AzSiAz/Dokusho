@@ -21,7 +21,7 @@ extension SourceEntity {
     @NSManaged public var active: Bool
     @NSManaged public var favorite: Bool
     @NSManaged public var position: Int16
-    @NSManaged public var sourceId: UUID
+    @NSManaged public var sourceId: UUID?
 }
 
 extension SourceEntity : Identifiable {}
