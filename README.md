@@ -18,7 +18,7 @@ Alternative to consider:
 
 ## Features
 - MultiSource (see progress in [MangaScraper](https://github.com/AzSiAz/MangaScraper) repository)
-- Library stored in CoreData
+- Library stored in CoreData + cloudkit
 - Multi collection (only one manga per collection)
 - Basic Filter in library (read/unread/all) saved per collection
 - Very basic manga/webtoon/etc. reader and a way to change reader direction
@@ -26,9 +26,6 @@ Alternative to consider:
 
 ## Working On
 - Save reader direction for manga/webtoon/etc.
-
-## Depend on Apple
-- iCloud Sync with `NSPersistentCloudKitContainer` (broken since iOS 15.0 beta 4, [maybe for iOS 15.2 🤞](https://developer.apple.com/forums/thread/687877?answerId=694468022#694468022))
 
 ## Planned
 - Tracker (maybe, I don't use them anymore)
