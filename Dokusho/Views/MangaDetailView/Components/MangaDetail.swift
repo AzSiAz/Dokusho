@@ -59,7 +59,7 @@ struct MangaDetail: View {
             }
             .id("Chapter")
         }
-        .frame(width: UIScreen.main.bounds.width, alignment: .leading)
+        .frame(alignment: .leading)
     }
     
     @ViewBuilder

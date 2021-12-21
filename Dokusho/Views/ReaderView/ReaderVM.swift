@@ -34,8 +34,8 @@ class ReaderVM: ObservableObject {
     func fetchChapter() async {
         do {
             images = try await src.fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
-            tabIndex = images.first!
-            
+            tabIndex = images.first ?? .init(index: 0, imageUrl: "")
+
             images.forEach { ImagePipeline.inMemory.loadImage(with: $0.imageUrl, completion: { _ in }) }
         } catch {
             Logger.reader.info("Error loading chapter \(self.chapter): \(error.localizedDescription)")
@@ -62,5 +62,9 @@ class ReaderVM: ObservableObject {
     
     func getImagesOrderForDirection() -> [SourceChapterImage] {
         return direction == .rightToLeft ? images.reversed() : images
+    }
+    
+    func toggleToolbar() {
+        withAnimation { showToolBar.toggle() }
     }
 }

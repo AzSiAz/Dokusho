@@ -38,7 +38,7 @@ typealias BackupResult = Result<BackupTask, Error>
 class PersistenceController {
     static let shared = PersistenceController()
     
-    var container: NSPersistentContainer
+    var container: NSPersistentCloudKitContainer
     let group = "group.tech.azsiaz.Dokusho"
     var groupStoreURL: URL {
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group)
@@ -51,7 +51,7 @@ class PersistenceController {
     }
 
     init() {
-        container = NSPersistentContainer(name: "Dokusho")
+        container = NSPersistentCloudKitContainer(name: "Dokusho")
         
         guard let storeDescription = container.persistentStoreDescriptions.first else { fatalError("Failed to open first persistentStoreDescription") }
         
