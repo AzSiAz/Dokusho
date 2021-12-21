@@ -95,6 +95,7 @@
 		E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */; };
 		E27A5DD326FCC69600F95361 /* DeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */; };
 		E27A5DD526FCCE7700F95361 /* MangaDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD426FCCE7700F95361 /* MangaDetail.swift */; };
+		E27FF70427723E650035DB99 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = E27FF70327723E650035DB99 /* GRDB */; };
 		E2B96CD3274DB9BD002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
 		E2B96CD4274DB9EE002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
 		E2B96CD5274DB9EF002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
@@ -335,6 +336,7 @@
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
+				E27FF70427723E650035DB99 /* GRDB in Frameworks */,
 				E26D7E612708123B0003C6C1 /* ImageScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -828,6 +830,7 @@
 				E27A5DCE26FBA77700F95361 /* SwiftUIX */,
 				E26D7E602708123B0003C6C1 /* ImageScrollView */,
 				E26D7E63270B30770003C6C1 /* SFSafeSymbols */,
+				E27FF70327723E650035DB99 /* GRDB */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -892,6 +895,7 @@
 				E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 				E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */,
 				E26D7E62270B30770003C6C1 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
+				E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -1516,6 +1520,14 @@
 				kind = branch;
 			};
 		};
+		E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.17.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1553,6 +1565,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
 			productName = SwiftUIX;
+		};
+		E27FF70327723E650035DB99 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
 		};
 		E2C24EFF270CC1BC00A7D6C5 /* MangaScraper */ = {
 			isa = XCSwiftPackageProductDependency;
