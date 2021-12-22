@@ -9,12 +9,6 @@
 import Foundation
 import CoreData
 
-enum ChapterStatus: String, CaseIterable {
-    case unread = "Unread"
-    case read = "Read"
-}
-
-
 @objc(ChapterEntity)
 public class ChapterEntity: NSManagedObject {}
 

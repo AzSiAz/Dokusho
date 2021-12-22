@@ -7,22 +7,19 @@
 
 import SwiftUI
 import MangaScraper
+import GRDBQuery
 
 struct ExploreSourceView: View {
-    @FetchRequest var mangas: FetchedResults<MangaEntity>
-    
-    @FetchRequest<CollectionEntity>(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default) var collections
+    @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
+    @Query(MangaCollectionRequest()) var collections
     
     @StateObject var vm: ExploreSourceVM
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
     init(source: Source) {
-        self._vm = .init(wrappedValue: .init(for: source))
-        self._mangas = .init(
-            sortDescriptors: [],
-            predicate: MangaEntity.inCollectionForSource(sourceId: source.id), animation: .none
-        )
+        _vm = .init(wrappedValue: .init(for: source))
+        _mangas = Query(MangaInCollectionsRequest(srcId: source.id))
     }
     
     var body: some View {
@@ -53,7 +50,7 @@ struct ExploreSourceView: View {
                                 .task { await vm.fetchMoreIfPossible(for: manga) }
                                 .overlay(alignment: .topTrailing) {
                                     if found != nil {
-                                        Text(found?.collection?.name ?? "No Name")
+                                        Text(found!.collectionName)
                                             .lineLimit(1)
                                             .padding(2)
                                             .foregroundColor(.primary)
@@ -95,8 +92,8 @@ struct ExploreSourceView: View {
     @ViewBuilder
     func ContextMenu(manga: SourceSmallManga) -> some View {
         ForEach(collections) { collection in
-            AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection.objectID) }) {
-                Text("Add to \(collection.name ?? "")")
+            AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection) }) {
+                Text("Add to \(collection.name)")
             }
         }
     }

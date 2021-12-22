@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "GRDBQuery",
+        "repositoryURL": "https://github.com/groue/GRDBQuery.git",
+        "state": {
+          "branch": null,
+          "revision": "4301166cd2aee9ce37b4057c9a58f5cc3bbeae06",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "ImageScrollView",
         "repositoryURL": "https://github.com/huynguyencong/ImageScrollView.git",
         "state": {
@@ -24,7 +33,7 @@
         "repositoryURL": "https://github.com/AzSiAz/MangaScraper",
         "state": {
           "branch": "main",
-          "revision": "09a8240923d1bc038ab9f9dc116c807c811cf8e5",
+          "revision": "e64afaa1beb81e5c488382e6d30b4ab413424efc",
           "version": null
         }
       },
@@ -33,7 +42,7 @@
         "repositoryURL": "https://github.com/kean/Nuke",
         "state": {
           "branch": "master",
-          "revision": "c059f4fb3edd10f5375a56a85bb7c527e480057f",
+          "revision": "cbfba3803fe39abf4eb337a963f1d3c2129726cb",
           "version": null
         }
       },
@@ -60,7 +69,7 @@
         "repositoryURL": "https://github.com/SwiftUIX/SwiftUIX.git",
         "state": {
           "branch": "master",
-          "revision": "46a914827cae85ee8b0f967148881e0717d66e69",
+          "revision": "f94db014c708408b29933f3fba2f7cb2d5c909d4",
           "version": null
         }
       },

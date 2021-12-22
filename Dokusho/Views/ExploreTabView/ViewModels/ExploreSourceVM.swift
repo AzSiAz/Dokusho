@@ -11,7 +11,7 @@ import CoreData
 import MangaScraper
 
 class ExploreSourceVM: ObservableObject {
-    private let ctx = PersistenceController.shared.backgroundCtx()
+    private let database = AppDatabase.shared.database
     
     let src: Source
     
@@ -20,10 +20,6 @@ class ExploreSourceVM: ObservableObject {
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
-    
-    init(for source: SourceEntity) {
-        self.src = try! source.getSource()
-    }
     
     init(for source: Source) {
         self.src = source
@@ -39,9 +35,7 @@ class ExploreSourceVM: ObservableObject {
         self.error = false
         
         do {
-            let newManga = try await type == .latest
-                ? src.fetchLatestUpdates(page: nextPage)
-                : src.fetchPopularManga(page: nextPage)
+            let newManga = try await type == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchPopularManga(page: nextPage)
 
             self.mangas += newManga.mangas
             self.nextPage += 1
@@ -61,16 +55,31 @@ class ExploreSourceVM: ObservableObject {
         return "\(src.name) - \(type.rawValue)"
     }
     
-    func addToCollection(smallManga: SourceSmallManga, collection collectionId: NSManagedObjectID) async {
+    func addToCollection(smallManga: SourceSmallManga, collection: MangaCollection) async {
         guard let sourceManga = try? await src.fetchMangaDetail(id: smallManga.id) else { return }
 
-        try! await ctx.perform {
-            guard let manga = try? MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src) else { return }
-            guard let collection = self.ctx.object(with: collectionId) as? CollectionEntity else { return }
-            
-            collection.addToMangas(manga)
-            
-            try self.ctx.save()
+        do {
+            try database.write { db -> Void in
+                // TODO: Investigate why I can't use `Manga.filter`
+                guard var manga = try Manga.fetchOne(db, key: ["mangaId": sourceManga.id, "scraperId": src.id]) else {
+                    var manga = Manga(from: sourceManga, sourceId: src.id)
+                    manga.mangaCollectionId = collection.id
+                    try manga.save(db)
+                    
+                    for info in sourceManga.chapters.enumerated() {
+                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id)
+                        try chapter.save(db)
+                    }
+
+                    return
+                }
+
+                manga.mangaCollectionId = collection.id
+
+                return try manga.save(db)
+            }
+        } catch(let err) {
+            print(err)
         }
     }
 }

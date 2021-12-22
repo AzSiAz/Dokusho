@@ -18,6 +18,27 @@
 			<key>orderHint</key>
 			<integer>14</integer>
 		</dict>
+		<key>Associations (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>27</integer>
+		</dict>
+		<key>Associations (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>28</integer>
+		</dict>
+		<key>Associations (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>29</integer>
+		</dict>
 		<key>Associations (Playground).xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -39,6 +60,27 @@
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
+		<key>CustomizedDecodingOfDatabaseRows (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>33</integer>
+		</dict>
+		<key>CustomizedDecodingOfDatabaseRows (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>34</integer>
+		</dict>
+		<key>CustomizedDecodingOfDatabaseRows (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>35</integer>
+		</dict>
 		<key>CustomizedDecodingOfDatabaseRows (Playground).xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -54,12 +96,12 @@
 		<key>DokushoIntentHandler.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>DokushoWidgetExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<key>MyPlayground (Playground) 1.xcscheme</key>
 		<dict>
@@ -74,6 +116,27 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>20</integer>
+		</dict>
+		<key>MyPlayground (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>24</integer>
+		</dict>
+		<key>MyPlayground (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>25</integer>
+		</dict>
+		<key>MyPlayground (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>26</integer>
 		</dict>
 		<key>MyPlayground (Playground).xcscheme</key>
 		<dict>
@@ -101,21 +164,21 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>21</integer>
 		</dict>
 		<key>Playground (Playground) 4.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>22</integer>
 		</dict>
 		<key>Playground (Playground) 5.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>23</integer>
 		</dict>
 		<key>Playground (Playground) 6.xcscheme</key>
 		<dict>
@@ -159,6 +222,27 @@
 			<key>orderHint</key>
 			<integer>17</integer>
 		</dict>
+		<key>Tour (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>30</integer>
+		</dict>
+		<key>Tour (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>31</integer>
+		</dict>
+		<key>Tour (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>32</integer>
+		</dict>
 		<key>Tour (Playground).xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -179,6 +263,27 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>11</integer>
+		</dict>
+		<key>TransactionObserver (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>36</integer>
+		</dict>
+		<key>TransactionObserver (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>37</integer>
+		</dict>
+		<key>TransactionObserver (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>38</integer>
 		</dict>
 		<key>TransactionObserver (Playground).xcscheme</key>
 		<dict>

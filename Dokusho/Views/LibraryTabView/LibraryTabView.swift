@@ -7,11 +7,12 @@
 
 import SwiftUI
 import MangaScraper
+import GRDBQuery
 
 struct LibraryTabView: View {
-    @Environment(\.managedObjectContext) var ctx
-    
-    @FetchRequest<CollectionEntity>(sortDescriptors: [CollectionEntity.positionOrder], predicate: nil, animation: .default)
+    @Environment(\.appDatabase) var appDB
+
+    @Query(DetailedMangaCollectionRequest())
     var collections
 
     @StateObject var vm: LibraryVM = .init()
@@ -23,10 +24,10 @@ struct LibraryTabView: View {
         NavigationView {
             List {
                 Section("User Collection") {
-                    ForEach(collections) { collection in
-                        NavigationLink(destination: CollectionPage(collection: collection)) {
-                            Label("\(collection.getName())", systemSymbol: .squareGrid2x2)
-                                .badge(collection.mangas?.count ?? 0)
+                    ForEach(collections) { info in
+                        NavigationLink(destination: CollectionPage(collection: info.mangaCollection)) {
+                            Label(info.mangaCollection.name, systemSymbol: .squareGrid2x2)
+                                .badge("\(info.mangaCount)")
                                 .padding(.vertical)
                         }
                     }
@@ -64,11 +65,16 @@ struct LibraryTabView: View {
     }
     
     func saveNewCollection() {
-        let lastPosition = (collections.last?.position ?? 0) + 1
+        guard !newCollectionName.isEmpty else { return }
+        let lastPosition = (collections.last?.mangaCollection.position ?? 0) + 1
         
-        try? ctx.performAndWait {
-            let _ = CollectionEntity(ctx: ctx, name: newCollectionName, position: Int(lastPosition))
-            try ctx.save()
+        do {
+            try appDB.database.write { db in
+                let collection = MangaCollection(id: UUID(), name: newCollectionName, position: lastPosition)
+                try collection.save(db)
+            }
+        } catch(let err) {
+            print(err)
         }
         
         newCollectionName = ""
@@ -78,27 +84,30 @@ struct LibraryTabView: View {
         offsets
             .map { collections[$0] }
             .forEach { collection in
-                ctx.perform {
-                    ctx.delete(collection)
+                do {
+                    let _ = try appDB.database.write { db in
+                        try collection.mangaCollection.delete(db)
+                    }
+                } catch(let err) {
+                    print(err)
                 }
             }
     }
     
     func onMove(_ offsets: IndexSet, _ position: Int) {
-        try? ctx.performAndWait {
-            var revisedItems: [CollectionEntity] = collections.map{ $0 }
+        try? appDB.database.write { db in
+            var revisedItems: [MangaCollection] = collections.map{ $0.mangaCollection }
 
-            // change the order of the items in the array
+//            change the order of the items in the array
             revisedItems.move(fromOffsets: offsets, toOffset: position)
 
-            // update the userOrder attribute in revisedItems to
-            // persist the new order. This is done in reverse order
-            // to minimize changes to the indices.
+//            update the userOrder attribute in revisedItems to
+//            persist the new order. This is done in reverse order
+//            to minimize changes to the indices.
             for reverseIndex in stride(from: revisedItems.count - 1, through: 0, by: -1) {
-                revisedItems[reverseIndex].position = Int16(reverseIndex)
+                revisedItems[reverseIndex].position = reverseIndex
+                try revisedItems[reverseIndex].save(db)
             }
-            
-            try ctx.save()
         }
     }
 }

@@ -39,10 +39,10 @@ struct MangaInCollectionForGenre: View {
     var content: some View {
         ScrollView {
             LazyVGrid(columns: columns) {
-                ForEach(mangas) { manga in
-                    MangaCardView(manga: manga)
-                        .onTapGesture { selectedManga = manga }
-                }
+//                ForEach(mangas) { manga in
+//                    MangaCardView(manga: manga)
+//                        .onTapGesture { selectedManga = manga }
+//                }
             }
         }
         .navigationTitle("\(genre.name ?? "No name") (\(mangas.count))")

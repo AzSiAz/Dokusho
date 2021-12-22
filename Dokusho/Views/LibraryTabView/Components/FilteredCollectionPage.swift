@@ -6,29 +6,29 @@
 //
 
 import SwiftUI
+import GRDBQuery
 
 struct FilteredCollectionPage: View {
-    @FetchRequest var mangas: FetchedResults<MangaEntity>
-    
-    @ObservedObject var collection: CollectionEntity
-    @Binding var selectedManga: MangaEntity?
-    
+    @Query<DetailedMangaInCollectionsRequest> var mangas: [DetailedMangaInCollections]
+    @Binding var selectedManga: Manga?
+
+    var collection: MangaCollection
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
-    init(collection: CollectionEntity, selectedManga: Binding<MangaEntity?>, searchTerm: String) {
+    init(collection: MangaCollection, selectedManga: Binding<Manga?>, searchTerm: String) {
         self.collection = collection
-        self._selectedManga = selectedManga
-        self._mangas = .init(sortDescriptors: [MangaEntity.lastUpdate], predicate: MangaEntity.collectionPredicate(collection: collection, searchTerm: searchTerm), animation: .easeIn)
+        _selectedManga = selectedManga
+        _mangas = Query(DetailedMangaInCollectionsRequest(requestType: .forCollection(collection: collection, searchTerm: searchTerm)))
     }
     
     var body: some View {
         LazyVGrid(columns: columns) {
             ForEach(mangas) { manga in
-                MangaCardView(manga: manga)
-                    .onTapGesture { selectedManga = manga }
+                MangaCardView(manga: manga.manga, count: manga.unreadChapterCount)
+                    .onTapGesture { selectedManga = manga.manga }
             }
         }
-        .navigationTitle("\(collection.name ?? "No name") (\(mangas.count))")
+        .navigationTitle("\(collection.name) (\(mangas.count))")
         .navigationBarTitleDisplayMode(.automatic)
     }
 }

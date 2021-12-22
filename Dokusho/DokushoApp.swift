@@ -15,6 +15,7 @@ struct DokushoApp: App {
         WindowGroup {
             RootView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.appDatabase, .shared)
         }
     }
 }

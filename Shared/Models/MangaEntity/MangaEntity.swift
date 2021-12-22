@@ -9,12 +9,6 @@ import Foundation
 import CoreData
 import MangaScraper
 
-enum ReadingDirection: String, CaseIterable {
-    case rightToLeft = "Right to Left (Manga)"
-    case leftToRight = "Left to Right (Manhua)"
-    case vertical = "Vertical (Webtoon, no gaps)"
-}
-
 extension MangaEntity {
     func getSource() -> Source {
         return MangaScraperService.shared.getSource(sourceId: self.sourceId)!

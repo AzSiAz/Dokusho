@@ -24,10 +24,10 @@ struct MangaForSourcePage: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns) {
-                ForEach(mangas) { manga in
-                    MangaCardView(manga: manga)
-                        .onTapGesture { selectedManga = manga }
-                }
+//                ForEach(mangas) { manga in
+//                    MangaCardView(manga: manga)
+//                        .onTapGesture { selectedManga = manga }
+//                }
             }
             .navigationTitle("\(sourceName) (\(mangas.count))")
             .navigationBarTitleDisplayMode(.automatic)

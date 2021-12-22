@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct MangaLibraryContextMenu: View {
-    @ObservedObject var manga: MangaEntity
+    @Environment(\.appDatabase) var appDB
 
+    var manga: Manga
     var count: Int
 
     var body: some View {
@@ -27,14 +28,8 @@ struct MangaLibraryContextMenu: View {
     }
     
     func markAllChapterAs(newSatus: ChapterStatus) {
-        manga.managedObjectContext?.perform {
-            manga
-                .chapters?.filter { $0.isUnread }
-                .forEach { $0.markAs(newStatus: newSatus) }
-            
-            manga.lastUserAction = .now
-            
-            try? manga.managedObjectContext?.save()
+        try? appDB.database.write { db in
+            try MangaChapter.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
         }
     }
 }

@@ -7,52 +7,67 @@
 
 import SwiftUI
 import MangaScraper
+import GRDB
+import GRDBQuery
 
 struct ExploreTabView: View {
-    @Environment(\.managedObjectContext) var ctx
+    @Environment(\.appDatabase) var appDb
     
-    @FetchRequest<SourceEntity>(
-        sortDescriptors: [SourceEntity.positionOrder],
-        predicate: SourceEntity.onlyActiveAndNotFavorite,
-        animation: .default
-    )
-    var activeSources
-    
-    @FetchRequest<SourceEntity>(
-        sortDescriptors: [SourceEntity.positionOrder],
-        predicate: SourceEntity.onlyFavoriteAndActive,
-        animation: .default
-    )
-    var favoriteSources
-    
+    @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers
+    @Query(ScraperRequest(type: .onlyActive)) var activeScrapers
+
     @State var searchText: String = ""
     
     var body: some View {
         NavigationView {
-            List {
-                Section("Favorite") {
-                    ForEach(favoriteSources) { source in
-                        FavoriteSourceRowView(source: source)
-                    }
-                    .onMove(perform: { onMove(offsets: $0, position: $1, sources: favoriteSources) })
-                }
-                
-                Section("Active") {
-                    ForEach(activeSources) { source in
-                        ActiveSourceRowView(source: source)
-                    }
-                    .onMove(perform: { onMove(offsets: $0, position: $1, sources: activeSources) })
-                }
-
-                Section("All Sources") {
-                    ForEach(MangaScraperService.shared.list, id: \.id) { source in
-                        OtherSourceRowView(src: source)
-                    }
-                }
+            Group {
+                if searchText.isEmpty {  NotSearchingUI }
+                else { SearchingUI }
             }
             .toolbar { EditButton() }
             .searchable(text: $searchText)
             .navigationTitle("Explore Source")
+        }
+    }
+    
+    func onlyGetThirdPartyScraper() -> [Source] {
+        return MangaScraperService.shared.list
+            .filter { src in return !activeScrapers.contains(where: { scraper in src.id == scraper.id }) }
+            .filter { src in return !favoriteScrapers.contains(where: { scraper in src.id == scraper.id }) }
+    }
+    
+    @ViewBuilder
+    var SearchingUI: some View {
+        Text("Searching \(searchText)")
+    }
+    
+    @ViewBuilder
+    var NotSearchingUI: some View {
+        List {
+            Section("Favorite") {
+                ForEach(favoriteScrapers) { scraper in
+                    FavoriteSourceRowView(source: scraper.asSource()!)
+                        .id(scraper.id)
+                }
+                .onMove(perform: { onMove(offsets: $0, position: $1) })
+            }
+            .animation(.easeIn, value: favoriteScrapers)
+
+            Section("Active") {
+                ForEach(activeScrapers) { scraper in
+                    ActiveSourceRowView(source: scraper.asSource()!)
+                        .id(scraper.id)
+                }
+                .onMove(perform: { onMove(offsets: $0, position: $1) })
+            }
+            .animation(.easeIn, value: activeScrapers)
+
+            Section("All Sources") {
+                ForEach(onlyGetThirdPartyScraper(), id: \.id) { source in
+                    OtherSourceRowView(src: source)
+                        .id(source.id)
+                }
+            }
         }
     }
     
@@ -67,8 +82,8 @@ struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func ActiveSourceRowView(source: SourceEntity) -> some View {
-        SourceRow(src: try! source.getSource())
+    func ActiveSourceRowView(source: Source) -> some View {
+        SourceRow(src: source)
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: source) }) {
                     Label("Deactivate", systemSymbol: .xmark)
@@ -82,8 +97,8 @@ struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func FavoriteSourceRowView(source: SourceEntity) -> some View {
-        SourceRow(src: try! source.getSource())
+    func FavoriteSourceRowView(source: Source) -> some View {
+        SourceRow(src: source)
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: source) }) {
                     Label("Deactivate", systemSymbol: .xmark)
@@ -91,7 +106,7 @@ struct ExploreTabView: View {
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: { toogleFavorite(source: source) }) {
-                    Label("UnFavorite", systemSymbol: .handThumbsdown)
+                    Label("Unfavorite", systemSymbol: .handThumbsdown)
                 }.tint(.blue)
             }
     }
@@ -115,49 +130,67 @@ struct ExploreTabView: View {
     }
 
     func toogleActive(source: Source) {
-        withAnimation {
-            try? self.ctx.performAndWait {
-                let entity = SourceEntity.createFromSource(ctx: self.ctx, source: source)
-                entity.active = true
-
-                try self.ctx.save()
+        do {
+            try appDb.database.write { db in
+                let scraper = try Scraper.fetchOne(db, id: source.id)
+                if var scraper = scraper {
+                    scraper.isActive.toggle()
+                    try scraper.save(db)
+                } else {
+                    var scraper = Scraper(from: source)
+                    scraper.isActive = true
+                    try scraper.save(db)
+                }
             }
+        } catch(let err) {
+            print(err)
         }
     }
 
-    func toogleActive(source: SourceEntity) {
-        withAnimation {
-            try? self.ctx.performAndWait {
-                source.active.toggle()
-                try ctx.save()
+    func toogleFavorite(source: Source) {
+        do {
+            try appDb.database.write { db in
+                let scraper = try Scraper.fetchOne(db, id: source.id)
+                if var scraper = scraper {
+                    scraper.isFavorite.toggle()
+                    try scraper.save(db)
+                } else {
+                    var scraper = Scraper(from: source)
+                    scraper.isFavorite = true
+                    try scraper.save(db)
+                }
             }
-        }
-    }
-
-    func toogleFavorite(source: SourceEntity) {
-        withAnimation {
-            try? ctx.performAndWait {
-                source.favorite.toggle()
-                try ctx.save()
-            }
+        } catch(let err) {
+            print(err)
         }
     }
     
-    func onMove(offsets: IndexSet, position: Int, sources: FetchedResults<SourceEntity>) {
-        try? ctx.performAndWait {
-            var revisedItems: [SourceEntity] = sources.map{ $0 }
+    func onMove(offsets: IndexSet, position: Int) {
+        do {
+            try appDb.database.write { db in
+                // Should probably be change as before to only order between section 🤷‍♂️
+                var scrapers = try Scraper.all().orderByPosition().fetchAll(db)
 
-            // change the order of the items in the array
-            revisedItems.move(fromOffsets: offsets, toOffset: position)
+                // change the order of the items in the array
+                scrapers.move(fromOffsets: offsets, toOffset: position)
 
-            // update the userOrder attribute in revisedItems to
-            // persist the new order. This is done in reverse order
-            // to minimize changes to the indices.
-            for reverseIndex in stride(from: revisedItems.count - 1, through: 0, by: -1) {
-                revisedItems[reverseIndex].position = Int16(reverseIndex)
+                // update the userOrder attribute in revisedItems to
+                // persist the new order. This is done in reverse order
+                // to minimize changes to the indices.
+                for reverseIndex in stride(from: scrapers.count - 1, through: 0, by: -1) {
+                    scrapers[reverseIndex].position = reverseIndex
+                    try scrapers[reverseIndex].save(db)
+                }
             }
-            
-            try ctx.save()
+        } catch(let err) {
+            print(err)
         }
+    }
+}
+
+struct ExploreTabView_Previews: PreviewProvider {
+    static var previews: some View {
+        ExploreTabView()
+            .environment(\.appDatabase, .uiTest())
     }
 }
