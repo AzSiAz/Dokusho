@@ -13,6 +13,7 @@ import GRDBQuery
 struct DetailedMangaInList: Identifiable, FetchableRecord, Decodable {
     var id: UUID { manga.id }
     var manga: PartialManga
+    var scraper: Scraper
     var unreadChapterCount: Int
 }
 
@@ -51,6 +52,7 @@ struct DetailedMangaInListRequest: Queryable {
                 count(SQL(sql: chapterCount)).forKey("chapterCount")
             ])
             .joining(optional: Manga.chapters)
+            .including(required: Manga.scraper)
             .group(Manga.Columns.id)
 
         switch requestType {

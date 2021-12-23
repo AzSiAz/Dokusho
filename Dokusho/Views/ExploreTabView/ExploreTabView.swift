@@ -46,7 +46,7 @@ struct ExploreTabView: View {
         List {
             Section("Favorite") {
                 ForEach(favoriteScrapers) { scraper in
-                    FavoriteSourceRowView(source: scraper.asSource()!)
+                    FavoriteSourceRowView(scraper: scraper)
                         .id(scraper.id)
                 }
                 .onMove(perform: { onMove(offsets: $0, position: $1) })
@@ -55,7 +55,7 @@ struct ExploreTabView: View {
 
             Section("Active") {
                 ForEach(activeScrapers) { scraper in
-                    ActiveSourceRowView(source: scraper.asSource()!)
+                    ActiveSourceRowView(scraper: scraper)
                         .id(scraper.id)
                 }
                 .onMove(perform: { onMove(offsets: $0, position: $1) })
@@ -64,7 +64,7 @@ struct ExploreTabView: View {
 
             Section("All Sources") {
                 ForEach(onlyGetThirdPartyScraper(), id: \.id) { source in
-                    OtherSourceRowView(src: source)
+                    OtherSourceRowView(source: source)
                         .id(source.id)
                 }
             }
@@ -72,18 +72,20 @@ struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func OtherSourceRowView(src: Source) -> some View {
-        SourceRow(src: src)
+    func OtherSourceRowView(source: Source) -> some View {
+        SourceRow(src: source)
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: { toogleActive(source: src) }) {
+                Button(action: { toogleActive(source: source) }) {
                     Label("Activate", systemSymbol: .checkmark)
                 }.tint(.purple)
             }
     }
     
     @ViewBuilder
-    func ActiveSourceRowView(source: Source) -> some View {
-        SourceRow(src: source)
+    func ActiveSourceRowView(scraper: Scraper) -> some View {
+        let source = scraper.asSource()!
+
+        ScraperRow(scraper: scraper)
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: source) }) {
                     Label("Deactivate", systemSymbol: .xmark)
@@ -97,8 +99,10 @@ struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func FavoriteSourceRowView(source: Source) -> some View {
-        SourceRow(src: source)
+    func FavoriteSourceRowView(scraper: Scraper) -> some View {
+        let source = scraper.asSource()!
+
+        ScraperRow(scraper: scraper)
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { toogleActive(source: source) }) {
                     Label("Deactivate", systemSymbol: .xmark)
@@ -113,7 +117,24 @@ struct ExploreTabView: View {
     
     @ViewBuilder
     func SourceRow(src: Source) -> some View {
-        NavigationLink(destination: ExploreSourceView(source: src)) {
+        HStack {
+            RemoteImageCacheView(url: src.icon, contentMode: .fit)
+                .frame(width: 32, height: 32)
+                .padding(.trailing)
+            
+            VStack(alignment: .leading) {
+                Text(src.name)
+                Text(src.lang.rawValue)
+            }
+            .padding(.leading, 8)
+        }
+        .padding(.vertical)
+    }
+    
+    @ViewBuilder
+    func ScraperRow(scraper: Scraper) -> some View {
+        let src = scraper.asSource()!
+        NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
             HStack {
                 RemoteImageCacheView(url: src.icon, contentMode: .fit)
                     .frame(width: 32, height: 32)

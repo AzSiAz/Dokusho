@@ -9,17 +9,17 @@ import SwiftUI
 
 struct ChapterListRow: View {
     @ObservedObject var vm: ChapterListVM
-    @ObservedObject var chapter: ChapterEntity
-    
-    @Binding var selectedChapter: ChapterEntity?
+    @Binding var selectedChapter: MangaChapter?
+
+    var chapter: MangaChapter
     
     var body: some View {
         HStack {
             Button(action: { selectedChapter = chapter }) {
                 HStack {
                     VStack(alignment: .leading) {
-                        Text(chapter.title ?? "")
-                        Text(chapter.dateSourceUpload?.formatted() ?? "")
+                        Text(chapter.title)
+                        Text(chapter.dateSourceUpload.formatted())
                             .font(.system(size: 12))
                         if let readAt = chapter.readAt {
                             Text("Read At: \(readAt.formatted())")

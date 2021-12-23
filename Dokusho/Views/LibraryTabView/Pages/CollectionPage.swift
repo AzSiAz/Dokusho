@@ -10,7 +10,7 @@ import GRDBQuery
 
 struct CollectionPage: View {
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
-    @State var selectedManga: PartialManga?
+    @State var selectedManga: DetailedMangaInList?
     @State var showFilter = false
     
     @State var searchTerm = ""
@@ -24,8 +24,9 @@ struct CollectionPage: View {
             ScrollView {
                 FilteredCollectionPage(collection: collection, selectedManga: $selectedManga, searchTerm: searchTerm)
             }
-            .sheetSizeAware(item: $selectedManga, content: { manga in
-                MangaDetailView(mangaId: manga.mangaId, src: manga.scraperId!, isInCollectionPage: true)
+            .sheetSizeAware(item: $selectedManga, content: { data in
+                let _ = print(data)
+                MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
             })
             .searchable(text: $searchTerm)
             .toolbar { LibraryToolbarView(collection: collection, showFilter: $showFilter) }

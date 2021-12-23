@@ -24,6 +24,7 @@ enum ChapterStatus: String, CaseIterable, Codable, DatabaseValueConvertible {
 
 struct MangaChapter: Identifiable, Equatable, Codable {
     var id: String
+    var chapterId: String
     var title: String
     var dateSourceUpload: Date
     var position: Int
@@ -31,14 +32,13 @@ struct MangaChapter: Identifiable, Equatable, Codable {
     var status: ChapterStatus
     var mangaId: UUID
     
-    static func markAllAs(newStatus: ChapterStatus, date: Date = .now, db: Database, mangaId: UUID) throws {
-        return try db.execute(sql: """
-            UPDATE "mangaChapter" SET status = ?, "readAt" = ? WHERE status = ? AND "mangaId" = ?
-        """, arguments: [newStatus, date, newStatus.inverse(), mangaId])
+    var isUnread: Bool {
+        return status != .read
     }
     
-    init(from data: SourceChapter, position: Int, mangaId: UUID) {
-        self.id = data.id
+    init(from data: SourceChapter, position: Int, mangaId: UUID, scraperId: UUID) {
+        self.id = "\(scraperId)@@\(data.id)"
+        self.chapterId = data.id
         self.title = data.name
         self.dateSourceUpload = data.dateUpload
         self.position = position
@@ -54,6 +54,7 @@ extension MangaChapter: TableRecord {
 
     enum Columns {
         static let id = Column(CodingKeys.id)
+        static let chapterId = Column(CodingKeys.chapterId)
         static let title = Column(CodingKeys.title)
         static let dateSourceUpload = Column(CodingKeys.dateSourceUpload)
         static let position = Column(CodingKeys.position)
@@ -64,6 +65,7 @@ extension MangaChapter: TableRecord {
     
     static let databaseSelection: [SQLSelectable] = [
         Columns.id,
+        Columns.chapterId,
         Columns.title,
         Columns.dateSourceUpload,
         Columns.position,
@@ -83,3 +85,19 @@ extension DerivableRequest where RowDecoder == MangaChapter {
     }
 }
 
+extension MangaChapter {
+    
+    static func markAllAs(newStatus: ChapterStatus, date: Date = .now, db: Database, mangaId: UUID) throws {
+        return try db.execute(sql: """
+            UPDATE "mangaChapter" SET status = ?, "readAt" = ? WHERE status = ? AND "mangaId" = ?
+        """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), mangaId])
+    }
+    
+    static func markChapterAs(newStatus: ChapterStatus, date: Date = .now, db: Database, chapterId: String) throws {
+        return try db.execute(sql: """
+            UPDATE "mangaChapter" SET status = ?, "readAt" = ? WHERE status = ? AND "id" = ?
+        """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
+    }
+    
+    
+}

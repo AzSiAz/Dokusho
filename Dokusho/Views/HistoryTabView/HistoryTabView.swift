@@ -61,11 +61,12 @@ struct FilteredHistoryView: View {
     @ViewBuilder
     func ChapterRow(chapter: ChapterEntity) -> some View {
         NavigationLink(
-            destination: MangaDetailView(
-                mangaId: chapter.manga!.mangaId!,
-                src: chapter.manga!.sourceId,
-                showDismiss: false
-            )
+            destination: EmptyView()
+//            MangaDetailView(
+//                mangaId: chapter.manga!.mangaId!,
+//                src: chapter.manga!.sourceId,
+//                showDismiss: false
+//            )
         ) {
             HStack {
                 RemoteImageCacheView(url: chapter.manga!.cover!, contentMode: .fit)

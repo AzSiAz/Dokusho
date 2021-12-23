@@ -85,6 +85,18 @@ struct Manga: Identifiable, Equatable, Codable {
                 return .vertical
         }
     }
+    
+    mutating func updateFromSource(from data: SourceManga) {
+        self.title = data.title
+        self.cover = URL(string: data.cover)!
+        self.synopsis = data.synopsis
+        self.alternateTitles = data.alternateNames
+        self.genres = data.genres
+        self.authors = data.authors
+        self.artists = data.authors
+        self.status = data.status
+        self.type = data.type
+    }
 }
 
 extension Manga: FetchableRecord, MutablePersistableRecord {}
@@ -146,10 +158,33 @@ extension DerivableRequest where RowDecoder == Manga {
     }
     
     func filterByGenre(_ genre: String) -> Self {
-        return filter(RowDecoder.Columns.genres.like("%\(genre)%"))
+        filter(RowDecoder.Columns.genres.like("%\(genre)%"))
     }
     
     func orderByTitle() -> Self {
-        order(Manga.Columns.title.collating(.localizedCaseInsensitiveCompare).asc)
+        order(RowDecoder.Columns.title.collating(.localizedCaseInsensitiveCompare).asc)
+    }
+    
+    func forMangaId(_ mangaId: String, _ scraperId: UUID) -> Self {
+        whereSource(scraperId).filter(RowDecoder.Columns.mangaId == mangaId)
+    }
+    
+}
+
+struct MangaWithDetail: Decodable, FetchableRecord {
+    var manga: Manga
+    var mangaCollection: MangaCollection?
+    var scraper: Scraper?
+}
+
+extension Manga {
+    static func fetchMangaWithDetail(for mangaId: String, in scraperId: UUID, _ db: Database) throws -> MangaWithDetail? {
+        let request = Manga
+            .all()
+            .forMangaId(mangaId, scraperId)
+            .including(optional: Manga.scraper)
+            .including(optional: Manga.mangaCollection)
+        
+        return try MangaWithDetail.fetchOne(db, request)
     }
 }

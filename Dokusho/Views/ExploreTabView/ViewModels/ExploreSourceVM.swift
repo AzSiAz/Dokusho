@@ -12,8 +12,8 @@ import MangaScraper
 
 class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
-    
-    let src: Source
+
+    let scraper: Scraper
     
     @Published var nextPage = 1
     @Published var mangas: [SourceSmallManga] = []
@@ -21,8 +21,8 @@ class ExploreSourceVM: ObservableObject {
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
     
-    init(for source: Source) {
-        self.src = source
+    init(for scraper: Scraper) {
+        self.scraper = scraper
     }
     
     @MainActor
@@ -35,9 +35,9 @@ class ExploreSourceVM: ObservableObject {
         self.error = false
         
         do {
-            let newManga = try await type == .latest ? src.fetchLatestUpdates(page: nextPage) : src.fetchPopularManga(page: nextPage)
+            let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) :  scraper.asSource()?.fetchPopularManga(page: nextPage)
 
-            self.mangas += newManga.mangas
+            self.mangas += newManga!.mangas
             self.nextPage += 1
         } catch {
             self.error = true
@@ -52,22 +52,22 @@ class ExploreSourceVM: ObservableObject {
     }
     
     func getTitle() -> String {
-        return "\(src.name) - \(type.rawValue)"
+        return "\(scraper.name) - \(type.rawValue)"
     }
     
     func addToCollection(smallManga: SourceSmallManga, collection: MangaCollection) async {
-        guard let sourceManga = try? await src.fetchMangaDetail(id: smallManga.id) else { return }
+        guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 
         do {
             try database.write { db -> Void in
                 // TODO: Investigate why I can't use `Manga.filter`
-                guard var manga = try Manga.fetchOne(db, key: ["mangaId": sourceManga.id, "scraperId": src.id]) else {
-                    var manga = Manga(from: sourceManga, sourceId: src.id)
+                guard var manga = try Manga.fetchOne(db, key: ["mangaId": sourceManga.id, "scraperId": scraper.id]) else {
+                    var manga = Manga(from: sourceManga, sourceId: scraper.id)
                     manga.mangaCollectionId = collection.id
                     try manga.save(db)
                     
                     for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id)
+                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
                         try chapter.save(db)
                     }
 

@@ -17,9 +17,9 @@ struct ExploreSourceView: View {
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
-    init(source: Source) {
-        _vm = .init(wrappedValue: .init(for: source))
-        _mangas = Query(MangaInCollectionsRequest(srcId: source.id))
+    init(scraper: Scraper) {
+        _vm = .init(wrappedValue: .init(for: scraper))
+        _mangas = Query(MangaInCollectionsRequest(srcId: scraper.id))
     }
     
     var body: some View {
@@ -42,7 +42,7 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(mangaId: manga.id, src: vm.src.id, showDismiss: false)) {
+                        NavigationLink(destination: MangaDetailView(mangaId: manga.id, scraper: vm.scraper, showDismiss: false)) {
                             let found = mangas.first { $0.mangaId == manga.id }
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)

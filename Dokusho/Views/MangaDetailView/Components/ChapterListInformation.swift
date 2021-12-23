@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct ChapterListInformation: View {
-    @ObservedObject var manga: MangaEntity
-    
-    @Binding var selectedChapter: ChapterEntity?
     @State var ascendingOrder = true
     @State var filter: ChapterStatusFilter = .all
+    
+    var manga: Manga
     var refreshing: Bool
 
     var body: some View {
@@ -46,7 +45,7 @@ struct ChapterListInformation: View {
             Divider()
                 .padding(.horizontal, 5)
             
-            ChapterCollection(manga: manga.objectID, selectedChaper: $selectedChapter, ascendingOrder: ascendingOrder, filter: filter, refreshing: refreshing)
+            ChapterCollection(manga: manga, ascendingOrder: ascendingOrder, filter: filter, refreshing: refreshing)
                 .padding(.horizontal, 10)
         }
     }

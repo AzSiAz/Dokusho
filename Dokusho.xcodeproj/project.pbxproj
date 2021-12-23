@@ -50,6 +50,8 @@
 		E26E1F182773ACE00092FA99 /* DetailedMangaInList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F172773ACE00092FA99 /* DetailedMangaInList.swift */; };
 		E26E1F1B2773F6F30092FA99 /* ScraperWithMangaInCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F1A2773F6F30092FA99 /* ScraperWithMangaInCollection.swift */; };
 		E26E1F1D277400E70092FA99 /* DistinctMangaGenreRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F1C277400E70092FA99 /* DistinctMangaGenreRequest.swift */; };
+		E26E1F1F2774B29A0092FA99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F1E2774B29A0092FA99 /* String.swift */; };
+		E26E1F232774E2570092FA99 /* MangaChaptersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F222774E2570092FA99 /* MangaChaptersRequest.swift */; };
 		E27367E0272004AB00DBB3B1 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27367DF272004AB00DBB3B1 /* ImagePipeline.swift */; };
 		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
 		E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */; };
@@ -161,6 +163,8 @@
 		E26E1F172773ACE00092FA99 /* DetailedMangaInList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedMangaInList.swift; sourceTree = "<group>"; };
 		E26E1F1A2773F6F30092FA99 /* ScraperWithMangaInCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperWithMangaInCollection.swift; sourceTree = "<group>"; };
 		E26E1F1C277400E70092FA99 /* DistinctMangaGenreRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistinctMangaGenreRequest.swift; sourceTree = "<group>"; };
+		E26E1F1E2774B29A0092FA99 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		E26E1F222774E2570092FA99 /* MangaChaptersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaChaptersRequest.swift; sourceTree = "<group>"; };
 		E27367DF272004AB00DBB3B1 /* ImagePipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePipeline.swift; sourceTree = "<group>"; };
 		E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveStack.swift; sourceTree = "<group>"; };
 		E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceOrientation.swift; sourceTree = "<group>"; };
@@ -273,6 +277,7 @@
 				E26E1F172773ACE00092FA99 /* DetailedMangaInList.swift */,
 				E26E1F1A2773F6F30092FA99 /* ScraperWithMangaInCollection.swift */,
 				E26E1F1C277400E70092FA99 /* DistinctMangaGenreRequest.swift */,
+				E26E1F222774E2570092FA99 /* MangaChaptersRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -322,6 +327,7 @@
 				E2187EA426CC5D9E009604A9 /* UIScreen.swift */,
 				E2CB129026CD1C8A007837D1 /* Optional.swift */,
 				E2DA94DA26D64DF00083F2F7 /* URL.swift */,
+				E26E1F1E2774B29A0092FA99 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -777,6 +783,7 @@
 				E2DA94E926D668170083F2F7 /* LibraryVM.swift in Sources */,
 				E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */,
 				E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */,
+				E26E1F232774E2570092FA99 /* MangaChaptersRequest.swift in Sources */,
 				E2DA94E326D667FE0083F2F7 /* LibraryTabView.swift in Sources */,
 				E2DA94D526D645CE0083F2F7 /* SettingsTabView.swift in Sources */,
 				E20837DB26E8BBA800E6DCEE /* AddButton.swift in Sources */,
@@ -797,6 +804,7 @@
 				E2187EA726CC5D9E009604A9 /* View.swift in Sources */,
 				E2CB129E26CD4EB7007837D1 /* ReaderView.swift in Sources */,
 				E26D7E71270B46810003C6C1 /* ByGenreListPage.swift in Sources */,
+				E26E1F1F2774B29A0092FA99 /* String.swift in Sources */,
 				E2F2D6432773859A008AC108 /* ChapterEntity.swift in Sources */,
 				E2CB128926CD0559007837D1 /* ChapterListInformation.swift in Sources */,
 				E26E1F182773ACE00092FA99 /* DetailedMangaInList.swift in Sources */,

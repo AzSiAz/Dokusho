@@ -6,32 +6,19 @@
 //
 
 import SwiftUI
-import CoreData
+import GRDBQuery
 import SFSafeSymbols
 
 struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var sizeClass
-    
-    @FetchRequest<CollectionEntity>(sortDescriptors: [], predicate: nil, animation: nil) var collections
 
-    @StateObject var orientation: DeviceOrientation = DeviceOrientation()
-    @ObservedObject var manga: MangaEntity
-    @Binding var selectedChapter: ChapterEntity?
-
-    @State var addToCollection = false
-    @State var showMoreDesc = false
-    @State var selectedGenre: GenreEntity?
+    @Query(MangaCollectionRequest()) var collections
     
-    let isInCollectionPage: Bool
-    let refreshing: Bool
-    var forceCompact: Bool
-    var update: () async -> Void
-    var resetCache: () async -> Void
-    var insertMangaInCollection: @MainActor (_ collectionId: NSManagedObjectID) -> Void
-    var removeMangaFromCollection: @MainActor () -> Void
+    @ObservedObject var vm: MangaDetailVM
+    @StateObject var orientation: DeviceOrientation = DeviceOrientation()    
     
     var body: some View {
-        if forceCompact || (sizeClass == .compact || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait)) {
+        if !vm.showDismiss || (sizeClass == .compact || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait)) {
             CompactBody()
         } else {
             LargeBody()
@@ -40,43 +27,47 @@ struct MangaDetail: View {
     
     @ViewBuilder
     func LargeBody() -> some View {
-        HStack(alignment: .top, spacing: 5) {
-            ScrollView {
-                VStack {
-                    HeaderRow()
-                    ActionRow()
-                    SynopsisRow(isLarge: true)
+        if let data = vm.data {
+            HStack(alignment: .top, spacing: 5) {
+                ScrollView {
+                    VStack {
+                        HeaderRow(data)
+                        ActionRow(data)
+                        SynopsisRow(data, isLarge: true)
+                    }
+                    .frame(maxWidth: 500, alignment: .leading)
+                    .id("Detail")
                 }
-                .frame(maxWidth: 500, alignment: .leading)
-                .id("Detail")
+                
+                Divider()
+                
+                ScrollView {
+                    ChapterListInformation(manga: data.manga, refreshing: vm.refreshing)
+                        .padding(.bottom)
+                }
+                .id("Chapter")
             }
-            
-            Divider()
-            
-            ScrollView {
-                ChapterListInformation(manga: manga, selectedChapter: $selectedChapter, refreshing: refreshing)
-                    .padding(.bottom)
-            }
-            .id("Chapter")
+            .frame(alignment: .leading)
         }
-        .frame(alignment: .leading)
     }
     
     @ViewBuilder
     func CompactBody() -> some View {
-        ScrollView {
-            HeaderRow()
-            ActionRow()
-            SynopsisRow(isLarge: false)
-            ChapterListInformation(manga: manga, selectedChapter: $selectedChapter, refreshing: refreshing)
-                .padding(.bottom)
+        if let data = vm.data {
+            ScrollView {
+                HeaderRow(data)
+                ActionRow(data)
+                SynopsisRow(data, isLarge: false)
+                ChapterListInformation(manga: data.manga, refreshing: vm.refreshing)
+                    .padding(.bottom)
+            }
         }
     }
     
     @ViewBuilder
-    func HeaderRow() -> some View {
+    func HeaderRow(_ data: MangaWithDetail) -> some View {
         HStack(alignment: .top) {
-            RemoteImageCacheView(url: manga.cover, contentMode: .fit)
+            RemoteImageCacheView(url: data.manga.cover, contentMode: .fit)
                 .frame(height: 180)
                 .cornerRadius(10)
                 .clipped()
@@ -84,7 +75,7 @@ struct MangaDetail: View {
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading) {
-                    Text(manga.title ?? "")
+                    Text(data.manga.title)
                         .lineLimit(2)
                         .font(.subheadline.bold())
                 }
@@ -95,18 +86,19 @@ struct MangaDetail: View {
                 
                 VStack(alignment: .center) {
                     VStack {
-                        ForEach(manga.authorsAndArtists?.sorted(using: SortDescriptor(\AuthorAndArtistEntity.name)) ?? [], id: \.self) { author in
-                            Text("\(author.name ?? "")")
+                        ForEach(data.manga.authors) { author in
+                            Text(author)
                                 .font(.caption.italic())
                         }
                     }
                     .padding(.bottom, 5)
                     
-                    Text(manga.statusRaw ?? "")
+                    Text(data.manga.status.rawValue)
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     
-                    Text(manga.getSource().name)
+                    // TODO: Change to source name
+                    Text(data.scraper?.name ?? "No Name")
                         .font(.callout.bold())
                 }
             }
@@ -114,50 +106,51 @@ struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func ActionRow() -> some View {
+    func ActionRow(_ data: MangaWithDetail) -> some View {
         ControlGroup {
             Button(action: {
                 withAnimation {
-                    addToCollection.toggle()
+                    vm.addToCollection.toggle()
                 }
             }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
-                        .symbolVariant(manga.collection != nil ? .fill : .none)
-                    Text(manga.collection?.name ?? "Favoris")
+                        .symbolVariant(data.mangaCollection != nil ? .fill : .none)
+                    // TODO: Change this to real collection name
+                    Text(data.mangaCollection?.name ?? "Favoris")
                 }
             }
             .buttonStyle(.plain)
-            .actionSheet(isPresented: $addToCollection) {
+            .actionSheet(isPresented: $vm.addToCollection) {
                 var actions: [ActionSheet.Button] = []
-                
+
                 collections.forEach { col in
                     actions.append(.default(
-                        Text(col.name!),
+                        Text(col.name),
                         action: {
-                            insertMangaInCollection(col.objectID)
+                            vm.insertMangaInCollection(col)
                         }
                     ))
                 }
 
-                if manga.collection != nil {
+                if let collectionName = vm.data?.mangaCollection?.name {
                     actions.append(.destructive(
-                        Text("Remove from \(manga.collection?.name ?? "")"),
+                        Text("Remove from \(collectionName)"),
                         action: {
-                            removeMangaFromCollection()
+                            vm.removeMangaFromCollection()
                         }
                     ))
                 }
-                
+
                 actions.append(.cancel())
-                
+
                 return ActionSheet(title: Text("Choose collection"), buttons: actions)
             }
 
             Divider()
                 .padding(.horizontal)
             
-            AsyncButton(action: { await update() }) {
+            AsyncButton(action: { await vm.update() }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "arrow.clockwise")
                     Text("Refresh")
@@ -167,7 +160,7 @@ struct MangaDetail: View {
             Divider()
                 .padding(.horizontal)
             
-            AsyncButton(action: { await resetCache() }) {
+            AsyncButton(action: { await vm.resetCache() }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "xmark.bin.circle")
                     Text("Reset cache")
@@ -181,20 +174,20 @@ struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func SynopsisRow(isLarge: Bool) -> some View {
+    func SynopsisRow(_ data: MangaWithDetail , isLarge: Bool) -> some View {
         let availableWidth = isLarge ? 490 : UIScreen.main.bounds.width
         
         VStack {
             VStack(spacing: 5) {
-                Text(manga.synopsis ?? "...")
-                    .lineLimit(showMoreDesc ? .max : 4)
+                Text(data.manga.synopsis)
+                    .lineLimit(vm.showMoreDesc ? .max : 4)
                 
                 HStack {
                     Spacer()
                     Button(action: { withAnimation {
-                        showMoreDesc.toggle()
+                        vm.showMoreDesc.toggle()
                     } }) {
-                        Text("Show \(!showMoreDesc ? "more" : "less")")
+                        Text("Show \(!vm.showMoreDesc ? "more" : "less")")
                     }
                 }
             }
@@ -206,19 +199,13 @@ struct MangaDetail: View {
             }
             .padding(.horizontal)
             
-            FlexibleView(data: manga.genres.sorted(by: \.name!), availableWidth: availableWidth, spacing: 5, alignment: .center) { genre in
-                Button(genre.name ?? "Unknown", action: { selectedGenre = genre })
+            FlexibleView(data: data.manga.genres, availableWidth: availableWidth, spacing: 5, alignment: .center) { genre in
+                Button(genre, action: { vm.selectedGenre = genre })
                     .buttonStyle(.bordered)
             }
-//            .sheetSizeAware(item: $selectedGenre) { genre in
-//                if isInCollectionPage {
-//                    MangaInCollectionForGenre(genre: genre)
-//                } else {
-//                    ScrollView {
-//                        Text(selectedGenre?.name ?? "Genre")
-//                    }
-//                }
-//            }
+            .sheetSizeAware(item: $vm.selectedGenre) { genre in
+                MangaInCollectionForGenre(genre: genre)
+            }
         }
     }
 }

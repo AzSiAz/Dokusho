@@ -11,7 +11,7 @@ import GRDBQuery
 struct MangaInCollectionForGenre: View {
     @Environment(\.dismiss) var dismiss
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
-    @State var selectedManga: PartialManga?
+    @State var selectedManga: DetailedMangaInList?
     
     var genre: String
     var showDismiss: Bool
@@ -37,9 +37,9 @@ struct MangaInCollectionForGenre: View {
     var content: some View {
         ScrollView {
             LazyVGrid(columns: columns) {
-                ForEach(list) { manga in
-                    MangaCardView(manga: manga.manga, count: manga.unreadChapterCount)
-                        .onTapGesture { selectedManga = manga.manga }
+                ForEach(list) { data in
+                    MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                        .onTapGesture { selectedManga = data }
                 }
             }
         }
@@ -54,8 +54,8 @@ struct MangaInCollectionForGenre: View {
                 }
             }
         }
-//        .sheetSizeAware(item: $selectedManga, content: { manga in
-//            MangaDetailView(mangaId: manga.mangaId, src: manga.scraperId, isInCollectionPage: true)
-//        })
+        .sheetSizeAware(item: $selectedManga, content: { data in
+            MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
+        })
     }
 }

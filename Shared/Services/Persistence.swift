@@ -188,6 +188,7 @@ struct AppDatabase {
 
             try db.create(table: "mangaChapter") { t in
                 t.column("id", .text).notNull().primaryKey()
+                t.column("chapterId", .text).notNull()
                 t.column("title", .text).notNull().defaults(to: "No Title")
                 t.column("dateSourceUpload", .datetime).notNull().defaults(sql: "CURRENT_TIMESTAMP")
                 t.column("position", .integer).notNull()

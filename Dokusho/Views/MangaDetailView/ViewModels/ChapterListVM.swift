@@ -10,49 +10,51 @@ import CoreData
 import SwiftUI
 
 class ChapterListVM: ObservableObject {
-    private var ctx = PersistenceController.shared.container.viewContext
-    
-    var manga: MangaEntity
+    private let database = AppDatabase.shared.database
+
+    var manga: Manga
     
     @Published var error: Error?
+    @Published var refreshing: Bool
+    @Published var selectedChapter: MangaChapter?
 
-    init(mangaOId: NSManagedObjectID) {
-        self.manga = ctx.object(with: mangaOId) as! MangaEntity
+    init(manga: Manga, refreshing: Bool) {
+        self.manga = manga
+        self.refreshing = refreshing
     }
 
-    func changeChapterStatus(for chapter: ChapterEntity, status: ChapterStatus) {
-        try? ctx.performAndWait {
-            chapter.markAs(newStatus: status)
-            manga.lastUserAction = .now
-
-            try ctx.save()
+    func changeChapterStatus(for chapter: MangaChapter, status: ChapterStatus) {
+        do {
+            try database.write { db in
+                try MangaChapter.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
+            }
+        } catch(let err) {
+            print(err)
         }
     }
 
-    func changePreviousChapterStatus(for chapter: ChapterEntity, status: ChapterStatus, in: FetchedResults<ChapterEntity>) {
-        try? ctx.performAndWait {
-            let chapters = ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID)
-            
-            chapters
-                .filter { status == .unread ? !$0.isUnread : $0.isUnread }
-                .filter { chapter.position < $0.position }
-                .forEach { $0.markAs(newStatus: status) }
-            
-            manga.lastUserAction = .now
-
-            try ctx.save()
+    func changePreviousChapterStatus(for chapter: MangaChapter, status: ChapterStatus, in chapters: [MangaChapter]) {
+        do {
+            try database.write { db in
+                try chapters
+                    .filter { status == .unread ? !$0.isUnread : $0.isUnread }
+                    .filter { chapter.position < $0.position }
+                    .forEach { try MangaChapter.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
+            }
+        } catch(let err) {
+            print(err)
         }
     }
 
-    func hasPreviousUnreadChapter(for chapter: ChapterEntity, chapters: FetchedResults<ChapterEntity>) -> Bool {
-        return ChapterEntity.chaptersForManga(ctx: ctx, manga: manga.objectID)
+    func hasPreviousUnreadChapter(for chapter: MangaChapter, chapters: [MangaChapter]) -> Bool {
+        return chapters
             .filter { chapter.position < $0.position }
             .contains { $0.isUnread }
     }
 
-    func nextUnreadChapter(chapters: FetchedResults<ChapterEntity>) -> ChapterEntity? {       
+    func nextUnreadChapter(chapters: [MangaChapter]) -> MangaChapter? {
         return chapters
-            .sorted(using: SortDescriptor(\ChapterEntity.position, order: .reverse))
+            .sorted { $0.position > $1.position }
             .first { $0.isUnread }
     }
 }
