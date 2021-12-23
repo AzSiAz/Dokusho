@@ -10,7 +10,7 @@ import GRDB
 
 struct MangaCollectionFilter: Codable, Equatable, DatabaseValueConvertible {
     enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case hasUnreadChapters, all
+        case onlyUnReadChapter, all
     }
     
     var field: Field = .all
@@ -18,7 +18,7 @@ struct MangaCollectionFilter: Codable, Equatable, DatabaseValueConvertible {
 
 struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
     enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case unreadChapters, lastUpdate, title
+        case unreadChapters, lastUpdate, title, chapterCount
     }
 
     enum Direction: String, Codable, CaseIterable, DatabaseValueConvertible {

@@ -41,7 +41,7 @@ extension Scraper: FetchableRecord, PersistableRecord {}
 extension Scraper: TableRecord {
     static let mangas = hasMany(Manga.self)
     
-    enum Columns {
+    enum Columns: CaseIterable {
         static let id = Column(CodingKeys.id)
         static let name = Column(CodingKeys.name)
         static let position = Column(CodingKeys.position)

@@ -6,22 +6,21 @@
 //
 
 import SwiftUI
+import GRDBQuery
 
 struct MangaInCollectionForGenre: View {
     @Environment(\.dismiss) var dismiss
-    @FetchRequest var mangas: FetchedResults<MangaEntity>
-    @ObservedObject var genre: GenreEntity
-    @State var selectedManga: MangaEntity?
+    @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
+    @State var selectedManga: PartialManga?
     
+    var genre: String
     var showDismiss: Bool
-    
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
-    init(genre: GenreEntity, showDismiss: Bool = true) {
+    init(genre: String, showDismiss: Bool = true) {
         self.showDismiss = showDismiss
         self.genre = genre
-
-        self._mangas = .init(sortDescriptors: [MangaEntity.nameOrder], predicate: MangaEntity.forGenres(genre: genre), animation: .easeIn)
+        _list = Query(DetailedMangaInListRequest(requestType: .forGenre(genre: genre)))
     }
     
     var body: some View {
@@ -33,19 +32,18 @@ struct MangaInCollectionForGenre: View {
             content
         }
     }
-    
-    
+
     @ViewBuilder
     var content: some View {
         ScrollView {
             LazyVGrid(columns: columns) {
-//                ForEach(mangas) { manga in
-//                    MangaCardView(manga: manga)
-//                        .onTapGesture { selectedManga = manga }
-//                }
+                ForEach(list) { manga in
+                    MangaCardView(manga: manga.manga, count: manga.unreadChapterCount)
+                        .onTapGesture { selectedManga = manga.manga }
+                }
             }
         }
-        .navigationTitle("\(genre.name ?? "No name") (\(mangas.count))")
+        .navigationTitle("\(genre) (\(list.count))")
         .navigationBarTitleDisplayMode(.automatic)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -56,8 +54,8 @@ struct MangaInCollectionForGenre: View {
                 }
             }
         }
-        .sheetSizeAware(item: $selectedManga, content: { manga in
-            MangaDetailView(mangaId: manga.mangaId!, src: manga.sourceId, isInCollectionPage: true)
-        })
+//        .sheetSizeAware(item: $selectedManga, content: { manga in
+//            MangaDetailView(mangaId: manga.mangaId, src: manga.scraperId, isInCollectionPage: true)
+//        })
     }
 }

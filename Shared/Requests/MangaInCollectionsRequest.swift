@@ -31,6 +31,7 @@ struct MangaInCollectionsRequest: Queryable {
         return try Manga
             .select([Manga.Columns.mangaId])
             .annotated(withRequired: Manga.mangaCollection.select(MangaCollection.Columns.name.forKey("collectionName")))
+            .whereSource(srcId)
             .asRequest(of: MangaInCollection.self)
             .fetchAll(db)
     }

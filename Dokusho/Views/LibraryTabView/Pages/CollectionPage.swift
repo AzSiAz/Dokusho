@@ -9,10 +9,8 @@ import SwiftUI
 import GRDBQuery
 
 struct CollectionPage: View {
-    
-
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
-    @State var selectedManga: Manga?
+    @State var selectedManga: PartialManga?
     @State var showFilter = false
     
     @State var searchTerm = ""

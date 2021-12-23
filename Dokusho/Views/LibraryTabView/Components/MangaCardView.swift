@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MangaCardView: View {
-    var manga: Manga
+    var manga: PartialManga
     var count: Int
     
     var body: some View {

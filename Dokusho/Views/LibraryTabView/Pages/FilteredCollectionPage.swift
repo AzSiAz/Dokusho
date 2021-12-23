@@ -9,16 +9,16 @@ import SwiftUI
 import GRDBQuery
 
 struct FilteredCollectionPage: View {
-    @Query<DetailedMangaInCollectionsRequest> var mangas: [DetailedMangaInCollections]
-    @Binding var selectedManga: Manga?
+    @Query<DetailedMangaInListRequest> var mangas: [DetailedMangaInList]
+    @Binding var selectedManga: PartialManga?
 
     var collection: MangaCollection
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
-    init(collection: MangaCollection, selectedManga: Binding<Manga?>, searchTerm: String) {
+    init(collection: MangaCollection, selectedManga: Binding<PartialManga?>, searchTerm: String) {
         self.collection = collection
         _selectedManga = selectedManga
-        _mangas = Query(DetailedMangaInCollectionsRequest(requestType: .forCollection(collection: collection, searchTerm: searchTerm)))
+        _mangas = Query(DetailedMangaInListRequest(requestType: .forCollection(collection: collection, searchTerm: searchTerm)))
     }
     
     var body: some View {

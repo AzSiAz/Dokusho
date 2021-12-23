@@ -18,6 +18,14 @@ enum ReadingDirection: String, CaseIterable {
     case vertical = "Vertical (Webtoon, no gaps)"
 }
 
+struct PartialManga: Decodable, Identifiable {
+    var id: UUID
+    var mangaId: String
+    var title: String
+    var cover: URL
+    var scraperId: UUID?
+}
+
 struct Manga: Identifiable, Equatable, Codable {
     var id: UUID
     var mangaId: String
@@ -135,5 +143,13 @@ extension DerivableRequest where RowDecoder == Manga {
     func filterByName(_ searchTerm: String) -> Self {
         let search = "%\(searchTerm)%"
         return filter(RowDecoder.Columns.title.like(search)).filter(RowDecoder.Columns.alternateTitles.like(search))
+    }
+    
+    func filterByGenre(_ genre: String) -> Self {
+        return filter(RowDecoder.Columns.genres.like("%\(genre)%"))
+    }
+    
+    func orderByTitle() -> Self {
+        order(Manga.Columns.title.collating(.localizedCaseInsensitiveCompare).asc)
     }
 }

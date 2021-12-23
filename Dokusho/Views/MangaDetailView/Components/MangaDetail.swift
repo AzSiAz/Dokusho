@@ -210,15 +210,15 @@ struct MangaDetail: View {
                 Button(genre.name ?? "Unknown", action: { selectedGenre = genre })
                     .buttonStyle(.bordered)
             }
-            .sheetSizeAware(item: $selectedGenre) { genre in
-                if isInCollectionPage {
-                    MangaInCollectionForGenre(genre: genre)
-                } else {
-                    ScrollView {
-                        Text(selectedGenre?.name ?? "Genre")
-                    }
-                }
-            }
+//            .sheetSizeAware(item: $selectedGenre) { genre in
+//                if isInCollectionPage {
+//                    MangaInCollectionForGenre(genre: genre)
+//                } else {
+//                    ScrollView {
+//                        Text(selectedGenre?.name ?? "Genre")
+//                    }
+//                }
+//            }
         }
     }
 }

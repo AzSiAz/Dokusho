@@ -10,7 +10,7 @@ import SwiftUI
 struct MangaLibraryContextMenu: View {
     @Environment(\.appDatabase) var appDB
 
-    var manga: Manga
+    var manga: PartialManga
     var count: Int
 
     var body: some View {
