@@ -61,7 +61,7 @@ struct DetailedMangaInListRequest: Queryable {
             
             if !searchTerm.isEmpty { request = request.filterByName(searchTerm) }
             
-            switch collection.filter.field {
+            switch collection.filter {
             case .all: break
             case .onlyUnReadChapter: request = request.having(sql: "unreadChapterCount > 0")
             }
@@ -73,10 +73,9 @@ struct DetailedMangaInListRequest: Queryable {
             case .chapterCount: request = request.order(sql: "chapterCount \(collection.order.direction)")
             }
         case .forScraper(let scraper): request = request.orderByTitle().whereSource(scraper.id)
-        case .forGenre(let genre): request = request.orderByTitle().filterByGenre(genre)
+        case .forGenre(let genre): request = request.orderByTitle().filterByGenre(genre).isInCollection()
         }
         
-        return try DetailedMangaInList
-            .fetchAll(db, request)
+        return try DetailedMangaInList.fetchAll(db, request)
     }
 }

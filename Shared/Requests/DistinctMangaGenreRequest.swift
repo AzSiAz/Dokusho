@@ -31,6 +31,7 @@ struct DistinctMangaGenreRequest: Queryable {
             SELECT DISTINCT(t2.value) as genre, COUNT(DISTINCT(t1.rowid)) as mangaCount
             FROM manga AS t1
             JOIN json_each((SELECT genres FROM manga WHERE id = t1.id)) AS t2
+            WHERE t1."mangaCollectionId" IS NOT NULL
             GROUP BY t2.value;
         """)
     }

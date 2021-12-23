@@ -4,120 +4,11 @@
 //
 //  Created by Stephan Deumier on 17/08/2021.
 //
-import CoreData
 import SwiftUI
 import GRDB
 import GRDBQuery
 import OSLog
 import MangaScraper
-
-
-class PersistenceController {
-    static let shared = PersistenceController()
-
-    var container: NSPersistentContainer
-    
-    var groupStoreURL: URL {
-        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.tech.azsiaz.Dokusho")
-
-        if !FileManager.default.fileExists(atPath: url!.path) {
-            try? FileManager.default.createDirectory(at: url!, withIntermediateDirectories: true, attributes: nil)
-        }
-
-        return url!.appendingPathComponent("Dokusho.sqlite")
-    }
-
-    init() {
-        container = NSPersistentContainer(name: "Dokusho")
-
-        guard let storeDescription = container.persistentStoreDescriptions.first else { fatalError("Failed to open first persistentStoreDescription") }
-
-        storeDescription.url = groupStoreURL
-
-        storeDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-        storeDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-
-        container.loadPersistentStores { (storeDescription, error) in
-            if let error = error as NSError? {
-                Logger.persistence.error("Unresolved error \(error) with \(error.userInfo)")
-                fatalError()
-            }
-
-            self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            self.container.viewContext.automaticallyMergesChangesFromParent = true
-        }
-    }
-
-    func backgroundCtx() -> NSManagedObjectContext {
-        let ctx = container.newBackgroundContext()
-
-        ctx.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-        ctx.automaticallyMergesChangesFromParent = true
-
-        return ctx
-    }
-
-    func createBackup() -> [CollectionBackup] {
-        let ctx = self.backgroundCtx()
-        var backup = [CollectionBackup]()
-
-        ctx.performAndWait {
-            let collections = CollectionEntity.fetchMany(ctx: ctx)
-
-            backup = collections.map { collection -> CollectionBackup in
-                let mangaBackup: [MangaBackup] = collection.mangas!.map { manga in
-                    let chapterBackup: [ChapterBackup] = manga.chapters!.filter { !$0.isUnread }.map { chapter in
-                        return ChapterBackup(id: chapter.chapterId!, readAt: chapter.readAt ?? chapter.dateSourceUpload ?? .now)
-                    }
-                    return MangaBackup(id: manga.mangaId!, sourceId: manga.sourceId, readChapter: chapterBackup)
-                }
-
-                return CollectionBackup(id: collection.uuid!, name: collection.name!, position: Int(collection.position), mangas: mangaBackup)
-            }
-        }
-
-        return backup
-    }
-
-    func importBackup(backup: [CollectionBackup]) async {
-        let ctx = self.backgroundCtx()
-
-        await withTaskGroup(of: BackupResult.self) { group in
-            for collectionBackup in backup {
-                let collection = CollectionEntity.fromBackup(info: collectionBackup, ctx: ctx)
-                try? ctx.save()
-
-                for mangaBackup in collectionBackup.mangas {
-                    group.addTask(priority: .background) {
-                        return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
-                    }
-                }
-            }
-
-            for await taskResult in group {
-                switch(taskResult) {
-                    case .failure(let error):
-                        Logger.backup.error("\(error.localizedDescription)")
-                    case .success(let task):
-                        Logger.backup.info("Restoring \(task.mangaBackup.id)")
-
-                        guard let source = MangaScraperService.shared.getSource(sourceId: task.mangaBackup.sourceId) else { continue }
-
-                        guard let sourceInfo = try? await source.fetchMangaDetail(id: task.mangaBackup.id) else { continue }
-
-                        guard let manga = try? MangaEntity.updateFromSource(ctx: ctx, data: sourceInfo, source: source) else { continue }
-
-                        manga.importChapterBackup(chaptersBackup: task.mangaBackup.readChapter)
-                        task.collection.addToMangas(manga)
-
-                        try? ctx.save()
-                }
-            }
-        }
-
-        try? ctx.save()
-    }
-}
 
 /// AppDatabase lets the application access the database.
 ///
@@ -160,7 +51,7 @@ struct AppDatabase {
                 t.column("filter", .text).notNull()
                 t.column("order", .text).notNull()
             }
-                        
+
             try db.create(table: "scraper") { t in
                 t.column("id", .text).primaryKey(onConflict: .ignore, autoincrement: false)
                 t.column("name", .text).notNull().indexed()

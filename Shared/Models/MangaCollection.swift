@@ -8,12 +8,8 @@
 import Foundation
 import GRDB
 
-struct MangaCollectionFilter: Codable, Equatable, DatabaseValueConvertible {
-    enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case onlyUnReadChapter, all
-    }
-    
-    var field: Field = .all
+enum MangaCollectionFilter: String, Codable, Equatable, DatabaseValueConvertible {
+    case onlyUnReadChapter = "Only Unread Chapter", all = "All"
 }
 
 struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
@@ -33,7 +29,7 @@ struct MangaCollection: Codable, Identifiable, Equatable {
     var id: UUID
     var name: String
     var position: Int
-    var filter: MangaCollectionFilter = .init()
+    var filter: MangaCollectionFilter = .all
     var order: MangaCollectionOrder = .init()
 }
 

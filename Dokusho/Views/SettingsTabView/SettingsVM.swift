@@ -41,10 +41,10 @@ class SettingsVM: ObservableObject {
     @Published var fileName: String?
     @Published var showImportfile = false
     
-    func createBackup(ctx: NSManagedObjectContext) {
+    func createBackup() {
         actionInProgress.toggle()
         
-        let backup = PersistenceController.shared.createBackup()
+        let backup = BackupManager.shared.createBackup()
 
         fileName = "dokusho-backup-\(Date.now.ISO8601Format()).json"
         file = Backup(data: backup)
@@ -53,7 +53,7 @@ class SettingsVM: ObservableObject {
         actionInProgress.toggle()
     }
     
-    func importBackup(url: URL, ctx: NSManagedObjectContext) async {
+    func importBackup(url: URL) async {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
             actionInProgress.toggle()
@@ -61,7 +61,7 @@ class SettingsVM: ObservableObject {
             let backup = try JSONDecoder().decode([CollectionBackup].self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
 
-            await PersistenceController.shared.importBackup(backup: backup)
+            await BackupManager.shared.importBackup(backup: backup)
 
             self.actionInProgress.toggle()
         } catch {
@@ -70,7 +70,7 @@ class SettingsVM: ObservableObject {
         }
     }
     
-    func cleanOrphanData(ctx: NSManagedObjectContext) {}
+    func cleanOrphanData() {}
     
     func clearImageCache() {
         Nuke.DataLoader.sharedUrlCache.removeAllCachedResponses()

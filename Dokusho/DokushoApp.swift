@@ -9,13 +9,9 @@ import SwiftUI
 
 @main
 struct DokushoApp: App {
-    let persistenceController = PersistenceController.shared
-
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environment(\.appDatabase, .shared)
+            RootView().environment(\.appDatabase, .shared)
         }
     }
 }
