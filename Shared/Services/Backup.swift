@@ -7,6 +7,30 @@
 
 import Foundation
 import OSLog
+import SwiftUI
+import UniformTypeIdentifiers
+
+struct Backup: FileDocument {
+    static var readableContentTypes = [UTType.json]
+    static var writableContentTypes = [UTType.json]
+    
+    var data: [CollectionBackup]
+    
+    init(configuration: ReadConfiguration) throws {
+        data = []
+    }
+    
+    
+    init(data: [CollectionBackup]) {
+        self.data = data
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        let data = try! JSONEncoder().encode(data)
+
+        return FileWrapper(regularFileWithContents: data)
+    }
+}
 
 struct ChapterBackup: Codable {
     var id: String
@@ -40,26 +64,32 @@ struct BackupManager {
     private let database = AppDatabase.shared.database
     
     func createBackup() -> [CollectionBackup] {
-//        let ctx = self.backgroundCtx()
-//        var backup = [CollectionBackup]()
-//
-//        ctx.performAndWait {
-//            let collections = CollectionEntity.fetchMany(ctx: ctx)
-//
-//            backup = collections.map { collection -> CollectionBackup in
-//                let mangaBackup: [MangaBackup] = collection.mangas!.map { manga in
-//                    let chapterBackup: [ChapterBackup] = manga.chapters!.filter { !$0.isUnread }.map { chapter in
-//                        return ChapterBackup(id: chapter.chapterId!, readAt: chapter.readAt ?? chapter.dateSourceUpload ?? .now)
-//                    }
-//                    return MangaBackup(id: manga.mangaId!, sourceId: manga.sourceId, readChapter: chapterBackup)
-//                }
-//
-//                return CollectionBackup(id: collection.uuid!, name: collection.name!, position: Int(collection.position), mangas: mangaBackup)
-//            }
-//        }
-//
-//        return backup
-        return []
+        var backup = [CollectionBackup]()
+
+        do {
+            try database.read { db in
+                let collections = try MangaCollection.all().fetchAll(db)
+                
+                for collection in collections {
+                    let mangas = try Manga.all().forCollectionId(collection.id).fetchAll(db)
+                    var mangasBackup = [MangaBackup]()
+
+                    for manga in mangas {
+                        let readChapters = try MangaChapter.all().onlyRead().forMangaId(manga.id).fetchAll(db)
+                        var chaptersBackup = [ChapterBackup]()
+                        
+                        chaptersBackup += readChapters.map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
+                        mangasBackup.append(MangaBackup(id: manga.mangaId, sourceId: manga.scraperId!, readChapter: chaptersBackup))
+                    }
+                    
+                    backup.append(CollectionBackup(id: collection.id, name: collection.name, position: collection.position, mangas: mangasBackup))
+                }
+            }
+        } catch(let err) {
+            print(err)
+        }
+        
+        return backup
     }
 
     func importBackup(backup: [CollectionBackup]) async {

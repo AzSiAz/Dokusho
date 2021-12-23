@@ -7,31 +7,7 @@
 
 import Foundation
 import SwiftUI
-import CoreData
-import UniformTypeIdentifiers
 import Nuke
-
-struct Backup: FileDocument {
-    static var readableContentTypes = [UTType.json]
-    static var writableContentTypes = [UTType.json]
-    
-    var data: [CollectionBackup]
-    
-    init(configuration: ReadConfiguration) throws {
-        data = []
-    }
-    
-    
-    init(data: [CollectionBackup]) {
-        self.data = data
-    }
-    
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = try! JSONEncoder().encode(data)
-
-        return FileWrapper(regularFileWithContents: data)
-    }
-}
 
 @MainActor
 class SettingsVM: ObservableObject {
