@@ -17,7 +17,7 @@ struct OneMangaCollectionRequest: Queryable {
     func publisher(in database: AppDatabase) -> DatabasePublishers.Value<MangaCollection?> {
         ValueObservation
             .tracking(MangaCollection.filter(id: collectionId).fetchOne(_:))
-            .publisher(in: AppDatabase.shared.database, scheduling: .immediate)
+            .publisher(in: database.database, scheduling: .immediate)
     }
 }
 

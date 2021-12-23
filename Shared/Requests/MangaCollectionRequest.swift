@@ -16,7 +16,7 @@ struct MangaCollectionRequest: Queryable {
     func publisher(in database: AppDatabase) -> AnyPublisher<[MangaCollection], Error> {
         ValueObservation
             .tracking(MangaCollection.all().orderByPosition().fetchAll(_:))
-            .publisher(in: AppDatabase.shared.database, scheduling: .immediate)
+            .publisher(in: database.database, scheduling: .immediate)
             .eraseToAnyPublisher()
     }
 }

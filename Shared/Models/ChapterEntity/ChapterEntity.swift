@@ -24,10 +24,6 @@ enum ChapterStatusFilter {
     
 }
 
-enum ChapterStatusHistory: String {
-    case all = "All", read = "Read"
-}
-
 extension ChapterEntity {
     var isUnread: Bool {
         return status != .read

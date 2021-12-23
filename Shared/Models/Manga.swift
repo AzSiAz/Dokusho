@@ -154,7 +154,7 @@ extension DerivableRequest where RowDecoder == Manga {
     
     func filterByName(_ searchTerm: String) -> Self {
         let search = "%\(searchTerm)%"
-        return filter(RowDecoder.Columns.title.like(search)).filter(RowDecoder.Columns.alternateTitles.like(search))
+        return filter(RowDecoder.Columns.title.like(search) || RowDecoder.Columns.alternateTitles.like(search))
     }
     
     func filterByGenre(_ genre: String) -> Self {

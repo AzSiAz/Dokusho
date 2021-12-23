@@ -18,7 +18,7 @@ struct MangaDetail: View {
     @StateObject var orientation: DeviceOrientation = DeviceOrientation()    
     
     var body: some View {
-        if !vm.showDismiss || (sizeClass == .compact || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait)) {
+        if sizeClass == .compact || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait) {
             CompactBody()
         } else {
             LargeBody()

@@ -51,6 +51,7 @@ extension MangaChapter: FetchableRecord, PersistableRecord {}
 
 extension MangaChapter: TableRecord {
     static let manga = belongsTo(Manga.self)
+    static let scraper = hasOne(Scraper.self, through: manga, using: Manga.scraper)
 
     enum Columns {
         static let id = Column(CodingKeys.id)
@@ -82,6 +83,18 @@ extension DerivableRequest where RowDecoder == MangaChapter {
     
     func forChapterStatus(_ status: ChapterStatus) -> Self {
         filter(RowDecoder.Columns.status == status)
+    }
+    
+    func orderHistoryAll() -> Self {
+        order(MangaChapter.Columns.dateSourceUpload.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+    }
+    
+    func orderHistoryRead() -> Self {
+        order(MangaChapter.Columns.readAt.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+    }
+    
+    func onlyRead() -> Self {
+        filter(MangaChapter.Columns.status == ChapterStatus.read)
     }
 }
 
