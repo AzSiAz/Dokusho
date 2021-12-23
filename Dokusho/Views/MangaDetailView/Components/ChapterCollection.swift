@@ -12,8 +12,8 @@ struct ChapterCollection: View {
     @Query<MangaChaptersRequest> var chapters: [MangaChapter]
     @StateObject var vm: ChapterListVM
     
-    init(manga: Manga, ascendingOrder: Bool, filter: ChapterStatusFilter, refreshing: Bool) {
-        _vm = .init(wrappedValue: .init(manga: manga, refreshing: refreshing))
+    init(manga: Manga, scraper: Scraper, ascendingOrder: Bool, filter: ChapterStatusFilter) {
+        _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
         _chapters = Query(MangaChaptersRequest(manga: manga, order: ascendingOrder ? .ASC : .DESC, filter: filter))
     }
     
@@ -27,7 +27,6 @@ struct ChapterCollection: View {
                 .buttonStyle(.bordered)
                 .controlSize(.large)
                 .padding(.horizontal)
-                .disabled(vm.refreshing)
             }
 
             ForEach(chapters) { chapter in
@@ -55,11 +54,10 @@ struct ChapterCollection: View {
                             }
                         }
                     }
-                    .disabled(vm.refreshing)
             }
         }
         .fullScreenCover(item: $vm.selectedChapter) { chapter in
-//            ReaderView(vm: .init(for: chapter))
+            ReaderView(vm: .init(manga: vm.manga, chapter: chapter, scraper: vm.scraper, chapters: chapters))
         }
     }
 }

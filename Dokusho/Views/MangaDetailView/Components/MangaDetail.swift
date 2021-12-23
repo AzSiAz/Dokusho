@@ -42,7 +42,8 @@ struct MangaDetail: View {
                 Divider()
                 
                 ScrollView {
-                    ChapterListInformation(manga: data.manga, refreshing: vm.refreshing)
+                    ChapterListInformation(manga: data.manga, scraper: vm.scraper)
+                        .disabled(vm.refreshing)
                         .padding(.bottom)
                 }
                 .id("Chapter")
@@ -58,7 +59,8 @@ struct MangaDetail: View {
                 HeaderRow(data)
                 ActionRow(data)
                 SynopsisRow(data, isLarge: false)
-                ChapterListInformation(manga: data.manga, refreshing: vm.refreshing)
+                ChapterListInformation(manga: data.manga, scraper: data.scraper!)
+                    .disabled(vm.refreshing)
                     .padding(.bottom)
             }
         }

@@ -12,7 +12,7 @@ struct ChapterListInformation: View {
     @State var filter: ChapterStatusFilter = .all
     
     var manga: Manga
-    var refreshing: Bool
+    var scraper: Scraper
 
     var body: some View {
         LazyVStack {
@@ -45,7 +45,7 @@ struct ChapterListInformation: View {
             Divider()
                 .padding(.horizontal, 5)
             
-            ChapterCollection(manga: manga, ascendingOrder: ascendingOrder, filter: filter, refreshing: refreshing)
+            ChapterCollection(manga: manga, scraper: scraper, ascendingOrder: ascendingOrder, filter: filter)
                 .padding(.horizontal, 10)
         }
     }

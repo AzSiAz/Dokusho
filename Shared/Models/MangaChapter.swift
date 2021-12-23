@@ -98,6 +98,4 @@ extension MangaChapter {
             UPDATE "mangaChapter" SET status = ?, "readAt" = ? WHERE status = ? AND "id" = ?
         """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
     }
-    
-    
 }

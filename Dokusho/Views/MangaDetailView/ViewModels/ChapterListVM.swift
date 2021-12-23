@@ -13,14 +13,14 @@ class ChapterListVM: ObservableObject {
     private let database = AppDatabase.shared.database
 
     var manga: Manga
+    var scraper: Scraper
     
     @Published var error: Error?
-    @Published var refreshing: Bool
     @Published var selectedChapter: MangaChapter?
 
-    init(manga: Manga, refreshing: Bool) {
+    init(manga: Manga, scraper: Scraper) {
         self.manga = manga
-        self.refreshing = refreshing
+        self.scraper = scraper
     }
 
     func changeChapterStatus(for chapter: MangaChapter, status: ChapterStatus) {
