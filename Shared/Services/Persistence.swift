@@ -155,9 +155,11 @@ extension AppDatabase {
             Logger.persistence.info("Db is \(dbURL.path)")
             
             var config = Configuration()
+            #if DEBUG
             config.prepareDatabase { db in
                 db.trace { print($0) }
             }
+            #endif
 
             let dbPool = try DatabasePool(path: dbURL.path, configuration: config)
 

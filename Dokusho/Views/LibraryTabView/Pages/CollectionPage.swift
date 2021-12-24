@@ -25,7 +25,6 @@ struct CollectionPage: View {
                 FilteredCollectionPage(collection: collection, selectedManga: $selectedManga, searchTerm: searchTerm)
             }
             .sheetSizeAware(item: $selectedManga, content: { data in
-                let _ = print(data)
                 MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
             })
             .searchable(text: $searchTerm)
