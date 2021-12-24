@@ -51,5 +51,6 @@ class SettingsVM: ObservableObject {
     func clearImageCache() {
         Nuke.DataLoader.sharedUrlCache.removeAllCachedResponses()
         Nuke.ImageCache.shared.removeAll()
+        DataCache.DiskCover?.removeAll()
     }
 }
