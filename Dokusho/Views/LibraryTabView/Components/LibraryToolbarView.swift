@@ -75,23 +75,6 @@ struct LibraryToolbarView: ToolbarContent {
                     .onChange(of: collectionOrderDirection, perform: { updateCollectionOrder(direction: $0, field: nil) })
                 }
             }
-
-//            Button(action: { showFilter.toggle() }) {
-//                Image(systemName: "line.3.horizontal.decrease.circle")
-//                    .symbolVariant(collection.filter == .onlyUnReadChapter ? .fill : .none)
-//            }
-//            .buttonStyle(.plain)
-//            .actionSheet(isPresented: $showFilter) {
-//                ActionSheet(title: Text("Change Filter"), buttons: [
-//                    .default(
-//                        Text("All"),
-//                        action: { updateCollectionFilter(newFilter: .all) }),
-//                    .default(
-//                        Text("Only Unread"),
-//                        action: { updateCollectionFilter(newFilter: .onlyUnReadChapter) }),
-//                    .cancel()
-//                ])
-//            }
         }
     }
     
