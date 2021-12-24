@@ -13,9 +13,9 @@ struct RootView: View {
     enum ActiveTab {
         case explore, library, history, settings
     }
-    
+
     @State var tab: ActiveTab = .library
-    
+
     var body: some View {
         TabView(selection: $tab) {
             LibraryTabView()

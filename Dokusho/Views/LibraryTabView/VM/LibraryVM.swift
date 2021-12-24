@@ -21,13 +21,13 @@ class LibraryVM: ObservableObject {
     @Published var showSettings = false
     @Published var showChangeFilter = false
     @Published var selectedCollection = 0
-    @Published var refreshStatus: [CollectionEntity: RefreshStatus] = [:]
+    @Published var refreshStatus: [MangaCollection.ID: RefreshStatus] = [:]
     
-    func changeFilter(collection: CollectionEntity, newFilterState: CollectionEntityFilter) {
+    func changeFilter(collection: MangaCollection, newFilterState: MangaCollection) {
 //        dataManager.updateCollection(collection: collection, newFilterState: newFilterState)
     }
     
-    func refreshLib(for collection: CollectionEntity) {
+    func refreshLib(for collection: MangaCollection) {
 //        refreshStatus[collection] = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 0, refreshTitle: "")
 //
 //        Task.detached(priority: .userInitiated) {
@@ -39,7 +39,7 @@ class LibraryVM: ObservableObject {
 //        }
     }
     
-    func updateRefreshStatus(collection: CollectionEntity, newStatus: RefreshStatus? = nil) {
+    func updateRefreshStatus(collection: MangaCollection, newStatus: RefreshStatus? = nil) {
 //        DispatchQueue.main.async {
 //            self.refreshStatus[collection] = newStatus
 //        }

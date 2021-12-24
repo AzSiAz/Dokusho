@@ -77,7 +77,7 @@ struct ReaderView: View {
 
                 Spacer()
                 
-                Text(vm.chapter.title!)
+                Text(vm.chapter.title)
                     .foregroundColor(.primary)
                 
                 Spacer()

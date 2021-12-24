@@ -13,32 +13,37 @@ import MangaScraper
 import Nuke
 
 class ReaderVM: ObservableObject {
-    private var src: Source
-    private var ctx = PersistenceController.shared.backgroundCtx()
+    private let database = AppDatabase.shared.database
     
-    @Published var chapter: ChapterEntity
+    @Published var chapter: MangaChapter
     @Published var images = [SourceChapterImage]()
-    
+
     @Published var showToolBar = false
     @Published var tabIndex: SourceChapterImage = .init(index: 0, imageUrl: "")
     @Published var direction: ReadingDirection = .vertical
     @Published var showReaderDirectionChoice = false
+    
+    private var scraper: Scraper
+    private var manga: Manga
+    private var chapters: [MangaChapter] = []
 
-    init(for chapter: ChapterEntity) {
-        self.src = chapter.manga!.getSource()
+    init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.chapter = chapter
-        self.direction = chapter.manga!.getDefaultReadingDirection()
+        self.chapters = chapters
+        self.manga = manga
+        self.scraper = scraper
+        self.direction = manga.getDefaultReadingDirection()
     }
     
     @MainActor
     func fetchChapter() async {
         do {
-            images = try await src.fetchChapterImages(mangaId: chapter.manga!.mangaId!, chapterId: chapter.chapterId!)
+            images = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
             tabIndex = images.first ?? .init(index: 0, imageUrl: "")
 
             images.forEach { ImagePipeline.inMemory.loadImage(with: $0.imageUrl, completion: { _ in }) }
         } catch {
-            Logger.reader.info("Error loading chapter \(self.chapter): \(error.localizedDescription)")
+            Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
         }
     }
     
@@ -49,12 +54,12 @@ class ReaderVM: ObservableObject {
     func updateChapterStatus(image: SourceChapterImage) {
         if images.last == image {
             Task {
-                try? await ctx.perform {
-                    guard let chapter = self.ctx.object(with: self.chapter.objectID) as? ChapterEntity else { return }
-                    chapter.markAs(newStatus: .read)
-                    chapter.manga?.lastUserAction = .now
-
-                    try self.ctx.save()
+                do {
+                    try database.write { db in
+                        try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: chapter.id)
+                    }
+                } catch(let err) {
+                    print(err)
                 }
             }
         }

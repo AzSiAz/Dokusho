@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import GRDBQuery
 
 struct ByGenreListPage: View {
-    @FetchRequest<GenreEntity>(sortDescriptors: [GenreEntity.nameSort], animation: .easeIn) var genres
-    
+    @Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]
+
     var body: some View {
         List(genres) { genre in
-            NavigationLink(destination: MangaInCollectionForGenre(genre: genre, showDismiss: false)) {
-                Text("\(genre.name ?? "No Name") (\(genre.mangas?.count ?? 0))")
+            NavigationLink(destination: MangaInCollectionForGenre(genre: genre.genre, showDismiss: false)) {
+                Text(genre.genre)
+                    .badge("\(genre.mangaCount)")
             }
         }
         .navigationTitle("By Genres")

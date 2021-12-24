@@ -7,17 +7,17 @@
 
 import SwiftUI
 import MangaScraper
+import GRDBQuery
 
 struct BySourceListPage: View {
-    @SectionedFetchRequest<UUID, MangaEntity>(sectionIdentifier: \.sourceId, sortDescriptors: [MangaEntity.nameOrder], predicate: nil) var sources
+    @Query(ScraperWithMangaInCollection()) var scrapers
     
     var body: some View {
         List {
-            ForEach(sources) { source in
-                NavigationLink(destination: MangaForSourcePage(sourceId: source.id)) {
-                    let name = MangaScraperService.shared.getSource(sourceId: source.id)?.name
-                    Text(name ?? "No name, weird")
-                        .badge(source.count)
+            ForEach(scrapers) { scraper in
+                NavigationLink(destination: MangaForSourcePage(scraper: scraper.scraper)) {
+                    Text(scraper.scraper.name)
+                        .badge(scraper.mangaCount)
                 }
             }
         }

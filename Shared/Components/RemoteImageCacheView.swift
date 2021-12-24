@@ -9,7 +9,7 @@ import SwiftUI
 import Nuke
 
 struct RemoteImageCacheView: View {
-    @StateObject private var image = FetchImage()
+    @StateObject private var image: FetchImage
     
     let url: URL
     let contentMode: ContentMode
@@ -17,11 +17,15 @@ struct RemoteImageCacheView: View {
     init(url: URL?, contentMode: ContentMode) {
         self.url = url ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
         self.contentMode = contentMode
+        
+        let image = FetchImage()
+        image.pipeline = .coverCache
+        _image = .init(wrappedValue: image)
     }
     
     init(url: String?, contentMode: ContentMode) {
-        self.contentMode = contentMode
-        self.url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        let url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.init(url: url, contentMode: contentMode)
     }
     
     var body: some View {

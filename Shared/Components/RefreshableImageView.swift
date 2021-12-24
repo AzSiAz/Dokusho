@@ -24,17 +24,12 @@ struct ChapterImageView: View {
         
         let image = FetchImage()
         image.pipeline = ImagePipeline.inMemory
-        self._image = .init(wrappedValue: image)
+        _image = .init(wrappedValue: image)
     }
     
     init(url: String?, contentMode: ContentMode, size: CGSize) {
-        self.contentMode = contentMode
-        self.url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
-        self.size = size
-        
-        let image = FetchImage()
-        image.pipeline = ImagePipeline.inMemory
-        self._image = .init(wrappedValue: image)
+        let url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.init(url: url, contentMode: contentMode, size: size)
     }
     
     var body: some View {

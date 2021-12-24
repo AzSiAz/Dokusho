@@ -6,61 +6,58 @@
 //
 
 import SwiftUI
-import CoreData
+import GRDBQuery
 
 struct ChapterCollection: View {
-    @FetchRequest var chapters: FetchedResults<ChapterEntity>
-    
-    @Binding var selectedChapter: ChapterEntity?
+    @Query<MangaChaptersRequest> var chapters: [MangaChapter]
     @StateObject var vm: ChapterListVM
     
-    var refreshing: Bool
-    
-    init(manga: NSManagedObjectID, selectedChaper: Binding<ChapterEntity?>, ascendingOrder: Bool, filter: ChapterStatusFilter, refreshing: Bool) {
-        self._selectedChapter = selectedChaper
-        self._vm = .init(wrappedValue: .init(mangaOId: manga))
-        self._chapters = .init(sortDescriptors: [ChapterEntity.positionOrder(order: ascendingOrder ? .forward : .reverse)], predicate: ChapterEntity.chaptersListForMangaPredicate(manga: manga, filter: filter))
-        self.refreshing = refreshing
+    init(manga: Manga, scraper: Scraper, ascendingOrder: Bool, filter: ChapterStatusFilter) {
+        _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
+        _chapters = Query(MangaChaptersRequest(manga: manga, order: ascendingOrder ? .ASC : .DESC, filter: filter))
     }
     
     var body: some View {
-        if let chapter = vm.nextUnreadChapter(chapters: chapters) {
-            Button(action: { selectedChapter = chapter }) {
-                Text("Read next unread chapter")
-                    .frame(minWidth: 0, maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-            .controlSize(.large)
-            .padding(.horizontal)
-            .disabled(refreshing)
-        }
-
-        ForEach(chapters) { chapter in
-            ChapterListRow(vm: vm, chapter: chapter, selectedChapter: $selectedChapter)
-                .contextMenu {
-                    if chapter.isUnread {
-                        Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
-                            Text("Mark as read")
-                        }
-                    }
-                    else {
-                        Button(action: { vm.changeChapterStatus(for: chapter, status: .unread) }) {
-                            Text("Mark as unread")
-                        }
-                    }
-
-                    if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
-                        Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .read, in: chapters) }) {
-                            Text("Mark previous as read")
-                        }
-                    }
-                    else {
-                        Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .unread, in: chapters) }) {
-                            Text("Mark previous as unread")
-                        }
-                    }
+        Group {
+            if let chapter = vm.nextUnreadChapter(chapters: chapters) {
+                Button(action: { vm.selectedChapter = chapter }) {
+                    Text("Read next unread chapter")
+                        .frame(minWidth: 0, maxWidth: .infinity)
                 }
-                .disabled(self.refreshing)
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .padding(.horizontal)
+            }
+
+            ForEach(chapters) { chapter in
+                ChapterListRow(vm: vm, selectedChapter: $vm.selectedChapter, chapter: chapter)
+                    .contextMenu {
+                        if chapter.isUnread {
+                            Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
+                                Text("Mark as read")
+                            }
+                        }
+                        else {
+                            Button(action: { vm.changeChapterStatus(for: chapter, status: .unread) }) {
+                                Text("Mark as unread")
+                            }
+                        }
+
+                        if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
+                            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .read, in: chapters) }) {
+                                Text("Mark previous as read")
+                            }
+                        }
+                        else {
+                            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .unread, in: chapters) }) {
+                                Text("Mark previous as unread")
+                            }
+                        }
+                    }
+            }
+        }
+        .fullScreenCover(item: $vm.selectedChapter) { chapter in
+            ReaderView(vm: .init(manga: vm.manga, chapter: chapter, scraper: vm.scraper, chapters: chapters))
         }
     }
 }
