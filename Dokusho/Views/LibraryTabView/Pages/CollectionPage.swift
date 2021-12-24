@@ -10,12 +10,18 @@ import GRDBQuery
 
 struct CollectionPage: View {
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
-    @State var selectedManga: DetailedMangaInList?
-    @State var showFilter = false
     
+    @State var selectedManga: DetailedMangaInList?
     @State var searchTerm = ""
+    @State var showFilter = false
+    @State var collectionFilter: MangaCollectionFilter
+    @State var collectionOrderField: MangaCollectionOrder.Field
+    @State var collectionOrderDirection: MangaCollectionOrder.Direction
     
     init(collection : MangaCollection) {
+        _collectionFilter = .init(initialValue: collection.filter)
+        _collectionOrderField = .init(initialValue: collection.order.field)
+        _collectionOrderDirection = .init(initialValue: collection.order.direction)
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
     }
     
@@ -28,7 +34,15 @@ struct CollectionPage: View {
                 MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
             })
             .searchable(text: $searchTerm)
-            .toolbar { LibraryToolbarView(collection: collection, showFilter: $showFilter) }
+            .toolbar {
+                LibraryToolbarView(
+                    collection: collection,
+                    showFilter: $showFilter,
+                    collectionFilter: $collectionFilter,
+                    collectionOrderField: $collectionOrderField,
+                    collectionOrderDirection: $collectionOrderDirection
+                )
+            }
         }
     }
 }

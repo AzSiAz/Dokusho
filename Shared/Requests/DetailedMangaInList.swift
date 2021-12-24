@@ -65,10 +65,10 @@ struct DetailedMangaInListRequest: Queryable {
             case .all: break
             case .onlyUnReadChapter: request = request.having(sql: "unreadChapterCount > 0")
             }
-            
+
             switch collection.order.field {
             case .unreadChapters: request = request.order(sql: "unreadChapterCount \(collection.order.direction)")
-            case .title: request = request.orderByTitle()
+            case .title: request = request.orderByTitle(direction: collection.order.direction)
             case .lastUpdate: request = request.order(sql: "mangaChapter.dateSourceUpload \(collection.order.direction)")
             case .chapterCount: request = request.order(sql: "chapterCount \(collection.order.direction)")
             }

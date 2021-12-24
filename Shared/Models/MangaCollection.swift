@@ -8,7 +8,7 @@
 import Foundation
 import GRDB
 
-enum MangaCollectionFilter: String, Codable, Equatable, DatabaseValueConvertible {
+enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, DatabaseValueConvertible {
     case onlyUnReadChapter = "Only Unread Chapter", all = "All"
 }
 

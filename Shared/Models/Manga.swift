@@ -161,8 +161,11 @@ extension DerivableRequest where RowDecoder == Manga {
         filter(RowDecoder.Columns.genres.like("%\(genre)%"))
     }
     
-    func orderByTitle() -> Self {
-        order(RowDecoder.Columns.title.collating(.localizedCaseInsensitiveCompare).asc)
+    func orderByTitle(direction: MangaCollectionOrder.Direction = .ASC) -> Self {
+        switch direction {
+        case .ASC: return order(RowDecoder.Columns.title.collating(.localizedCaseInsensitiveCompare).ascNullsLast)
+        case .DESC: return order(RowDecoder.Columns.title.collating(.localizedCaseInsensitiveCompare).desc)
+        }
     }
     
     func forMangaId(_ mangaId: String, _ scraperId: UUID) -> Self {
