@@ -64,7 +64,6 @@
 		E27FF71B27725E510035DB99 /* MangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27FF71A27725E510035DB99 /* MangaCollection.swift */; };
 		E2844CB627726393009F4F31 /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2844CB527726393009F4F31 /* Scraper.swift */; };
 		E2B96CD3274DB9BD002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
-		E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2BD651326F22AE200BE5CD7 /* CloudKit.framework */; };
 		E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127B26CD0559007837D1 /* ChapterListVM.swift */; };
 		E2CB128526CD0559007837D1 /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */; };
 		E2CB128626CD0559007837D1 /* ChapterCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127E26CD0559007837D1 /* ChapterCollection.swift */; };
@@ -194,7 +193,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E26D7E64270B30770003C6C1 /* SFSafeSymbols in Frameworks */,
-				E2BD651426F22AE200BE5CD7 /* CloudKit.framework in Frameworks */,
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
@@ -836,7 +834,6 @@
 		E26662CA26CC36840054868A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
@@ -875,7 +872,6 @@
 		E26662CB26CC36840054868A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
