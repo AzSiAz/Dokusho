@@ -14,7 +14,7 @@ struct RootView: View {
         case explore, library, history, settings
     }
 
-    @State var tab: ActiveTab = .history
+    @State var tab: ActiveTab = .library
 
     var body: some View {
         TabView(selection: $tab) {

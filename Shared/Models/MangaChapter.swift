@@ -105,15 +105,26 @@ extension DerivableRequest where RowDecoder == MangaChapter {
     }
     
     func orderHistoryAll() -> Self {
-        order(MangaChapter.Columns.dateSourceUpload.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+        order(RowDecoder.Columns.dateSourceUpload.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
     }
     
     func orderHistoryRead() -> Self {
-        order(MangaChapter.Columns.readAt.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+        order(RowDecoder.Columns.readAt.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+    }
+    
+    func filter(_ status: ChapterStatusHistory) -> Self {
+        guard let last30days = Calendar.current.date(byAdding: .day, value: -31, to: Date()) else { return self }
+        let dc = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: last30days)
+        let date = DatabaseDateComponents(dc, format: .YMD_HMSS)
+    
+        switch status {
+        case .all: return filter(RowDecoder.Columns.dateSourceUpload >= date).orderHistoryAll()
+        case .read: return filter(RowDecoder.Columns.readAt >= date).orderHistoryRead().onlyRead()
+        }
     }
     
     func onlyRead() -> Self {
-        filter(MangaChapter.Columns.status == ChapterStatus.read)
+        filter(RowDecoder.Columns.status == ChapterStatus.read)
     }
 }
 

@@ -38,12 +38,11 @@ struct AppDatabase {
         #if DEBUG
         // Speed up development by nuking the database when migrations change
         // See https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md#the-erasedatabaseonschemachange-option
-        migrator.eraseDatabaseOnSchemaChange = true
+//        migrator.eraseDatabaseOnSchemaChange = true
         #endif
 
+        Logger.migration.info("Registering init_state migration")
         migrator.registerMigration("init_state") { db in
-            Logger.migration.info("Using init_state migration")
-
             try db.create(table: "mangaCollection") { t in
                 t.column("id", .text).primaryKey(onConflict: .ignore, autoincrement: false)
                 t.column("name", .text).notNull()
@@ -87,6 +86,14 @@ struct AppDatabase {
                 t.column("status", .text).notNull()
                 t.column("mangaId", .integer).notNull().indexed().references("manga", onDelete: .cascade, onUpdate: .cascade)
             }
+        }
+        
+        Logger.migration.info("Registering update_index migration")
+        migrator.registerMigration("update_index") { db in
+            try db.create(index: "mangaChapter_status", on: "mangaChapter", columns: ["status"])
+            try db.create(index: "mangaChapter_readAt", on: "mangaChapter", columns: ["readAt"])
+            try db.create(index: "mangaChapter_position", on: "mangaChapter", columns: ["position"])
+            try db.create(index: "mangaChapter_dateSourceUpload", on: "mangaChapter", columns: ["dateSourceUpload"])
         }
 
         return migrator

@@ -39,14 +39,10 @@ struct ChaptersHistoryRequest: Queryable {
             .all()
             .including(required: MangaChapter.manga)
             .including(required: MangaChapter.scraper)
+            .filter(filter)
         
         if !searchTerm.isEmpty { request = request.including(required: MangaChapter.manga.filterByName(searchTerm)) }
-        
-        switch filter {
-        case .all: request = request.orderHistoryAll()
-        case .read: request = request.orderHistoryRead().onlyRead()
-        }
-        
+
         return try ChaptersHistory.fetchAll(db, request)
     }
 }
