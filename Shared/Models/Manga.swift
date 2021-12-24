@@ -178,6 +178,10 @@ struct MangaWithDetail: Decodable, FetchableRecord {
 }
 
 extension Manga {
+    static func fetchOne(_ db: Database, mangaId: String, scraperId: UUID) throws -> Manga? {
+        return try Manga.all().forMangaId(mangaId, scraperId).fetchOne(db)
+    }
+    
     static func fetchMangaWithDetail(for mangaId: String, in scraperId: UUID, _ db: Database) throws -> MangaWithDetail? {
         let request = Manga
             .all()
@@ -188,6 +192,7 @@ extension Manga {
         return try MangaWithDetail.fetchOne(db, request)
     }
     
+    @discardableResult
     static func updateFromSource(db: Database, scraper: Scraper, data: SourceManga, readChapters: [ChapterBackup]) throws -> Manga {
         if var manga = try Manga.all().forMangaId(data.id, scraper.id).fetchOne(db) {
             manga.updateFromSource(from: data)

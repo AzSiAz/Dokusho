@@ -59,15 +59,14 @@ class ExploreSourceVM: ObservableObject {
         guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 
         do {
-            try database.write { db -> Void in
-                // TODO: Investigate why I can't use `Manga.filter`
-                guard var manga = try Manga.fetchOne(db, key: ["mangaId": sourceManga.id, "scraperId": scraper.id]) else {
-                    var manga = Manga(from: sourceManga, sourceId: scraper.id)
+            try await database.write { db -> Void in
+                guard var manga = try Manga.all().forMangaId(smallManga.id, self.scraper.id).fetchOne(db) else {
+                    var manga = Manga(from: sourceManga, sourceId: self.scraper.id)
                     manga.mangaCollectionId = collection.id
                     try manga.save(db)
                     
                     for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
+                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: self.scraper.id)
                         try chapter.save(db)
                     }
 

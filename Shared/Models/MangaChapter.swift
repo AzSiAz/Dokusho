@@ -141,7 +141,7 @@ extension MangaChapter {
             UPDATE "mangaChapter" SET status = ?, "readAt" = ? WHERE status = ? AND "id" = ?
         """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
     }
-    
+
     static func updateFromSource(db: Database, manga: Manga, data: SourceManga, readChapters: [ChapterBackup]) throws {
         for info in data.chapters.enumerated() {
             var chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)
@@ -151,6 +151,13 @@ extension MangaChapter {
             }
 
             try chapter.save(db)
+        }
+        
+        // Clean chapter removed from source
+        let dbChapters = try MangaChapter.all().forMangaId(manga.id).fetchAll(db)
+        for dbChapter in dbChapters {
+            if (data.chapters.first(where: { $0.id == dbChapter.chapterId }) != nil) { continue }
+            try dbChapter.delete(db)
         }
     }
 }

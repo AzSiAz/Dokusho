@@ -118,7 +118,6 @@ struct MangaDetail: View {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
                         .symbolVariant(data.mangaCollection != nil ? .fill : .none)
-                    // TODO: Change this to real collection name
                     Text(data.mangaCollection?.name ?? "Favoris")
                 }
             }

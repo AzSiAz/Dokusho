@@ -41,8 +41,7 @@ class MangaDetailVM: ObservableObject {
     func fetchManga() async {
         if data == nil { await update() }
     }
-    
-    @MainActor
+
     func update() async {
         withAnimation {
             self.error = false
@@ -51,35 +50,22 @@ class MangaDetailVM: ObservableObject {
 
         do {
             guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
-            if var manga = data?.manga {
-                manga.updateFromSource(from: sourceManga)
-                
-                try database.write { db in
-                    try manga.save(db)
+            try await database.write { db in
+                guard let manga = try Manga.fetchOne(db, mangaId: self.mangaId, scraperId: self.scraper.id) else { return }
+                let readChapters = try MangaChapter.all().onlyRead().forMangaId(manga.id).fetchAll(db)
+                let chaptersBackup = readChapters.map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
 
-                    // TODO: Export this to correct place
-                    for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
-                        try chapter.save(db)
-                    }
-                }
-            } else {
-                try database.write { db in
-                    var manga = Manga(from: sourceManga, sourceId: scraper.id)
-                    try manga.save(db)
-
-                    // TODO: Export this to correct place
-                    for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
-                        try chapter.save(db)
-                    }
-                }
+                try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga, readChapters: chaptersBackup)
             }
 
-            try database.read { db in
-                try withAnimation {
-                    data = try Manga.fetchMangaWithDetail(for: mangaId, in: scraper.id, db)
-                    self.refreshing = false
+            try await database.read { db in
+                let updated = try Manga.fetchMangaWithDetail(for: self.mangaId, in: self.scraper.id, db)
+                
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self.data = updated
+                        self.refreshing = false
+                    }
                 }
             }
         } catch {
