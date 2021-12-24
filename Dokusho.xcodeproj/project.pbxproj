@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E2000CEF272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
-		E2000CF0272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
-		E2000CF1272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
 		E2006E892720544A00BE6907 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2006E882720544A00BE6907 /* EnvironmentValues.swift */; };
 		E2034182270C6F7E00990F80 /* WidgetKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2034181270C6F7E00990F80 /* WidgetKind.swift */; };
 		E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E203B9C826ECFED700F4B749 /* MangaScraper */; };
@@ -844,7 +841,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -882,7 +879,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
