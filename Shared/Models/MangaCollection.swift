@@ -8,17 +8,41 @@
 import Foundation
 import GRDB
 
-enum MangaCollectionFilter: String, Codable, Equatable, DatabaseValueConvertible {
+enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, DatabaseValueConvertible {
     case onlyUnReadChapter = "Only Unread Chapter", all = "All"
 }
 
 struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
     enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case unreadChapters, lastUpdate, title, chapterCount
+        case unreadChapters = "By unread chapter", lastUpdate = "By last update", title = "By title", chapterCount = "By chapter count"
+
+        init?(rawValue: String) {
+            switch rawValue {
+            case "By unread chapter": fallthrough
+            case "unreadChapters": self = .unreadChapters
+            case "By last update": fallthrough
+            case "lastUpdate": self = .lastUpdate
+            case "By title": fallthrough
+            case "title": self = .title
+            case "By chapter count": fallthrough
+            case "chapterCount": self = .chapterCount
+            default: self = .lastUpdate
+            }
+        }
     }
 
     enum Direction: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case ASC, DESC
+        case ASC = "Ascending", DESC = "Descending"
+        
+        init?(rawValue: String) {
+            switch rawValue {
+            case "Ascending": fallthrough
+            case "ASC": self = .ASC
+            case "Descending": fallthrough
+            case "DESC": self = .DESC
+            default: self = .ASC
+            }
+        }
     }
     
     var field: Field = .lastUpdate

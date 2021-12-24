@@ -47,6 +47,7 @@
     <entity name="CollectionEntity" representedClassName="CollectionEntity" syncable="YES">
         <attribute name="filterRaw" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="orderByRaw" optional="YES" attributeType="String"/>
         <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="collection" inverseEntity="MangaEntity"/>
@@ -93,7 +94,7 @@
         <element name="AlternateTitlesEntity" positionX="-1206.10546875" positionY="-926.0234375" width="128" height="74"/>
         <element name="AuthorAndArtistEntity" positionX="-1157.22265625" positionY="-769.4296875" width="128" height="74"/>
         <element name="ChapterEntity" positionX="-1390.50390625" positionY="-670.42578125" width="128" height="149"/>
-        <element name="CollectionEntity" positionX="-1395" positionY="-801" width="128" height="104"/>
+        <element name="CollectionEntity" positionX="-1395" positionY="-801" width="128" height="119"/>
         <element name="GenreEntity" positionX="-1600.05859375" positionY="-960.765625" width="128" height="59"/>
         <element name="MangaEntity" positionX="-1417.8984375" positionY="-965.15625" width="98.859375" height="239"/>
         <element name="SourceEntity" positionX="-1576.33203125" positionY="-851" width="98.72265625" height="89"/>

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E2000CEF272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
+		E2000CF0272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
+		E2000CF1272002C2000EA6C2 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */; };
 		E2006E892720544A00BE6907 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2006E882720544A00BE6907 /* EnvironmentValues.swift */; };
 		E2034182270C6F7E00990F80 /* WidgetKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2034181270C6F7E00990F80 /* WidgetKind.swift */; };
 		E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E203B9C826ECFED700F4B749 /* MangaScraper */; };
@@ -104,6 +107,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePipeline.swift; sourceTree = "<group>"; };
 		E2006E882720544A00BE6907 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		E203414E270C4F9E00990F80 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E2034150270C4F9E00990F80 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -298,6 +302,7 @@
 				E2187EA426CC5D9E009604A9 /* UIScreen.swift */,
 				E2CB129026CD1C8A007837D1 /* Optional.swift */,
 				E2DA94DA26D64DF00083F2F7 /* URL.swift */,
+				E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */,
 				E26E1F1E2774B29A0092FA99 /* String.swift */,
 			);
 			path = Extensions;
