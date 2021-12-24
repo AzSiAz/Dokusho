@@ -100,6 +100,10 @@ extension DerivableRequest where RowDecoder == MangaChapter {
         filter(RowDecoder.Columns.mangaId == mangaId)
     }
     
+    func forMangaId(_ mangaId: String, _ scraperId: UUID) -> Self {
+        joining(required: RowDecoder.manga.forMangaId(mangaId, scraperId))
+    }
+    
     func forChapterStatus(_ status: ChapterStatus) -> Self {
         filter(RowDecoder.Columns.status == status)
     }

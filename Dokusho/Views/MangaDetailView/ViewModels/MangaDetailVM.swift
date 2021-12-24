@@ -51,8 +51,7 @@ class MangaDetailVM: ObservableObject {
         do {
             guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
             try await database.write { db in
-                guard let manga = try Manga.fetchOne(db, mangaId: self.mangaId, scraperId: self.scraper.id) else { return }
-                let readChapters = try MangaChapter.all().onlyRead().forMangaId(manga.id).fetchAll(db)
+                let readChapters = try MangaChapter.all().onlyRead().forMangaId(self.mangaId, self.scraper.id).fetchAll(db)
                 let chaptersBackup = readChapters.map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
 
                 try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga, readChapters: chaptersBackup)
