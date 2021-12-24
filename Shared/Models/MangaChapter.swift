@@ -60,6 +60,10 @@ struct MangaChapter: Identifiable, Equatable, Codable {
         self.mangaId = mangaId
         self.status = .unread
     }
+    
+    mutating func updateFromBackup(chapterBackup: ChapterBackup) {
+        
+    }
 }
 
 extension MangaChapter: FetchableRecord, PersistableRecord {}
@@ -125,5 +129,17 @@ extension MangaChapter {
         return try db.execute(sql: """
             UPDATE "mangaChapter" SET status = ?, "readAt" = ? WHERE status = ? AND "id" = ?
         """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
+    }
+    
+    static func updateFromSource(db: Database, manga: Manga, data: SourceManga, readChapters: [ChapterBackup]) throws {
+        for info in data.chapters.enumerated() {
+            var chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)
+            if let foundBackup = readChapters.first(where: { $0.id == chapter.chapterId }) {
+                chapter.readAt = foundBackup.readAt
+                chapter.status = .read
+            }
+
+            try chapter.save(db)
+        }
     }
 }

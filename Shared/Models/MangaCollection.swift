@@ -63,3 +63,13 @@ extension DerivableRequest where RowDecoder == MangaCollection {
         )
     }
 }
+
+extension MangaCollection {
+    static func fetchOrCreateFromBackup(db: Database, backup: CollectionBackup) throws -> MangaCollection {
+        if let collection = try MangaCollection.fetchOne(db, id: backup.id) {
+            return collection
+        }
+        
+        return try MangaCollection(id: backup.id, name: backup.name, position: backup.position).saved(db)
+    }
+}

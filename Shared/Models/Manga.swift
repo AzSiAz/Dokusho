@@ -187,4 +187,23 @@ extension Manga {
         
         return try MangaWithDetail.fetchOne(db, request)
     }
+    
+    static func updateFromSource(db: Database, scraper: Scraper, data: SourceManga, readChapters: [ChapterBackup]) throws -> Manga {
+        if var manga = try Manga.all().forMangaId(data.id, scraper.id).fetchOne(db) {
+            manga.updateFromSource(from: data)
+
+            try manga.save(db)
+            try MangaChapter.filter(MangaChapter.Columns.mangaId == manga.id).deleteAll(db)
+            try MangaChapter.updateFromSource(db: db, manga: manga, data: data, readChapters: readChapters)
+            
+            return manga
+        }
+        
+        var manga = Manga.init(from: data, sourceId: scraper.id)
+        try manga.save(db)
+        
+        try MangaChapter.updateFromSource(db: db, manga: manga, data: data, readChapters: readChapters)
+        
+        return manga
+    }
 }

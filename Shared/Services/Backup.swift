@@ -9,6 +9,7 @@ import Foundation
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
+import MangaScraper
 
 struct Backup: FileDocument {
     static var readableContentTypes = [UTType.json]
@@ -44,7 +45,7 @@ struct MangaBackup: Codable {
 }
 
 struct CollectionBackup: Codable {
-    var id: UUID?
+    var id: UUID
     var name: String
     var position: Int
     var mangas: [MangaBackup]
@@ -93,8 +94,6 @@ struct BackupManager {
     }
 
     func importBackup(backup: [CollectionBackup]) async {
-//        let ctx = self.backgroundCtx()
-//
 //        await withTaskGroup(of: BackupResult.self) { group in
 //            for collectionBackup in backup {
 //                let collection = CollectionEntity.fromBackup(info: collectionBackup, ctx: ctx)
@@ -127,7 +126,40 @@ struct BackupManager {
 //                }
 //            }
 //        }
-//
-//        try? ctx.save()
+        await withTaskGroup(of: BackupResult.self) { group in
+            
+            for collectionBackup in backup {
+                guard let collection = try? AppDatabase.shared.database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup) }) else { continue }
+                
+                for mangaBackup in collectionBackup.mangas {
+                    group.addTask(priority: .background) {
+                        return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
+                    }
+                }
+            }
+            
+            
+            for await taskResult in group {
+                switch(taskResult) {
+                case .failure(let error): Logger.backup.error("\(error.localizedDescription)")
+                case .success(let task):
+                    Logger.backup.info("Restoring \(task.mangaBackup.id)")
+                    guard let source = MangaScraperService.shared.getSource(sourceId: task.mangaBackup.sourceId) else { continue }
+                    guard let sourceInfo = try? await source.fetchMangaDetail(id: task.mangaBackup.id) else { continue }
+                    
+                    do {
+                        try AppDatabase.shared.database.write { db in
+                            let scraper = try Scraper.fetchOne(db, source: source)
+                            var manga = try Manga.updateFromSource(db: db, scraper: scraper, data: sourceInfo, readChapters: task.mangaBackup.readChapter)
+                            manga.mangaCollectionId = task.collection.id
+                            
+                            try manga.save(db)
+                        }
+                    } catch(let err) {
+                        print(err)
+                    }
+                }
+            }
+        }
     }
 }

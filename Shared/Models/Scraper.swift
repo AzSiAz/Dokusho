@@ -74,3 +74,12 @@ extension DerivableRequest where RowDecoder == Scraper {
         )
     }
 }
+
+extension Scraper {
+    static func fetchOne(_ db: Database, source: Source) throws -> Self {
+        if let scraper = try Self.fetchOne(db, id: source.id) { return scraper }
+
+        let source = Scraper(from: source)
+        return try source.saved(db)
+    }
+}
