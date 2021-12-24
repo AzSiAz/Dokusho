@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct MangaCardView: View {
-    @ObservedObject var manga: MangaEntity
-    
-    var count: Int { manga.chapters?.filter({ $0.isUnread }).count ?? 0 }
+    var manga: PartialManga
+    var count: Int
     
     var body: some View {
-        ImageWithTextOver(title: manga.title!, imageUrl: manga.cover?.absoluteString ?? "")
+        ImageWithTextOver(title: manga.title, imageUrl: manga.cover.absoluteString)
             .frame(height: 180)
             .overlay(alignment: .topTrailing) { MangaUnreadCount(count: count) }
             .contextMenu { MangaLibraryContextMenu(manga: manga, count: count) }

@@ -12,8 +12,8 @@ struct MangaDetailView: View {
 
     @StateObject var vm: MangaDetailVM
     
-    init(mangaId: String, src: UUID, showDismiss: Bool = true, isInCollectionPage: Bool = false) {
-        self._vm = .init(wrappedValue: .init(for: src, mangaId: mangaId, showDismiss: showDismiss, isInCollectionPage: isInCollectionPage))
+    init(mangaId: String, scraper: Scraper, showDismiss: Bool = true) {
+        _vm = .init(wrappedValue: .init(for: scraper, mangaId: mangaId, showDismiss: showDismiss))
     }
     
     var body: some View {
@@ -38,25 +38,12 @@ struct MangaDetailView: View {
                     }
                 }
             }
-            
-            if !vm.error && vm.manga == nil {
+
+            if vm.data != nil { MangaDetail(vm: vm) }
+            else {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .frame(maxWidth: .infinity)
-            }
-            
-            if !vm.error && vm.manga != nil {
-                MangaDetail(
-                    manga: vm.manga!,
-                    selectedChapter: $vm.selectedChapter,
-                    isInCollectionPage: vm.isInCollectionPage,
-                    refreshing: vm.refreshing,
-                    forceCompact: !vm.showDismiss,
-                    update: vm.update,
-                    resetCache: vm.resetCache,
-                    insertMangaInCollection: vm.insertMangaInCollection,
-                    removeMangaFromCollection: vm.removeMangaFromCollection
-                )
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -67,10 +54,10 @@ struct MangaDetailView: View {
                         Image(systemName: "chevron.down")
                     }
                     .buttonStyle(.plain)
-                    
+
                 }
             }
-            
+
             ToolbarItem(placement: .navigationBarTrailing) {
                 Link(destination: self.vm.getMangaURL()) {
                     Image(systemName: "safari")
@@ -78,8 +65,5 @@ struct MangaDetailView: View {
             }
         }
         .task(priority: .userInitiated) { await vm.fetchManga() }
-        .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: .init(for: chapter))
-        }
     }
 }

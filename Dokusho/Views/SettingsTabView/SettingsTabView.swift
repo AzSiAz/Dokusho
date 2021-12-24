@@ -9,21 +9,19 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct SettingsTabView: View {
-    @Environment(\.managedObjectContext) var ctx
-    
     @StateObject var vm: SettingsVM = .init()
     
     var body: some View {
         NavigationView {
             List {
                 Section("Data") {
-                    Button(action: { vm.createBackup(ctx: ctx) }) {
+                    Button(action: { vm.createBackup() }) {
                         Text("Create Backup")
                     }
                     Button(action: { vm.showImportfile.toggle() }) {
                         Text("Import Backup")
                     }
-                    Button(action: { vm.cleanOrphanData(ctx: ctx) }) {
+                    Button(action: { vm.cleanOrphanData() }) {
                         Text("Clean orphan data")
                     }
                 }
@@ -39,9 +37,7 @@ struct SettingsTabView: View {
             }
             .fileImporter(isPresented: $vm.showImportfile, allowedContentTypes: [.json], allowsMultipleSelection: false) { res in
                 let url = try! res.get().first!
-                Task {
-                    await vm.importBackup(url: url, ctx: ctx)
-                }
+                Task { await vm.importBackup(url: url) }
             }
             .overlay {
                 if vm.actionInProgress {

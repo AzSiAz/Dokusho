@@ -7,32 +7,32 @@
 
 import SwiftUI
 import MangaScraper
+import GRDBQuery
 
 struct MangaForSourcePage: View {
-    @FetchRequest var mangas: FetchedResults<MangaEntity>
-    @State var selectedManga: MangaEntity?
+    @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
+    @State var selectedManga: DetailedMangaInList?
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
-    var sourceName: String
+    var scraper: Scraper
     
-    init(sourceId: UUID) {
-        self.sourceName = MangaScraperService.shared.getSource(sourceId: sourceId)!.name
-        
-        self._mangas = .init(sortDescriptors: [MangaEntity.nameOrder], predicate: MangaEntity.sourcePredicate(sourceId: sourceId), animation: .easeIn)
+    init(scraper: Scraper) {
+        self.scraper = scraper
+        _list = Query(DetailedMangaInListRequest(requestType: .forScraper(scraper: scraper)))
     }
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns) {
-                ForEach(mangas) { manga in
-                    MangaCardView(manga: manga)
-                        .onTapGesture { selectedManga = manga }
+                ForEach(list) { data in
+                    MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                        .onTapGesture { selectedManga = data }
                 }
             }
-            .navigationTitle("\(sourceName) (\(mangas.count))")
+            .navigationTitle("\(scraper.name) (\(list.count))")
             .navigationBarTitleDisplayMode(.automatic)
-            .sheetSizeAware(item: $selectedManga, content: { manga in
-                MangaDetailView(mangaId: manga.mangaId!, src: manga.sourceId, isInCollectionPage: true)
+            .sheetSizeAware(item: $selectedManga, content: { data in
+                MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
             })
         }
     }

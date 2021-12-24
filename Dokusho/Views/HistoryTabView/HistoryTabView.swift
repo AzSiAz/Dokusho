@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GRDBQuery
 
 struct HistoryTabView: View {
     @State var searchTitle: String = ""
@@ -13,7 +14,7 @@ struct HistoryTabView: View {
     
     var body: some View {
         NavigationView {
-            FilteredHistoryView(searchTerm: searchTitle, status: status)
+            FilteredHistoryView(searchTitle: searchTitle, status: status)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Picker("Chapter Status", selection: $status) {
@@ -36,48 +37,37 @@ struct HistoryTabView: View {
 }
 
 struct FilteredHistoryView: View {
-    @FetchRequest var chapters: FetchedResults<ChapterEntity>
-    
+    @Query<ChaptersHistoryRequest> var list: [ChaptersHistory]
     var status: ChapterStatusHistory
     
-    init(searchTerm: String, status: ChapterStatusHistory) {
+    init(searchTitle: String, status: ChapterStatusHistory) {
         self.status = status
-        self._chapters = .init(
-            sortDescriptors: ChapterEntity.chapterHistoryOrder(status: status),
-            predicate: ChapterEntity.chapterHistoryPredicate(status: status, searchTerm: searchTerm),
-            animation: .easeIn
-        )
+        _list = Query(ChaptersHistoryRequest(filter: status, searchTerm: searchTitle))
     }
     
     var body: some View {
         List {
-            ForEach(chapters) { chapter in
-                ChapterRow(chapter: chapter)
+            ForEach(list) { data in
+                ChapterRow(data)
             }
         }
         .id(UUID())
     }
     
     @ViewBuilder
-    func ChapterRow(chapter: ChapterEntity) -> some View {
-        NavigationLink(
-            destination: MangaDetailView(
-                mangaId: chapter.manga!.mangaId!,
-                src: chapter.manga!.sourceId,
-                showDismiss: false
-            )
-        ) {
+    func ChapterRow(_ data: ChaptersHistory) -> some View {
+        NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper, showDismiss: false)) {
             HStack {
-                RemoteImageCacheView(url: chapter.manga!.cover!, contentMode: .fit)
+                RemoteImageCacheView(url: data.manga.cover, contentMode: .fit)
                     .frame(width: 80)
-                    .id(chapter.key)
+                    .id(data.id)
                 
                 VStack(alignment: .leading) {
-                    Text(chapter.manga!.title!)
-                    Text(chapter.title ?? "No title...")
+                    Text(data.manga.title)
+                    Text(data.chapter.title)
                     
-                    if status == .read { Text("Read at: \(chapter.readAt?.formatted() ?? "No date...")") }
-                    if status == .all { Text("Uploaded at: \(chapter.dateSourceUpload?.formatted() ?? "No date...")") }
+                    if status == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
+                    if status == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
                 }
             }
             .frame(minHeight: 120)

@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct ChapterListInformation: View {
-    @ObservedObject var manga: MangaEntity
-    
-    @Binding var selectedChapter: ChapterEntity?
     @State var ascendingOrder = true
     @State var filter: ChapterStatusFilter = .all
-    var refreshing: Bool
+    
+    var manga: Manga
+    var scraper: Scraper
 
     var body: some View {
         LazyVStack {
@@ -46,7 +45,7 @@ struct ChapterListInformation: View {
             Divider()
                 .padding(.horizontal, 5)
             
-            ChapterCollection(manga: manga.objectID, selectedChaper: $selectedChapter, ascendingOrder: ascendingOrder, filter: filter, refreshing: refreshing)
+            ChapterCollection(manga: manga, scraper: scraper, ascendingOrder: ascendingOrder, filter: filter)
                 .padding(.horizontal, 10)
         }
     }

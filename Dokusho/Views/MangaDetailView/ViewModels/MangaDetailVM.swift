@@ -6,42 +6,42 @@
 //
 
 import Foundation
-import CoreData
 import SwiftUI
 import MangaScraper
-import WidgetKit
+import GRDB
 
 @MainActor
 class MangaDetailVM: ObservableObject {
-    private var ctx = PersistenceController.shared.container.viewContext
-    let src: Source
+    private let database = AppDatabase.shared.database
+    
+    let scraper: Scraper
     let mangaId: String
     let showDismiss: Bool
     
     @Published var error = false
-    @Published var manga: MangaEntity?
     @Published var showMoreDesc = false
     @Published var addToCollection = false
     @Published var refreshing = false
-    @Published var selectedChapter: ChapterEntity?
-    @Published var isInCollectionPage: Bool
+    @Published var selectedChapter: MangaChapter?
+    @Published var selectedGenre: String?
+    @Published var data: MangaWithDetail?
     
-    init(for sourceId: UUID, mangaId: String, showDismiss: Bool, isInCollectionPage: Bool = false) {
-        self.src = MangaScraperService.shared.getSource(sourceId: sourceId)!
+    init(for scraper: Scraper, mangaId: String, showDismiss: Bool) {
+        self.scraper = scraper
         self.mangaId = mangaId
         self.showDismiss = showDismiss
-        self.isInCollectionPage = isInCollectionPage
-
-        withAnimation {
-            self.manga = MangaEntity.fetchOne(ctx: ctx, mangaId: mangaId, sourceId: src.id, includeChapters: true)
+        
+        try? database.read { db in
+            try withAnimation {
+                data = try Manga.fetchMangaWithDetail(for: mangaId, in: scraper.id, db)
+            }
         }
     }
     
     func fetchManga() async {
-        if manga == nil { await update() }
+        if data == nil { await update() }
     }
-    
-    @MainActor
+
     func update() async {
         withAnimation {
             self.error = false
@@ -49,17 +49,24 @@ class MangaDetailVM: ObservableObject {
         }
 
         do {
-            guard let sourceManga = try? await src.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
-            guard let saved = try? MangaEntity.updateFromSource(ctx: self.ctx, data: sourceManga, source: self.src) else { throw "Error updating/fetching manga" }
-            try ctx.save()
+            guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
+            try await database.write { db in
+                guard let manga = try Manga.fetchOne(db, mangaId: self.mangaId, scraperId: self.scraper.id) else { return }
+                let readChapters = try MangaChapter.all().onlyRead().forMangaId(manga.id).fetchAll(db)
+                let chaptersBackup = readChapters.map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
 
-            withAnimation {
-                self.manga = saved
-                self.refreshing = false
+                try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga, readChapters: chaptersBackup)
             }
-            
-            Task(priority: .low) {
-                WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.latestMangaWidget.rawValue)
+
+            try await database.read { db in
+                let updated = try Manga.fetchMangaWithDetail(for: self.mangaId, in: self.scraper.id, db)
+                
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self.data = updated
+                        self.refreshing = false
+                    }
+                }
             }
         } catch {
             withAnimation {
@@ -70,32 +77,53 @@ class MangaDetailVM: ObservableObject {
     }
     
     func getMangaURL() -> URL {
-        return self.src.mangaUrl(mangaId: self.mangaId)
+        return scraper.asSource()?.mangaUrl(mangaId: self.mangaId) ?? URL(string: "")!
     }
     
     func getSourceName() -> String {
-        return src.name
+        return scraper.name
     }
     
     // TODO: Rework reset cache to avoid deleting chapter read/unread info
-    func resetCache() async {
-//        guard let id = self.manga?.objectID else { return }
-//
-//        await fetchAndInsert()
-    }
+    func resetCache() async {}
     
-    func insertMangaInCollection(_ collectionId: NSManagedObjectID) {
-        guard let collection = ctx.object(with: collectionId) as? CollectionEntity else { return }
-        try? ctx.performAndWait {
-            self.manga?.collection = collection
-            try ctx.save()
+    func insertMangaInCollection(_ collection: MangaCollection) {
+        guard var manga = data?.manga else { return }
+
+        do {
+            try database.write { db in
+                manga.mangaCollectionId = collection.id
+                try manga.save(db)
+                
+                try withAnimation {
+                    data = try Manga.fetchMangaWithDetail(for: mangaId, in: scraper.id, db)
+                }
+            }
+        } catch(let err) {
+            print(err)
+            withAnimation {
+                self.error = true
+            }
         }
     }
     
     func removeMangaFromCollection() {
-        try? ctx.performAndWait {
-            self.manga?.collection = nil
-            try self.ctx.save()
+        guard var manga = data?.manga else { return }
+
+        do {
+            try database.write { db in
+                manga.mangaCollectionId = nil
+                try manga.save(db)
+                
+                try withAnimation {
+                    data = try Manga.fetchMangaWithDetail(for: mangaId, in: scraper.id, db)
+                }
+            }
+        } catch(let err) {
+            print(err)
+            withAnimation {
+                self.error = true
+            }
         }
     }
 }
