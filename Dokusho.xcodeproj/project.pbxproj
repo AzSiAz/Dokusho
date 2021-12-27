@@ -64,6 +64,7 @@
 		E27FF71B27725E510035DB99 /* MangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27FF71A27725E510035DB99 /* MangaCollection.swift */; };
 		E2844CB627726393009F4F31 /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2844CB527726393009F4F31 /* Scraper.swift */; };
 		E2B96CD3274DB9BD002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
+		E2C97A5E277A292000A7DFC0 /* ZoomGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C97A5D277A292000A7DFC0 /* ZoomGesture.swift */; };
 		E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127B26CD0559007837D1 /* ChapterListVM.swift */; };
 		E2CB128526CD0559007837D1 /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */; };
 		E2CB128626CD0559007837D1 /* ChapterCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127E26CD0559007837D1 /* ChapterCollection.swift */; };
@@ -104,7 +105,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePipeline.swift; sourceTree = "<group>"; };
 		E2006E882720544A00BE6907 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		E203414E270C4F9E00990F80 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E2034150270C4F9E00990F80 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -162,6 +162,7 @@
 		E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowBorder.swift; sourceTree = "<group>"; };
 		E2BD651326F22AE200BE5CD7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E2C24EF0270CC15200A7D6C5 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		E2C97A5D277A292000A7DFC0 /* ZoomGesture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomGesture.swift; sourceTree = "<group>"; };
 		E2CB127B26CD0559007837D1 /* ChapterListVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListVM.swift; sourceTree = "<group>"; };
 		E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailVM.swift; sourceTree = "<group>"; };
 		E2CB127E26CD0559007837D1 /* ChapterCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterCollection.swift; sourceTree = "<group>"; };
@@ -299,7 +300,6 @@
 				E2187EA426CC5D9E009604A9 /* UIScreen.swift */,
 				E2CB129026CD1C8A007837D1 /* Optional.swift */,
 				E2DA94DA26D64DF00083F2F7 /* URL.swift */,
-				E2000CEE272002C2000EA6C2 /* ImagePipeline.swift */,
 				E26E1F1E2774B29A0092FA99 /* String.swift */,
 			);
 			path = Extensions;
@@ -465,6 +465,7 @@
 		E2B96CD1274DB9B3002F66BD /* ViewModifier */ = {
 			isa = PBXGroup;
 			children = (
+				E2C97A5D277A292000A7DFC0 /* ZoomGesture.swift */,
 				E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */,
 			);
 			path = ViewModifier;
@@ -672,6 +673,7 @@
 				E2844CB627726393009F4F31 /* Scraper.swift in Sources */,
 				E26D7E5E27080E9A0003C6C1 /* ChapterImage.swift in Sources */,
 				E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */,
+				E2C97A5E277A292000A7DFC0 /* ZoomGesture.swift in Sources */,
 				E26E1F262774FE5E0092FA99 /* ChaptersHistoryRequest.swift in Sources */,
 				E26D7E592704D47E0003C6C1 /* FilteredCollectionPage.swift in Sources */,
 				E2F2D5FE27736635008AC108 /* MangaCollectionRequest.swift in Sources */,

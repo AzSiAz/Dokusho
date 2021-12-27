@@ -27,6 +27,7 @@ struct VerticalReaderView: View {
                             .id(image)
                             .tag(image)
                             .onAppear { vm.tabIndex = image }
+                            .addPinchZoom()
                     }
                 }
             }

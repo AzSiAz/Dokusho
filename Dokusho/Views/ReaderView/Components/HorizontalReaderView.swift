@@ -22,6 +22,7 @@ struct HorizontalReaderView: View {
                         )
                         .id(image)
                         .tag(image)
+                        .addPinchZoom()
                 }
             }
         }
