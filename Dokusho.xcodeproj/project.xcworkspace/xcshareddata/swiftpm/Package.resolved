@@ -33,7 +33,7 @@
         "repositoryURL": "https://github.com/AzSiAz/MangaScraper",
         "state": {
           "branch": "main",
-          "revision": "e64afaa1beb81e5c488382e6d30b4ab413424efc",
+          "revision": "40864231ea5a298b47e3498b09d39b14de67be06",
           "version": null
         }
       },
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
         "state": {
           "branch": "master",
-          "revision": "3fa09f4d79e5172b14cb50e02f1d5f115a2bbaef",
+          "revision": "2fd5b591d1924f6e5906e87e752cf1fa82418da8",
           "version": null
         }
       },
@@ -80,6 +80,15 @@
           "branch": "master",
           "revision": "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07",
           "version": null
+        }
+      },
+      {
+        "package": "ZoomableImageView",
+        "repositoryURL": "https://github.com/rushairer/ZoomableImageView.git",
+        "state": {
+          "branch": null,
+          "revision": "4544906abfa6891b9a536ed467947f7d926e4da3",
+          "version": "1.0.2"
         }
       }
     ]

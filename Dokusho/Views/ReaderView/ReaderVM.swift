@@ -43,6 +43,7 @@ class ReaderVM: ObservableObject {
 
             images.forEach { ImagePipeline.inMemory.loadImage(with: $0.imageUrl, completion: { _ in }) }
         } catch {
+            print(error)
             Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
         }
     }

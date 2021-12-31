@@ -39,6 +39,7 @@ struct ChapterImageView: View {
                     Image(uiImage: res.image)
                         .resizable()
                         .aspectRatio(contentMode: contentMode)
+                        .addPinchZoom()
             case .failure(let err):
                     VStack {
                         Button(action: { id = UUID() }) {

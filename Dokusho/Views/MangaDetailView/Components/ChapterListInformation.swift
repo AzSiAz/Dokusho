@@ -42,9 +42,6 @@ struct ChapterListInformation: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
             
-            Divider()
-                .padding(.horizontal, 5)
-            
             ChapterCollection(manga: manga, scraper: scraper, ascendingOrder: ascendingOrder, filter: filter)
                 .padding(.horizontal, 10)
         }
