@@ -18,10 +18,10 @@ Alternative to consider:
 
 ## Features
 - MultiSource (see progress in [MangaScraper](https://github.com/AzSiAz/MangaScraper) repository)
-- Library stored in CoreData + cloudkit
+- Library stored in GRDB
 - Multi collection (only one manga per collection)
-- Basic Filter in library (read/unread/all) saved per collection
-- Very basic manga/webtoon/etc. reader and a way to change reader direction
+- some Library Filter and order (saved)
+- Very basic manga/webtoon/etc reader and a way to change reader direction
 - Backup/Restore
 
 ## Working On
@@ -29,9 +29,10 @@ Alternative to consider:
 
 ## Planned
 - Tracker (maybe, I don't use them anymore)
-- Scroll to next chaper in reader
+- Scroll to next chapter in reader
 - One manga in multiple collection, maybe
 - Cleanup DB, cache
 - Cloudflare bypass (pain in the ass when you are hit currently)
 - Double Page reader
 - Download
+- CloudKit
