@@ -29,7 +29,7 @@ struct ScraperWithMangaInCollection: Queryable {
     func fetchValue(_ db: Database) throws -> [ScraperWithMangaCount] {
         let request = Scraper
             .select(Scraper.databaseSelection + [count(SQL(sql: "DISTINCT manga.rowid")).forKey("mangaCount")])
-            .joining(required: Scraper.mangas)
+            .joining(required: Scraper.mangas.isInCollection())
             .group(Scraper.Columns.id)
             .orderByPosition()
 
