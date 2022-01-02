@@ -146,10 +146,28 @@ extension MangaChapter {
         """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
     }
 
-    static func updateFromSource(db: Database, manga: Manga, data: SourceManga, readChapters: [ChapterBackup]) throws {
+    static func updateFromSource(db: Database, manga: Manga, scraper: Scraper, data: SourceManga, readChapters: [ChapterBackup]? = nil) throws {
+        // Sometimes all chapters are deleted, I don't know why and it's impossible to reproduce in test
+        guard !data.chapters.isEmpty else {
+            print("Empty chapters, weird so abort to avoid losing read chapters")
+            return
+        }
+        
+        var oldChapters = [ChapterBackup]()
+        
+        if readChapters == nil {
+            // In case it's not from a backup
+            oldChapters = try MangaChapter
+                .all()
+                .onlyRead()
+                .forMangaId(manga.mangaId, scraper.id)
+                .fetchAll(db)
+                .map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
+        }
+
         for info in data.chapters.enumerated() {
             var chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)
-            if let foundBackup = readChapters.first(where: { $0.id == chapter.chapterId }) {
+            if let foundBackup = oldChapters.first(where: { $0.id == chapter.chapterId }) {
                 chapter.readAt = foundBackup.readAt
                 chapter.status = .read
             }

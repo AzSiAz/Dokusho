@@ -36,4 +36,3 @@ struct ScraperWithMangaInCollection: Queryable {
         return try ScraperWithMangaCount.fetchAll(db, request)
     }
 }
-
