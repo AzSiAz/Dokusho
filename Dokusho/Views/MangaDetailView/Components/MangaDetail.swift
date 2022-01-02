@@ -116,7 +116,7 @@ struct MangaDetail: View {
                 }
             }) {
                 VStack(alignment: .center, spacing: 1) {
-                    Image(systemName: "heart")
+                    Image(systemSymbol: .heart)
                         .symbolVariant(data.mangaCollection != nil ? .fill : .none)
                     Text(data.mangaCollection?.name ?? "Favoris")
                 }
@@ -153,7 +153,7 @@ struct MangaDetail: View {
             
             AsyncButton(action: { await vm.update() }) {
                 VStack(alignment: .center, spacing: 1) {
-                    Image(systemName: "arrow.clockwise")
+                    Image(systemSymbol: .arrowClockwise)
                     Text("Refresh")
                 }
             }
@@ -163,7 +163,7 @@ struct MangaDetail: View {
             
             AsyncButton(action: { await vm.resetCache() }) {
                 VStack(alignment: .center, spacing: 1) {
-                    Image(systemName: "xmark.bin.circle")
+                    Image(systemSymbol: .xmarkBinCircle)
                     Text("Reset cache")
                 }
             }

@@ -35,14 +35,14 @@ struct LibraryToolbarView: ToolbarContent {
 //        TODO: Cancel task when I know how it work^^
 //        ToolbarItem(placement: .navigationBarTrailing) {
 //            AsyncButton(action: { /*vm.refreshLib(for: collection)*/ }) {
-//                Image(systemName: "arrow.clockwise")
+//                Image(systemSymbol: .arrowClockwise)
 //            }
 //            .buttonStyle(.plain)
 //        }
         
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: { showFilter.toggle() }) {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                Image(systemSymbol: .lineHorizontal3DecreaseCircle)
                     .symbolVariant(collection.filter != .all ? .fill : .none)
             }
             .sheet(isPresented: $showFilter) {

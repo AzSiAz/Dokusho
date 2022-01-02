@@ -34,7 +34,7 @@ struct MangaDetailView: View {
                 VStack {
                     Text("Something weird happened, try again")
                     AsyncButton(action: { await vm.update() }) {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image(systemSymbol: .arrowClockwise)
                     }
                 }
             }
@@ -51,7 +51,7 @@ struct MangaDetailView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 if vm.showDismiss {
                     Button(action: dismiss.callAsFunction) {
-                        Image(systemName: "chevron.down")
+                        Image(systemSymbol: .chevronDown)
                     }
                     .buttonStyle(.plain)
 
@@ -60,7 +60,7 @@ struct MangaDetailView: View {
 
             ToolbarItem(placement: .navigationBarTrailing) {
                 Link(destination: self.vm.getMangaURL()) {
-                    Image(systemName: "safari")
+                    Image(systemSymbol: .safari)
                 }
             }
         }

@@ -28,7 +28,7 @@ struct ExploreSourceView: View {
                 VStack {
                     Text("Something weird happened, try again")
                     AsyncButton(action: { await vm.fetchList(clean: true) }) {
-                        Image(systemName: "arrow.counterclockwise")
+                        Image(systemSymbol: .arrowClockwise)
                     }
                 }
             }
@@ -64,13 +64,12 @@ struct ExploreSourceView: View {
             }
         }
         .task { await vm.fetchList() }
-        .refreshable { await vm.fetchList(clean: true) }
         .toolbar {
             ToolbarItem(placement: .principal) { Header() }
             ToolbarItem(placement: .navigationBarTrailing) {
-                AsyncButton(action: { await vm.fetchList(clean: true) }, {
-                    Text("Refresh")
-                })
+                AsyncButton(action: { await vm.fetchList(clean: true) }) {
+                    Image(systemSymbol: .arrowClockwise)
+                }
             }
         }
         .navigationTitle(vm.getTitle())

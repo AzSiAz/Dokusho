@@ -72,7 +72,7 @@ struct ReaderView: View {
         if vm.showToolBar {
             HStack(alignment: .center) {
                 Button(action: { dismiss() }) {
-                    Image(systemName: "xmark")
+                    Image(systemSymbol: .xmark)
                 }
 
                 Spacer()
@@ -82,7 +82,7 @@ struct ReaderView: View {
                 
                 Spacer()
                 Button(action: { vm.showReaderDirectionChoice.toggle() }) {
-                    Image(systemName: "slider.vertical.3")
+                    Image(systemSymbol: .sliderVertical3)
                 }
                 .actionSheet(isPresented: $vm.showReaderDirectionChoice) {
                     var actions: [ActionSheet.Button] = ReadingDirection.allCases.map { dir in

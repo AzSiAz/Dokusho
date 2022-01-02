@@ -43,7 +43,7 @@ struct ChapterImageView: View {
             case .failure(let err):
                     VStack {
                         Button(action: { id = UUID() }) {
-                            Image(systemName: "arrow.clockwise")
+                            Image(systemSymbol: .arrowClockwise)
                                 .resizable()
                                 .frame(width: 32, height: 32)
                         }

@@ -31,7 +31,7 @@ struct ChapterListRow: View {
                 Spacer()
                 
                 Button(action: { print("download")}) {
-                    Image(systemName: "icloud.and.arrow.down")
+                    Image(systemSymbol: .icloudAndArrowDown)
                 }
             }
             .buttonStyle(.plain)
