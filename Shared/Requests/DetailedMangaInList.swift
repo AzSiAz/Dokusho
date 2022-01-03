@@ -15,6 +15,9 @@ struct DetailedMangaInList: Identifiable, FetchableRecord, Decodable {
     var manga: PartialManga
     var scraper: Scraper
     var unreadChapterCount: Int
+    var readChapterCount: Int
+    var chapterCount: Int
+    var lastUpdate: Date
 }
 
 struct DetailedMangaInListRequest: Queryable {
@@ -49,7 +52,8 @@ struct DetailedMangaInListRequest: Queryable {
                 Manga.Columns.cover,
                 count(SQL(sql: unreadChapterCount)).forKey("unreadChapterCount"),
                 count(SQL(sql: readChapterCount)).forKey("readChapterCount"),
-                count(SQL(sql: chapterCount)).forKey("chapterCount")
+                count(SQL(sql: chapterCount)).forKey("chapterCount"),
+                max(SQL(sql: "\"mangaChapter\".\"dateSourceUpload\"")).forKey("lastUpdate")
             ])
             .joining(optional: Manga.chapters)
             .including(required: Manga.scraper)
