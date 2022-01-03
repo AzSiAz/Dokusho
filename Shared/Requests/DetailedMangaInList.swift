@@ -17,7 +17,7 @@ struct DetailedMangaInList: Identifiable, FetchableRecord, Decodable {
     var unreadChapterCount: Int
     var readChapterCount: Int
     var chapterCount: Int
-    var lastUpdate: Date
+    var lastUpdate: Date?
 }
 
 struct DetailedMangaInListRequest: Queryable {
@@ -68,6 +68,7 @@ struct DetailedMangaInListRequest: Queryable {
             switch collection.filter {
             case .all: break
             case .onlyUnReadChapter: request = request.having(sql: "unreadChapterCount > 0")
+            case .completed: request = request.forMangaStatus(.complete)
             }
 
             switch collection.order.field {

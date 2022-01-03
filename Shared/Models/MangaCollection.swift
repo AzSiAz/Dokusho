@@ -9,7 +9,7 @@ import Foundation
 import GRDB
 
 enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, DatabaseValueConvertible {
-    case onlyUnReadChapter = "Only Unread Chapter", all = "All"
+    case onlyUnReadChapter = "Only Unread Chapter", all = "All", completed = "Only Completed"
 }
 
 struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
@@ -17,15 +17,15 @@ struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
         case unreadChapters = "By unread chapter", lastUpdate = "By last update", title = "By title", chapterCount = "By chapter count"
 
         init?(rawValue: String) {
-            switch rawValue {
-            case "By unread chapter": fallthrough
-            case "unreadChapters": self = .unreadChapters
-            case "By last update": fallthrough
-            case "lastUpdate": self = .lastUpdate
-            case "By title": fallthrough
+            switch rawValue.lowercased() {
+            case "by unread chapter": fallthrough
+            case "unreadchapters": self = .unreadChapters
+            case "by last update": fallthrough
+            case "lastupdate": self = .lastUpdate
+            case "by title": fallthrough
             case "title": self = .title
-            case "By chapter count": fallthrough
-            case "chapterCount": self = .chapterCount
+            case "by chapter count": fallthrough
+            case "chaptercount": self = .chapterCount
             default: self = .lastUpdate
             }
         }
@@ -35,11 +35,11 @@ struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
         case ASC = "Ascending", DESC = "Descending"
         
         init?(rawValue: String) {
-            switch rawValue {
-            case "Ascending": fallthrough
-            case "ASC": self = .ASC
-            case "Descending": fallthrough
-            case "DESC": self = .DESC
+            switch rawValue.lowercased() {
+            case "ascending": fallthrough
+            case "asc": self = .ASC
+            case "descending": fallthrough
+            case "desc": self = .DESC
             default: self = .ASC
             }
         }

@@ -172,6 +172,9 @@ extension DerivableRequest where RowDecoder == Manga {
         whereSource(scraperId).filter(RowDecoder.Columns.mangaId == mangaId)
     }
     
+    func forMangaStatus(_ status: SourceMangaCompletion) -> Self {
+        filter(RowDecoder.Columns.status == status)
+    }
 }
 
 struct MangaWithDetail: Decodable, FetchableRecord {
