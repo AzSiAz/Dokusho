@@ -10,22 +10,38 @@ import GRDB
 
 enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, DatabaseValueConvertible {
     case onlyUnReadChapter = "Only Unread Chapter", all = "All", completed = "Only Completed"
+    
+    init(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "only unread chapter": self = .onlyUnReadChapter
+        
+        case "all": self = .all
+        
+        case "only completed": self = .completed
+        
+        default: self = .all
+        }
+    }
 }
 
 struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
     enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
         case unreadChapters = "By unread chapter", lastUpdate = "By last update", title = "By title", chapterCount = "By chapter count"
 
-        init?(rawValue: String) {
+        init(rawValue: String) {
             switch rawValue.lowercased() {
             case "by unread chapter": fallthrough
             case "unreadchapters": self = .unreadChapters
+
             case "by last update": fallthrough
             case "lastupdate": self = .lastUpdate
+
             case "by title": fallthrough
             case "title": self = .title
+
             case "by chapter count": fallthrough
             case "chaptercount": self = .chapterCount
+
             default: self = .lastUpdate
             }
         }
@@ -34,12 +50,14 @@ struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
     enum Direction: String, Codable, CaseIterable, DatabaseValueConvertible {
         case ASC = "Ascending", DESC = "Descending"
         
-        init?(rawValue: String) {
+        init(rawValue: String) {
             switch rawValue.lowercased() {
             case "ascending": fallthrough
             case "asc": self = .ASC
+            
             case "descending": fallthrough
             case "desc": self = .DESC
+            
             default: self = .ASC
             }
         }
