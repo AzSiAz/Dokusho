@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Nuke
 
-@MainActor
 class SettingsVM: ObservableObject {
     @Published var actionInProgress = false
     @Published var showExportfile = false
@@ -17,6 +16,7 @@ class SettingsVM: ObservableObject {
     @Published var fileName: String?
     @Published var showImportfile = false
     
+    @MainActor
     func createBackup() {
         actionInProgress.toggle()
         
@@ -29,6 +29,7 @@ class SettingsVM: ObservableObject {
         actionInProgress.toggle()
     }
     
+    @MainActor
     func importBackup(url: URL) async {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
@@ -46,6 +47,7 @@ class SettingsVM: ObservableObject {
         }
     }
     
+    @MainActor
     func cleanOrphanData() {}
     
     func clearImageCache() {

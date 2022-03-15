@@ -56,8 +56,8 @@ class ReaderVM: ObservableObject {
         if images.last == image {
             Task {
                 do {
-                    try database.write { db in
-                        try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: chapter.id)
+                    try await database.write { db in
+                        try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: self.chapter.id)
                     }
                 } catch(let err) {
                     print(err)

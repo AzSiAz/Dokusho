@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct SettingsTabView: View {
-    @StateObject var vm: SettingsVM = .init()
+    @StateObject var vm = SettingsVM()
     
     var body: some View {
         NavigationView {
