@@ -39,7 +39,7 @@ struct MangaDetailView: View {
                 }
             }
 
-            if vm.data != nil { MangaDetail(vm: vm) }
+            else if vm.data != nil { MangaDetail(vm: vm) }
             else {
                 ProgressView()
                     .progressViewStyle(.circular)

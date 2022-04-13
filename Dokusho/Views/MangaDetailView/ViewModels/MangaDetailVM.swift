@@ -49,7 +49,8 @@ class MangaDetailVM: ObservableObject {
         }
 
         do {
-            guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: mangaId) else { throw "Error fetch manga detail" }
+            guard let source = scraper.asSource() else { throw "Source Not found" }
+            let sourceManga = try await source.fetchMangaDetail(id: mangaId)
             
             try _ = await database.write { db in
                 try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
@@ -96,8 +97,7 @@ class MangaDetailVM: ObservableObject {
                     data = try Manga.fetchMangaWithDetail(for: mangaId, in: scraper.id, db)
                 }
             }
-        } catch(let err) {
-            print(err)
+        } catch {
             withAnimation {
                 self.error = true
             }
