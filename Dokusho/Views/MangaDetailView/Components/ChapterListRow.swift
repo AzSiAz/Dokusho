@@ -15,28 +15,41 @@ struct ChapterListRow: View {
     
     var body: some View {
         HStack {
-            Button(action: { selectedChapter = chapter }) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(chapter.title)
-                        Text(chapter.dateSourceUpload.formatted())
-                            .font(.system(size: 12))
-                        if let readAt = chapter.readAt {
-                            Text("Read At: \(readAt.formatted())")
-                                .font(.system(size: 10))
-                        }
-                    }
+            if let url = chapter.externalUrl {
+                Link(destination: URL(string: url)!) {
+                    self.content
                 }
-                
-                Spacer()
-                
-                Button(action: { print("download")}) {
-                    Image(systemSymbol: .icloudAndArrowDown)
+                .buttonStyle(.plain)
+                .padding(.vertical, 5)
+            } else {
+                Button(action: { selectedChapter = chapter }) {
+                    self.content
                 }
+                .buttonStyle(.plain)
+                .padding(.vertical, 5)
             }
-            .buttonStyle(.plain)
-            .padding(.vertical, 5)
         }
         .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
+    }
+    
+    @ViewBuilder
+    var content: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(chapter.title)
+                Text(chapter.dateSourceUpload.formatted())
+                    .font(.system(size: 12))
+                if let readAt = chapter.readAt {
+                    Text("Read At: \(readAt.formatted())")
+                        .font(.system(size: 10))
+                }
+            }
+        }
+        
+        Spacer()
+        
+        Button(action: { print("download")}) {
+            Image(systemSymbol: .icloudAndArrowDown)
+        }
     }
 }

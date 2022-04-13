@@ -17,6 +17,12 @@ struct ReaderView: View {
     
     var body: some View {
         Group {
+            if (vm.images.count == 0) {
+                VStack {
+                    Text("No images found in this chapter")
+                }
+            }
+            
             if vm.direction == .vertical { VerticalReaderView(vm: vm) }
             else { HorizontalReaderView(vm: vm) }
         }

@@ -46,6 +46,7 @@ struct MangaChapter: Identifiable, Equatable, Codable {
     var readAt: Date?
     var status: ChapterStatus
     var mangaId: UUID
+    var externalUrl: String?
     
     var isUnread: Bool {
         return status != .read
@@ -59,6 +60,7 @@ struct MangaChapter: Identifiable, Equatable, Codable {
         self.position = position
         self.mangaId = mangaId
         self.status = .unread
+        self.externalUrl = data.externalUrl
     }
     
     mutating func updateFromBackup(chapterBackup: ChapterBackup) {
@@ -81,6 +83,7 @@ extension MangaChapter: TableRecord {
         static let readAt = Column(CodingKeys.readAt)
         static let status = Column(CodingKeys.status)
         static let mangaId = Column(CodingKeys.mangaId)
+        static let externalUrl = Column(CodingKeys.externalUrl)
     }
     
     static let databaseSelection: [SQLSelectable] = [
@@ -91,7 +94,8 @@ extension MangaChapter: TableRecord {
         Columns.position,
         Columns.readAt,
         Columns.status,
-        Columns.mangaId
+        Columns.mangaId,
+        Columns.externalUrl
     ]
 }
 
@@ -170,6 +174,7 @@ extension MangaChapter {
             if let foundBackup = oldChapters.first(where: { $0.id == chapter.chapterId }) {
                 chapter.readAt = foundBackup.readAt
                 chapter.status = .read
+                chapter.externalUrl = info.element.externalUrl
             }
 
             try chapter.save(db)

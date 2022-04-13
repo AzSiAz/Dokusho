@@ -95,6 +95,13 @@ struct AppDatabase {
             try db.create(index: "mangaChapter_position", on: "mangaChapter", columns: ["position"])
             try db.create(index: "mangaChapter_dateSourceUpload", on: "mangaChapter", columns: ["dateSourceUpload"])
         }
+        
+        Logger.migration.info("Registering update_mangaChapter_table migration")
+        migrator.registerMigration("update_mangaChapter_table") { db in
+            try db.alter(table: "mangaChapter") { t in
+                t.add(column: "externalUrl", .text)
+            }
+        }
 
         return migrator
     }

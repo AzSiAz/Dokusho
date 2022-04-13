@@ -20,9 +20,16 @@ struct ChapterCollection: View {
     var body: some View {
         Group {
             if let chapter = vm.nextUnreadChapter(chapters: chapters) {
-                Button(action: { vm.selectedChapter = chapter }) {
-                    Text("Read next unread chapter")
-                        .frame(minWidth: 0, maxWidth: .infinity)
+                Group {
+                    if let url = chapter.externalUrl {
+                        Link(destination: URL(string: url)!) {
+                            self.nextButtonContent
+                        }
+                    } else {
+                        Button(action: { vm.selectedChapter = chapter }) {
+                            self.nextButtonContent
+                        }
+                    }
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
@@ -59,6 +66,12 @@ struct ChapterCollection: View {
         .fullScreenCover(item: $vm.selectedChapter) { chapter in
             ReaderView(vm: .init(manga: vm.manga, chapter: chapter, scraper: vm.scraper, chapters: chapters))
         }
+    }
+    
+    @ViewBuilder
+    var nextButtonContent: some View {
+        Text("Read next unread chapter")
+            .frame(minWidth: 0, maxWidth: .infinity)
     }
 }
 
