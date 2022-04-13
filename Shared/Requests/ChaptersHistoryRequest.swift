@@ -10,7 +10,7 @@ import GRDB
 import GRDBQuery
 
 enum ChapterStatusHistory: String {
-    case all = "All", read = "Read"
+    case all = "Update", read = "Read"
 }
 
 struct ChaptersHistory: Decodable, FetchableRecord, Identifiable {

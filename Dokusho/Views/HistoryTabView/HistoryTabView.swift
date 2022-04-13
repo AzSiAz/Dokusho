@@ -31,7 +31,7 @@ struct HistoryTabView: View {
                 }
                 .listStyle(.plain)
                 .searchable(text: $searchTitle)
-                .navigationBarTitle("Reading History", displayMode: .large)
+                .navigationBarTitle(status == .read ? "Reading history" : "Update history", displayMode: .large)
         }
     }
 }
