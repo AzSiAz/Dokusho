@@ -10,7 +10,7 @@ import SwiftUI
 struct AsyncButton<Content: View>: View {
     @State var isActionRunning = false
     
-    let action: () async -> Void
+    let action: () async throws -> Void
     let content: Content
     
     init(action: @escaping () async -> Void, @ViewBuilder _ content: () -> Content) {
@@ -22,7 +22,7 @@ struct AsyncButton<Content: View>: View {
         Button(action: {
             Task {
                 self.isActionRunning.toggle()
-                await self.action()
+                try await self.action()
                 self.isActionRunning.toggle()
             }
         }) {

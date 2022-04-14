@@ -12,10 +12,7 @@ import GRDBQuery
 struct LibraryTabView: View {
     @Environment(\.appDatabase) var appDB
 
-    @Query(DetailedMangaCollectionRequest())
-    var collections
-
-    @StateObject var vm: LibraryVM = .init()
+    @Query(DetailedMangaCollectionRequest()) var collections
 
     @State var editMode: EditMode = .inactive
     @State var newCollectionName = ""

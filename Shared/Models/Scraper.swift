@@ -82,4 +82,9 @@ extension Scraper {
         let source = Scraper(from: source)
         return try source.saved(db)
     }
+    
+    static func fetchOne(_ db: Database, sourceId: UUID) throws -> Self {
+        if let scraper = try Self.fetchOne(db, id: sourceId) { return scraper }
+        else { throw "Scraper not found" }
+    }
 }
