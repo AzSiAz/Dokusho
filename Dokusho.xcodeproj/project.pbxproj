@@ -343,7 +343,7 @@
 			isa = PBXGroup;
 			children = (
 				E2187EB326CC6243009604A9 /* ViewModels */,
-				E2187EB526CC6243009604A9 /* Pages */,
+				E2187EB526CC6243009604A9 /* Screens */,
 				E2187EBE26CC6243009604A9 /* ExploreTabView.swift */,
 			);
 			path = ExploreTabView;
@@ -358,12 +358,12 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		E2187EB526CC6243009604A9 /* Pages */ = {
+		E2187EB526CC6243009604A9 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
 				E2187EB726CC6243009604A9 /* ExploreSourceView.swift */,
 			);
-			path = Pages;
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		E2187EC826CC625C009604A9 /* Components */ = {
@@ -382,7 +382,7 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		E2263A5226FF28B000833CC8 /* Pages */ = {
+		E2263A5226FF28B000833CC8 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
 				E26D7E72270B4FCE0003C6C1 /* DynamicCollection */,
@@ -390,7 +390,7 @@
 				E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */,
 				E26D7E582704D47E0003C6C1 /* FilteredCollectionPage.swift */,
 			);
-			path = Pages;
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		E23AD6F326EE067E0042453A /* HistoryTabView */ = {
@@ -544,7 +544,7 @@
 			isa = PBXGroup;
 			children = (
 				E26D7E6B270B3D020003C6C1 /* VM */,
-				E2263A5226FF28B000833CC8 /* Pages */,
+				E2263A5226FF28B000833CC8 /* Screens */,
 				E2DA94DE26D667FE0083F2F7 /* Components */,
 				E2DA94DD26D667FE0083F2F7 /* LibraryTabView.swift */,
 			);
@@ -859,7 +859,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -897,7 +897,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
