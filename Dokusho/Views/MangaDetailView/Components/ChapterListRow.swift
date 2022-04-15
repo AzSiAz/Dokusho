@@ -17,13 +17,13 @@ struct ChapterListRow: View {
         HStack {
             if let url = chapter.externalUrl {
                 Link(destination: URL(string: url)!) {
-                    self.content
+                    content
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
                 Button(action: { selectedChapter = chapter }) {
-                    self.content
+                    content
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
@@ -48,8 +48,12 @@ struct ChapterListRow: View {
         
         Spacer()
         
-        Button(action: { print("download")}) {
-            Image(systemSymbol: .icloudAndArrowDown)
+        if chapter.externalUrl != nil {
+            Image(systemName: "arrow.up.forward.app")
+        } else {
+            Button(action: { print("download")}) {
+                Image(systemSymbol: .icloudAndArrowDown)
+            }
         }
     }
 }

@@ -64,7 +64,7 @@ struct ChapterCollection: View {
             }
         }
         .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: .init(manga: vm.manga, chapter: chapter, scraper: vm.scraper, chapters: chapters))
+            ReaderView(vm: .init(manga: vm.manga, chapter: chapter, scraper: vm.scraper, chapters: chapters), selectedChapter: $vm.selectedChapter)
         }
     }
     

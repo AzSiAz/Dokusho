@@ -17,7 +17,7 @@ class ReaderVM: ObservableObject {
     
     @Published var chapter: MangaChapter
     @Published var images = [SourceChapterImage]()
-
+    @Published var isLoading = true
     @Published var showToolBar = false
     @Published var tabIndex: SourceChapterImage = .init(index: 0, imageUrl: "")
     @Published var direction: ReadingDirection = .vertical
@@ -38,6 +38,7 @@ class ReaderVM: ObservableObject {
     @MainActor
     func fetchChapter() async {
         do {
+            
             images = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
             tabIndex = images.first ?? .init(index: 0, imageUrl: "")
 
@@ -46,6 +47,8 @@ class ReaderVM: ObservableObject {
             print(error)
             Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
         }
+        
+        isLoading.toggle()
     }
     
     func progressBarCurrent() -> Double {
