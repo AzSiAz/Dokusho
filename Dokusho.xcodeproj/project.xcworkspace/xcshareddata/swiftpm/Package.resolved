@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "inject",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzysztofzablocki/Inject.git",
+      "state" : {
+        "revision" : "e3e8f4c4504f5c2bb24fa6c110ec0726f072667c",
+        "version" : "1.0.6"
+      }
+    },
+    {
       "identity" : "mangascraper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AzSiAz/MangaScraper",
