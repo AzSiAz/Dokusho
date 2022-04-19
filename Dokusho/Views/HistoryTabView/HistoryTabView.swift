@@ -7,51 +7,39 @@
 
 import SwiftUI
 import GRDBQuery
+import Combine
 
 struct HistoryTabView: View {
+    @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
+    
     @State var searchTitle: String = ""
-    @State var status: ChapterStatusHistory = .read
     
     var body: some View {
         NavigationView {
-            FilteredHistoryView(searchTitle: searchTitle, status: status)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        Picker("Chapter Status", selection: $status) {
-                            Text(ChapterStatusHistory.read.rawValue).tag(ChapterStatusHistory.read)
-                            Text(ChapterStatusHistory.all.rawValue).tag(ChapterStatusHistory.all)
-                        }
-                        .frame(maxWidth: 150)
-                        .pickerStyle(.segmented)
-                    }
-
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
+            List {
+                ForEach(list) { data in
+                    ChapterRow(data)
                 }
-                .listStyle(.plain)
-                .searchable(text: $searchTitle)
-                .navigationBarTitle(status == .read ? "Reading history" : "Update history", displayMode: .large)
-        }
-    }
-}
-
-struct FilteredHistoryView: View {
-    @Query<ChaptersHistoryRequest> var list: [ChaptersHistory]
-    var status: ChapterStatusHistory
-    
-    init(searchTitle: String, status: ChapterStatusHistory) {
-        self.status = status
-        _list = Query(ChaptersHistoryRequest(filter: status, searchTerm: searchTitle))
-    }
-    
-    var body: some View {
-        List {
-            ForEach(list) { data in
-                ChapterRow(data)
             }
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Picker("Chapter Status", selection: $list.filter) {
+                        Text(ChapterStatusHistory.read.rawValue).tag(ChapterStatusHistory.read)
+                        Text(ChapterStatusHistory.all.rawValue).tag(ChapterStatusHistory.all)
+                    }
+                    .frame(maxWidth: 150)
+                    .pickerStyle(.segmented)
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                }
+            }
+            .listStyle(.plain)
+            .searchable(text: $list.searchTerm)
+            .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
+            .mirrorAppearanceState(to: $list.isAutoupdating)
         }
-        .id(UUID())
     }
     
     @ViewBuilder
@@ -66,8 +54,8 @@ struct FilteredHistoryView: View {
                     Text(data.manga.title)
                     Text(data.chapter.title)
                     
-                    if status == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
-                    if status == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
+                    if $list.filter.wrappedValue == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
+                    if $list.filter.wrappedValue == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
                 }
             }
             .frame(minHeight: 120)

@@ -19,9 +19,7 @@ struct ReaderView: View {
     
     var body: some View {
         Group {
-            if (vm.isLoading) {
-                Text("Loading")
-            } else if (vm.images.isEmpty && !vm.isLoading) {
+            if (vm.images.isEmpty && !vm.isLoading) {
                 Text("No images found in this chapter")
             }
             else {

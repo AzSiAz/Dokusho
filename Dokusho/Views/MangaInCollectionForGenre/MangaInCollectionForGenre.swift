@@ -11,6 +11,7 @@ import GRDBQuery
 struct MangaInCollectionForGenre: View {
     @Environment(\.dismiss) var dismiss
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
+
     @State var selectedManga: DetailedMangaInList?
     
     var genre: String
@@ -20,7 +21,7 @@ struct MangaInCollectionForGenre: View {
     init(genre: String, showDismiss: Bool = true) {
         self.showDismiss = showDismiss
         self.genre = genre
-        _list = Query(DetailedMangaInListRequest(requestType: .forGenre(genre: genre)))
+        _list = Query(DetailedMangaInListRequest(genre: genre))
     }
     
     var body: some View {

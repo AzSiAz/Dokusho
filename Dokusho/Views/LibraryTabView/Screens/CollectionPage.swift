@@ -7,52 +7,59 @@
 
 import SwiftUI
 import GRDBQuery
+import Combine
 
 struct CollectionPage: View {
+    @Environment(\.appDatabase) var appDatabase
+    @EnvironmentObject var libraryUpdater: LibraryUpdater
+
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
-    @StateObject var vm: LibraryVM
+    @Query<DetailedMangaInCollectionRequest> var list: [DetailedMangaInList]
+    @State var showFilter = false
+    @State var reload = true
+    
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
     init(collection : MangaCollection) {
-        _vm = .init(wrappedValue: .init(collection: collection))
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
+        _list = Query(DetailedMangaInCollectionRequest(collection: collection))
     }
     
     var body: some View {
         if let collection = collection {
             ScrollView {
-                FilteredCollectionPage(collection: collection, searchTerm: vm.searchTerm)
-            }
-            .searchable(text: $vm.searchTerm)
-            .toolbar { toolbar }
-            .safeAreaInset(edge: .bottom) {
-                if let refresh = vm.refreshStatus {
-                    ProgressView(value: Double(refresh.refreshProgress), total: Double(refresh.refreshCount)) {
-                        Text(refresh.refreshTitle)
-                            .lineLimit(1)
-                            .padding(5)
+                LazyVGrid(columns: columns) {
+                    ForEach(list) { data in
+                        NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper, showDismiss: false)) {
+                            MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .background(.thickMaterial)
                 }
             }
-            
+            .searchable(text: $list.searchTerm)
+            .toolbar { toolbar }
+            .navigationTitle("\(collection.name) (\(list.count))")
+            .navigationBarTitleDisplayMode(.automatic)
+            .mirrorAppearanceState(to: $list.isAutoupdating)
         }
     }
     
     var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            AsyncButton(action: { try? await vm.refreshCollection() }) {
+            AsyncButton(action: { try? await libraryUpdater.refreshCollection(collection: collection!) }) {
                 Image(systemSymbol: .arrowClockwise)
             }
             
-            Button(action: { vm.showFilter.toggle() }) {
+            Button(action: { showFilter.toggle() }) {
                 Image(systemSymbol: .lineHorizontal3DecreaseCircle)
-                    .symbolVariant(vm.collection.filter != .all ? .fill : .none)
+                    .symbolVariant(collection!.filter != .all ? .fill : .none)
             }
-            .sheet(isPresented: $vm.showFilter) {
+            .sheet(isPresented: $showFilter) {
                 NavigationView {
                     List {
                         Section("Filter") {
-                            Picker("Change collection filter", selection: $vm.collectionFilter) {
+                            Picker("Change collection filter", selection: $list.collectionFilter) {
                                 ForEach(MangaCollectionFilter.allCases, id: \.self) { filter in
                                     Text(filter.rawValue).tag(filter)
                                 }
@@ -60,12 +67,12 @@ struct CollectionPage: View {
                         }
 
                         Section("Order") {
-                            Picker("Change collection order field", selection: $vm.collectionOrderField) {
+                            Picker("Change collection order field", selection: $list.collectionOrder.field) {
                                 ForEach(MangaCollectionOrder.Field.allCases, id: \.self) { filter in
                                     Text(filter.rawValue).tag(filter)
                                 }
                             }
-                            Picker("Change collection order direction", selection: $vm.collectionOrderDirection) {
+                            Picker("Change collection order direction", selection: $list.collectionOrder.direction) {
                                 ForEach(MangaCollectionOrder.Direction.allCases, id: \.self) { filter in
                                     Text(filter.rawValue).tag(filter)
                                 }
@@ -73,11 +80,44 @@ struct CollectionPage: View {
                         }
                     }
                     .navigationTitle(Text("Modify Filter"))
-                    .onChange(of: vm.collectionFilter, perform: { vm.updateCollectionFilter(newFilter: $0) })
-                    .onChange(of: vm.collectionOrderField, perform: { vm.updateCollectionOrder(direction: nil, field: $0) })
-                    .onChange(of: vm.collectionOrderDirection, perform: { vm.updateCollectionOrder(direction: $0, field: nil) })
+                    .onChange(of: $list.collectionFilter.wrappedValue, perform: { updateCollectionFilter(newFilter: $0) })
+                    .onChange(of: $list.collectionOrder.field.wrappedValue, perform: { updateCollectionOrder(direction: nil, field: $0) })
+                    .onChange(of: $list.collectionOrder.direction.wrappedValue, perform: { updateCollectionOrder(direction: $0, field: nil) })
                 }
             }
+        }
+    }
+    
+    func updateCollectionFilter(newFilter: MangaCollectionFilter) {
+        guard let collection = collection else { return }
+
+        do {
+            try appDatabase.database.write { db in
+                guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
+                print(foundCollection)
+                foundCollection.filter = newFilter
+                print(foundCollection)
+
+                try foundCollection.save(db)
+            }
+        } catch(let err) {
+            print(err)
+        }
+    }
+    
+    func updateCollectionOrder(direction: MangaCollectionOrder.Direction? = nil, field: MangaCollectionOrder.Field? = nil) {
+        guard let collection = collection else { return }
+        
+        do {
+            try appDatabase.database.write { db in
+                guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
+                if let direction = direction { foundCollection.order.direction = direction }
+                if let field = field { foundCollection.order.field = field }
+
+                try foundCollection.save(db)
+            }
+        } catch(let err) {
+            print(err)
         }
     }
 }

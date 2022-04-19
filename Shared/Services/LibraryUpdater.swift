@@ -11,12 +11,13 @@ import CoreData
 import MangaScraper
 import OSLog
 
-class LibraryVM: ObservableObject {
+class LibraryUpdater: ObservableObject {
     struct RefreshStatus {
         var isRefreshing: Bool
         var refreshProgress: Int
         var refreshCount: Int
         var refreshTitle: String
+        var collectionId: MangaCollection.ID
     }
     
     struct RefreshManga {
@@ -26,29 +27,16 @@ class LibraryVM: ObservableObject {
     }
 
     private let database = AppDatabase.shared.database
-    var collection: MangaCollection
 
-    @Published var searchTerm = ""
-    @Published var showFilter = false
-    @Published var collectionFilter: MangaCollectionFilter
-    @Published var collectionOrderField: MangaCollectionOrder.Field
-    @Published var collectionOrderDirection: MangaCollectionOrder.Direction
     @Published var refreshStatus: RefreshStatus?
     
-    init(collection: MangaCollection) {
-        self.collection = collection
-        collectionFilter = collection.filter
-        collectionOrderField = collection.order.field
-        collectionOrderDirection = collection.order.direction
-    }
-    
-    func refreshCollection() async throws {
-        var status = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 1, refreshTitle: "Refreshing...")
+    func refreshCollection(collection: MangaCollection) async throws {
+        var status = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 1, refreshTitle: "Refreshing...", collectionId: collection.id)
         
         await updateRefreshStatus(status)
         
         let mangas = try await database.read { db in
-            try Manga.all().forCollectionId(self.collection.id).fetchAll(db)
+            try Manga.all().forCollectionId(collection.id).fetchAll(db)
         }
         
         status.refreshCount = mangas.count
@@ -88,34 +76,5 @@ class LibraryVM: ObservableObject {
     @MainActor
     func updateRefreshStatus(_ newStatus: RefreshStatus? = nil) {
         self.refreshStatus = newStatus
-    }
-    
-    func updateCollectionFilter(newFilter: MangaCollectionFilter) {
-        do {
-            try database.write { db in
-                guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
-                print(foundCollection)
-                foundCollection.filter = newFilter
-                print(foundCollection)
-
-                try foundCollection.save(db)
-            }
-        } catch(let err) {
-            print(err)
-        }
-    }
-    
-    func updateCollectionOrder(direction: MangaCollectionOrder.Direction? = nil, field: MangaCollectionOrder.Field? = nil) {
-        do {
-            try database.write { db in
-                guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
-                if let direction = direction { foundCollection.order.direction = direction }
-                if let field = field { foundCollection.order.field = field }
-
-                try foundCollection.save(db)
-            }
-        } catch(let err) {
-            print(err)
-        }
     }
 }

@@ -22,6 +22,7 @@ struct DokushoApp: App {
         WindowGroup {
             RootView()
                 .environment(\.appDatabase, .shared)
+                .environmentObject(LibraryUpdater())
                 .enableInjection()
         }
     }
