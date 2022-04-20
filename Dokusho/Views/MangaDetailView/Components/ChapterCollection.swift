@@ -9,6 +9,8 @@ import SwiftUI
 import GRDBQuery
 
 struct ChapterCollection: View {
+    @EnvironmentObject var readerManager: ReaderManager
+    
     @Query<MangaChaptersRequest> var chapters: [MangaChapter]
     @StateObject var vm: ChapterListVM
     
@@ -26,7 +28,7 @@ struct ChapterCollection: View {
                             self.nextButtonContent
                         }
                     } else {
-                        Button(action: { vm.selectedChapter = chapter }) {
+                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper) }) {
                             self.nextButtonContent
                         }
                     }
@@ -37,7 +39,7 @@ struct ChapterCollection: View {
             }
 
             ForEach(chapters) { chapter in
-                ChapterListRow(vm: vm, selectedChapter: $vm.selectedChapter, chapter: chapter)
+                ChapterListRow(vm: vm, chapter: chapter)
                     .contextMenu {
                         if chapter.isUnread {
                             Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
@@ -62,9 +64,6 @@ struct ChapterCollection: View {
                         }
                     }
             }
-        }
-        .fullScreenCover(item: $vm.selectedChapter) { chapter in
-            ReaderView(vm: .init(manga: vm.manga, chapter: chapter, scraper: vm.scraper, chapters: chapters), selectedChapter: $vm.selectedChapter)
         }
     }
     

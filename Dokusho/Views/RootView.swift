@@ -10,7 +10,7 @@ import SwiftUI
 import MangaScraper
 
 struct RootView: View {
-    @EnvironmentObject var libraryUpdater: LibraryUpdater
+    @EnvironmentObject var readerManager: ReaderManager
     
     enum ActiveTab: String {
         case explore, library, history, settings
@@ -36,24 +36,10 @@ struct RootView: View {
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(ActiveTab.settings)
         }
-        .overlay(alignment: .bottom) {
-            if let refresh = libraryUpdater.refreshStatus {
-                VStack {
-                    Text(refresh.refreshTitle)
-                        .lineLimit(1)
-                        .padding(.horizontal, 10)
-                        .padding(.top, 15)
-                    ProgressView(value: Double(refresh.refreshProgress), total: Double(refresh.refreshCount))
-                        .padding(.horizontal, 10)
-                        .padding(.bottom, 2)
-                }
-                .background(.ultraThickMaterial)
-                .clipShape(Rectangle())
-                .cornerRadius(15)
-                .padding(.horizontal, 50)
-                .padding(.bottom, 55)
-                .shadow(radius: 5)
-            }
+        .overlay(alignment: .bottom) { LibraryRefresher() }
+        .fullScreenCover(item: $readerManager.selectedChapter) { data in
+            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper))
+                .environmentObject(readerManager)
         }
     }
 }

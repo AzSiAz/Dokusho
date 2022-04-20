@@ -35,6 +35,7 @@ struct HistoryTabView: View {
                     EditButton()
                 }
             }
+            .id($list.filter.wrappedValue)
             .listStyle(.plain)
             .searchable(text: $list.searchTerm)
             .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)

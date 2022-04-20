@@ -23,6 +23,7 @@ struct DokushoApp: App {
             RootView()
                 .environment(\.appDatabase, .shared)
                 .environmentObject(LibraryUpdater())
+                .environmentObject(ReaderManager())
                 .enableInjection()
         }
     }

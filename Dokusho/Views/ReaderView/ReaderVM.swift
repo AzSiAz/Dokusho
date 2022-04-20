@@ -25,11 +25,9 @@ class ReaderVM: ObservableObject {
     
     private var scraper: Scraper
     private var manga: Manga
-    private var chapters: [MangaChapter] = []
 
-    init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
+    init(manga: Manga, chapter: MangaChapter, scraper: Scraper) {
         self.chapter = chapter
-        self.chapters = chapters
         self.manga = manga
         self.scraper = scraper
         self.direction = manga.getDefaultReadingDirection()
@@ -38,7 +36,6 @@ class ReaderVM: ObservableObject {
     @MainActor
     func fetchChapter() async {
         do {
-            
             images = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
             tabIndex = images.first ?? .init(index: 0, imageUrl: "")
 

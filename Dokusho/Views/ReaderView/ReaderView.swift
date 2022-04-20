@@ -12,20 +12,19 @@ typealias OnProgress = (_ status: ChapterStatus) -> Void
 struct ReaderView: View {
     @Environment(\.safeAreaInsets) var inset
 //    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject() var readerManager: ReaderManager
     
     @StateObject var vm: ReaderVM
     
-    @Binding var selectedChapter: MangaChapter?
-    
     var body: some View {
         Group {
-            if (vm.images.isEmpty && !vm.isLoading) {
-                Text("No images found in this chapter")
-            }
-            else {
+//            if (vm.images.isEmpty && !vm.isLoading) {
+//                Text("No images found in this chapter")
+//            }
+//            else {
                 if vm.direction == .vertical { VerticalReaderView(vm: vm) }
                 else { HorizontalReaderView(vm: vm) }
-            }
+//            }
         }
         .background(Color.black.ignoresSafeArea())
         .navigationBarHidden(true)
@@ -78,7 +77,7 @@ struct ReaderView: View {
     func TopOverlay() -> some View {
         if vm.showToolBar {
             HStack(alignment: .center) {
-                Button(action: { selectedChapter = nil }) {
+                Button(action: { readerManager.dismiss() }) {
                     Image(systemSymbol: .xmark)
                 }
 

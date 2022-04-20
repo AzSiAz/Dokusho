@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ChapterListRow: View {
+    @EnvironmentObject var readerManager: ReaderManager
     @ObservedObject var vm: ChapterListVM
-    @Binding var selectedChapter: MangaChapter?
 
     var chapter: MangaChapter
     
@@ -22,7 +22,7 @@ struct ChapterListRow: View {
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
-                Button(action: { selectedChapter = chapter }) {
+                Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper) }) {
                     content
                 }
                 .buttonStyle(.plain)
@@ -52,7 +52,7 @@ struct ChapterListRow: View {
             Image(systemName: "arrow.up.forward.app")
         } else {
             Button(action: { print("download")}) {
-                Image(systemSymbol: .icloudAndArrowDown)
+                Image(systemName: "icloud.and.arrow.down")
             }
         }
     }
