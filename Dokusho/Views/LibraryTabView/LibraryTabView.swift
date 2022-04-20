@@ -23,7 +23,7 @@ struct LibraryTabView: View {
                 Section("User Collection") {
                     ForEach(collections) { info in
                         NavigationLink(destination: CollectionPage(collection: info.mangaCollection)) {
-                            Label(info.mangaCollection.name, systemSymbol: .squareGrid2x2)
+                            Label(info.mangaCollection.name, systemImage: "square.grid.2x2")
                                 .badge("\(info.mangaCount)")
                                 .padding(.vertical)
                         }

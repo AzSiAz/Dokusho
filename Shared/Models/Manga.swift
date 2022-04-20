@@ -216,4 +216,10 @@ extension Manga {
         
         return manga
     }
+    
+    static func updateCollection(id: UUID, collectionId: UUID?, _ db: Database) throws {
+        return try db.execute(sql: """
+            UPDATE "manga" SET "mangaCollectionId" = ? WHERE id = ?
+        """, arguments: [collectionId, id])
+    }
 }

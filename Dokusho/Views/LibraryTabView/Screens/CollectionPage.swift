@@ -30,7 +30,7 @@ struct CollectionPage: View {
             ScrollView {
                 LazyVGrid(columns: columns) {
                     ForEach(list) { data in
-                        NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper, showDismiss: false)) {
+                        NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
                             MangaCardView(manga: data.manga, count: data.unreadChapterCount)
                         }
                         .buttonStyle(.plain)
@@ -48,11 +48,11 @@ struct CollectionPage: View {
     var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             AsyncButton(action: { try? await libraryUpdater.refreshCollection(collection: collection!) }) {
-                Image(systemSymbol: .arrowClockwise)
+                Image(systemName: "arrow.clockwise")
             }
             
             Button(action: { showFilter.toggle() }) {
-                Image(systemSymbol: .lineHorizontal3DecreaseCircle)
+                Image(systemName: "line.3.horizontal.decrease.circle")
                     .symbolVariant(collection!.filter != .all ? .fill : .none)
             }
             .sheet(isPresented: $showFilter) {

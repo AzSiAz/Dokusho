@@ -50,7 +50,7 @@ struct MangaInCollectionForGenre: View {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 if showDismiss {
                     Button(action: dismiss.callAsFunction) {
-                        Image(systemSymbol: .xmark)
+                        Image(systemName: "xmark")
                     }
                 }
             }

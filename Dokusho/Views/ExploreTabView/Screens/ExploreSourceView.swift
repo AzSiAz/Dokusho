@@ -28,7 +28,7 @@ struct ExploreSourceView: View {
                 VStack {
                     Text("Something weird happened, try again")
                     AsyncButton(action: { await vm.fetchList(clean: true) }) {
-                        Image(systemSymbol: .arrowClockwise)
+                        Image(systemName: "arrow.clockwise")
                     }
                 }
             }
@@ -42,7 +42,7 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(mangaId: manga.id, scraper: vm.scraper, showDismiss: false)) {
+                        NavigationLink(destination: MangaDetailView(mangaId: manga.id, scraper: vm.scraper)) {
                             let found = mangas.first { $0.mangaId == manga.id }
                             ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
                                 .frame(height: 180)
@@ -68,7 +68,7 @@ struct ExploreSourceView: View {
             ToolbarItem(placement: .principal) { Header() }
             ToolbarItem(placement: .navigationBarTrailing) {
                 AsyncButton(action: { await vm.fetchList(clean: true) }) {
-                    Image(systemSymbol: .arrowClockwise)
+                    Image(systemName: "arrow.clockwise")
                 }
             }
         }

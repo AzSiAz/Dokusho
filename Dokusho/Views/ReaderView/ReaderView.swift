@@ -11,20 +11,19 @@ typealias OnProgress = (_ status: ChapterStatus) -> Void
 
 struct ReaderView: View {
     @Environment(\.safeAreaInsets) var inset
-//    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject() var readerManager: ReaderManager
     
     @StateObject var vm: ReaderVM
+    @ObservedObject var readerManager: ReaderManager
     
     var body: some View {
         Group {
-//            if (vm.images.isEmpty && !vm.isLoading) {
-//                Text("No images found in this chapter")
-//            }
-//            else {
+            if (vm.images.isEmpty && !vm.isLoading) {
+                Text("No images found in this chapter")
+            }
+            else {
                 if vm.direction == .vertical { VerticalReaderView(vm: vm) }
                 else { HorizontalReaderView(vm: vm) }
-//            }
+            }
         }
         .background(Color.black.ignoresSafeArea())
         .navigationBarHidden(true)
@@ -77,8 +76,8 @@ struct ReaderView: View {
     func TopOverlay() -> some View {
         if vm.showToolBar {
             HStack(alignment: .center) {
-                Button(action: { readerManager.dismiss() }) {
-                    Image(systemSymbol: .xmark)
+                Button(action: readerManager.dismiss) {
+                    Image(systemName: "xmark")
                 }
 
                 Spacer()
@@ -88,7 +87,7 @@ struct ReaderView: View {
                 
                 Spacer()
                 Button(action: { vm.showReaderDirectionChoice.toggle() }) {
-                    Image(systemSymbol: .sliderVertical3)
+                    Image(systemName: "slider.horizontal.3")
                 }
                 .actionSheet(isPresented: $vm.showReaderDirectionChoice) {
                     var actions: [ActionSheet.Button] = ReadingDirection.allCases.map { dir in

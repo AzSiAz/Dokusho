@@ -24,7 +24,7 @@ struct ChapterListInformation: View {
                 
                 HStack {
                     Button(action: { filter.toggle() }) {
-                        Image(systemSymbol: .lineHorizontal3DecreaseCircle)
+                        Image(systemName: "line.3.horizontal.decrease.circle")
                             .resizable()
                             .scaledToFit()
                             .symbolVariant(filter == .all ? .none : .fill)
@@ -32,7 +32,7 @@ struct ChapterListInformation: View {
                     .padding(.trailing, 5)
                     
                     Button(action: { ascendingOrder.toggle() }) {
-                        Image(systemSymbol: .chevronUpChevronDown)
+                        Image(systemName: "chevron.up.chevron.down")
                             .resizable()
                             .scaledToFit()
                     }

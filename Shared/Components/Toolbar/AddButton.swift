@@ -12,7 +12,7 @@ struct AddButton: View {
     
     var body: some View {
         AsyncButton(action: onTapGesture) {
-            Image(systemSymbol: .plus)
+            Image(systemName: "plus")
         }
     }
 }

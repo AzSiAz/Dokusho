@@ -10,8 +10,6 @@ import SwiftUI
 import MangaScraper
 
 struct RootView: View {
-    @EnvironmentObject var readerManager: ReaderManager
-    
     enum ActiveTab: String {
         case explore, library, history, settings
     }
@@ -37,9 +35,5 @@ struct RootView: View {
                 .tag(ActiveTab.settings)
         }
         .overlay(alignment: .bottom) { LibraryRefresher() }
-        .fullScreenCover(item: $readerManager.selectedChapter) { data in
-            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper))
-                .environmentObject(readerManager)
-        }
     }
 }

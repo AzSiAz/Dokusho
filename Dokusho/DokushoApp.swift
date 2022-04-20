@@ -11,7 +11,7 @@ import Inject
 
 @main
 struct DokushoApp: App {
-    
+    @StateObject var libraryUpdater = LibraryUpdater()
     @ObservedObject private var iO = Inject.observer
     
     init() {
@@ -22,8 +22,7 @@ struct DokushoApp: App {
         WindowGroup {
             RootView()
                 .environment(\.appDatabase, .shared)
-                .environmentObject(LibraryUpdater())
-                .environmentObject(ReaderManager())
+                .environmentObject(libraryUpdater)
                 .enableInjection()
         }
     }
