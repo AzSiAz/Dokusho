@@ -9,16 +9,16 @@ import Foundation
 import GRDB
 import MangaScraper
 
-enum ChapterStatusFilter {
+enum ChapterStatusFilter: String {
     case all
     case unread
     
-    mutating func toggle() {
-        if self == .all {
-            self = .unread
+    static func toggle(value: Self) -> Self {
+        if value == .all {
+            return .unread
         }
         else {
-            self = .all
+            return .all
         }
     }
     

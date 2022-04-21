@@ -15,8 +15,8 @@ struct MangaChaptersRequest: Queryable {
     }
     
     var manga: Manga
-    var order: Order = .ASC
-    var filter: ChapterStatusFilter = .all
+    var ascendingOrder = true
+    var filterAll = true
     
     static var defaultValue: [MangaChapter] { [] }
     
@@ -32,16 +32,15 @@ struct MangaChaptersRequest: Queryable {
             .all()
             .forMangaId(manga.id)
         
-        if filter == .unread {
+        if !filterAll {
             request = request.filter(MangaChapter.Columns.readAt == nil)
         }
         
-        switch order {
-        case .ASC: request = request.order(MangaChapter.Columns.position.asc)
-        case .DESC: request = request.order(MangaChapter.Columns.position.desc)
+        switch ascendingOrder {
+        case true: request = request.order(MangaChapter.Columns.position.asc)
+        case false: request = request.order(MangaChapter.Columns.position.desc)
         }
             
-        return try request
-            .fetchAll(db)
+        return try request.fetchAll(db)
     }
 }

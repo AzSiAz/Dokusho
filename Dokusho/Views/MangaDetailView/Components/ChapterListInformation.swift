@@ -6,13 +6,23 @@
 //
 
 import SwiftUI
+import GRDBQuery
 
 struct ChapterListInformation: View {
-    @State var ascendingOrder = true
-    @State var filter: ChapterStatusFilter = .all
+    @EnvironmentObject var readerManager: ReaderManager
+    
+    @Query<MangaChaptersRequest> var chapters: [MangaChapter]
+    @StateObject var vm: ChapterListVM
     
     var manga: Manga
     var scraper: Scraper
+    
+    init(manga: Manga, scraper: Scraper) {
+        self.manga = manga
+        self.scraper = scraper
+        _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
+        _chapters = Query(MangaChaptersRequest(manga: manga))
+    }
 
     var body: some View {
         LazyVStack {
@@ -23,27 +33,87 @@ struct ChapterListInformation: View {
                 Spacer()
                 
                 HStack {
-                    Button(action: { filter.toggle() }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                            .resizable()
-                            .scaledToFit()
-                            .symbolVariant(filter == .all ? .none : .fill)
-                    }
-                    .padding(.trailing, 5)
-                    
-                    Button(action: { ascendingOrder.toggle() }) {
-                        Image(systemName: "chevron.up.chevron.down")
-                            .resizable()
-                            .scaledToFit()
-                    }
+                    ChaptersButton(filter: $chapters.filterAll, order: $chapters.ascendingOrder)
                 }
             }
             .frame(height: 24)
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
             
-            ChapterCollection(manga: manga, scraper: scraper, ascendingOrder: ascendingOrder, filter: filter)
+            ChapterCollections()
                 .padding(.horizontal, 10)
+        }
+    }
+    
+    @ViewBuilder
+    func ChapterCollections() -> some View {
+        Group {
+            if let chapter = vm.nextUnreadChapter(chapters: chapters) {
+                Group {
+                    if let url = chapter.externalUrl {
+                        Link(destination: URL(string: url)!) {
+                            NextButtonContent()
+                        }
+                    } else {
+                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper) }) {
+                            NextButtonContent()
+                        }
+                    }
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .padding(.horizontal)
+            }
+
+            ForEach(chapters) { chapter in
+                ChapterListRow(vm: vm, chapter: chapter)
+                    .contextMenu {
+                        if chapter.isUnread {
+                            Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
+                                Text("Mark as read")
+                            }
+                        }
+                        else {
+                            Button(action: { vm.changeChapterStatus(for: chapter, status: .unread) }) {
+                                Text("Mark as unread")
+                            }
+                        }
+
+                        if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
+                            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .read, in: chapters) }) {
+                                Text("Mark previous as read")
+                            }
+                        }
+                        else {
+                            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .unread, in: chapters) }) {
+                                Text("Mark previous as unread")
+                            }
+                        }
+                    }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func NextButtonContent() -> some View {
+        Text("Read next unread chapter")
+            .frame(minWidth: 0, maxWidth: .infinity)
+    }
+    
+    @ViewBuilder
+    func ChaptersButton(filter: Binding<Bool>, order: Binding<Bool>) -> some View {
+        Button(action: { filter.wrappedValue.toggle() }) {
+            Image(systemName: "line.3.horizontal.decrease.circle")
+                .resizable()
+                .scaledToFit()
+                .symbolVariant(filter.wrappedValue == true ? .none : .fill)
+        }
+        .padding(.trailing, 5)
+        
+        Button(action: { order.wrappedValue.toggle() }) {
+            Image(systemName: "chevron.up.chevron.down")
+                .resizable()
+                .scaledToFit()
         }
     }
 }

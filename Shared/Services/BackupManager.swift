@@ -97,7 +97,7 @@ struct BackupManager {
         await withTaskGroup(of: BackupResult.self) { group in
             
             for collectionBackup in backup {
-                guard let collection = try? await AppDatabase.shared.database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup) }) else { continue }
+                guard let collection = try? await database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup) }) else { continue }
                 
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
@@ -116,7 +116,7 @@ struct BackupManager {
                     guard let sourceInfo = try? await source.fetchMangaDetail(id: task.mangaBackup.id) else { continue }
                     
                     do {
-                        try await AppDatabase.shared.database.write { db in
+                        try await database.write { db in
                             let scraper = try Scraper.fetchOne(db, source: source)
                             var manga = try Manga.updateFromSource(db: db, scraper: scraper, data: sourceInfo, readChapters: task.mangaBackup.readChapter)
                             manga.mangaCollectionId = task.collection.id
