@@ -9,57 +9,58 @@ import SwiftUI
 import MangaScraper
 import GRDB
 import GRDBQuery
+import Combine
 
 struct ExploreTabView: View {
-    @StateObject var vm = ExploreTabVM()
-    
     @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers
     @Query(ScraperRequest(type: .onlyActive)) var activeScrapers
     
+    @StateObject var vm = ExploreTabVM()
+    
     var body: some View {
         NavigationView {
-            Group {
-                if vm.searchText.isEmpty {  NotSearchingUI }
-                else { SearchingUI }
+            List {
+                Section("Favorite") {
+                    ForEach(favoriteScrapers) { scraper in
+                        FavoriteSourceRowView(scraper: scraper)
+                            .id(scraper.id)
+                    }
+                    .onMove(perform: { vm.onMove(scrapers: favoriteScrapers, offsets: $0, position: $1) })
+                }
+                .animation(.easeIn, value: favoriteScrapers)
+
+                Section("Active") {
+                    ForEach(activeScrapers) { scraper in
+                        ActiveSourceRowView(scraper: scraper)
+                            .id(scraper.id)
+                    }
+                    .onMove(perform: { vm.onMove(scrapers: activeScrapers, offsets: $0, position: $1) })
+                }
+                .animation(.easeIn, value: activeScrapers)
+
+                Section("All Sources") {
+                    ForEach(vm.onlyGetThirdPartyScraper(favorite: favoriteScrapers, active: activeScrapers), id: \.id) { source in
+                        OtherSourceRowView(source: source)
+                            .id(source.id)
+                    }
+                }
             }
-            .toolbar { EditButton() }
-            .searchable(text: $vm.searchText)
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    EditButton()
+                }
+                
+                ToolbarItemGroup(placement: .navigationBarLeading) {
+                    Button(action: { vm.showSourceMangaSearchModal.toggle() }) {
+                        Image(systemName: "magnifyingglass")
+                    }
+                }
+                
+            }
             .navigationTitle("Explore Source")
         }
-    }
-    
-    @ViewBuilder
-    var SearchingUI: some View {
-        Text("Searching \(vm.searchText)")
-    }
-    
-    @ViewBuilder
-    var NotSearchingUI: some View {
-        List {
-            Section("Favorite") {
-                ForEach(favoriteScrapers) { scraper in
-                    FavoriteSourceRowView(scraper: scraper)
-                        .id(scraper.id)
-                }
-                .onMove(perform: { vm.onMove(scrapers: favoriteScrapers, offsets: $0, position: $1) })
-            }
-            .animation(.easeIn, value: favoriteScrapers)
-
-            Section("Active") {
-                ForEach(activeScrapers) { scraper in
-                    ActiveSourceRowView(scraper: scraper)
-                        .id(scraper.id)
-                }
-                .onMove(perform: { vm.onMove(scrapers: activeScrapers, offsets: $0, position: $1) })
-            }
-            .animation(.easeIn, value: activeScrapers)
-
-            Section("All Sources") {
-                ForEach(vm.onlyGetThirdPartyScraper(favorite: favoriteScrapers, active: activeScrapers), id: \.id) { source in
-                    OtherSourceRowView(source: source)
-                        .id(source.id)
-                }
-            }
+        .sheet(isPresented: $vm.showSourceMangaSearchModal) {
+            SearchSourceListScreen(scrapers: favoriteScrapers+activeScrapers)
         }
     }
     

@@ -33,6 +33,8 @@
 		E2187ED426CC625C009604A9 /* NavigationLinkLazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECD26CC625C009604A9 /* NavigationLinkLazyView.swift */; };
 		E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */; };
 		E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23AD6F426EE069E0042453A /* HistoryTabView.swift */; };
+		E261654B281161F2002482C8 /* SearchScraperVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654A281161F2002482C8 /* SearchScraperVM.swift */; };
+		E261654F28118A01002482C8 /* SearchSourceListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654E28118A01002482C8 /* SearchSourceListScreen.swift */; };
 		E2633308280975DB00B80AD4 /* ExploreTabVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2633307280975DB00B80AD4 /* ExploreTabVM.swift */; };
 		E26662BA26CC36830054868A /* DokushoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662B926CC36830054868A /* DokushoApp.swift */; };
 		E26662C326CC36840054868A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662C226CC36840054868A /* Persistence.swift */; };
@@ -52,6 +54,7 @@
 		E26E1F232774E2570092FA99 /* MangaChaptersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F222774E2570092FA99 /* MangaChaptersRequest.swift */; };
 		E26E1F262774FE5E0092FA99 /* ChaptersHistoryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F252774FE5E0092FA99 /* ChaptersHistoryRequest.swift */; };
 		E27367E0272004AB00DBB3B1 /* Nuke.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27367DF272004AB00DBB3B1 /* Nuke.swift */; };
+		E2770B762811ADCD007763C6 /* DebouncedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2770B752811ADCD007763C6 /* DebouncedTextField.swift */; };
 		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
 		E27A5DD126FBB11200F95361 /* AdaptiveStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */; };
 		E27A5DD326FCC69600F95361 /* DeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */; };
@@ -135,6 +138,8 @@
 		E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaUnreadCount.swift; sourceTree = "<group>"; };
 		E2187ED726CC69C4009604A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E23AD6F426EE069E0042453A /* HistoryTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTabView.swift; sourceTree = "<group>"; };
+		E261654A281161F2002482C8 /* SearchScraperVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScraperVM.swift; sourceTree = "<group>"; };
+		E261654E28118A01002482C8 /* SearchSourceListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSourceListScreen.swift; sourceTree = "<group>"; };
 		E2633307280975DB00B80AD4 /* ExploreTabVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTabVM.swift; sourceTree = "<group>"; };
 		E26662B626CC36830054868A /* Dokusho.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dokusho.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E26662B926CC36830054868A /* DokushoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DokushoApp.swift; sourceTree = "<group>"; };
@@ -155,6 +160,7 @@
 		E26E1F222774E2570092FA99 /* MangaChaptersRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaChaptersRequest.swift; sourceTree = "<group>"; };
 		E26E1F252774FE5E0092FA99 /* ChaptersHistoryRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersHistoryRequest.swift; sourceTree = "<group>"; };
 		E27367DF272004AB00DBB3B1 /* Nuke.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nuke.swift; sourceTree = "<group>"; };
+		E2770B752811ADCD007763C6 /* DebouncedTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedTextField.swift; sourceTree = "<group>"; };
 		E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveStack.swift; sourceTree = "<group>"; };
 		E27A5DD226FCC69600F95361 /* DeviceOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceOrientation.swift; sourceTree = "<group>"; };
 		E27FF709277241920035DB99 /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
@@ -355,6 +361,7 @@
 			children = (
 				E2187EB426CC6243009604A9 /* ExploreSourceVM.swift */,
 				E2633307280975DB00B80AD4 /* ExploreTabVM.swift */,
+				E261654A281161F2002482C8 /* SearchScraperVM.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -363,6 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				E2187EB726CC6243009604A9 /* ExploreSourceView.swift */,
+				E261654E28118A01002482C8 /* SearchSourceListScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -380,6 +388,7 @@
 				E27A5DD026FBB11200F95361 /* AdaptiveStack.swift */,
 				E2FDBEC2277CBA2200105C5E /* ChapterImageView.swift */,
 				E2EB7B76281093C200C619E6 /* LibraryRefresher.swift */,
+				E2770B752811ADCD007763C6 /* DebouncedTextField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -680,10 +689,12 @@
 				E2C97A5E277A292000A7DFC0 /* ZoomGesture.swift in Sources */,
 				E26E1F262774FE5E0092FA99 /* ChaptersHistoryRequest.swift in Sources */,
 				E2F2D5FE27736635008AC108 /* MangaCollectionRequest.swift in Sources */,
+				E261654B281161F2002482C8 /* SearchScraperVM.swift in Sources */,
 				E2DA94E926D668170083F2F7 /* LibraryUpdater.swift in Sources */,
 				E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */,
 				E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */,
 				E26E1F232774E2570092FA99 /* MangaChaptersRequest.swift in Sources */,
+				E2770B762811ADCD007763C6 /* DebouncedTextField.swift in Sources */,
 				E2DA94E326D667FE0083F2F7 /* LibraryTabView.swift in Sources */,
 				E2DA94D526D645CE0083F2F7 /* SettingsTabView.swift in Sources */,
 				E20837DB26E8BBA800E6DCEE /* AddButton.swift in Sources */,
@@ -712,6 +723,7 @@
 				E27FF71B27725E510035DB99 /* MangaCollection.swift in Sources */,
 				E26E1F1D277400E70092FA99 /* DistinctMangaGenreRequest.swift in Sources */,
 				E2187ED026CC625C009604A9 /* FlexibleView.swift in Sources */,
+				E261654F28118A01002482C8 /* SearchSourceListScreen.swift in Sources */,
 				E2CB12A026CD4EB7007837D1 /* HorizontalReaderView.swift in Sources */,
 				E2EB7B77281093C200C619E6 /* LibraryRefresher.swift in Sources */,
 				E26E1F16277397040092FA99 /* DetailedMangaCollectionRequest.swift in Sources */,
@@ -847,7 +859,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -866,7 +878,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -886,7 +898,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -905,7 +917,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;

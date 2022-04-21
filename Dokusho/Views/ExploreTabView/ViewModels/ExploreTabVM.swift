@@ -10,8 +10,8 @@ import MangaScraper
 
 class ExploreTabVM: ObservableObject {
     var database = AppDatabase.shared.database
-    
-    @Published var searchText: String = ""
+
+    @Published var showSourceMangaSearchModal = false
     
     func onlyGetThirdPartyScraper(favorite: [Scraper], active: [Scraper]) -> [Source] {
         return MangaScraperService.shared.list
