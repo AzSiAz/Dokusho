@@ -13,25 +13,27 @@ class SearchScraperVM: ObservableObject {
     private var database = AppDatabase.shared.database
     
     var scraper: Scraper
-    var textToSearch: String
     var nextPage = 1
-
+    var oldSearch: String?
+    
     @Published var isLoading = true
     @Published var hasNextPage = false
     @Published var mangas = [SourceSmallManga]()
     
-    init(scraper: Scraper, textToSearch: String) {
+    init(scraper: Scraper) {
         self.scraper = scraper
-        self.textToSearch = textToSearch
     }
     
-    func fetchData(reset: Bool = true) async {
+    func fetchData(textToSearch: String) async {
+        guard !textToSearch.isEmpty else { return }
+
         do {
             isLoading = true
 
-            if reset {
+            if oldSearch != textToSearch {
                 self.mangas = []
                 self.hasNextPage = false
+                self.nextPage = 1
             }
             
             guard let data = try await scraper.asSource()?.fetchSearchManga(query: textToSearch, page: nextPage) else { throw "Error searching for \(textToSearch)" }
@@ -42,6 +44,7 @@ class SearchScraperVM: ObservableObject {
                     self.mangas += data.mangas
                     self.isLoading = false
                     self.nextPage += 1
+                    self.oldSearch = textToSearch
                 }
             }
         } catch {
@@ -50,8 +53,10 @@ class SearchScraperVM: ObservableObject {
     }
     
     func fetchMoreIfPossible(for manga: SourceSmallManga) async {
+        guard let oldSearch = oldSearch else { return }
+
         if mangas.last == manga && hasNextPage {
-            return await fetchData(reset: false)
+            return await fetchData(textToSearch: oldSearch)
         }
     }
     

@@ -22,18 +22,13 @@ struct SearchSourceListScreen: View {
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            TextFieldWithDebounce(debouncedText: $searchText)
+            SearchBarWithDebounce(debouncedText: $searchText)
                 .padding(.top, 10)
-            
-            if searchText.isEmpty {
-                EmptyView()
+                .padding(.horizontal, 10)
+            ForEach(scrapers) { scraper in
+                ScraperSearch(scraper: scraper, textToSearch: $searchText, collections: collections)
             }
-            else {
-                ForEach(scrapers) { scraper in
-                    ScraperSearch(scraper: scraper, textToSearch: searchText, collections: collections)
-                }
-            }
-        }
+        }.padding(.top, 5)
     }
 }
 
@@ -41,44 +36,59 @@ struct ScraperSearch: View {
     @Query<MangaInCollectionsRequest> var mangasInCollection: [MangaInCollection]
 
     @StateObject var vm: SearchScraperVM
+    @Binding var textToSearch: String
     
     var collections: [MangaCollection]
     
-    init(scraper: Scraper, textToSearch: String, collections: [MangaCollection]) {
+    init(scraper: Scraper, textToSearch: Binding<String>, collections: [MangaCollection]) {
         self.collections = collections
-        _vm = .init(wrappedValue: .init(scraper: scraper, textToSearch: textToSearch ))
+        _textToSearch = textToSearch
+        _vm = .init(wrappedValue: .init(scraper: scraper))
         _mangasInCollection = Query(MangaInCollectionsRequest(srcId: scraper.id))
     }
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text(vm.scraper.name)
-                    .padding(.top, 15)
-                    .padding(.leading, 15)
-                Spacer()
-            }
-            
-            if vm.isLoading && vm.mangas.isEmpty {
-                ProgressView()
-                    .padding(.leading, 25)
-            }
-            else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack {
-                        ForEach(vm.mangas) { manga in
-                            mangaCard(manga: manga)
-                        }
-                        
-                        if vm.isLoading && !vm.mangas.isEmpty {
-                            ProgressView()
+            if textToSearch.isEmpty {
+                EmptyView()
+            } else {
+                HStack {
+                    Text(vm.scraper.name)
+                        .padding(.top, 15)
+                        .padding(.leading, 15)
+                    Spacer()
+                }
+                Group {
+                    if vm.isLoading && vm.mangas.isEmpty {
+                        ProgressView()
+                            .padding(.leading, 25)
+                    } else if !vm.isLoading && vm.mangas.isEmpty {
+                        Text("No Results founds")
+                            .padding(.leading, 15)
+                    }
+                    else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack {
+                                ForEach(vm.mangas) { manga in
+                                    mangaCard(manga: manga)
+                                }
+                                
+                                if vm.isLoading && !vm.mangas.isEmpty {
+                                    ProgressView()
+                                }
+                            }
                         }
                     }
                 }
+                .frame(height: !vm.isLoading && vm.mangas.isEmpty ? 50 : 180)
             }
         }
         .padding(.bottom, 10)
-        .task { await vm.fetchData(reset: true) }
+        .onChange(of: textToSearch) { text in
+            Task {
+                await vm.fetchData(textToSearch: textToSearch)
+            }
+        }
     }
     
     @ViewBuilder

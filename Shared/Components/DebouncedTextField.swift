@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import SwiftUIX
 
 class TextFieldObserver : ObservableObject {
     @Published var debouncedText = ""
@@ -40,9 +41,20 @@ struct TextFieldWithDebounce : View {
                         .stroke(Color.blue, lineWidth: 1)
                 )
                 .padding(.horizontal, 20)
-                .onSubmit {
-                    debouncedText = textObserver.debouncedText
-                }
+        }.onReceive(textObserver.$debouncedText) { (val) in
+            debouncedText = val
+        }
+    }
+}
+
+struct SearchBarWithDebounce: View {
+    @Binding var debouncedText : String
+    @StateObject private var textObserver = TextFieldObserver()
+    
+    var body: some View {
+    
+        VStack {
+            SearchBar("Title", text: $textObserver.searchText)
         }.onReceive(textObserver.$debouncedText) { (val) in
             debouncedText = val
         }
