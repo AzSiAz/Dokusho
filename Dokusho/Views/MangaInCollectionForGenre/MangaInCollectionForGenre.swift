@@ -39,8 +39,10 @@ struct MangaInCollectionForGenre: View {
         ScrollView {
             LazyVGrid(columns: columns) {
                 ForEach(list) { data in
-                    MangaCardView(manga: data.manga, count: data.unreadChapterCount)
-                        .onTapGesture { selectedManga = data }
+                    NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+                        MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -55,8 +57,5 @@ struct MangaInCollectionForGenre: View {
                 }
             }
         }
-        .sheetSizeAware(item: $selectedManga, content: { data in
-            MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
-        })
     }
 }

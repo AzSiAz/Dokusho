@@ -11,10 +11,9 @@ import GRDBQuery
 
 struct MangaForSourcePage: View {
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
-    @State var selectedManga: DetailedMangaInList?
     
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     var scraper: Scraper
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
     
     init(scraper: Scraper) {
         self.scraper = scraper
@@ -25,15 +24,14 @@ struct MangaForSourcePage: View {
         ScrollView {
             LazyVGrid(columns: columns) {
                 ForEach(list) { data in
-                    MangaCardView(manga: data.manga, count: data.unreadChapterCount)
-                        .onTapGesture { selectedManga = data }
+                    NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+                        MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .navigationTitle("\(scraper.name) (\(list.count))")
             .navigationBarTitleDisplayMode(.automatic)
-            .sheetSizeAware(item: $selectedManga, content: { data in
-                MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
-            })
         }
     }
 }
