@@ -12,33 +12,35 @@ struct ChapterListRow: View {
     @ObservedObject var vm: ChapterListVM
 
     var chapter: MangaChapter
+    var chapters: [MangaChapter]
     
     var body: some View {
         HStack {
             if let url = chapter.externalUrl {
                 Link(destination: URL(string: url)!) {
-                    content
+                    Content()
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
-                Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper) }) {
-                    content
+                Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
+                    Content()
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             }
         }
         .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
+        .contextMenu { ChapterRowContextMenu() }
         .fullScreenCover(item: $readerManager.selectedChapter) { data in
             NavigationView {
-                ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper), readerManager: readerManager)
+                ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
             }
         }
     }
     
     @ViewBuilder
-    var content: some View {
+    func Content() -> some View {
         HStack {
             VStack(alignment: .leading) {
                 Text(chapter.title)
@@ -58,6 +60,31 @@ struct ChapterListRow: View {
         } else {
             Button(action: { print("download")}) {
                 Image(systemName: "icloud.and.arrow.down")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func ChapterRowContextMenu() -> some View {
+        if chapter.isUnread {
+            Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
+                Text("Mark as read")
+            }
+        }
+        else {
+            Button(action: { vm.changeChapterStatus(for: chapter, status: .unread) }) {
+                Text("Mark as unread")
+            }
+        }
+
+        if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
+            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .read, in: chapters) }) {
+                Text("Mark previous as read")
+            }
+        }
+        else {
+            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .unread, in: chapters) }) {
+                Text("Mark previous as unread")
             }
         }
     }

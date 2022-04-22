@@ -12,6 +12,10 @@ import OSLog
 import MangaScraper
 import Nuke
 
+enum GoToChapterDirection {
+    case next, previous
+}
+
 class ReaderVM: ObservableObject {
     private let database = AppDatabase.shared.database
     
@@ -22,12 +26,14 @@ class ReaderVM: ObservableObject {
     @Published var tabIndex: SourceChapterImage = .init(index: 0, imageUrl: "")
     @Published var direction: ReadingDirection = .vertical
     @Published var showReaderDirectionChoice = false
-    
+
     private var scraper: Scraper
     private var manga: Manga
+    private var chapters: [MangaChapter]
 
-    init(manga: Manga, chapter: MangaChapter, scraper: Scraper) {
+    init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.chapter = chapter
+        self.chapters = chapters.sorted(by: \.position, using: >)
         self.manga = manga
         self.scraper = scraper
         self.direction = manga.getDefaultReadingDirection()
@@ -35,6 +41,8 @@ class ReaderVM: ObservableObject {
     
     @MainActor
     func fetchChapter() async {
+        if !isLoading { isLoading = true }
+
         do {
             images = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
             tabIndex = images.first ?? .init(index: 0, imageUrl: "")
@@ -53,7 +61,15 @@ class ReaderVM: ObservableObject {
     }
 
     func updateChapterStatus(image: SourceChapterImage) {
+        if images.last != image && showToolBar == true && images.first != image {
+            withAnimation {
+                showToolBar = false
+            }
+        }
+
         if images.last == image {
+            toggleToolbar()
+
             Task {
                 do {
                     try await database.write { db in
@@ -71,6 +87,59 @@ class ReaderVM: ObservableObject {
     }
     
     func toggleToolbar() {
-        withAnimation { showToolBar.toggle() }
+        withAnimation {
+            showToolBar.toggle()
+        }
+    }
+    
+    func goToChapter(_ goToDirection: GoToChapterDirection) {
+        switch goToDirection {
+        case .next:
+            let foundChapters = chapters
+                .filter {
+                    switch direction {
+                    case .rightToLeft:
+                        return $0.position > chapter.position
+                    case .leftToRight, .vertical:
+                        return $0.position < chapter.position
+                    }
+                }
+            
+            if let foundChapter = direction == .rightToLeft ? foundChapters.last : foundChapters.first {
+                self.chapter = foundChapter
+            }
+        case .previous:
+            let foundChapters = chapters
+                .filter {
+                    switch direction {
+                    case .rightToLeft:
+                        return $0.position < chapter.position
+                    case .leftToRight, .vertical:
+                        return $0.position > chapter.position
+                    }
+                }
+            
+            if let foundChapter = direction == .rightToLeft ? foundChapters.first : foundChapters.last {
+                self.chapter = foundChapter
+            }
+        }
+    }
+    
+    func hasPreviousChapter() -> Bool {
+        switch direction {
+        case .rightToLeft:
+            return chapters.last?.id != chapter.id
+        case .leftToRight, .vertical:
+            return chapters.first?.id != chapter.id
+        }
+    }
+    
+    func hasNextChapter() -> Bool {
+        switch direction {
+        case .rightToLeft:
+            return chapters.first?.id != chapter.id
+        case .leftToRight, .vertical:
+            return chapters.last?.id != chapter.id
+        }
     }
 }

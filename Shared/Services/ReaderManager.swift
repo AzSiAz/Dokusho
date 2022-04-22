@@ -12,6 +12,7 @@ class ReaderManager: ObservableObject {
         var chapter: MangaChapter
         var manga: Manga
         var scraper: Scraper
+        var chapters: [MangaChapter]
         
         var id: String { chapter.id }
     }
@@ -20,8 +21,8 @@ class ReaderManager: ObservableObject {
     
     @Published var selectedChapter: SelectedChapter?
 
-    func selectChapter(chapter: MangaChapter, manga: Manga, scraper: Scraper) {
-        self.selectedChapter = .init(chapter: chapter, manga: manga, scraper: scraper)
+    func selectChapter(chapter: MangaChapter, manga: Manga, scraper: Scraper, chapters: [MangaChapter]) {
+        self.selectedChapter = .init(chapter: chapter, manga: manga, scraper: scraper, chapters: chapters)
     }
     
     func dismiss() {

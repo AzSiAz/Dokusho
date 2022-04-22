@@ -103,7 +103,7 @@ extension DerivableRequest where RowDecoder == MangaChapter {
     func forMangaId(_ mangaId: String, _ scraperId: UUID) -> Self {
         joining(required: RowDecoder.manga.forMangaId(mangaId, scraperId))
     }
-    
+
     func forChapterStatus(_ status: ChapterStatus) -> Self {
         filter(RowDecoder.Columns.status == status)
     }

@@ -34,6 +34,7 @@ struct ReaderView: View {
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
         .onChange(of: vm.tabIndex) { vm.updateChapterStatus(image: $0) }
+        .onChange(of: vm.chapter) { _ in Task { await vm.fetchChapter() } }
         .preferredColorScheme(.dark)
     }
     
@@ -54,6 +55,12 @@ struct ReaderView: View {
     func BottomOverlay() -> some View {
         if vm.showToolBar {
             HStack {
+                Button(action: { vm.goToChapter(.previous) }) {
+                    Image(systemName: "chevron.left")
+                        .padding(.trailing)
+                }
+                .disabled(!vm.hasPreviousChapter())
+
                 Spacer()
                 if vm.images.isEmpty {
                     Text("Loading...")
@@ -64,6 +71,12 @@ struct ReaderView: View {
                         .padding(.leading)
                 }
                 Spacer()
+                
+                Button(action: { vm.goToChapter(.next) }) {
+                    Image(systemName: "chevron.right")
+                        .padding(.leading)
+                }
+                .disabled(!vm.hasNextChapter())
             }
             .padding(.all)
             .background(.thickMaterial)

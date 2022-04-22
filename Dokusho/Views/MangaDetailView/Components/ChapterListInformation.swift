@@ -55,7 +55,7 @@ struct ChapterListInformation: View {
                             NextButtonContent()
                         }
                     } else {
-                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper) }) {
+                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
                             NextButtonContent()
                         }
                     }
@@ -66,30 +66,7 @@ struct ChapterListInformation: View {
             }
 
             ForEach(chapters) { chapter in
-                ChapterListRow(vm: vm, chapter: chapter)
-                    .contextMenu {
-                        if chapter.isUnread {
-                            Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
-                                Text("Mark as read")
-                            }
-                        }
-                        else {
-                            Button(action: { vm.changeChapterStatus(for: chapter, status: .unread) }) {
-                                Text("Mark as unread")
-                            }
-                        }
-
-                        if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
-                            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .read, in: chapters) }) {
-                                Text("Mark previous as read")
-                            }
-                        }
-                        else {
-                            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .unread, in: chapters) }) {
-                                Text("Mark previous as unread")
-                            }
-                        }
-                    }
+                ChapterListRow(vm: vm, chapter: chapter, chapters: chapters)
             }
         }
     }
@@ -116,4 +93,6 @@ struct ChapterListInformation: View {
                 .scaledToFit()
         }
     }
+    
+    
 }
