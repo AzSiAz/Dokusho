@@ -19,6 +19,7 @@ class SearchScraperVM: ObservableObject {
     @Published var isLoading = true
     @Published var hasNextPage = false
     @Published var mangas = [SourceSmallManga]()
+    @Published var selectedManga: SourceSmallManga?
     
     init(scraper: Scraper) {
         self.scraper = scraper

@@ -70,7 +70,10 @@ struct ScraperSearch: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack {
                                 ForEach(vm.mangas) { manga in
-                                    mangaCard(manga: manga)
+                                    MangaCard(manga: manga)
+                                        .onTapGesture {
+                                            vm.selectedManga = manga
+                                        }
                                 }
                                 
                                 if vm.isLoading && !vm.mangas.isEmpty {
@@ -89,10 +92,15 @@ struct ScraperSearch: View {
                 await vm.fetchData(textToSearch: textToSearch)
             }
         }
+        .sheet(item: $vm.selectedManga) { manga in
+            NavigationView {
+                MangaDetailView(mangaId: manga.id, scraper: vm.scraper)
+            }
+        }
     }
     
     @ViewBuilder
-    func mangaCard(manga: SourceSmallManga) -> some View {
+    func MangaCard(manga: SourceSmallManga) -> some View {
         ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
             .frame(width: 120, height: 180)
             .contextMenu { ContextMenu(manga: manga) }

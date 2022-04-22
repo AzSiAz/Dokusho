@@ -30,6 +30,9 @@ struct ChapterListRow: View {
             }
         }
         .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
+        .fullScreenCover(item: $readerManager.selectedChapter) { data in
+            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper), readerManager: readerManager)
+        }
     }
     
     @ViewBuilder
