@@ -15,14 +15,14 @@ struct Backup: FileDocument {
     static var readableContentTypes = [UTType.json]
     static var writableContentTypes = [UTType.json]
     
-    var data: [CollectionBackup]
+    var data: BackupData
     
     init(configuration: ReadConfiguration) throws {
-        data = []
+        throw "Not done"
     }
     
     
-    init(data: [CollectionBackup]) {
+    init(data: BackupData) {
         self.data = data
     }
     
@@ -33,27 +33,24 @@ struct Backup: FileDocument {
     }
 }
 
-struct ChapterBackup: Codable {
-    var id: String
-    var readAt: Date
+struct BackupData: Codable {
+    var collections: [BackupCollectionData]
+    var scrapers: [Scraper]
 }
 
-struct MangaBackup: Codable {
-    var id: String
-    var sourceId: UUID
-    var readChapter: [ChapterBackup]
+struct BackupCollectionData: Codable {
+    var collection: MangaCollection
+    var mangas: [MangaWithChapters]
 }
 
-struct CollectionBackup: Codable {
-    var id: UUID
-    var name: String
-    var position: Int
-    var mangas: [MangaBackup]
+struct MangaWithChapters: Codable {
+    var manga: Manga
+    var chapters: [MangaChapter]
 }
 
 
 struct BackupTask {
-    var mangaBackup: MangaBackup
+    var mangaBackup: MangaWithChapters
     var collection: MangaCollection
 }
 
@@ -64,40 +61,43 @@ struct BackupManager {
     
     private let database = AppDatabase.shared.database
     
-    func createBackup() -> [CollectionBackup] {
-        var backup = [CollectionBackup]()
+    func createBackup() -> BackupData {
+        var backupCollections = [BackupCollectionData]()
+        var scrapers = [Scraper]()
 
         do {
             try database.read { db in
+                scrapers = try Scraper.all().fetchAll(db)
                 let collections = try MangaCollection.all().fetchAll(db)
                 
                 for collection in collections {
                     let mangas = try Manga.all().forCollectionId(collection.id).fetchAll(db)
-                    var mangasBackup = [MangaBackup]()
+                    var mangasBackup = [MangaWithChapters]()
 
                     for manga in mangas {
-                        let readChapters = try MangaChapter.all().onlyRead().forMangaId(manga.id).fetchAll(db)
-                        var chaptersBackup = [ChapterBackup]()
-                        
-                        chaptersBackup += readChapters.map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
-                        mangasBackup.append(MangaBackup(id: manga.mangaId, sourceId: manga.scraperId!, readChapter: chaptersBackup))
+                        let chapters = try MangaChapter.all().forMangaId(manga.id).fetchAll(db)
+                        mangasBackup.append(.init(manga: manga, chapters: chapters))
                     }
                     
-                    backup.append(CollectionBackup(id: collection.id, name: collection.name, position: collection.position, mangas: mangasBackup))
+                    backupCollections.append(.init(collection: collection, mangas: mangasBackup))
                 }
             }
         } catch(let err) {
             print(err)
         }
         
-        return backup
+        return .init(collections: backupCollections, scrapers: scrapers)
     }
 
-    func importBackup(backup: [CollectionBackup]) async {
+    func importBackup(backup: BackupData) async {
         await withTaskGroup(of: BackupResult.self) { group in
             
-            for collectionBackup in backup {
-                guard let collection = try? await database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup) }) else { continue }
+            for scraper in backup.scrapers {
+                let _ = try? await database.write({ try Scraper.fetchOrCreateFromBackup(db: $0, backup: scraper) })
+            }
+            
+            for collectionBackup in backup.collections {
+                guard let collection = try? await database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup.collection) }) else { continue }
                 
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
@@ -111,17 +111,11 @@ struct BackupManager {
                 switch(taskResult) {
                 case .failure(let error): Logger.backup.error("\(error.localizedDescription)")
                 case .success(let task):
-                    Logger.backup.info("Restoring \(task.mangaBackup.id)")
-                    guard let source = MangaScraperService.shared.getSource(sourceId: task.mangaBackup.sourceId) else { continue }
-                    guard let sourceInfo = try? await source.fetchMangaDetail(id: task.mangaBackup.id) else { continue }
-                    
+                    Logger.backup.info("Restoring \(task.mangaBackup.manga.title)")                    
                     do {
                         try await database.write { db in
-                            let scraper = try Scraper.fetchOne(db, source: source)
-                            var manga = try Manga.updateFromSource(db: db, scraper: scraper, data: sourceInfo, readChapters: task.mangaBackup.readChapter)
-                            manga.mangaCollectionId = task.collection.id
-                            
-                            try manga.save(db)
+                            let _ = try task.mangaBackup.manga.saved(db)
+                            try task.mangaBackup.chapters.forEach { try $0.save(db) }
                         }
                     } catch(let err) {
                         print(err)

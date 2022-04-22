@@ -199,17 +199,17 @@ extension Manga {
     }
     
     @discardableResult
-    static func updateFromSource(db: Database, scraper: Scraper, data: SourceManga, readChapters: [ChapterBackup]? = nil) throws -> Manga {
+    static func updateFromSource(db: Database, scraper: Scraper, data: SourceManga) throws -> Manga {
         if var manga = try Manga.all().forMangaId(data.id, scraper.id).fetchOne(db) {
             manga.updateFromSource(from: data)
 
             try manga.save(db)
-            try MangaChapter.updateFromSource(db: db, manga: manga, scraper: scraper, data: data, readChapters: readChapters)
+            try MangaChapter.updateFromSource(db: db, manga: manga, scraper: scraper, data: data)
             
             return manga
         }
         
-        var manga = Manga.init(from: data, sourceId: scraper.id)
+        var manga = Manga(from: data, sourceId: scraper.id)
         try manga.save(db)
         
         try MangaChapter.updateFromSource(db: db, manga: manga, scraper: scraper, data: data)

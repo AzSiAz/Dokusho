@@ -88,3 +88,14 @@ extension Scraper {
         else { throw "Scraper not found" }
     }
 }
+
+
+extension Scraper {
+    static func fetchOrCreateFromBackup(db: Database, backup: Self) throws -> Scraper {
+        if let collection = try Scraper.fetchOne(db, id: backup.id) {
+            return collection
+        }
+        
+        return try Scraper(id: backup.id, name: backup.name, position: backup.position, isFavorite: backup.isFavorite, isActive: backup.isActive).saved(db)
+    }
+}

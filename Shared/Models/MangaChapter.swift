@@ -62,10 +62,6 @@ struct MangaChapter: Identifiable, Equatable, Codable {
         self.status = .unread
         self.externalUrl = data.externalUrl
     }
-    
-    mutating func updateFromBackup(chapterBackup: ChapterBackup) {
-        
-    }
 }
 
 extension MangaChapter: FetchableRecord, PersistableRecord {}
@@ -150,24 +146,18 @@ extension MangaChapter {
         """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
     }
 
-    static func updateFromSource(db: Database, manga: Manga, scraper: Scraper, data: SourceManga, readChapters: [ChapterBackup]? = nil) throws {
+    static func updateFromSource(db: Database, manga: Manga, scraper: Scraper, data: SourceManga) throws {
         // Sometimes all chapters are deleted, I don't know why and it's impossible to reproduce in test
         guard !data.chapters.isEmpty else {
             print("Empty chapters, weird so abort to avoid losing read chapters")
             return
         }
         
-        var oldChapters = [ChapterBackup]()
-        
-        if readChapters == nil {
-            // In case it's not from a backup
-            oldChapters = try MangaChapter
-                .all()
-                .onlyRead()
-                .forMangaId(manga.mangaId, scraper.id)
-                .fetchAll(db)
-                .map { ch -> ChapterBackup in ChapterBackup(id: ch.chapterId, readAt: ch.readAt ?? ch.dateSourceUpload) }
-        }
+        let oldChapters = try MangaChapter
+            .all()
+            .onlyRead()
+            .forMangaId(manga.mangaId, scraper.id)
+            .fetchAll(db)
 
         for info in data.chapters.enumerated() {
             var chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)

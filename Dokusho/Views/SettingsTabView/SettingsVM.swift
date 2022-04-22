@@ -35,7 +35,7 @@ class SettingsVM: ObservableObject {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
             actionInProgress.toggle()
             let data = try Data(contentsOf: url)
-            let backup = try JSONDecoder().decode([CollectionBackup].self, from: data)
+            let backup = try JSONDecoder().decode(BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
 
             await BackupManager.shared.importBackup(backup: backup)
