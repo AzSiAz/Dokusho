@@ -61,14 +61,10 @@ class ReaderVM: ObservableObject {
     }
 
     func updateChapterStatus(image: SourceChapterImage) {
-        if images.last != image && showToolBar == true && images.first != image {
-            withAnimation {
-                showToolBar = false
-            }
-        }
-
         if images.last == image {
-            toggleToolbar()
+            withAnimation {
+                showToolBar = true
+            }
 
             Task {
                 do {
@@ -106,7 +102,7 @@ class ReaderVM: ObservableObject {
                 }
             
             if let foundChapter = direction == .rightToLeft ? foundChapters.last : foundChapters.first {
-                self.chapter = foundChapter
+                changeChapters(chapter: foundChapter)
             }
         case .previous:
             let foundChapters = chapters
@@ -120,8 +116,17 @@ class ReaderVM: ObservableObject {
                 }
             
             if let foundChapter = direction == .rightToLeft ? foundChapters.first : foundChapters.last {
-                self.chapter = foundChapter
+                changeChapters(chapter: foundChapter)
             }
+        }
+    }
+    
+    func changeChapters(chapter: MangaChapter) {
+        withAnimation {
+            self.images = []
+            self.tabIndex = .init(index: 0, imageUrl: "")
+            self.chapter = chapter
+            self.showToolBar = true
         }
     }
     

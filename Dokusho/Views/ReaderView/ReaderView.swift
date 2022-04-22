@@ -25,6 +25,7 @@ struct ReaderView: View {
                 else { HorizontalReaderView(vm: vm) }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black.ignoresSafeArea())
         .navigationBarHidden(true)
         .onTapGesture { vm.toggleToolbar() }
@@ -62,14 +63,19 @@ struct ReaderView: View {
                 .disabled(!vm.hasPreviousChapter())
 
                 Spacer()
-                if vm.images.isEmpty {
-                    Text("Loading...")
-                } else {
-                    // TODO: Add a custom slider to be able to update tabIndex value
-                    ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
-                    Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
-                        .padding(.leading)
+
+                HStack {
+                    if vm.images.isEmpty {
+                        EmptyView()
+                    } else {
+                        // TODO: Add a custom slider to be able to update tabIndex value
+                        ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
+                        Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
+                            .padding(.leading)
+                    }
                 }
+                .frame(height: 25)
+
                 Spacer()
                 
                 Button(action: { vm.goToChapter(.next) }) {
@@ -80,7 +86,7 @@ struct ReaderView: View {
             }
             .padding(.all)
             .background(.thickMaterial)
-            .offset(x: 0, y: vm.showToolBar ? 0 : 150)
+            .offset(x: 0, y: vm.showToolBar ? 0 : 500)
             .transition(.move(edge: vm.showToolBar ? .bottom : .top))
         }
     }
