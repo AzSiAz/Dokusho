@@ -83,7 +83,7 @@ struct DetailedMangaInListRequest: Queryable {
         } else if let genre = genre {
             request = request.orderByTitle().filterByGenre(genre).isInCollection()
         } else if let scraper = scraper {
-            request = request.orderByTitle().whereSource(scraper.id)
+            request = request.orderByTitle().whereSource(scraper.id).isInCollection()
         }
         
         return try DetailedMangaInList.fetchAll(db, request)
