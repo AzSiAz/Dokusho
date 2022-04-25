@@ -10,7 +10,7 @@ import SwiftUI
 typealias OnProgress = (_ status: ChapterStatus) -> Void
 
 struct ReaderView: View {
-    @Environment(\.safeAreaInsets) var inset
+    @Environment(\.presentationManager) var presentationMode
     
     @StateObject var vm: ReaderVM
     @ObservedObject var readerManager: ReaderManager
@@ -95,7 +95,7 @@ struct ReaderView: View {
     func TopOverlay() -> some View {
         if vm.showToolBar {
             HStack(alignment: .center) {
-                Button(action: readerManager.dismiss) {
+                Button(action: presentationMode.dismiss) {
                     Image(systemName: "xmark")
                 }
 

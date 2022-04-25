@@ -49,12 +49,15 @@ struct TextFieldWithDebounce : View {
 
 struct SearchBarWithDebounce: View {
     @Binding var debouncedText : String
+    var disableAutoCorrect = true
+    
     @StateObject private var textObserver = TextFieldObserver()
     
     var body: some View {
     
         VStack {
             SearchBar("Title", text: $textObserver.searchText)
+                .disableAutocorrection(disableAutoCorrect)
         }.onReceive(textObserver.$debouncedText) { (val) in
             debouncedText = val
         }
