@@ -15,10 +15,12 @@ struct CollectionPage: View {
 
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     @Query<DetailedMangaInCollectionRequest> var list: [DetailedMangaInList]
+
     @State var showFilter = false
     @State var reload = true
+    @State var selected: DetailedMangaInList?
     
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
+    var columns: [GridItem] = [GridItem(.adaptive(120))]
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -26,23 +28,27 @@ struct CollectionPage: View {
     }
     
     var body: some View {
-        if let collection = collection {
-            ScrollView {
-                LazyVGrid(columns: columns) {
-                    ForEach(list) { data in
-                        NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
-                            MangaCardView(manga: data.manga, count: data.unreadChapterCount)
-                        }
-                        .buttonStyle(.plain)
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                ForEach(list) { data in
+                    Button(action: { selected = data }){
+                        MangaCardView(manga: data.manga, count: data.unreadChapterCount)
                     }
+                    .buttonStyle(.plain)
+                    .id(data.id)
                 }
             }
-            .searchable(text: $list.searchTerm)
-            .toolbar { toolbar }
-            .navigationTitle("\(collection.name) (\(list.count))")
-            .navigationBarTitleDisplayMode(.automatic)
-            .mirrorAppearanceState(to: $list.isAutoupdating)
         }
+        .navigate(item: $selected, destination: makeMangaDetailView(data:))
+        .searchable(text: $list.searchTerm)
+        .toolbar { toolbar }
+        .navigationTitle("\(collection?.name ?? "") (\(list.count))")
+        .navigationBarTitleDisplayMode(.automatic)
+        .mirrorAppearanceState(to: $list.isAutoupdating, $collection.isAutoupdating)
+    }
+    
+    func makeMangaDetailView(data: DetailedMangaInList) -> some View {
+        MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
     }
     
     var toolbar: some ToolbarContent {

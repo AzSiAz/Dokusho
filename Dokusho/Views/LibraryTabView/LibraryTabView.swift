@@ -49,8 +49,6 @@ struct LibraryTabView: View {
                     }
                 }
             }
-            .listStyle(.sidebar)
-            .id(editMode)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     EditButton()
@@ -58,6 +56,7 @@ struct LibraryTabView: View {
             }
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
+            .mirrorAppearanceState(to: $collections.isAutoupdating)
         }
     }
     
@@ -98,7 +97,7 @@ struct LibraryTabView: View {
 //            change the order of the items in the array
             revisedItems.move(fromOffsets: offsets, toOffset: position)
 
-//            update the userOrder attribute in revisedItems to
+//            update the position attribute in revisedItems to
 //            persist the new order. This is done in reverse order
 //            to minimize changes to the indices.
             for reverseIndex in stride(from: revisedItems.count - 1, through: 0, by: -1) {
