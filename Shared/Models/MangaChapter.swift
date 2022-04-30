@@ -158,9 +158,6 @@ extension MangaChapter {
             .onlyRead()
             .forMangaId(manga.mangaId, scraper.id)
             .fetchAll(db)
-        
-//        print(oldChapters)
-//        return
 
         for info in data.chapters.enumerated() {
             var chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)
