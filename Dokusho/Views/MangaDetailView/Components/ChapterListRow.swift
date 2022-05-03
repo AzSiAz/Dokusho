@@ -32,11 +32,6 @@ struct ChapterListRow: View {
         }
         .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
         .contextMenu { ChapterRowContextMenu() }
-        .fullScreenCover(item: $readerManager.selectedChapter) { data in
-            NavigationView {
-                ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
-            }
-        }
     }
     
     @ViewBuilder

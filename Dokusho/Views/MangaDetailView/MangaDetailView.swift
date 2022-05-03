@@ -54,6 +54,11 @@ struct MangaDetailView: View {
                 }
             }
         }
+        .fullScreenCover(item: $readerManager.selectedChapter) { data in
+            NavigationView {
+                ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
+            }
+        }
         .environmentObject(readerManager)
     }
     
