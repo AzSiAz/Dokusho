@@ -39,7 +39,7 @@ class SearchScraperVM: ObservableObject {
             
             guard let data = try await scraper.asSource()?.fetchSearchManga(query: textToSearch, page: nextPage) else { throw "Error searching for \(textToSearch)" }
             
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 withAnimation {
                     self.hasNextPage = data.hasNextPage
                     self.mangas += data.mangas
