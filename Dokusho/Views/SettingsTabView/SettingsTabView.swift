@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 
 struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()
+    @Preference(\.useNewCollectionView) var useNewCollectionView
     
     var body: some View {
         NavigationView {
@@ -24,6 +25,10 @@ struct SettingsTabView: View {
                     Button(action: { vm.cleanOrphanData() }) {
                         Text("Clean orphan data")
                     }
+                }
+                
+                Section("Experimental") {
+                    Toggle("Use new collection view", isOn: $useNewCollectionView)
                 }
                 
                 Section("Cache") {

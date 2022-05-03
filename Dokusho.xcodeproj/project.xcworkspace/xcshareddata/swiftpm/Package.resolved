@@ -1,6 +1,24 @@
 {
   "pins" : [
     {
+      "identity" : "ascollectionview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apptekstudios/ASCollectionView",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2742a1233b76855ae80af93df0a89ecc329ea7f7"
+      }
+    },
+    {
+      "identity" : "differencekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ra1028/DifferenceKit",
+      "state" : {
+        "revision" : "62745d7780deef4a023a792a1f8f763ec7bf9705",
+        "version" : "1.2.0"
+      }
+    },
+    {
       "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",

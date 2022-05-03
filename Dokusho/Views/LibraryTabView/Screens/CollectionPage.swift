@@ -8,6 +8,7 @@
 import SwiftUI
 import GRDBQuery
 import Combine
+import ASCollectionView
 
 struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
@@ -19,8 +20,9 @@ struct CollectionPage: View {
     @State var showFilter = false
     @State var reload = true
     @State var selected: DetailedMangaInList?
+    @Preference(\.useNewCollectionView) var useNewCollectionView
     
-    var columns: [GridItem] = [GridItem(.adaptive(120))]
+    var columns: [GridItem] = [GridItem(.adaptive(130))]
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -28,16 +30,40 @@ struct CollectionPage: View {
     }
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(list) { data in
+        Group {
+            if !useNewCollectionView {
+                ScrollView {
+                    LazyVGrid(columns: columns) {
+                        ForEach(list) { data in
+                            Button(action: { selected = data }){
+                                MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                            }
+                            .buttonStyle(.plain)
+                            .id(data.id)
+                        }
+                    }
+                }
+            }
+            else {
+                ASCollectionView(data: list, dataID: \.id) { data, _ in
                     Button(action: { selected = data }){
                         MangaCardView(manga: data.manga, count: data.unreadChapterCount)
                     }
                     .buttonStyle(.plain)
                     .id(data.id)
                 }
+                .alwaysBounceVertical(true)
+                .layout {
+                    .grid(
+                        layoutMode: .adaptive(withMinItemSize: 130),
+                        itemSpacing: 5,
+                        lineSpacing: 5,
+                        itemSize: .absolute(180)
+                    )
+                }
+                .edgesIgnoringSafeArea(.all)
             }
+            
         }
         .navigate(item: $selected, destination: makeMangaDetailView(data:))
         .searchable(text: $list.searchTerm)

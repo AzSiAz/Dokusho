@@ -33,6 +33,8 @@
 		E2187ED426CC625C009604A9 /* NavigationLinkLazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECD26CC625C009604A9 /* NavigationLinkLazyView.swift */; };
 		E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */; };
 		E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23AD6F426EE069E0042453A /* HistoryTabView.swift */; };
+		E257883828218753008BACF3 /* ASCollectionView in Frameworks */ = {isa = PBXBuildFile; productRef = E257883728218753008BACF3 /* ASCollectionView */; };
+		E257883B28219001008BACF3 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E257883A28219001008BACF3 /* Preferences.swift */; };
 		E261654B281161F2002482C8 /* SearchScraperVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654A281161F2002482C8 /* SearchScraperVM.swift */; };
 		E261654F28118A01002482C8 /* SearchSourceListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654E28118A01002482C8 /* SearchSourceListScreen.swift */; };
 		E2633308280975DB00B80AD4 /* ExploreTabVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2633307280975DB00B80AD4 /* ExploreTabVM.swift */; };
@@ -139,6 +141,7 @@
 		E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaUnreadCount.swift; sourceTree = "<group>"; };
 		E2187ED726CC69C4009604A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E23AD6F426EE069E0042453A /* HistoryTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTabView.swift; sourceTree = "<group>"; };
+		E257883A28219001008BACF3 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E261654A281161F2002482C8 /* SearchScraperVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScraperVM.swift; sourceTree = "<group>"; };
 		E261654E28118A01002482C8 /* SearchSourceListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSourceListScreen.swift; sourceTree = "<group>"; };
 		E2633307280975DB00B80AD4 /* ExploreTabVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTabVM.swift; sourceTree = "<group>"; };
@@ -211,6 +214,7 @@
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 				E29F8E68280B3E21000761C0 /* Inject in Frameworks */,
+				E257883828218753008BACF3 /* ASCollectionView in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
 				E27FF712277244630035DB99 /* GRDB in Frameworks */,
 				E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */,
@@ -232,6 +236,7 @@
 		E2034163270C540600990F80 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E257883928218FF2008BACF3 /* PropertyWrapper */,
 				E204C7F42772926E00BDDDBD /* Requests */,
 				E2B96CD1274DB9B3002F66BD /* ViewModifier */,
 				E26662CC26CC538A0054868A /* Models */,
@@ -414,6 +419,14 @@
 			path = HistoryTabView;
 			sourceTree = "<group>";
 		};
+		E257883928218FF2008BACF3 /* PropertyWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				E257883A28219001008BACF3 /* Preferences.swift */,
+			);
+			path = PropertyWrapper;
+			sourceTree = "<group>";
+		};
 		E26662AD26CC36830054868A = {
 			isa = PBXGroup;
 			children = (
@@ -589,6 +602,7 @@
 				E2C97A62277CAEB600A7DFC0 /* ZoomableImageView */,
 				E28E4C8527E0A6D7004B9397 /* TelemetryClient */,
 				E29F8E67280B3E21000761C0 /* Inject */,
+				E257883728218753008BACF3 /* ASCollectionView */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -628,6 +642,7 @@
 				E2C97A61277CAEB600A7DFC0 /* XCRemoteSwiftPackageReference "ZoomableImageView" */,
 				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
 				E29F8E66280B3E21000761C0 /* XCRemoteSwiftPackageReference "Inject" */,
+				E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -686,6 +701,7 @@
 				E26D7E6F270B466A0003C6C1 /* MangaForSourcePage.swift in Sources */,
 				E2187ED226CC625C009604A9 /* RemoteImageCacheView.swift in Sources */,
 				E2844CB627726393009F4F31 /* Scraper.swift in Sources */,
+				E257883B28219001008BACF3 /* Preferences.swift in Sources */,
 				E2EB7B802819EA8800C619E6 /* NavigationLink.swift in Sources */,
 				E26D7E5E27080E9A0003C6C1 /* ChapterImage.swift in Sources */,
 				E2FDBEC3277CBA2200105C5E /* ChapterImageView.swift in Sources */,
@@ -863,7 +879,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -902,7 +918,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -967,6 +983,14 @@
 		E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apptekstudios/ASCollectionView";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -1040,6 +1064,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
+		};
+		E257883728218753008BACF3 /* ASCollectionView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */;
+			productName = ASCollectionView;
 		};
 		E26D7E602708123B0003C6C1 /* ImageScrollView */ = {
 			isa = XCSwiftPackageProductDependency;
