@@ -128,18 +128,7 @@ struct ExploreTabView: View {
     func ScraperRow(scraper: Scraper) -> some View {
         let src = scraper.asSource()!
         NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
-            HStack {
-                RemoteImageCacheView(url: src.icon, contentMode: .fit)
-                    .frame(width: 32, height: 32)
-                    .padding(.trailing)
-                
-                VStack(alignment: .leading) {
-                    Text(src.name)
-                    Text(src.lang.rawValue)
-                }
-                .padding(.leading, 8)
-            }
-            .padding(.vertical)
+            SourceRow(src: src)
         }
     }
 }
