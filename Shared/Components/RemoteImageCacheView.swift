@@ -7,38 +7,28 @@
 
 import SwiftUI
 import Nuke
+import NukeUI
 
 struct RemoteImageCacheView: View {
-    @StateObject private var image: FetchImage
+    let url: String
+    let contentMode: ImageResizingMode
+    let pipeline: ImagePipeline
+    let radius: Double
     
-    let url: URL
-    let contentMode: ContentMode
-    
-    init(url: URL?, contentMode: ContentMode) {
-        self.url = url ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+    init(url: String?, contentMode: ImageResizingMode, radius: Double = 10, pipeline: ImagePipeline = .coverCache) {
+        self.url = url ?? "https://picsum.photos/seed/picsum/200/300"
         self.contentMode = contentMode
-        
-        let image = FetchImage()
-        image.pipeline = .coverCache
-        _image = .init(wrappedValue: image)
-    }
-    
-    init(url: String?, contentMode: ContentMode) {
-        let url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
-        self.init(url: url, contentMode: contentMode)
+        self.pipeline = pipeline
+        self.radius = radius
     }
     
     var body: some View {
-        ZStack(alignment: .center) {
-            if image.view == nil { ProgressView() }
-
-            image.view?
-                .resizable()
-                .aspectRatio(contentMode: contentMode)
-                .clipped()
+        GeometryReader { proxy in
+            LazyImage(source: url, resizingMode: contentMode)
+                .processors([ImageProcessors.Resize(size: proxy.size), ImageProcessors.RoundedCorners(radius: radius)])
+                .pipeline(pipeline)
+                .cornerRadius(radius)
+                .id(url)
         }
-        .onAppear { image.load(url) }
-        .onChange(of: url) { image.load($0) }
-        .onDisappear(perform: image.reset)
     }
 }

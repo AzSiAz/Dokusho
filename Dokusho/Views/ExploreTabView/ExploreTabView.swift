@@ -111,7 +111,7 @@ struct ExploreTabView: View {
     @ViewBuilder
     func SourceRow(src: Source) -> some View {
         HStack {
-            RemoteImageCacheView(url: src.icon, contentMode: .fit)
+            RemoteImageCacheView(url: src.icon, contentMode: .aspectFit)
                 .frame(width: 32, height: 32)
                 .padding(.trailing)
             

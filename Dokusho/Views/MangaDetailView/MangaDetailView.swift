@@ -102,8 +102,8 @@ struct MangaDetailView: View {
     @ViewBuilder
     func HeaderRow(_ data: MangaWithDetail) -> some View {
         HStack(alignment: .top) {
-            RemoteImageCacheView(url: data.manga.cover, contentMode: .fit)
-                .frame(height: 180)
+            RemoteImageCacheView(url: data.manga.cover.absoluteString, contentMode: .aspectFit)
+                .frame(width: 120, height: 180)
                 .cornerRadius(10)
                 .clipped()
                 .padding(.leading, 10)
@@ -115,9 +115,6 @@ struct MangaDetailView: View {
                         .font(.subheadline.bold())
                 }
                 .padding(.bottom, 5)
-                
-                Divider()
-                    .hidden()
                 
                 VStack(alignment: .center) {
                     VStack {
@@ -137,6 +134,7 @@ struct MangaDetailView: View {
                         .font(.callout.bold())
                 }
             }
+            .frame(maxWidth: .infinity)
         }
     }
     

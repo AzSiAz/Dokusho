@@ -55,6 +55,7 @@
 		E26E1F1F2774B29A0092FA99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F1E2774B29A0092FA99 /* String.swift */; };
 		E26E1F232774E2570092FA99 /* MangaChaptersRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F222774E2570092FA99 /* MangaChaptersRequest.swift */; };
 		E26E1F262774FE5E0092FA99 /* ChaptersHistoryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F252774FE5E0092FA99 /* ChaptersHistoryRequest.swift */; };
+		E272716D282577A400D6F09E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = E272716C282577A400D6F09E /* NukeUI */; };
 		E27367E0272004AB00DBB3B1 /* Nuke.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27367DF272004AB00DBB3B1 /* Nuke.swift */; };
 		E2770B762811ADCD007763C6 /* DebouncedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2770B752811ADCD007763C6 /* DebouncedTextField.swift */; };
 		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
@@ -217,6 +218,7 @@
 				E257883828218753008BACF3 /* ASCollectionView in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
 				E27FF712277244630035DB99 /* GRDB in Frameworks */,
+				E272716D282577A400D6F09E /* NukeUI in Frameworks */,
 				E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */,
 				E26D7E612708123B0003C6C1 /* ImageScrollView in Frameworks */,
 			);
@@ -603,6 +605,7 @@
 				E28E4C8527E0A6D7004B9397 /* TelemetryClient */,
 				E29F8E67280B3E21000761C0 /* Inject */,
 				E257883728218753008BACF3 /* ASCollectionView */,
+				E272716C282577A400D6F09E /* NukeUI */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -643,6 +646,7 @@
 				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
 				E29F8E66280B3E21000761C0 /* XCRemoteSwiftPackageReference "Inject" */,
 				E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
+				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -879,7 +883,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -918,7 +922,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -1004,6 +1008,14 @@
 				kind = branch;
 			};
 		};
+		E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/NukeUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.8.1;
+			};
+		};
 		E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX.git";
@@ -1074,6 +1086,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */;
 			productName = ImageScrollView;
+		};
+		E272716C282577A400D6F09E /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */;
+			productName = NukeUI;
 		};
 		E27A5DCE26FBA77700F95361 /* SwiftUIX */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -47,7 +47,7 @@ struct HistoryTabView: View {
     func ChapterRow(_ data: ChaptersHistory) -> some View {
         NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
             HStack {
-                RemoteImageCacheView(url: data.manga.cover, contentMode: .fit)
+                RemoteImageCacheView(url: data.manga.cover.absoluteString, contentMode: .aspectFit)
                     .frame(width: 80)
                     .id(data.id)
                 
