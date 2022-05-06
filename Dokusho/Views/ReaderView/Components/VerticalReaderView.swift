@@ -13,13 +13,11 @@ struct VerticalReaderView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            let imgSize = CGSize(width: proxy.size.width, height: UIScreen.main.bounds.height)
-
             // TODO: Add a ScrollViewReader to be able to go to specific ID when tabIndex is updated from bottom overlay slider
             ScrollView([.vertical], showsIndicators: false) {
                 LazyVStack(spacing: 0) {
                     ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
-                        ChapterImageView(url: image.imageUrl, contentMode: .fit, size: imgSize)
+                        ChapterImage(url: image.imageUrl)
                             .frame(
                                 width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                                 alignment: .center

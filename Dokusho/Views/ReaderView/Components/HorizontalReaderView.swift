@@ -14,7 +14,7 @@ struct HorizontalReaderView: View {
         TabView(selection: $vm.tabIndex) {
             ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
                 GeometryReader { proxy in
-                    ChapterImageView(url: image.imageUrl, contentMode: .fit, size: proxy.size)
+                    ChapterImage(url: image.imageUrl)
                         .frame(
                             minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2: proxy.size.width,
                             minHeight: proxy.size.height,

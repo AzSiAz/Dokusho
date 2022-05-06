@@ -6,61 +6,40 @@
 //
 
 import SwiftUI
-import ImageScrollView
+import NukeUI
 import Nuke
 
-//struct ChapterImage: UIViewRepresentable {
-//    var url: String
-//    var size: CGSize
-//    
-//    @State var imageView = UIImageView()
-//
-//    func makeUIView(context: Context) -> ImageScrollView {
-//        Nuke.loadImage(with: url, into: imageView)
-//        
-//        let img = ImageScrollView()
-//        img.setup()
-//        img.imageContentMode = .aspectFit
-//        img.initialOffset = .center
-//        img.display(image: imageView.image ?? UIImage(systemName: "progress") ?? UIImage())
-//        img.contentSize = size
-//        img.layoutIfNeeded()
-//        
-////        img.delegate = context.coordinator
-//        
-//        return img
-//    }
-//    
-//    func updateUIView(_ uiView: ImageScrollView, context: Context) {
-////        let imageView = UIImageView()
-////        Nuke.loadImage(with: url, into: imageView)
-//        
-//        uiView.display(image: imageView.image ?? UIImage())
-//        uiView.contentSize = size
-//        uiView.layoutIfNeeded()
-//    }
-//    
-//    func makeCoordinator() -> Coordinator {
-//        return Coordinator(self)
-//    }
-//    
-//    class Coordinator: NSObject, ImageScrollViewDelegate {
-//        var parent: ChapterImage
-//
-//        init(_ img: ChapterImage) {
-//            parent = img
-//        }
-//        
-//        func imageScrollViewDidChangeOrientation(imageScrollView: ImageScrollView) {
-//            print("Did change orientation")
-//        }
-//        
-//        func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-//            print("scrollViewDidEndZooming at scale \(scale)")
-//        }
-//        
-//        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//            print("scrollViewDidScroll at offset \(scrollView.contentOffset)")
-//        }
-//    }
-//}
+struct ChapterImage: View {
+    private let fullHeight = UIScreen.main.bounds.height
+    let url: String
+    
+    @State var id = UUID()
+    
+    var body: some View {
+            LazyImage(source: url) { state in
+                if let image = state.imageContainer?.image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .addPinchAndPan()
+                } else if let error = state.error {
+                    VStack {
+                        Button(action: { id = UUID() }) {
+                            Image(systemName: "arrow.clockwise")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                        }
+
+                        Text("Error: \(error.localizedDescription)")
+                    }
+                    .frame(height: fullHeight)
+                } else {
+                    ProgressView(value: Double(state.progress.completed), total: Double(state.progress.total))
+                        .progressViewStyle(.circular)
+                        .frame(height: fullHeight)
+                }
+            }
+            .pipeline(.inMemory)
+            .id(id)
+    }
+}

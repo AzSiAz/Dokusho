@@ -8,12 +8,16 @@
 import SwiftUI
 
 // Add Pinch to Zoom Custom Modifier...
-extension View{
+extension View {
     
-    func addPinchZoom()->some View{
+    func addPinchZoom() -> some View {
         return PinchZoomContext {
             self
         }
+    }
+    
+    func addPinchAndPan() -> some View {
+        self
     }
 }
 
