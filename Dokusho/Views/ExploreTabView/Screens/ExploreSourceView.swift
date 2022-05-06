@@ -15,7 +15,7 @@ struct ExploreSourceView: View {
     
     @StateObject var vm: ExploreSourceVM
     
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
+    var columns: [GridItem] = [GridItem(.adaptive(130))]
     
     init(scraper: Scraper) {
         _vm = .init(wrappedValue: .init(for: scraper))
