@@ -42,7 +42,6 @@
 		E26662C326CC36840054868A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26662C226CC36840054868A /* Persistence.swift */; };
 		E26662D126CC58160054868A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E26662D026CC58160054868A /* Assets.xcassets */; };
 		E26D7E5E27080E9A0003C6C1 /* ChapterImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E5D27080E9A0003C6C1 /* ChapterImage.swift */; };
-		E26D7E612708123B0003C6C1 /* ImageScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = E26D7E602708123B0003C6C1 /* ImageScrollView */; };
 		E26D7E6A270B3C530003C6C1 /* MangaInCollectionForGenre.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E69270B3C530003C6C1 /* MangaInCollectionForGenre.swift */; };
 		E26D7E6D270B46540003C6C1 /* BySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E6C270B46540003C6C1 /* BySource.swift */; };
 		E26D7E6F270B466A0003C6C1 /* MangaForSourcePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */; };
@@ -67,12 +66,8 @@
 		E27FF71B27725E510035DB99 /* MangaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27FF71A27725E510035DB99 /* MangaCollection.swift */; };
 		E2844CB627726393009F4F31 /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2844CB527726393009F4F31 /* Scraper.swift */; };
 		E28E4C8627E0A6D7004B9397 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = E28E4C8527E0A6D7004B9397 /* TelemetryClient */; };
-		E29F8E68280B3E21000761C0 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = E29F8E67280B3E21000761C0 /* Inject */; };
-		E2B7059B281D42860020094A /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = E2B7059A281D42860020094A /* Introspect */; };
 		E2B96CD3274DB9BD002F66BD /* GlowBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */; };
 		E2C97A5E277A292000A7DFC0 /* ZoomGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C97A5D277A292000A7DFC0 /* ZoomGesture.swift */; };
-		E2C97A60277CA85200A7DFC0 /* ImageGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C97A5F277CA85200A7DFC0 /* ImageGesture.swift */; };
-		E2C97A63277CAEB600A7DFC0 /* ZoomableImageView in Frameworks */ = {isa = PBXBuildFile; productRef = E2C97A62277CAEB600A7DFC0 /* ZoomableImageView */; };
 		E2CB128426CD0559007837D1 /* ChapterListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127B26CD0559007837D1 /* ChapterListVM.swift */; };
 		E2CB128526CD0559007837D1 /* MangaDetailVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */; };
 		E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128026CD0559007837D1 /* ChapterListRow.swift */; };
@@ -99,7 +94,6 @@
 		E2F2D60027736B75008AC108 /* MangaInCollectionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F2D5FF27736B75008AC108 /* MangaInCollectionsRequest.swift */; };
 		E2F2D60227736F0C008AC108 /* Manga.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F2D60127736F0C008AC108 /* Manga.swift */; };
 		E2F2D604277373C9008AC108 /* MangaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F2D603277373C9008AC108 /* MangaChapter.swift */; };
-		E2FDBEC3277CBA2200105C5E /* ChapterImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FDBEC2277CBA2200105C5E /* ChapterImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -176,7 +170,6 @@
 		E2BD651326F22AE200BE5CD7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E2C24EF0270CC15200A7D6C5 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		E2C97A5D277A292000A7DFC0 /* ZoomGesture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomGesture.swift; sourceTree = "<group>"; };
-		E2C97A5F277CA85200A7DFC0 /* ImageGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGesture.swift; sourceTree = "<group>"; };
 		E2CB127B26CD0559007837D1 /* ChapterListVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListVM.swift; sourceTree = "<group>"; };
 		E2CB127C26CD0559007837D1 /* MangaDetailVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MangaDetailVM.swift; sourceTree = "<group>"; };
 		E2CB128026CD0559007837D1 /* ChapterListRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterListRow.swift; sourceTree = "<group>"; };
@@ -203,7 +196,6 @@
 		E2F2D5FF27736B75008AC108 /* MangaInCollectionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaInCollectionsRequest.swift; sourceTree = "<group>"; };
 		E2F2D60127736F0C008AC108 /* Manga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manga.swift; sourceTree = "<group>"; };
 		E2F2D603277373C9008AC108 /* MangaChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaChapter.swift; sourceTree = "<group>"; };
-		E2FDBEC2277CBA2200105C5E /* ChapterImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,18 +203,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2C97A63277CAEB600A7DFC0 /* ZoomableImageView in Frameworks */,
 				E28E4C8627E0A6D7004B9397 /* TelemetryClient in Frameworks */,
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
-				E29F8E68280B3E21000761C0 /* Inject in Frameworks */,
 				E257883828218753008BACF3 /* ASCollectionView in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
 				E27FF712277244630035DB99 /* GRDB in Frameworks */,
-				E2B7059B281D42860020094A /* Introspect in Frameworks */,
 				E272716D282577A400D6F09E /* NukeUI in Frameworks */,
 				E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */,
-				E26D7E612708123B0003C6C1 /* ImageScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,7 +484,6 @@
 			isa = PBXGroup;
 			children = (
 				E2B96CD2274DB9BD002F66BD /* GlowBorder.swift */,
-				E2C97A5F277CA85200A7DFC0 /* ImageGesture.swift */,
 				E2C97A5D277A292000A7DFC0 /* ZoomGesture.swift */,
 			);
 			path = ViewModifier;
@@ -543,7 +530,6 @@
 		E2CB129826CD4EB7007837D1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				E2FDBEC2277CBA2200105C5E /* ChapterImageView.swift */,
 				E2CB129926CD4EB7007837D1 /* VerticalReaderView.swift */,
 				E2CB129A26CD4EB7007837D1 /* HorizontalReaderView.swift */,
 				E26D7E5D27080E9A0003C6C1 /* ChapterImage.swift */,
@@ -600,13 +586,9 @@
 				E2187E9126CC5ACC009604A9 /* Nuke */,
 				E203B9C826ECFED700F4B749 /* MangaScraper */,
 				E27A5DCE26FBA77700F95361 /* SwiftUIX */,
-				E26D7E602708123B0003C6C1 /* ImageScrollView */,
 				E27FF711277244630035DB99 /* GRDB */,
 				E27FF7142772453B0035DB99 /* GRDBQuery */,
-				E2C97A62277CAEB600A7DFC0 /* ZoomableImageView */,
 				E28E4C8527E0A6D7004B9397 /* TelemetryClient */,
-				E29F8E67280B3E21000761C0 /* Inject */,
-				E2B7059A281D42860020094A /* Introspect */,
 				E257883728218753008BACF3 /* ASCollectionView */,
 				E272716C282577A400D6F09E /* NukeUI */,
 			);
@@ -642,15 +624,11 @@
 				E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */,
 				E203B9C726ECFDF000F4B749 /* XCRemoteSwiftPackageReference "MangaScraper" */,
 				E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
-				E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */,
 				E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				E27FF7132772453B0035DB99 /* XCRemoteSwiftPackageReference "GRDBQuery" */,
-				E2C97A61277CAEB600A7DFC0 /* XCRemoteSwiftPackageReference "ZoomableImageView" */,
 				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
-				E29F8E66280B3E21000761C0 /* XCRemoteSwiftPackageReference "Inject" */,
 				E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
 				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
-				E2B70599281D42860020094A /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -695,7 +673,6 @@
 				E2034182270C6F7E00990F80 /* WidgetKind.swift in Sources */,
 				E2187EBF26CC6243009604A9 /* ExploreSourceVM.swift in Sources */,
 				E2DA94D926D645F30083F2F7 /* SettingsVM.swift in Sources */,
-				E2C97A60277CA85200A7DFC0 /* ImageGesture.swift in Sources */,
 				E2187EA526CC5D9E009604A9 /* RoundedCorner.swift in Sources */,
 				E2F2D60227736F0C008AC108 /* Manga.swift in Sources */,
 				E2CB129F26CD4EB7007837D1 /* VerticalReaderView.swift in Sources */,
@@ -712,7 +689,6 @@
 				E257883B28219001008BACF3 /* Preferences.swift in Sources */,
 				E2EB7B802819EA8800C619E6 /* NavigationLink.swift in Sources */,
 				E26D7E5E27080E9A0003C6C1 /* ChapterImage.swift in Sources */,
-				E2FDBEC3277CBA2200105C5E /* ChapterImageView.swift in Sources */,
 				E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */,
 				E2C97A5E277A292000A7DFC0 /* ZoomGesture.swift in Sources */,
 				E26E1F262774FE5E0092FA99 /* ChaptersHistoryRequest.swift in Sources */,
@@ -1004,14 +980,6 @@
 				kind = branch;
 			};
 		};
-		E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/huynguyencong/ImageScrollView.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/NukeUI";
@@ -1052,30 +1020,6 @@
 				version = 1.1.6;
 			};
 		};
-		E29F8E66280B3E21000761C0 /* XCRemoteSwiftPackageReference "Inject" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzysztofzablocki/Inject.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		E2B70599281D42860020094A /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.4;
-			};
-		};
-		E2C97A61277CAEB600A7DFC0 /* XCRemoteSwiftPackageReference "ZoomableImageView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rushairer/ZoomableImageView.git";
-			requirement = {
-				kind = exactVersion;
-				version = 1.0.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1093,11 +1037,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */;
 			productName = ASCollectionView;
-		};
-		E26D7E602708123B0003C6C1 /* ImageScrollView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E26D7E5F2708123B0003C6C1 /* XCRemoteSwiftPackageReference "ImageScrollView" */;
-			productName = ImageScrollView;
 		};
 		E272716C282577A400D6F09E /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1123,21 +1062,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */;
 			productName = TelemetryClient;
-		};
-		E29F8E67280B3E21000761C0 /* Inject */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E29F8E66280B3E21000761C0 /* XCRemoteSwiftPackageReference "Inject" */;
-			productName = Inject;
-		};
-		E2B7059A281D42860020094A /* Introspect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2B70599281D42860020094A /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
-			productName = Introspect;
-		};
-		E2C97A62277CAEB600A7DFC0 /* ZoomableImageView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2C97A61277CAEB600A7DFC0 /* XCRemoteSwiftPackageReference "ZoomableImageView" */;
-			productName = ZoomableImageView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

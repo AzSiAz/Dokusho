@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TelemetryClient
-import Inject
 
 @main
 struct DokushoApp: App {
@@ -23,7 +22,6 @@ struct DokushoApp: App {
             RootView()
                 .environment(\.appDatabase, .shared)
                 .environmentObject(libraryUpdater)
-                .enableInjection()
         }
     }
 }

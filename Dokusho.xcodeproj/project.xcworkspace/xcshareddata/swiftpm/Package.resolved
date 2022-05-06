@@ -46,24 +46,6 @@
       }
     },
     {
-      "identity" : "imagescrollview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/huynguyencong/ImageScrollView.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "3b5bf7e1bf719facb736e43bda9403c0c661fae6"
-      }
-    },
-    {
-      "identity" : "inject",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/krzysztofzablocki/Inject.git",
-      "state" : {
-        "revision" : "e3e8f4c4504f5c2bb24fa6c110ec0726f072667c",
-        "version" : "1.0.6"
-      }
-    },
-    {
       "identity" : "mangascraper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AzSiAz/MangaScraper",
@@ -109,15 +91,6 @@
       }
     },
     {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
-      "state" : {
-        "revision" : "f2616860a41f9d9932da412a8978fec79c06fe24",
-        "version" : "0.1.4"
-      }
-    },
-    {
       "identity" : "swiftuix",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
@@ -133,15 +106,6 @@
       "state" : {
         "branch" : "master",
         "revision" : "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07"
-      }
-    },
-    {
-      "identity" : "zoomableimageview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rushairer/ZoomableImageView.git",
-      "state" : {
-        "revision" : "4544906abfa6891b9a536ed467947f7d926e4da3",
-        "version" : "1.0.2"
       }
     }
   ],
