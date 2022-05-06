@@ -55,7 +55,6 @@ class LibraryUpdater: ObservableObject {
             
             
             for try await data in group {
-
                 status.refreshTitle = "Updating: \(data.manga.title)"
                 await updateRefreshStatus(status)
 

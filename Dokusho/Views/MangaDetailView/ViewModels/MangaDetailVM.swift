@@ -43,7 +43,7 @@ class MangaDetailVM: ObservableObject {
                 try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
             }
 
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 withAnimation {
                     self.refreshing = false
                 }

@@ -12,23 +12,23 @@ import GRDBQuery
 import MangaScraper
 
 struct SearchSourceListScreen: View {
-    @Environment(\.isSearching) var isSearching
-    
     @Query(MangaCollectionRequest()) var collections
     
     @State var searchText: String = ""
+    @State var isSearchFocused: Bool = true
     
     var scrapers: [Scraper]
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            SearchBarWithDebounce(debouncedText: $searchText)
+            SearchBarWithDebounce(debouncedText: $searchText, isFocused: $isSearchFocused)
                 .padding(.top, 10)
                 .padding(.horizontal, 10)
             ForEach(scrapers) { scraper in
                 ScraperSearch(scraper: scraper, textToSearch: $searchText, collections: collections)
             }
-        }.padding(.top, 5)
+        }
+        .padding(.top, 5)
     }
 }
 

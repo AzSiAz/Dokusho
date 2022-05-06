@@ -47,7 +47,10 @@ class ReaderVM: ObservableObject {
             images = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
             tabIndex = images.first ?? .init(index: 0, imageUrl: "")
 
-            images.forEach { ImagePipeline.inMemory.loadImage(with: $0.imageUrl, completion: { _ in }) }
+            for image in images {
+                Logger.reader.info("Loading \(image.imageUrl)")
+                _ = try? await ImagePipeline.inMemory.image(for: image.imageUrl)
+            }
         } catch {
             print(error)
             Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
@@ -66,9 +69,9 @@ class ReaderVM: ObservableObject {
                 showToolBar = true
             }
 
-            Task {
+            Task(priority: .background) {
                 do {
-                    try await database.write { db in
+                    try await self.database.write { db in
                         try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: self.chapter.id)
                     }
                 } catch(let err) {

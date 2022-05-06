@@ -13,7 +13,8 @@ It's a OSS project (see license) so unless your code is a bigger mess than mine 
 
 Alternative to consider:    
 - ~~MangaSoup, v2 should be the best one for iOS I think~~ (sorry dead...) 
-- Paperback (not a fan, but great work nevertheless)
+- [Aidoku](https://github.com/Aidoku/Aidoku)
+- Paperback ~(not a fan, but great work nevertheless)~
 - One from the app store (no seriously don't do this they are mostly full of ads)
 
 ## Features

@@ -10,22 +10,23 @@ import SwiftUI
 struct ImageWithTextOver: View {
     var title: String
     var imageUrl: String
+    var radius: Double = 10
     
     var body: some View {
         GeometryReader { proxy in
-            RemoteImageCacheView(url: URL(string: imageUrl), contentMode: .fill)
+            RemoteImageCacheView(url: imageUrl, contentMode: .fill, radius: radius)
                 .frame(minWidth: proxy.size.width, minHeight: proxy.size.height, alignment: .bottomLeading)
-                .overlay(
+                .overlay(alignment: .bottomLeading) {
                     ZStack {
                         Text(title)
                             .lineLimit(2)
                             .multilineTextAlignment(.leading)
                             .clipped()
-                    }
+                        }
                         .frame(width: proxy.size.width)
                         .background(.ultraThinMaterial)
-                    , alignment: .bottomLeading)
-                .cornerRadius(10)
+                }
+                .cornerRadius(radius)
         }
     }
 }
