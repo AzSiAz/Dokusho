@@ -35,11 +35,11 @@ extension View {
         self.modifier(PinchAndPanImage())
     }
     
-    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+    func readSize(global: Bool = false, onChange: @escaping (CGSize) -> Void) -> some View {
         background(
             GeometryReader { geometryProxy in
                 Color.clear
-                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+                    .preference(key: SizePreferenceKey.self, value: global ? geometryProxy.frame(in: .global).size : geometryProxy.size)
             }
         )
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
