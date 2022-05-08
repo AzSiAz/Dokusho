@@ -15,16 +15,18 @@ struct ImageWithTextOver: View {
     var body: some View {
         GeometryReader { proxy in
             RemoteImageCacheView(url: imageUrl, contentMode: .fill, radius: radius)
-                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height, alignment: .bottomLeading)
+                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height, alignment: .center)
                 .overlay(alignment: .bottomLeading) {
-                    ZStack {
+                    VStack {
                         Text(title)
                             .lineLimit(2)
                             .multilineTextAlignment(.leading)
                             .clipped()
-                        }
-                        .frame(width: proxy.size.width)
-                        .background(.ultraThinMaterial)
+                            .padding(.leading, 2)
+                            .padding(.top, 1)
+                    }
+                    .frame(width: proxy.size.width)
+                    .background(.ultraThinMaterial)
                 }
                 .cornerRadius(radius)
         }
