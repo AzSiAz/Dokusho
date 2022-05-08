@@ -20,8 +20,8 @@ struct ChapterImage: View {
                 if let image = state.imageContainer?.image {
                     Image(uiImage: image)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
                         .addPinchAndPan()
+                        .aspectRatio(contentMode: .fit)
                 } else if let error = state.error {
                     VStack {
                         Button(action: { id = UUID() }) {
