@@ -22,6 +22,11 @@ struct ChapterImage: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .addPinchAndPan()
+                        .contextMenu {
+                            Button(action: { saveImage(image: image) }) {
+                                Label("Save to library", systemImage: "icloud.and.arrow.down")
+                            }
+                        }
                 } else if let error = state.error {
                     VStack {
                         Button(action: { id = UUID() }) {
@@ -41,5 +46,9 @@ struct ChapterImage: View {
             }
             .pipeline(.inMemory)
             .id(id)
+    }
+    
+    func saveImage(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
 }
