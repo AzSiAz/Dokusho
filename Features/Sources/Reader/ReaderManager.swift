@@ -7,6 +7,7 @@
 
 import Foundation
 import DataKit
+import SwiftUI
 
 public class ReaderManager: ObservableObject {
     public struct SelectedChapter: Identifiable {
@@ -29,6 +30,8 @@ public class ReaderManager: ObservableObject {
     }
     
     public func dismiss() {
-        self.selectedChapter = nil
+        withAnimation {
+            self.selectedChapter = nil
+        }
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Skitty on 1/22/22.
 //
 import UIKit
+import DataKit
 
 enum ReaderInfoPageType {
     case previous
@@ -14,17 +15,17 @@ enum ReaderInfoPageType {
 class ReaderInfoPageView: UIView {
     var type: ReaderInfoPageType
 
-    var currentChapter: Chapter {
+    var currentChapter: MangaChapter {
         didSet {
             updateLabelText()
         }
     }
-    var previousChapter: Chapter? {
+    var previousChapter: MangaChapter? {
         didSet {
             updateLabelText()
         }
     }
-    var nextChapter: Chapter? {
+    var nextChapter: MangaChapter? {
         didSet {
             updateLabelText()
         }
@@ -38,7 +39,7 @@ class ReaderInfoPageView: UIView {
     let bottomChapterLabel = UILabel()
     let bottomChapterTitleLabel = UILabel()
 
-    init(type: ReaderInfoPageType, currentChapter: Chapter) {
+    init(type: ReaderInfoPageType, currentChapter: MangaChapter) {
         self.type = type
         self.currentChapter = currentChapter
 
@@ -104,20 +105,16 @@ class ReaderInfoPageView: UIView {
     func updateLabelText() {
         if let previousChapter = previousChapter {
             topChapterLabel.text = "Previous:"
-            topChapterTitleLabel.text = String(format: "Ch.%g - \(previousChapter.title ?? "No title")",
-                                               previousChapter.chapterNum ?? 0)
+            topChapterTitleLabel.text = previousChapter.title
             bottomChapterLabel.text = "Current:"
-            bottomChapterTitleLabel.text = String(format: "Ch.%g - \(currentChapter.title ?? "No title")",
-                                                  currentChapter.chapterNum ?? 0)
+            bottomChapterTitleLabel.text = currentChapter.title
             noChapterLabel.isHidden = true
             stackView.isHidden = false
         } else if let nextChapter = nextChapter {
             topChapterLabel.text = "Finished:"
-            topChapterTitleLabel.text = String(format: "Ch.%g - \(currentChapter.title ?? "No title")",
-                                               currentChapter.chapterNum ?? 0)
+            topChapterTitleLabel.text = currentChapter.title
             bottomChapterLabel.text = "Next:"
-            bottomChapterTitleLabel.text = String(format: "Ch.%g - \(nextChapter.title ?? "No title")",
-                                                  nextChapter.chapterNum ?? 0)
+            bottomChapterTitleLabel.text = nextChapter.title
             noChapterLabel.isHidden = true
             stackView.isHidden = false
         } else {

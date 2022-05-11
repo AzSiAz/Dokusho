@@ -10,7 +10,7 @@ import GRDBQuery
 import Combine
 import Foundation
 
-public struct DetailedMangaInList: Identifiable, FetchableRecord, Decodable {
+public struct DetailedMangaInList: Identifiable, Hashable, FetchableRecord, Decodable {
     public var id: UUID { manga.id }
     public var manga: PartialManga
     public var scraper: Scraper

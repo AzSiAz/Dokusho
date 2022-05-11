@@ -9,7 +9,7 @@ import Foundation
 import GRDB
 import MangaScraper
 
-public struct Scraper: Identifiable, Equatable, Codable {
+public struct Scraper: Identifiable, Equatable, Codable, Hashable {
     public var id: UUID
     public var name: String
     public var position: Int?

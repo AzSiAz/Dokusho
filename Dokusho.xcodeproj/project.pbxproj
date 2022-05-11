@@ -44,6 +44,8 @@
 		E26E1F1F2774B29A0092FA99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26E1F1E2774B29A0092FA99 /* String.swift */; };
 		E270C0D8282BDEFE00E3093E /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D7282BDEFE00E3093E /* Common */; };
 		E270C0DA282BDF1300E3093E /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D9282BDF1300E3093E /* Reader */; };
+		E270C0DC282C0D3700E3093E /* NewReader in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0DB282C0D3700E3093E /* NewReader */; };
+		E270C0DF282C264F00E3093E /* SwiftUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0DE282C264F00E3093E /* SwiftUIKit */; };
 		E272716D282577A400D6F09E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = E272716C282577A400D6F09E /* NukeUI */; };
 		E2770B762811ADCD007763C6 /* DebouncedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2770B752811ADCD007763C6 /* DebouncedTextField.swift */; };
 		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
@@ -160,7 +162,9 @@
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
 				E27FF712277244630035DB99 /* GRDB in Frameworks */,
 				E272716D282577A400D6F09E /* NukeUI in Frameworks */,
+				E270C0DF282C264F00E3093E /* SwiftUIKit in Frameworks */,
 				E270C0DA282BDF1300E3093E /* Reader in Frameworks */,
+				E270C0DC282C0D3700E3093E /* NewReader in Frameworks */,
 				E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +474,8 @@
 				E25B0C82282BC4360080A71A /* DataKit */,
 				E270C0D7282BDEFE00E3093E /* Common */,
 				E270C0D9282BDF1300E3093E /* Reader */,
+				E270C0DB282C0D3700E3093E /* NewReader */,
+				E270C0DE282C264F00E3093E /* SwiftUIKit */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -508,6 +514,7 @@
 				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
 				E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
 				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
+				E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -714,7 +721,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -754,7 +761,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -833,6 +840,14 @@
 				kind = branch;
 			};
 		};
+		E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielsaidi/SwiftUIKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/NukeUI";
@@ -902,6 +917,15 @@
 		E270C0D9282BDF1300E3093E /* Reader */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Reader;
+		};
+		E270C0DB282C0D3700E3093E /* NewReader */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NewReader;
+		};
+		E270C0DE282C264F00E3093E /* SwiftUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */;
+			productName = SwiftUIKit;
 		};
 		E272716C282577A400D6F09E /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;

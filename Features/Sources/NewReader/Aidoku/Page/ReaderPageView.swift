@@ -6,6 +6,8 @@
 //
 import UIKit
 import Kingfisher
+import DataKit
+import MangaScraper
 
 protocol ReaderPageViewDelegate: AnyObject {
     func imageLoaded(result: Result<RetrieveImageResult, KingfisherError>)
@@ -15,7 +17,7 @@ class ReaderPageView: UIView {
 
     weak var delegate: ReaderPageViewDelegate?
 
-    var sourceId: String
+    var sourceId: UUID
 
     var zoomableView = ZoomableScrollView(frame: UIScreen.main.bounds)
     let imageView = UIImageView()
@@ -42,7 +44,7 @@ class ReaderPageView: UIView {
         }
     }
 
-    init(sourceId: String) {
+    init(sourceId: UUID) {
         self.sourceId = sourceId
         super.init(frame: UIScreen.main.bounds)
         configureViews()
@@ -138,22 +140,7 @@ class ReaderPageView: UIView {
         if currentUrl == url && imageView.image != nil { return }
         currentUrl = url
 
-        let requestModifier: AnyModifier?
-
-        if let source = SourceManager.shared.source(for: sourceId),
-           source.handlesImageRequests,
-           let request = try? await source.getImageRequest(url: url) {
-            requestModifier = AnyModifier { urlRequest in
-                var r = urlRequest
-                for (key, value) in request.headers {
-                    r.setValue(value, forHTTPHeaderField: key)
-                }
-                if let body = request.body { r.httpBody = body }
-                return r
-            }
-        } else {
-            requestModifier = nil
-        }
+        let requestModifier: AnyModifier? = nil
 
         // Run the image loading code immediately on the main actor
         await MainActor.run {

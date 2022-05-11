@@ -37,7 +37,6 @@ struct HistoryTabView: View {
                 }
             }
             .id($list.filter.wrappedValue)
-            .listStyle(.plain)
             .searchable(text: $list.searchTerm)
             .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
             .mirrorAppearanceState(to: $list.isAutoupdating)
@@ -48,7 +47,7 @@ struct HistoryTabView: View {
     func ChapterRow(_ data: ChaptersHistory) -> some View {
         NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
             HStack {
-                RemoteImageCacheView(url: data.manga.cover.absoluteString, contentMode: .aspectFit)
+                RemoteImageCacheView(url: data.manga.cover.absoluteString, contentMode: .aspectFit, pipeline: .coverCache)
                     .frame(width: 80)
                     .id(data.id)
                 

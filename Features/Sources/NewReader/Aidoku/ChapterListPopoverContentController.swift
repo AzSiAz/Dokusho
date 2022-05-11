@@ -5,20 +5,21 @@
 //  Created by Skitty on 1/16/22.
 //
 import UIKit
+import DataKit
 
 protocol ChapterListPopoverDelegate: AnyObject {
-    func chapterSelected(_ chapter: Chapter)
+    func chapterSelected(_ chapter: MangaChapter)
 }
 
 class ChapterListPopoverContentController: UIViewController {
-    let chapterList: [Chapter]
+    let chapterList: [MangaChapter]
     var selectedIndex: Int
 
     weak var delegate: ChapterListPopoverDelegate?
 
     weak var tableView: UITableView?
 
-    init(chapterList: [Chapter], selectedIndex: Int = 0) {
+    init(chapterList: [MangaChapter], selectedIndex: Int = 0) {
         self.chapterList = chapterList
         self.selectedIndex = selectedIndex
         super.init(nibName: nil, bundle: nil)
@@ -61,6 +62,7 @@ extension ChapterListPopoverContentController: UITableViewDataSource {
         chapterList.count
     }
 
+    // TODO: fixme
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")
         if cell == nil {
@@ -69,22 +71,23 @@ extension ChapterListPopoverContentController: UITableViewDataSource {
         guard let cell = cell else { return UITableViewCell() }
 
         let chapter = chapterList[indexPath.row]
-        let volume = chapter.volumeNum
+//        let volume = chapter.volumeNum
 
-        var chapterString = ""
-        if let volume = volume, volume > 0 {
-            chapterString.append(String(format: "Vol.%g ", volume))
-        }
-        chapterString.append(String(format: "Ch.%g", chapter.chapterNum ?? 0))
+        let chapterString = ""
+//        if let volume = volume, volume > 0 {
+//            chapterString.append(String(format: "Vol.%g ", volume))
+//        }
+//        chapterString.append(String(format: "Ch.%g", chapter.chapterNum ?? 0))
 
         cell.backgroundColor = .clear
         cell.textLabel?.text = chapterString
         cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
-        if let title: String = chapter.title {
-            cell.detailTextLabel?.text = title
-            cell.detailTextLabel?.font = cell.textLabel?.font
-            cell.detailTextLabel?.textColor = .secondaryLabel
-        }
+//        if let title: String = chapter.title {
+
+        cell.detailTextLabel?.text = chapter.title
+        cell.detailTextLabel?.font = cell.textLabel?.font
+        cell.detailTextLabel?.textColor = .secondaryLabel
+//        }
         if indexPath.row == selectedIndex {
             cell.accessoryType = .checkmark
         } else {

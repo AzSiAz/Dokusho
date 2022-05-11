@@ -18,7 +18,7 @@ public enum ReadingDirection: String, CaseIterable {
     case vertical = "Vertical (Webtoon, no gaps)"
 }
 
-public struct PartialManga: Decodable, Identifiable {
+public struct PartialManga: Decodable, Identifiable, Hashable {
     public var id: UUID
     public var mangaId: String
     public var title: String

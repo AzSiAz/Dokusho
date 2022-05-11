@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import DataKit
 
 extension Bool {
     var intValue: Int {
@@ -69,11 +70,13 @@ extension UIToolbar {
     }
 }
 
-class ReaderViewController: UIViewController {
+public class ReaderViewController: UIViewController {
 
-    let manga: Manga?
-    var chapter: Chapter
-    var chapterList: [Chapter]
+    let manga: Manga
+    let scraper: Scraper
+    let closeReader: () -> Void
+    var chapter: MangaChapter
+    var chapterList: [MangaChapter]
 
     var readingMode: MangaViewer = .defaultViewer
 
@@ -99,7 +102,7 @@ class ReaderViewController: UIViewController {
             pageManager.readingMode = readingMode
             pageManager.attach(toParent: self)
 
-            pageManager.setChapter(chapter: chapter, startPage: DataManager.shared.currentPage(for: chapter))
+            pageManager.setChapter(chapter: chapter, startPage: 0, scraper: scraper)
         }
     }
 
@@ -130,22 +133,25 @@ class ReaderViewController: UIViewController {
 
     var statusBarHidden = false
 
-    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+    public override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         UIStatusBarAnimation.fade
     }
 
-    override var prefersStatusBarHidden: Bool {
+    public override var prefersStatusBarHidden: Bool {
         statusBarHidden
     }
 
-    override var prefersHomeIndicatorAutoHidden: Bool {
+    public override var prefersHomeIndicatorAutoHidden: Bool {
         statusBarHidden
     }
 
-    init(manga: Manga?, chapter: Chapter, chapterList: [Chapter]) {
+    public init(manga: Manga, scraper: Scraper, chapter: MangaChapter, chapterList: [MangaChapter], closeReader: @escaping () -> Void) {
         self.manga = manga
+        self.scraper = scraper
         self.chapter = chapter
         self.chapterList = chapterList
+        self.closeReader = closeReader
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -153,14 +159,15 @@ class ReaderViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         modalPresentationCapturesStatusBarAppearance = true
 
         view.backgroundColor = .systemBackground
 
-        navigationItem.leftBarButtonItems = [
+        //TODO: fixme
+        self.parent?.navigationItem.leftBarButtonItems = [
             UIBarButtonItem(
                 barButtonSystemItem: .close,
                 target: self,
@@ -174,7 +181,8 @@ class ReaderViewController: UIViewController {
             )
         ]
 
-        navigationItem.rightBarButtonItems = [
+        //TODO: fixme
+        self.parent?.navigationItem.rightBarButtonItems = [
             UIBarButtonItem(
                 image: UIImage(systemName: "ellipsis"),
                 style: .plain,
@@ -188,9 +196,11 @@ class ReaderViewController: UIViewController {
                 action: #selector(openReaderSettings(_:))
             )
         ]
-        navigationItem.rightBarButtonItems?.first?.isEnabled = false
-
-        navigationController?.navigationBar.prefersLargeTitles = false
+        
+        //TODO: fixme
+        self.parent?.navigationItem.rightBarButtonItems?.first?.isEnabled = false
+        //TODO: fixme
+        self.parent?.navigationController?.navigationBar.prefersLargeTitles = false
 
         // Fixes navbar being clear
         let navigationBarAppearance = UINavigationBarAppearance()
@@ -203,7 +213,8 @@ class ReaderViewController: UIViewController {
         navigationController?.toolbar.standardAppearance = toolbarAppearance
         navigationController?.toolbar.compactAppearance = toolbarAppearance
         if #available(iOS 15.0, *) {
-            navigationController?.toolbar.scrollEdgeAppearance = toolbarAppearance
+            //TODO: fixme
+            self.parent?.navigationController?.toolbar.scrollEdgeAppearance = toolbarAppearance
         }
 
         currentPageLabel.font = .systemFont(ofSize: 10)
@@ -231,10 +242,12 @@ class ReaderViewController: UIViewController {
         toolbarSlider.customView?.heightAnchor.constraint(equalToConstant: 40).isActive = true
         toolbarSlider.customView?.transform = CGAffineTransform(translationX: 0, y: -10)
 
-        navigationController?.isToolbarHidden = false
+        //TODO: fixme
+        self.parent?.navigationController?.isToolbarHidden = false
         toolbarItems = [toolbarSlider]
 
-        navigationController?.toolbar.fitContentViewToToolbar()
+        //TODO: fixme
+        self.parent?.navigationController?.toolbar.fitContentViewToToolbar()
 
         // Shows when orientation changing in order to cover up the jerky scrolling happening
         transitionView.isHidden = true
@@ -263,6 +276,7 @@ class ReaderViewController: UIViewController {
         }
     }
 
+    // TODO: fixme
     func setReadingMode(_ mode: String?) {
         switch mode {
         case "rtl": readingMode = .rtl
@@ -270,11 +284,12 @@ class ReaderViewController: UIViewController {
         case "vertical": readingMode = .vertical
         case "scroll": readingMode = .scroll
         default:
-            if let manga = manga {
-                readingMode = manga.viewer
-            } else {
-                readingMode = .defaultViewer
-            }
+            readingMode = .rtl
+//            if let manga = manga {
+//                readingMode = manga.viewer
+//            } else {
+//                readingMode = .defaultViewer
+//            }
         }
 
         if readingMode == .defaultViewer || readingMode == .rtl {
@@ -311,7 +326,7 @@ class ReaderViewController: UIViewController {
         transitionView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
 //        transitionView.isHidden = false
@@ -326,7 +341,7 @@ class ReaderViewController: UIViewController {
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
+    public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
 }
@@ -364,23 +379,27 @@ extension ReaderViewController {
         }
     }
 
+    // TODO: fixme
     @MainActor
     func loadChapter() async {
-        if let manga = manga {
-            DataManager.shared.setRead(manga: manga)
-        }
-        DataManager.shared.addHistory(for: chapter)
+//        if let manga = manga {
+//            DataManager.shared.setRead(manga: manga)
+//        }
+//        DataManager.shared.addHistory(for: chapter)
 
         navigationItem.setTitle(
-            upper: chapter.volumeNum != nil ? String(format: "Volume %g", chapter.volumeNum ?? 0) : nil,
-            lower: String(format: "Chapter %g", chapter.chapterNum ?? 0)
+//            upper: chapter.title != nil ? String(format: "Volume %g", chapter.volumeNum ?? 0) : nil,
+//            lower: String(format: "Chapter %g", chapter.chapterNum ?? 0)
+            upper: manga.title,
+            lower: chapter.title
         )
 
-        if chapterList.isEmpty {
-            chapterList = await DataManager.shared.getChapters(from: chapter.sourceId, for: chapter.mangaId, fromSource: true)
-        }
+//        if chapterList.isEmpty {
+//            chapterList = await DataManager.shared.getChapters(from: chapter.sourceId, for: chapter.mangaId, fromSource: true)
+//        }
     }
 
+    // TODO: fixme
     @objc func close() {
         var index = currentPageIndex
         let pageCount = pageManager.pages.count
@@ -389,8 +408,9 @@ extension ReaderViewController {
         } else if index >= pageCount {
             index = pageCount - 1
         }
-        DataManager.shared.setCurrentPage(index, for: chapter)
-        self.dismiss(animated: true)
+//        DataManager.shared.setCurrentPage(index, for: chapter)
+//        self.dismiss(animated: true)
+        self.closeReader()
     }
 
     @objc func openChapterSelectionPopover(_ sender: UIBarButtonItem) {
@@ -404,9 +424,10 @@ extension ReaderViewController {
         present(vc, animated: true)
     }
 
+    // TODO: fixme
     @objc func openReaderSettings(_ sender: UIBarButtonItem) {
-        let vc = UINavigationController(rootViewController: ReaderSettingsViewController())
-        present(vc, animated: true)
+//        let vc = UINavigationController(rootViewController: ReaderSettingsViewController())
+//        present(vc, animated: true)
     }
 
     @objc func toggleBarVisibility() {
@@ -447,8 +468,8 @@ extension ReaderViewController {
                 self.setNeedsUpdateOfHomeIndicatorAutoHidden()
             } completion: { _ in
                 UIView.animate(withDuration: CATransaction.animationDuration()) {
-                    navigationController.navigationBar.alpha = 0
-                    navigationController.toolbar.alpha = 0
+                    self.parent?.navigationController?.navigationBar.alpha = 0
+                    self.parent?.navigationController?.toolbar.alpha = 0
                     self.view.backgroundColor = .black
                 } completion: { _ in
                     navigationController.toolbar.isHidden = true
@@ -461,6 +482,7 @@ extension ReaderViewController {
 // MARK: - Page Manager Delegate
 extension ReaderViewController: ReaderPageManagerDelegate {
 
+    // TODO: fixme
     func didMove(toPage page: Int) {
         currentPageIndex = page
         updateLabels()
@@ -471,7 +493,7 @@ extension ReaderViewController: ReaderPageManagerDelegate {
         } else if index >= pageCount {
             index = pageCount - 1
         }
-        DataManager.shared.setCurrentPage(index, for: chapter)
+//        DataManager.shared.setCurrentPage(index, for: chapter)
     }
 
     func pagesLoaded() {
@@ -481,7 +503,7 @@ extension ReaderViewController: ReaderPageManagerDelegate {
         }
     }
 
-    func move(toChapter chapter: Chapter) {
+    func move(toChapter chapter: MangaChapter) {
         self.chapter = chapter
         Task {
             await loadChapter()
@@ -491,9 +513,10 @@ extension ReaderViewController: ReaderPageManagerDelegate {
 
 // MARK: - Chapter List Delegate
 extension ReaderViewController: ChapterListPopoverDelegate {
-    func chapterSelected(_ chapter: Chapter) {
+    // TODO: fixme
+    func chapterSelected(_ chapter: MangaChapter) {
         self.chapter = chapter
-        pageManager.setChapter(chapter: chapter, startPage: DataManager.shared.currentPage(for: chapter))
+        pageManager.setChapter(chapter: chapter, startPage: 1, scraper: scraper)
         Task {
             await loadChapter()
         }
@@ -502,7 +525,7 @@ extension ReaderViewController: ChapterListPopoverDelegate {
 
 // MARK: - Popover Delegate
 extension ReaderViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for controller: UIPresentationController,
+    public func adaptivePresentationStyle(for controller: UIPresentationController,
                                    traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         .none
     }

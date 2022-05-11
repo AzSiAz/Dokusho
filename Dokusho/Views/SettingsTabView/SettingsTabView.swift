@@ -11,6 +11,8 @@ import UniformTypeIdentifiers
 struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()
     @Preference(\.useNewCollectionView) var useNewCollectionView
+    @Preference(\.useAidokuReader) var useAidokuReader
+    @Preference(\.useNewUIKitReader) var useNewUIKitReader
     
     var body: some View {
         NavigationView {
@@ -29,6 +31,8 @@ struct SettingsTabView: View {
                 
                 Section("Experimental") {
                     Toggle("Use new collection view", isOn: $useNewCollectionView)
+                    Toggle("Use aidoku reader (not Working)", isOn: $useAidokuReader)
+                    Toggle("Use new custom reader", isOn: $useNewUIKitReader)
                 }
                 
                 Section("Cache") {

@@ -5,34 +5,39 @@
 //  Created by Skitty on 3/15/22.
 //
 import UIKit
+import DataKit
+import MangaScraper
 import Kingfisher
 
 class ReaderPagedPageManager: NSObject, ReaderPageManager {
 
     weak var delegate: ReaderPageManagerDelegate?
 
-    var chapter: Chapter?
+    var chapter: MangaChapter?
+    var scraper: Scraper?
+    var manga: Manga?
+
     var readingMode: MangaViewer? {
         didSet(oldValue) {
             if (readingMode == .vertical && oldValue != .vertical) || oldValue == .vertical {
                 remove()
                 createPageViewController()
-                if let chapter = chapter {
-                    setChapter(chapter: chapter, startPage: currentPageIndex)
+                if let chapter = chapter, let scraper = scraper {
+                    setChapter(chapter: chapter, startPage: currentPageIndex, scraper: scraper)
                 }
             }
         }
     }
     var pages: [Page] = []
 
-    var preloadedChapter: Chapter?
+    var preloadedChapter: MangaChapter?
     var preloadedPages: [Page] = []
 
     var parentViewController: UIViewController!
     var pageViewController: UIPageViewController!
     var items: [UIViewController] = []
 
-    var chapterList: [Chapter] = []
+    var chapterList: [MangaChapter] = []
     var chapterIndex: Int {
         guard let chapter = chapter else { return 0 }
         return chapterList.firstIndex(of: chapter) ?? 0
@@ -41,7 +46,7 @@ class ReaderPagedPageManager: NSObject, ReaderPageManager {
     var hasNextChapter = false
     var hasPreviousChapter = false
 
-    var nextChapter: Chapter?
+    var nextChapter: MangaChapter?
 
     var currentIndex: Int = 0
     var currentPageIndex: Int {
@@ -82,9 +87,11 @@ class ReaderPagedPageManager: NSObject, ReaderPageManager {
         pageViewController = nil
     }
 
-    func setChapter(chapter: Chapter, startPage: Int) {
+    func setChapter(chapter: MangaChapter, startPage: Int, scraper: Scraper) {
         guard pageViewController != nil else { return }
         self.chapter = chapter
+        self.scraper = scraper
+        
         Task {
             pages = []
             await loadPages()
@@ -125,7 +132,7 @@ class ReaderPagedPageManager: NSObject, ReaderPageManager {
 extension ReaderPagedPageManager {
 
     // find next non-duplicate chapter
-    func getNextChapter() -> Chapter? {
+    func getNextChapter() -> MangaChapter? {
         guard !chapterList.isEmpty && chapterIndex != 0 else { return nil }
 
         var i = chapterIndex
@@ -133,7 +140,7 @@ extension ReaderPagedPageManager {
             i -= 1
             if i < 0 { return nil }
             let newChapter = chapterList[i]
-            if newChapter.chapterNum != chapter?.chapterNum || newChapter.volumeNum != chapter?.volumeNum {
+            if newChapter.position != chapter?.position {
                 return newChapter
             }
         }
@@ -146,7 +153,13 @@ extension ReaderPagedPageManager {
             if let chapters = delegate?.chapterList, !chapters.isEmpty {
                 chapterList = chapters
             } else {
-                chapterList = await DataManager.shared.getChapters(from: chapter.sourceId, for: chapter.mangaId)
+                // TODO: fixme
+                if let found = try? await AppDatabase.shared.database.read({ db in
+                    return try MangaChapter.all().forMangaId(self.chapter!.mangaId).fetchAll(db)
+                }) {
+                    chapterList = found
+                }
+//                chapterList = await DataManager.shared.getChapters(from: chapter.sourceId, for: chapter.mangaId)
             }
         }
         if let chapterIndex = chapterList.firstIndex(of: chapter) {
@@ -163,7 +176,8 @@ extension ReaderPagedPageManager {
             preloadedPages = []
             preloadedChapter = nil
         } else {
-            pages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+//            pages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+            pages = []
             delegate?.pagesLoaded()
         }
     }
@@ -226,7 +240,8 @@ extension ReaderPagedPageManager {
 
         for _ in pages {
             let c = UIViewController()
-            let page = ReaderPageView(sourceId: chapter.sourceId)
+            //TODO: fixme
+            let page = ReaderPageView(sourceId: scraper!.id)
             page.frame = pageViewController.view.bounds
             page.imageView.addInteraction(UIContextMenuInteraction(delegate: self))
             c.view = page
@@ -258,13 +273,15 @@ extension ReaderPagedPageManager {
 
         if hasPreviousChapter {
             let previousChapterPageController = UIViewController()
-            previousChapterPageController.view = ReaderPageView(sourceId: chapter.sourceId)
+            //TODO: fixme
+            previousChapterPageController.view = ReaderPageView(sourceId: scraper!.id)
             items.insert(previousChapterPageController, at: 0)
         }
 
         if hasNextChapter {
             let nextChapterPageController = UIViewController()
-            nextChapterPageController.view = ReaderPageView(sourceId: chapter.sourceId)
+            //TODO: fixme
+            nextChapterPageController.view = ReaderPageView(sourceId: scraper!.id)
             items.append(nextChapterPageController)
         }
 
@@ -280,8 +297,16 @@ extension ReaderPagedPageManager {
         }
     }
 
-    func preload(chapter: Chapter) async {
-        preloadedPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+    // TODO: fixme
+    func preload(chapter: MangaChapter) async {
+        preloadedPages = []
+//        preloadedPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+        
+        let found = try! await scraper!.asSource()!.fetchChapterImages(mangaId: manga!.mangaId, chapterId: chapter.id)
+        preloadedPages = found.map({ d in
+            return Page(index: d.index, imageURL: d.imageUrl, base64: nil, text: nil)
+        })
+        
         preloadedChapter = chapter
     }
 

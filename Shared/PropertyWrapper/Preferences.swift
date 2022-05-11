@@ -69,6 +69,12 @@ final class Preferences {
     
     @UserDefault("NEW_COLLECTION_VIEW")
     var useNewCollectionView: Bool = false
+    
+    @UserDefault("USE_AIDOKU_READER")
+    var useAidokuReader: Bool = false
+    
+    @UserDefault("USE_NEW_UIKIT_READER")
+    var useNewUIKitReader: Bool = false
 }
 
 @propertyWrapper

@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "59eb199fdb8dd47733624e8b0277822d0232579e",
+        "version" : "7.2.2"
+      }
+    },
+    {
       "identity" : "mangascraper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AzSiAz/MangaScraper",
@@ -88,6 +97,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "13ba661fd1146967270fca92ce8195b223631436"
+      }
+    },
+    {
+      "identity" : "swiftuikit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/SwiftUIKit.git",
+      "state" : {
+        "revision" : "5507a2e4d75e11d58390437591e5ab0b79586db0",
+        "version" : "2.6.0"
       }
     },
     {

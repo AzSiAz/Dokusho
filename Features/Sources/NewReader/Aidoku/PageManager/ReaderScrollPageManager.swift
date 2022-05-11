@@ -5,6 +5,7 @@
 //  Created by Skitty on 3/15/22.
 //
 import UIKit
+import DataKit
 import Kingfisher
 
 extension UIImage {
@@ -20,7 +21,9 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
 
     weak var delegate: ReaderPageManagerDelegate?
 
-    var chapter: Chapter? {
+    var scraper: Scraper?
+    var manga: Manga?
+    var chapter: MangaChapter? {
         didSet {
             getChapterInfo()
         }
@@ -30,14 +33,14 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
 
     var infiniteScroll = false
 
-    var previousChapter: Chapter?
+    var previousChapter: MangaChapter?
     var previousPages: [Page] = []
-    var nextChapter: Chapter?
+    var nextChapter: MangaChapter?
     var nextPages: [Page] = []
 
-    var targetNextChapter: Chapter?
+    var targetNextChapter: MangaChapter?
 
-    var preloadedChapter: Chapter?
+    var preloadedChapter: MangaChapter?
     var preloadedPages: [Page] = []
 
     var collectionView: UICollectionView!
@@ -45,7 +48,7 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
     var sizeCache: [String: CGSize] = [:]
     var lastSize: CGSize?
 
-    var chapterList: [Chapter] = []
+    var chapterList: [MangaChapter] = []
     var chapterIndex: Int {
         guard let chapter = chapter else { return 0 }
         return chapterList.firstIndex(of: chapter) ?? 0
@@ -156,10 +159,12 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
         collectionView = nil
     }
 
-    func setChapter(chapter: Chapter, startPage: Int) {
+    func setChapter(chapter: MangaChapter, startPage: Int, scraper: Scraper) {
         guard collectionView != nil else { return }
 
         self.chapter = chapter
+        self.scraper = scraper
+
         targetPage = startPage
 
         if transitioningChapter {
@@ -202,8 +207,9 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
         }
     }
 
+    // TODO: fixme
     // find next non-duplicate chapter
-    func getNextChapter() -> Chapter? {
+    func getNextChapter() -> MangaChapter? {
         guard !chapterList.isEmpty && chapterIndex != 0 else { return nil }
 
         var i = chapterIndex
@@ -211,12 +217,13 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
             i -= 1
             if i < 0 { return nil }
             let newChapter = chapterList[i]
-            if newChapter.chapterNum != chapter?.chapterNum || newChapter.volumeNum != chapter?.volumeNum {
+            if newChapter.position != chapter?.position {
                 return newChapter
             }
         }
     }
 
+    // TODO: fixme
     func loadPages() async {
         guard let chapter = chapter else { return }
         if preloadedChapter == chapter && !preloadedPages.isEmpty {
@@ -224,7 +231,12 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
             preloadedPages = []
             preloadedChapter = nil
         } else {
-            pages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+//            pages = []
+//            pages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+            let found = try! await scraper!.asSource()!.fetchChapterImages(mangaId: manga!.mangaId, chapterId: chapter.id)
+            pages = found.map({ d in
+                return Page(index: d.index, imageURL: d.imageUrl, base64: nil, text: nil)
+            })
         }
         sizeCache = [:]
         delegate?.pagesLoaded()
@@ -233,7 +245,9 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
             if let chapters = delegate?.chapterList, !chapters.isEmpty {
                 chapterList = chapters
             } else {
-                chapterList = await DataManager.shared.getChapters(from: chapter.sourceId, for: chapter.mangaId)
+                // TODO: fixme
+                chapterList = []
+//                chapterList = await DataManager.shared.getChapters(from: chapter.sourceId, for: chapter.mangaId)
             }
         }
         getChapterInfo()
@@ -250,8 +264,14 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
         }
     }
 
-    func preload(chapter: Chapter) async {
-        preloadedPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+    // TODO: fixme
+    func preload(chapter: MangaChapter) async {
+//        preloadedPages = []
+//        preloadedPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+        let found = try! await scraper!.asSource()!.fetchChapterImages(mangaId: manga!.mangaId, chapterId: chapter.id)
+        preloadedPages = found.map({ d in
+            return Page(index: d.index, imageURL: d.imageUrl, base64: nil, text: nil)
+        })
         preloadedChapter = chapter
     }
 
@@ -275,7 +295,7 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
     }
 
     @MainActor
-    func append(chapter: Chapter, toFront: Bool = false) async {
+    func append(chapter: MangaChapter, toFront: Bool = false) async {
         if toFront {
             guard previousChapter != chapter else { return }
 
@@ -286,7 +306,13 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
                 preloadedPages = []
                 preloadedChapter = nil
             } else {
-                previousPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+                // TODO: fixme
+//                previousPages = []
+//                previousPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+                let found = try! await scraper!.asSource()!.fetchChapterImages(mangaId: manga!.mangaId, chapterId: chapter.id)
+                previousPages = found.map({ d in
+                    return Page(index: d.index, imageURL: d.imageUrl, base64: nil, text: nil)
+                })
             }
 
             let bottomOffset = collectionView.contentSize.height - collectionView.contentOffset.y
@@ -311,7 +337,13 @@ class ReaderScrollPageManager: NSObject, ReaderPageManager {
                 preloadedPages = []
                 preloadedChapter = nil
             } else {
-                nextPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+                // TODO: fixme
+//                nextPages = []
+//                nextPages = (try? await SourceManager.shared.source(for: chapter.sourceId)?.getPageList(chapter: chapter)) ?? []
+                let found = try! await scraper!.asSource()!.fetchChapterImages(mangaId: manga!.mangaId, chapterId: chapter.id)
+                nextPages = found.map({ d in
+                    return Page(index: d.index, imageURL: d.imageUrl, base64: nil, text: nil)
+                })
             }
 
             collectionView.performBatchUpdates {
@@ -512,8 +544,8 @@ extension ReaderScrollPageManager: UICollectionViewDataSource {
             for: indexPath
         )
 
-        if let chapter = chapter, let cell = cell as? ReaderPageCollectionViewCell {
-            cell.sourceId = chapter.sourceId
+        if let chapter = chapter, let scraper = scraper, let cell = cell as? ReaderPageCollectionViewCell {
+            cell.sourceId = scraper.id
 
             if indexPath.section == 0 || indexPath.section == 2 {
                 cell.convertToPage()
@@ -596,7 +628,7 @@ extension ReaderScrollPageManager: UIContextMenuInteractionDelegate {
 // MARK: - Reader Page Collection Cell
 class ReaderPageCollectionViewCell: UICollectionViewCell {
 
-    var sourceId: String?
+    var sourceId: UUID?
 
     var pageView: ReaderPageView?
     var infoView: ReaderInfoPageView?
@@ -607,7 +639,7 @@ class ReaderPageCollectionViewCell: UICollectionViewCell {
         infoView?.removeFromSuperview()
         infoView = nil
 
-        pageView = ReaderPageView(sourceId: sourceId ?? "")
+        pageView = ReaderPageView(sourceId: sourceId!)
         pageView?.zoomEnabled = false
         pageView?.translatesAutoresizingMaskIntoConstraints = false
         addSubview(pageView!)
@@ -618,7 +650,7 @@ class ReaderPageCollectionViewCell: UICollectionViewCell {
         pageView?.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 
-    func convertToInfo(type: ReaderInfoPageType, currentChapter: Chapter) {
+    func convertToInfo(type: ReaderInfoPageType, currentChapter: MangaChapter) {
         guard infoView == nil else { return }
 
         pageView?.removeFromSuperview()

@@ -8,10 +8,12 @@
 import SwiftUI
 import GRDBQuery
 import Combine
-import ASCollectionView
+import SwiftUIKit
 import DataKit
 
 struct CollectionPage: View {
+    typealias Row = CollectionViewRow<Int, DetailedMangaInList>
+    
     @Environment(\.appDatabase) var appDatabase
     @EnvironmentObject var libraryUpdater: LibraryUpdater
 
@@ -24,6 +26,8 @@ struct CollectionPage: View {
     @Preference(\.useNewCollectionView) var useNewCollectionView
     
     var columns: [GridItem] = [GridItem(.adaptive(130))]
+    var rows: [Row] { [Row(section: 0, items: list)] }
+
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -46,25 +50,14 @@ struct CollectionPage: View {
                 }
             }
             else {
-                ASCollectionView(data: list, dataID: \.id) { data, _ in
-                    Button(action: { selected = data }){
-                        MangaCardView(manga: data.manga, count: data.unreadChapterCount)
-                    }
-                    .buttonStyle(.plain)
-                    .id(data.id)
-                }
-                .alwaysBounceVertical(true)
-                .layout {
-                    .grid(
-                        layoutMode: .adaptive(withMinItemSize: 130),
-                        itemSpacing: 5,
-                        lineSpacing: 5,
-                        itemSize: .absolute(180)
-                    )
-                }
+                CollectionView(
+                    rows: rows,
+                    layout: .verticalGrid(itemsPerRow: 3, itemHeight: 190, itemInsets: .init(.all(5))),
+                    cell: cell,
+                    supplementaryView: { _ in Text("Test") }
+                )
                 .edgesIgnoringSafeArea(.all)
             }
-            
         }
         .navigate(item: $selected, destination: makeMangaDetailView(data:))
         .searchable(text: $list.searchTerm)
@@ -72,6 +65,14 @@ struct CollectionPage: View {
         .navigationTitle("\(collection?.name ?? "") (\(list.count))")
         .navigationBarTitleDisplayMode(.automatic)
         .mirrorAppearanceState(to: $list.isAutoupdating, $collection.isAutoupdating)
+    }
+    
+    @ViewBuilder
+    func cell(at indexPath: IndexPath, for item: DetailedMangaInList) -> some View {
+        MangaCardView(manga: item.manga, count: item.unreadChapterCount)
+            .onTapGesture {
+                selected = item
+            }
     }
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {
