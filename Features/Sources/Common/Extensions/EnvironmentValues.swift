@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension UIApplication {
+public extension UIApplication {
     var keyWindow: UIWindow? {
         connectedScenes
             .compactMap {
@@ -29,7 +29,7 @@ private struct SafeAreaInsetsKey: EnvironmentKey {
     }
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var safeAreaInsets: EdgeInsets {
         self[SafeAreaInsetsKey.self]
     }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Nuke
-
+import Common
 
 struct ChapterImageView: View {
     @StateObject private var image: FetchImage
@@ -39,7 +39,7 @@ struct ChapterImageView: View {
                     Image(uiImage: res.image)
                         .resizable()
                         .aspectRatio(contentMode: contentMode)
-                        .addPinchZoom()
+                        .addPinchAndPan()
             case .failure(let err):
                     VStack {
                         Button(action: { id = UUID() }) {

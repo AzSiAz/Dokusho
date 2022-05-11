@@ -9,6 +9,7 @@ import GRDB
 import GRDBQuery
 import OSLog
 import MangaScraper
+import Common
 
 /// AppDatabase lets the application access the database.
 ///

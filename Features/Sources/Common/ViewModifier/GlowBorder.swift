@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct GlowBorder: ViewModifier {
+public struct GlowBorder: ViewModifier {
     var color: Color
     var lineWidth: Int
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         applyShadow(content: AnyView(content), lineWidth: lineWidth)
     }
     

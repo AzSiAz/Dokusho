@@ -12,12 +12,13 @@ import OSLog
 import MangaScraper
 import Nuke
 import DataKit
+import Common
 
 enum GoToChapterDirection {
     case next, previous
 }
 
-class ReaderVM: ObservableObject {
+public class ReaderVM: ObservableObject {
     private let database = AppDatabase.shared.database
     
     @Published var chapter: MangaChapter
@@ -32,7 +33,7 @@ class ReaderVM: ObservableObject {
     private var manga: Manga
     private var chapters: [MangaChapter]
 
-    init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
+    public init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.chapter = chapter
         self.chapters = chapters.sorted(by: \.position, using: >)
         self.manga = manga
@@ -53,7 +54,6 @@ class ReaderVM: ObservableObject {
                 _ = try? await ImagePipeline.inMemory.image(for: image.imageUrl)
             }
         } catch {
-            print(error)
             Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
         }
         

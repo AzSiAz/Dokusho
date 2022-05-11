@@ -8,7 +8,7 @@
 import Foundation
 import Nuke
 
-extension ImagePipeline {
+public extension ImagePipeline {
     static var inMemory: ImagePipeline {
         return  ImagePipeline { $0.imageCache =  ImageCache() }
     }
@@ -29,7 +29,7 @@ extension ImagePipeline {
     }
 }
 
-extension DataCache {
+public extension DataCache {
     static var DiskCover: DataCache? {
         let dataCache = try? DataCache(name: "tech.azsiaz.Dokusho.cover")
         dataCache?.sizeLimit = 1024 * 1024 * 1500

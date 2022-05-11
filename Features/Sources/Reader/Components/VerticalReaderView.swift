@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Common
 
 struct VerticalReaderView: View {
     @Environment(\.safeAreaInsets) var inset

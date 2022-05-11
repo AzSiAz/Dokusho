@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension UIScreen {
+public extension UIScreen {
     static var isLargeScreen: Bool {
         return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
     }

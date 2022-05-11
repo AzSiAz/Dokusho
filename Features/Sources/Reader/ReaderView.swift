@@ -10,13 +10,18 @@ import DataKit
 
 typealias OnProgress = (_ status: ChapterStatus) -> Void
 
-struct ReaderView: View {
-    @Environment(\.presentationManager) var presentationMode
+public struct ReaderView: View {
+    @Environment(\.dismiss) var dismiss
     
-    @StateObject var vm: ReaderVM
-    @ObservedObject var readerManager: ReaderManager
+    @StateObject public var vm: ReaderVM
+    @ObservedObject public var readerManager: ReaderManager
     
-    var body: some View {
+    public init(vm: ReaderVM, readerManager: ReaderManager) {
+        _vm = .init(wrappedValue: vm)
+        _readerManager = .init(wrappedValue: readerManager)
+    }
+    
+    public var body: some View {
         Group {
             if (vm.images.isEmpty && !vm.isLoading) {
                 Text("No images found in this chapter")
@@ -96,7 +101,7 @@ struct ReaderView: View {
     func TopOverlay() -> some View {
         if vm.showToolBar {
             HStack(alignment: .center) {
-                Button(action: presentationMode.dismiss) {
+                Button(action: dismiss.callAsFunction) {
                     Image(systemName: "xmark")
                 }
 

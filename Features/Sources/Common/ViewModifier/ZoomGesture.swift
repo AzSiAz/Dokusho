@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct PinchAndPanImage: ViewModifier {
+public struct PinchAndPanImage: ViewModifier {
     // For Drag Gesture
     @State var size: CGSize = .zero
     @State var offset: CGSize = .zero
@@ -10,7 +10,7 @@ struct PinchAndPanImage: ViewModifier {
     @State var scale: CGFloat = 1
     @State var lastScale: CGFloat = 1
 
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         content
             .readSize { size = $0 }
             .scaleEffect(scale < 1 ? 1 : scale)
