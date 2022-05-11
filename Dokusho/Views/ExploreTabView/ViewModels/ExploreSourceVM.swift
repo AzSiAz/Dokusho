@@ -7,8 +7,8 @@
 
 import Foundation
 import SwiftUI
-import CoreData
 import MangaScraper
+import DataKit
 
 class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database

@@ -8,6 +8,7 @@
 import Foundation
 import MangaScraper
 import SwiftUI
+import DataKit
 
 class SearchScraperVM: ObservableObject {
     private var database = AppDatabase.shared.database

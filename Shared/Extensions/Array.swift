@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import DataKit
 
 extension Array {
     func chunked(into size: Int) -> [[Element]] {
@@ -21,22 +22,6 @@ extension Array {
         } else {
             return nil
         }
-    }
-}
-
-extension Array where Element == MangaChapter {
-    func next(index: Index) -> Element? {
-        let newIdx = index.advanced(by: 1)
-        print(newIdx)
-        guard newIdx <= index else { return nil }
-        return self[newIdx]
-    }
-
-    func prev(index: Index) -> Element? {
-        let newIdx = index.advanced(by: -1)
-        print(newIdx)
-        guard newIdx <= endIndex else { return nil }
-        return self[newIdx]
     }
 }
 

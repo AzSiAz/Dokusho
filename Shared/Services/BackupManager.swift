@@ -10,6 +10,7 @@ import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 import MangaScraper
+import DataKit
 
 struct Backup: FileDocument {
     static var readableContentTypes = [UTType.json]

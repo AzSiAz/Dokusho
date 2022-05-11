@@ -9,6 +9,7 @@ import SwiftUI
 import GRDBQuery
 import Combine
 import ASCollectionView
+import DataKit
 
 struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase

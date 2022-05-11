@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GRDBQuery
+import DataKit
 
 struct MangaInCollectionForGenre: View {
     @Environment(\.dismiss) var dismiss

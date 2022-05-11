@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GRDBQuery
+import DataKit
 
 struct ChapterListInformation: View {
     @EnvironmentObject var readerManager: ReaderManager

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DataKit
 
 class ReaderManager: ObservableObject {
     struct SelectedChapter: Identifiable {

@@ -8,6 +8,7 @@
 import SwiftUI
 import MangaScraper
 import GRDBQuery
+import DataKit
 
 struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]

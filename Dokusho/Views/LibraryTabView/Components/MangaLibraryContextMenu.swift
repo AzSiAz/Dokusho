@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DataKit
 
 struct MangaLibraryContextMenu: View {
     @Environment(\.appDatabase) var appDB

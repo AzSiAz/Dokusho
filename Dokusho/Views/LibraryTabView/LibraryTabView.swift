@@ -8,6 +8,7 @@
 import SwiftUI
 import MangaScraper
 import GRDBQuery
+import DataKit
 
 struct LibraryTabView: View {
     @Environment(\.appDatabase) var appDB

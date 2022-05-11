@@ -8,6 +8,7 @@
 import SwiftUI
 import MangaScraper
 import GRDBQuery
+import DataKit
 
 struct BySourceListPage: View {
     @Query(ScraperWithMangaInCollection()) var scrapers

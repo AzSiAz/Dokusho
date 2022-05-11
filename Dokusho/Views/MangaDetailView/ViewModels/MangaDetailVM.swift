@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import MangaScraper
 import GRDB
+import DataKit
 
 @MainActor
 class MangaDetailVM: ObservableObject {

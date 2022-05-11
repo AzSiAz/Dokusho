@@ -10,6 +10,7 @@ import MangaScraper
 import GRDB
 import GRDBQuery
 import Combine
+import DataKit
 
 struct ExploreTabView: View {
     @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers

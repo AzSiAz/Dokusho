@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 import GRDBQuery
 import MangaScraper
+import DataKit
 
 struct SearchSourceListScreen: View {
     @Query(MangaCollectionRequest()) var collections

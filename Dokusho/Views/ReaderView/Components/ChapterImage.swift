@@ -44,8 +44,9 @@ struct ChapterImage: View {
                         .frame(height: fullHeight)
                 }
             }
+            .onDisappear(.none)
             .pipeline(.inMemory)
-            .id(id)
+//            .id(id)
     }
     
     func saveImage(image: UIImage) {

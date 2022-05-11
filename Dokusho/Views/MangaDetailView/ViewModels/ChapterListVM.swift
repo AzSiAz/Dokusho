@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import CoreData
 import SwiftUI
+import DataKit
 
 class ChapterListVM: ObservableObject {
     private let database = AppDatabase.shared.database

@@ -8,6 +8,7 @@
 import SwiftUI
 import GRDBQuery
 import Combine
+import DataKit
 
 struct HistoryTabView: View {
     @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]

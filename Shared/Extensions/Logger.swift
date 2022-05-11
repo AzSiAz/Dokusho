@@ -11,8 +11,6 @@ import OSLog
 extension Logger {
     private static var subsystem = Bundle.main.bundleIdentifier!
 
-    static let persistence = Logger(subsystem: subsystem, category: "db")
-    static let migration = Logger(subsystem: subsystem, category: "db.migration")
     static let reader = Logger(subsystem: subsystem, category: "reader")
     static let backup = Logger(subsystem: subsystem, category: "backup")
 }

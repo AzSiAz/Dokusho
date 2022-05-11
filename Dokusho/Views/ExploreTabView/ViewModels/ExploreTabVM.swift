@@ -7,6 +7,7 @@
 
 import Foundation
 import MangaScraper
+import DataKit
 
 class ExploreTabVM: ObservableObject {
     var database = AppDatabase.shared.database

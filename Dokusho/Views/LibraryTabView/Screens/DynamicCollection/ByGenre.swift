@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GRDBQuery
+import DataKit
 
 struct ByGenreListPage: View {
     @Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]

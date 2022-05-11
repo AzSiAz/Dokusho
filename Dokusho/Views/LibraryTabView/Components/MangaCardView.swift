@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DataKit
 
 struct MangaCardView: View {
     var manga: PartialManga

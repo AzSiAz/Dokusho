@@ -11,6 +11,7 @@ import SwiftUI
 import OSLog
 import MangaScraper
 import Nuke
+import DataKit
 
 enum GoToChapterDirection {
     case next, previous

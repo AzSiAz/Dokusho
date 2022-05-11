@@ -7,9 +7,9 @@
 
 import Foundation
 import SwiftUI
-import CoreData
 import MangaScraper
 import OSLog
+import DataKit
 
 class LibraryUpdater: ObservableObject {
     struct RefreshStatus {

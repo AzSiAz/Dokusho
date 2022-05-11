@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DataKit
 
 struct ChapterListRow: View {
     @EnvironmentObject var readerManager: ReaderManager

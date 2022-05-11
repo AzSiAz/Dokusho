@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GRDBQuery
+import DataKit
 
 struct MangaDetailView: View {
     @Environment(\.horizontalSizeClass) var sizeClass
