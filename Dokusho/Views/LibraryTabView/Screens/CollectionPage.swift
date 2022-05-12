@@ -26,9 +26,8 @@ struct CollectionPage: View {
     @State var selected: DetailedMangaInList?
     @Preference(\.useNewCollectionView) var useNewCollectionView
     
-    var columns: [GridItem] = [GridItem(.adaptive(130))]
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     var rows: [Row] { [Row(section: 0, items: list)] }
-
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -53,7 +52,7 @@ struct CollectionPage: View {
             else {
                 CollectionView(
                     rows: rows,
-                    layout: .verticalGrid(itemsPerRow: 3, itemHeight: 190, itemInsets: .init(.all(5))),
+                    layout: .verticalGrid(itemsPerRow: getItemPerRows(), itemHeight: 190, itemInsets: .init(.all(5))),
                     cell: cell,
                     supplementaryView: { _ in Text("Test") }
                 )
@@ -121,6 +120,10 @@ struct CollectionPage: View {
                 }
             }
         }
+    }
+    
+    func getItemPerRows() -> Int {
+        UIScreen.isLargeScreen ? 6 : 3
     }
     
     func updateCollectionFilter(newFilter: MangaCollectionFilter) {

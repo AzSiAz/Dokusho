@@ -22,6 +22,7 @@ let package = Package(
          .package(url: "https://github.com/kean/Nuke", branch: "master"),
          .package(url: "https://github.com/kean/NukeUI", from: "0.8.1"),
          .package(url: "https://github.com/AzSiAz/MangaScraper", branch: "main"),
+         .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -40,7 +41,8 @@ let package = Package(
         .target(
             name: "SharedUI",
             dependencies: [
-                .byName(name: "Common")
+                .byName(name: "Common"),
+                .byName(name: "SwiftUIX")
             ]
        ),
         
