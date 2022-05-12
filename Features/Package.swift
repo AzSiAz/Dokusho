@@ -9,6 +9,7 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Common", targets: ["Common"]),
+        .library(name: "SharedUI", targets: ["SharedUI"]),
         .library(name: "Reader", targets: ["Reader"]),
         .library(name: "NewReader", targets: ["NewReader"]),
         .library(name: "DataKit", targets: ["DataKit"]),
@@ -29,11 +30,19 @@ let package = Package(
             name: "Common",
             dependencies: [
                 .byName(name: "Nuke")
-            ]),
+            ]
+        ),
         .testTarget(
             name: "CommonTests",
-            dependencies: ["Common"]),
+            dependencies: ["Common"]
+        ),
 
+        .target(
+            name: "SharedUI",
+            dependencies: [
+                .byName(name: "Common")
+            ]
+       ),
         
         .target(
             name: "Reader",

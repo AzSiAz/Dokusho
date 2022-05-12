@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Date {
+public extension Date {
     static func from(year: Int, month: Int, day: Int, calendarType: Calendar.Identifier = .gregorian) -> Date {
         var dateComponents = DateComponents()
         dateComponents.year = year

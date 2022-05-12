@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import Common
 
 struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()

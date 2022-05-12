@@ -6,25 +6,33 @@
 //
 
 import SwiftUI
+import Common
 
-struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {
+public struct FlexibleView<Data: Collection, Content: View>: View where Data.Element: Hashable {
     let data: Data
     let availableWidth: CGFloat
     let spacing: CGFloat
     let alignment: HorizontalAlignment
     let content: (Data.Element) -> Content
+
     @State var elementsSize: [Data.Element: CGSize] = [:]
     
-    var body : some View {
+    public init(data: Data, availableWidth: CGFloat, spacing: CGFloat, alignment: HorizontalAlignment, @ViewBuilder content: @escaping (Data.Element) -> Content) {
+        self.data = data
+        self.availableWidth = availableWidth
+        self.spacing = spacing
+        self.alignment = alignment
+        self.content = content
+    }
+    
+    public var body : some View {
         VStack(alignment: alignment, spacing: spacing) {
             ForEach(computeRows(), id: \.self) { rowElements in
                 HStack(spacing: spacing) {
                     ForEach(rowElements, id: \.self) { element in
                         content(element)
                             .fixedSize()
-                            .readSize { size in
-                                elementsSize[element] = size
-                            }
+                            .readSize { elementsSize[element] = $0 }
                     }
                 }
             }

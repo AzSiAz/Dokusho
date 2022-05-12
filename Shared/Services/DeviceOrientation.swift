@@ -10,8 +10,7 @@ import Combine
 
 final class DeviceOrientation: ObservableObject {
     enum Orientation {
-        case portrait
-        case landscape
+        case portrait, landscape
     }
     
     @Published var orientation: Orientation

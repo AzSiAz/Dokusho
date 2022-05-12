@@ -10,6 +10,8 @@ import GRDBQuery
 import DataKit
 import Reader
 import NewReader
+import Common
+import SharedUI
 
 struct MangaDetailView: View {
     @Environment(\.horizontalSizeClass) var sizeClass

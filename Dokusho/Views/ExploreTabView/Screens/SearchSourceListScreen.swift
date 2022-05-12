@@ -11,6 +11,7 @@ import Combine
 import GRDBQuery
 import MangaScraper
 import DataKit
+import SharedUI
 
 struct SearchSourceListScreen: View {
     @Query(MangaCollectionRequest()) var collections
@@ -22,7 +23,7 @@ struct SearchSourceListScreen: View {
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            SearchBarWithDebounce(debouncedText: $searchText, isFocused: $isSearchFocused)
+            DebouncedSearchBar(debouncedText: $searchText, isFocused: $isSearchFocused)
                 .padding(.top, 10)
                 .padding(.horizontal, 10)
             ForEach(scrapers) { scraper in

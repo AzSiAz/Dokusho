@@ -10,6 +10,7 @@ import GRDBQuery
 import Combine
 import SwiftUIKit
 import DataKit
+import Common
 
 struct CollectionPage: View {
     typealias Row = CollectionViewRow<Int, DetailedMangaInList>

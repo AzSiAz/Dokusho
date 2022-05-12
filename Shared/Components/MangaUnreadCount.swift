@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SharedUI
 
 struct MangaUnreadCount: View {
     var count: Int
@@ -16,7 +17,7 @@ struct MangaUnreadCount: View {
                 .padding(2)
                 .foregroundColor(.primary)
                 .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
-//                .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
+                .clipShape(RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]))
         }
     }
 }
