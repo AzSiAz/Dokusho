@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import MangaScraper
 import DataKit
+import Collections
 
 class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
@@ -16,7 +17,7 @@ class ExploreSourceVM: ObservableObject {
     let scraper: Scraper
     
     @Published var nextPage = 1
-    @Published var mangas = [SourceSmallManga]()
+    @Published var mangas = OrderedSet<SourceSmallManga>()
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
@@ -36,8 +37,8 @@ class ExploreSourceVM: ObservableObject {
         
         do {
             let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) :  scraper.asSource()?.fetchPopularManga(page: nextPage)
-
-            self.mangas += newManga!.mangas
+            mangas.append(contentsOf: newManga!.mangas)
+            
             self.nextPage += 1
         } catch {
             self.error = true
