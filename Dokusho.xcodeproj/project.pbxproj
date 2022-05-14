@@ -23,7 +23,6 @@
 		E2187ED426CC625C009604A9 /* NavigationLinkLazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECD26CC625C009604A9 /* NavigationLinkLazyView.swift */; };
 		E2187ED526CC625C009604A9 /* MangaUnreadCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187ECE26CC625C009604A9 /* MangaUnreadCount.swift */; };
 		E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23AD6F426EE069E0042453A /* HistoryTabView.swift */; };
-		E257883828218753008BACF3 /* ASCollectionView in Frameworks */ = {isa = PBXBuildFile; productRef = E257883728218753008BACF3 /* ASCollectionView */; };
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E261654B281161F2002482C8 /* SearchScraperVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654A281161F2002482C8 /* SearchScraperVM.swift */; };
 		E261654F28118A01002482C8 /* SearchSourceListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654E28118A01002482C8 /* SearchSourceListScreen.swift */; };
@@ -133,7 +132,6 @@
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 				E270C0E1282C471400E3093E /* SharedUI in Frameworks */,
 				E25B0C83282BC4360080A71A /* DataKit in Frameworks */,
-				E257883828218753008BACF3 /* ASCollectionView in Frameworks */,
 				E270C0D8282BDEFE00E3093E /* Common in Frameworks */,
 				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
 				E27FF712277244630035DB99 /* GRDB in Frameworks */,
@@ -400,7 +398,6 @@
 				E27FF711277244630035DB99 /* GRDB */,
 				E27FF7142772453B0035DB99 /* GRDBQuery */,
 				E28E4C8527E0A6D7004B9397 /* TelemetryClient */,
-				E257883728218753008BACF3 /* ASCollectionView */,
 				E272716C282577A400D6F09E /* NukeUI */,
 				E25B0C82282BC4360080A71A /* DataKit */,
 				E270C0D7282BDEFE00E3093E /* Common */,
@@ -444,7 +441,6 @@
 				E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				E27FF7132772453B0035DB99 /* XCRemoteSwiftPackageReference "GRDBQuery" */,
 				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
-				E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */,
 				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
 				E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */,
 			);
@@ -640,7 +636,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -680,7 +676,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -751,14 +747,6 @@
 				kind = branch;
 			};
 		};
-		E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apptekstudios/ASCollectionView";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielsaidi/SwiftUIKit.git";
@@ -819,11 +807,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
-		};
-		E257883728218753008BACF3 /* ASCollectionView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E257883628218753008BACF3 /* XCRemoteSwiftPackageReference "ASCollectionView" */;
-			productName = ASCollectionView;
 		};
 		E25B0C82282BC4360080A71A /* DataKit */ = {
 			isa = XCSwiftPackageProductDependency;

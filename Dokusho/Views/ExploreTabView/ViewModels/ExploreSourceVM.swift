@@ -16,7 +16,7 @@ class ExploreSourceVM: ObservableObject {
     let scraper: Scraper
     
     @Published var nextPage = 1
-    @Published var mangas: [SourceSmallManga] = []
+    @Published var mangas = [SourceSmallManga]()
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
