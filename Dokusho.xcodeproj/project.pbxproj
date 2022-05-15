@@ -50,6 +50,7 @@
 		E2CB128826CD0559007837D1 /* ChapterListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128026CD0559007837D1 /* ChapterListRow.swift */; };
 		E2CB128926CD0559007837D1 /* ChapterListInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128126CD0559007837D1 /* ChapterListInformation.swift */; };
 		E2CB128B26CD0559007837D1 /* MangaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2CB128326CD0559007837D1 /* MangaDetailView.swift */; };
+		E2D6D37328311A7C000D7D3E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = E2D6D37228311A7C000D7D3E /* Collections */; };
 		E2DA94D526D645CE0083F2F7 /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94D426D645CE0083F2F7 /* SettingsTabView.swift */; };
 		E2DA94D926D645F30083F2F7 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94D826D645F30083F2F7 /* SettingsVM.swift */; };
 		E2DA94E326D667FE0083F2F7 /* LibraryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DA94DD26D667FE0083F2F7 /* LibraryTabView.swift */; };
@@ -127,6 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2D6D37328311A7C000D7D3E /* Collections in Frameworks */,
 				E28E4C8627E0A6D7004B9397 /* TelemetryClient in Frameworks */,
 				E203B9C926ECFED700F4B749 /* MangaScraper in Frameworks */,
 				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
@@ -405,6 +407,7 @@
 				E270C0DB282C0D3700E3093E /* NewReader */,
 				E270C0DE282C264F00E3093E /* SwiftUIKit */,
 				E270C0E0282C471400E3093E /* SharedUI */,
+				E2D6D37228311A7C000D7D3E /* Collections */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -443,6 +446,7 @@
 				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
 				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
 				E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */,
+				E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -795,6 +799,14 @@
 				version = 1.1.6;
 			};
 		};
+		E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -857,6 +869,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */;
 			productName = TelemetryClient;
+		};
+		E2D6D37228311A7C000D7D3E /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
