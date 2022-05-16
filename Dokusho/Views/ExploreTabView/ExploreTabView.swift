@@ -21,28 +21,34 @@ struct ExploreTabView: View {
     var body: some View {
         NavigationView {
             List {
-                Section("Favorite") {
-                    ForEach(favoriteScrapers) { scraper in
-                        FavoriteSourceRowView(scraper: scraper)
-                            .id(scraper.id)
+                if favoriteScrapers.count >= 1 {
+                    Section("Favorite") {
+                        ForEach(favoriteScrapers) { scraper in
+                            FavoriteSourceRowView(scraper: scraper)
+                                .id(scraper.id)
+                        }
+                        .onMove(perform: { vm.onMove(scrapers: favoriteScrapers, offsets: $0, position: $1) })
                     }
-                    .onMove(perform: { vm.onMove(scrapers: favoriteScrapers, offsets: $0, position: $1) })
+                    .animation(.easeIn, value: favoriteScrapers)
                 }
-                .animation(.easeIn, value: favoriteScrapers)
 
-                Section("Active") {
-                    ForEach(activeScrapers) { scraper in
-                        ActiveSourceRowView(scraper: scraper)
-                            .id(scraper.id)
+                if activeScrapers.count >= 1 {
+                    Section("Active") {
+                        ForEach(activeScrapers) { scraper in
+                            ActiveSourceRowView(scraper: scraper)
+                                .id(scraper.id)
+                        }
+                        .onMove(perform: { vm.onMove(scrapers: activeScrapers, offsets: $0, position: $1) })
                     }
-                    .onMove(perform: { vm.onMove(scrapers: activeScrapers, offsets: $0, position: $1) })
+                    .animation(.easeIn, value: activeScrapers)
                 }
-                .animation(.easeIn, value: activeScrapers)
 
-                Section("All Sources") {
-                    ForEach(vm.onlyGetThirdPartyScraper(favorite: favoriteScrapers, active: activeScrapers), id: \.id) { source in
-                        OtherSourceRowView(source: source)
-                            .id(source.id)
+                if vm.onlyGetThirdPartyScraper(favorite: favoriteScrapers, active: activeScrapers).count >= 1 {
+                    Section("All Sources") {
+                        ForEach(vm.onlyGetThirdPartyScraper(favorite: favoriteScrapers, active: activeScrapers), id: \.id) { source in
+                            OtherSourceRowView(source: source)
+                                .id(source.id)
+                        }
                     }
                 }
             }

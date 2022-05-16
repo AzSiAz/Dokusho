@@ -10,9 +10,10 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Common", targets: ["Common"]),
         .library(name: "SharedUI", targets: ["SharedUI"]),
-        .library(name: "Reader", targets: ["Reader"]),
-        .library(name: "NewReader", targets: ["NewReader"]),
         .library(name: "DataKit", targets: ["DataKit"]),
+        .library(name: "OldReader", targets: ["OldReader"]),
+        .library(name: "AidokuReader", targets: ["AidokuReader"]),
+        .library(name: "Reader", targets: ["Reader"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -47,19 +48,23 @@ let package = Package(
        ),
         
         .target(
-            name: "Reader",
+            name: "OldReader",
             dependencies: [
                 .byName(name: "Common"),
                 .byName(name: "DataKit"),
                 .byName(name: "Nuke"),
                 .byName(name: "NukeUI")
             ]),
-        .testTarget(
-            name: "ReaderTests",
-            dependencies: ["Reader"]),
 
         .target(
-            name: "NewReader",
+            name: "AidokuReader",
+            dependencies: [
+                .byName(name: "Kingfisher"),
+                .byName(name: "DataKit")
+            ]),
+        
+        .target(
+            name: "Reader",
             dependencies: [
                 .byName(name: "Kingfisher"),
                 .byName(name: "DataKit")

@@ -8,6 +8,7 @@
 import SwiftUI
 import DataKit
 import Reader
+import OldReader
 
 struct ChapterListRow: View {
     @EnvironmentObject var readerManager: ReaderManager

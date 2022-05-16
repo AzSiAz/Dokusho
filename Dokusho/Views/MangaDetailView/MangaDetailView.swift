@@ -9,7 +9,8 @@ import SwiftUI
 import GRDBQuery
 import DataKit
 import Reader
-import NewReader
+import OldReader
+import AidokuReader
 import Common
 import SharedUI
 
@@ -69,7 +70,7 @@ struct MangaDetailView: View {
                     readerManager.dismiss()
                 }
             } else {
-                ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
+                OldReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
             }
         }
         .environmentObject(readerManager)

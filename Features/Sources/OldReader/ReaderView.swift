@@ -10,7 +10,7 @@ import DataKit
 
 typealias OnProgress = (_ status: ChapterStatus) -> Void
 
-public struct ReaderView: View {
+public struct OldReaderView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject public var vm: ReaderVM
