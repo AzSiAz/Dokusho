@@ -11,6 +11,7 @@ import GRDB
 import GRDBQuery
 import Combine
 import DataKit
+import SharedUI
 
 struct ExploreTabView: View {
     @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers

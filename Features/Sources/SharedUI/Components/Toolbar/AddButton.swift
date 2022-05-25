@@ -7,10 +7,14 @@
 
 import SwiftUI
 
-struct AddButton: View {
+public struct AddButton: View {
     let onTapGesture: () -> Void
     
-    var body: some View {
+    public init(onTapGesture: @escaping () -> Void) {
+        self.onTapGesture = onTapGesture
+    }
+    
+    public var body: some View {
         AsyncButton(action: onTapGesture) {
             Image(systemName: "plus")
         }

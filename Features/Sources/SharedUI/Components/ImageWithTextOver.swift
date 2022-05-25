@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-struct ImageWithTextOver: View {
+public struct ImageWithTextOver: View {
     var title: String
     var imageUrl: String
-    var radius: Double = 10
+    var radius: Double
     
-    var body: some View {
+    public init(title: String, imageUrl: String, radius: Double = 10) {
+        self.title = title
+        self.imageUrl = imageUrl
+        self.radius = radius
+    }
+    
+    public var body: some View {
         GeometryReader { proxy in
             RemoteImageCacheView(url: imageUrl, contentMode: .fill, radius: radius)
                 .frame(minWidth: proxy.size.width, minHeight: proxy.size.height, alignment: .center)

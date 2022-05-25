@@ -7,12 +7,14 @@
 
 import SwiftUI
 
-struct NavigationLinkLazyView<Content: View>: View {
+public struct NavigationLinkLazyView<Content: View>: View {
     let build: () -> Content
-    init(_ build: @autoclosure @escaping () -> Content) {
+    
+    public init(_ build: @autoclosure @escaping () -> Content) {
         self.build = build
     }
-    var body: Content {
+    
+    public var body: Content {
         build()
     }
 }

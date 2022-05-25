@@ -11,6 +11,7 @@ import Combine
 import SwiftUIKit
 import DataKit
 import Common
+import SharedUI
 
 struct CollectionPage: View {
     typealias Row = CollectionViewRow<Int, DetailedMangaInList>

@@ -9,6 +9,7 @@ import SwiftUI
 import GRDBQuery
 import Combine
 import DataKit
+import SharedUI
 
 struct HistoryTabView: View {
     @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
@@ -36,6 +37,7 @@ struct HistoryTabView: View {
                     EditButton()
                 }
             }
+            .listStyle(PlainListStyle())
             .id($list.filter.wrappedValue)
             .searchable(text: $list.searchTerm)
             .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DataKit
+import SharedUI
 
 struct MangaCardView: View {
     var manga: PartialManga

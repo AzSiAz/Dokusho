@@ -34,6 +34,5 @@ struct RootView: View {
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(ActiveTab.settings)
         }
-        .overlay(alignment: .bottom) { LibraryRefresher() }
     }
 }

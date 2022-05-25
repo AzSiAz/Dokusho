@@ -12,16 +12,16 @@ struct HorizontalReaderView: View {
 
     var body: some View {
         TabView(selection: $vm.tabIndex) {
-            ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
+            ForEach(vm.getImagesOrderForDirection(), id: \.imageUrl) { image in
                 GeometryReader { proxy in
-                    ChapterImage(url: image.imageUrl)
+                    ChapterImageView(url: image.imageUrl, contentMode: .fit)
                         .frame(
-                            minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2: proxy.size.width,
+                            minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                             minHeight: proxy.size.height,
                             alignment: .center
                         )
-                        .id(image)
-                        .tag(image)
+                        .id(image.imageUrl)
+                        .tag(image.imageUrl)
                 }
             }
         }

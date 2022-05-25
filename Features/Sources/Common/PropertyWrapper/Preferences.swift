@@ -73,8 +73,11 @@ public final class Preferences {
     @UserDefault("USE_AIDOKU_READER")
     public var useAidokuReader: Bool = false
     
-    @UserDefault("USE_NEW_UIKIT_READER")
-    public var useNewUIKitReader: Bool = false
+    @UserDefault("USE_NEW_HORIZONTAL_READER")
+    public var useNewHorizontalReader: Bool = false
+    
+    @UserDefault("USE_NEW_VERTICAL_READER")
+    public var useNewVerticalReader: Bool = false
 }
 
 @propertyWrapper

@@ -7,18 +7,18 @@
 
 import SwiftUI
 
-struct AsyncButton<Content: View>: View {
+public struct AsyncButton<Content: View>: View {
     @State var isActionRunning = false
     
     let action: () async throws -> Void
     let content: Content
     
-    init(action: @escaping () async -> Void, @ViewBuilder _ content: () -> Content) {
+    public init(action: @escaping () async -> Void, @ViewBuilder _ content: () -> Content) {
         self.action = action
         self.content = content()
     }
     
-    var body: some View {
+    public var body: some View {
         Button(action: {
             Task {
                 self.isActionRunning.toggle()

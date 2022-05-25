@@ -9,9 +9,11 @@ import SwiftUI
 import MangaScraper
 import GRDBQuery
 import DataKit
+import SharedUI
 
 struct LibraryTabView: View {
     @Environment(\.appDatabase) var appDB
+    @EnvironmentObject var libraryRefresh: LibraryUpdater
 
     @Query(DetailedMangaCollectionRequest()) var collections
 
@@ -48,6 +50,11 @@ struct LibraryTabView: View {
                     NavigationLink(destination: BySourceListPage()) {
                         Text("By Source List")
                     }
+                }
+            }
+            .overlay(alignment: .bottom) {
+                if let refresh = libraryRefresh.refreshStatus {
+                    LibraryRefresher(title: refresh.refreshTitle, progress: refresh.refreshProgress, total: refresh.refreshCount)
                 }
             }
             .toolbar {

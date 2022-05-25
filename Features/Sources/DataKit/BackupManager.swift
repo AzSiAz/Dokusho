@@ -10,59 +10,58 @@ import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 import MangaScraper
-import DataKit
 
-struct Backup: FileDocument {
-    static var readableContentTypes = [UTType.json]
-    static var writableContentTypes = [UTType.json]
+public struct Backup: FileDocument {
+    public static var readableContentTypes = [UTType.json]
+    public static var writableContentTypes = [UTType.json]
     
     var data: BackupData
     
-    init(configuration: ReadConfiguration) throws {
+    public init(configuration: ReadConfiguration) throws {
         throw "Not done"
     }
     
     
-    init(data: BackupData) {
+    public init(data: BackupData) {
         self.data = data
     }
     
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         let data = try! JSONEncoder().encode(data)
 
         return FileWrapper(regularFileWithContents: data)
     }
 }
 
-struct BackupData: Codable {
+public struct BackupData: Codable {
     var collections: [BackupCollectionData]
     var scrapers: [Scraper]
 }
 
-struct BackupCollectionData: Codable {
+public struct BackupCollectionData: Codable {
     var collection: MangaCollection
     var mangas: [MangaWithChapters]
 }
 
-struct MangaWithChapters: Codable {
+public struct MangaWithChapters: Codable {
     var manga: Manga
     var chapters: [MangaChapter]
 }
 
 
-struct BackupTask {
+public struct BackupTask {
     var mangaBackup: MangaWithChapters
     var collection: MangaCollection
 }
 
-typealias BackupResult = Result<BackupTask, Error>
+public typealias BackupResult = Result<BackupTask, Error>
 
-struct BackupManager {
-    static let shared = BackupManager()
+public struct BackupManager {
+    public static let shared = BackupManager()
     
     private let database = AppDatabase.shared.database
     
-    func createBackup() -> BackupData {
+    public func createBackup() -> BackupData {
         var backupCollections = [BackupCollectionData]()
         var scrapers = [Scraper]()
 
@@ -90,7 +89,7 @@ struct BackupManager {
         return .init(collections: backupCollections, scrapers: scrapers)
     }
 
-    func importBackup(backup: BackupData) async {
+    public func importBackup(backup: BackupData) async {
         await withTaskGroup(of: BackupResult.self) { group in
             
             for scraper in backup.scrapers {

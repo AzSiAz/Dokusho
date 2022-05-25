@@ -11,7 +11,6 @@ let package = Package(
         .library(name: "Common", targets: ["Common"]),
         .library(name: "SharedUI", targets: ["SharedUI"]),
         .library(name: "DataKit", targets: ["DataKit"]),
-        .library(name: "OldReader", targets: ["OldReader"]),
         .library(name: "AidokuReader", targets: ["AidokuReader"]),
         .library(name: "Reader", targets: ["Reader"]),
     ],
@@ -43,18 +42,11 @@ let package = Package(
             name: "SharedUI",
             dependencies: [
                 .byName(name: "Common"),
-                .byName(name: "SwiftUIX")
-            ]
-       ),
-        
-        .target(
-            name: "OldReader",
-            dependencies: [
-                .byName(name: "Common"),
-                .byName(name: "DataKit"),
+                .byName(name: "SwiftUIX"),
                 .byName(name: "Nuke"),
-                .byName(name: "NukeUI")
-            ]),
+                .byName(name: "NukeUI"),
+            ]
+        ),
 
         .target(
             name: "AidokuReader",
@@ -67,7 +59,8 @@ let package = Package(
             name: "Reader",
             dependencies: [
                 .byName(name: "Kingfisher"),
-                .byName(name: "DataKit")
+                .byName(name: "DataKit"),
+                .byName(name: "Nuke")
             ]),
         
         .target(

@@ -8,16 +8,16 @@
 import SwiftUI
 import Combine
 
-final class DeviceOrientation: ObservableObject {
-    enum Orientation {
+public final class DeviceOrientation: ObservableObject {
+    public enum Orientation {
         case portrait, landscape
     }
     
-    @Published var orientation: Orientation
+    @Published public var orientation: Orientation
    
     private var listener: AnyCancellable?
     
-    init() {
+    public init() {
         orientation = UIDevice.current.orientation.isLandscape ? .landscape : .portrait
         listener = NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
             .compactMap { ($0.object as? UIDevice)?.orientation }

@@ -29,8 +29,8 @@ public class ReaderVM: ObservableObject {
     @Published var direction: ReadingDirection = .vertical
     @Published var showReaderDirectionChoice = false
 
+    var manga: Manga
     private var scraper: Scraper
-    private var manga: Manga
     private var chapters: [MangaChapter]
 
     public init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
@@ -131,6 +131,10 @@ public class ReaderVM: ObservableObject {
             self.tabIndex = .init(index: 0, imageUrl: "")
             self.chapter = chapter
             self.showToolBar = true
+        }
+        
+        withAnimation(.default.delay(0.5)) {
+            self.showToolBar = false
         }
     }
     

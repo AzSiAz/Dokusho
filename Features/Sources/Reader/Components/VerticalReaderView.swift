@@ -17,8 +17,8 @@ struct VerticalReaderView: View {
             // TODO: Add a ScrollViewReader to be able to go to specific ID when tabIndex is updated from bottom overlay slider
             ScrollView([.vertical], showsIndicators: false) {
                 LazyVStack(spacing: 0) {
-                    ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
-                        ChapterImage(url: image.imageUrl)
+                    ForEach(vm.getImagesOrderForDirection()) { image in
+                        ChapterImageView(url: image.imageUrl, contentMode: .fit)
                             .frame(
                                 width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                                 alignment: .center

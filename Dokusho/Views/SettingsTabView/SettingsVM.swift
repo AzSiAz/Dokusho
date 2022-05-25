@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Nuke
+import DataKit
 
 class SettingsVM: ObservableObject {
     @Published var actionInProgress = false

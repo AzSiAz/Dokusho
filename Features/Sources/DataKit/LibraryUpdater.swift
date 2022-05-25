@@ -9,28 +9,29 @@ import Foundation
 import SwiftUI
 import MangaScraper
 import OSLog
-import DataKit
 
-class LibraryUpdater: ObservableObject {
-    struct RefreshStatus {
-        var isRefreshing: Bool
-        var refreshProgress: Int
-        var refreshCount: Int
-        var refreshTitle: String
-        var collectionId: MangaCollection.ID
+public class LibraryUpdater: ObservableObject {
+    public static let shared = LibraryUpdater()
+    
+    public struct RefreshStatus {
+        public var isRefreshing: Bool
+        public var refreshProgress: Double
+        public var refreshCount: Double
+        public var refreshTitle: String
+        public var collectionId: MangaCollection.ID
     }
     
-    struct RefreshManga {
-        var source: Source
-        var manga: Manga
-        var scraper: Scraper
+    public struct RefreshManga {
+        public var source: Source
+        public var manga: Manga
+        public var scraper: Scraper
     }
 
     private let database = AppDatabase.shared.database
 
-    @Published var refreshStatus: RefreshStatus?
+    @Published public var refreshStatus: RefreshStatus?
     
-    func refreshCollection(collection: MangaCollection) async throws {
+    public func refreshCollection(collection: MangaCollection) async throws {
         var status = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 1, refreshTitle: "Refreshing...", collectionId: collection.id)
         
         await updateRefreshStatus(status)
@@ -39,7 +40,7 @@ class LibraryUpdater: ObservableObject {
             try Manga.all().forCollectionId(collection.id).fetchAll(db)
         }
         
-        status.refreshCount = mangas.count
+        status.refreshCount = Double(mangas.count)
         await updateRefreshStatus(status)
         
         try await withThrowingTaskGroup(of: RefreshManga.self) { group in
@@ -73,7 +74,7 @@ class LibraryUpdater: ObservableObject {
     }
     
     @MainActor
-    func updateRefreshStatus(_ newStatus: RefreshStatus? = nil) {
+    public func updateRefreshStatus(_ newStatus: RefreshStatus? = nil) {
         self.refreshStatus = newStatus
     }
 }

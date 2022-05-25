@@ -13,7 +13,8 @@ struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()
     @Preference(\.useNewCollectionView) var useNewCollectionView
     @Preference(\.useAidokuReader) var useAidokuReader
-    @Preference(\.useNewUIKitReader) var useNewUIKitReader
+    @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
+    @Preference(\.useNewVerticalReader) var useNewVerticalReader
     
     var body: some View {
         NavigationView {
@@ -33,7 +34,8 @@ struct SettingsTabView: View {
                 Section("Experimental") {
                     Toggle("Use new collection view", isOn: $useNewCollectionView)
                     Toggle("Use aidoku reader (not Working)", isOn: $useAidokuReader)
-                    Toggle("Use new custom reader", isOn: $useNewUIKitReader)
+                    Toggle("Use new horizontal reader", isOn: $userNewHorizontalReader)
+                    Toggle("Use new vertical reader", isOn: $useNewVerticalReader)
                 }
                 
                 Section("Cache") {
@@ -68,8 +70,8 @@ struct SettingsTabView: View {
     }
 }
 
-struct SettingsTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsTabView(vm: .init())
-    }
-}
+//struct SettingsTabView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SettingsTabView(vm: .init())
+//    }
+//}

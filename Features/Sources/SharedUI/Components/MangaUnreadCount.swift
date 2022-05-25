@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
-import SharedUI
 
-struct MangaUnreadCount: View {
+public struct MangaUnreadCount: View {
     var count: Int
     
-    var body: some View {
+    public init(count: Int) {
+        self.count = count
+    }
+    
+    public var body: some View {
         if count != 0 {
             Text(String(count))
                 .padding(2)

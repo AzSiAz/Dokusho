@@ -9,20 +9,20 @@ import SwiftUI
 import Nuke
 import NukeUI
 
-struct RemoteImageCacheView: View {
+public struct RemoteImageCacheView: View {
     let url: String
     let contentMode: ImageResizingMode
     let pipeline: ImagePipeline
     let radius: Double
     
-    init(url: String?, contentMode: ImageResizingMode, radius: Double = 10, pipeline: ImagePipeline = .coverCache) {
+    public init(url: String?, contentMode: ImageResizingMode, radius: Double = 10, pipeline: ImagePipeline = .coverCache) {
         self.url = url ?? "https://picsum.photos/seed/picsum/200/300"
         self.contentMode = contentMode
         self.pipeline = pipeline
         self.radius = radius
     }
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { proxy in
             LazyImage(source: url, resizingMode: contentMode)
                 .processors([ImageProcessors.Resize(size: proxy.size), ImageProcessors.RoundedCorners(radius: radius)])
