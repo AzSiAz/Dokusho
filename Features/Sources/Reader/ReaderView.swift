@@ -56,8 +56,8 @@ public struct ReaderView: View {
         .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
-        .onChange(of: vm.tabIndex) { vm.updateChapterStatus(image: $0) }
-        .onChange(of: vm.chapter) { _ in Task { await vm.fetchChapter() } }
+        .onReceive(vm.$tabIndex) { vm.updateChapterStatus(image: $0) }
+        .onReceive(vm.$chapter) { _ in Task { await vm.fetchChapter() } }
         .preferredColorScheme(.dark)
     }
     
