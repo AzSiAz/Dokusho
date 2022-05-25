@@ -12,7 +12,7 @@ struct HorizontalReaderView: View {
 
     var body: some View {
         TabView(selection: $vm.tabIndex) {
-            ForEach(vm.getImagesOrderForDirection(), id: \.imageUrl) { image in
+            ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
                 GeometryReader { proxy in
                     ChapterImageView(url: image.imageUrl, contentMode: .fit)
                         .frame(
@@ -20,8 +20,8 @@ struct HorizontalReaderView: View {
                             minHeight: proxy.size.height,
                             alignment: .center
                         )
-                        .id(image.imageUrl)
-                        .tag(image.imageUrl)
+                        .id(image)
+                        .tag(image)
                 }
             }
         }

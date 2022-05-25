@@ -53,11 +53,11 @@ public struct ReaderView: View {
         .navigationBarHidden(true)
         .onTapGesture { vm.toggleToolbar() }
         .task { await vm.fetchChapter() }
-        .statusBar(hidden: true)
+        .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
         .onChange(of: vm.tabIndex) { vm.updateChapterStatus(image: $0) }
-        .onReceive(vm.$chapter) { _ in Task { await vm.fetchChapter() } }
+        .onChange(of: vm.chapter) { _ in Task { await vm.fetchChapter() } }
         .preferredColorScheme(.dark)
     }
     
@@ -75,7 +75,7 @@ public struct ReaderView: View {
 
                 HStack {
                     if vm.images.isEmpty {
-                        EmptyView()
+                        Text("Loading...")
                     } else {
                         // TODO: Add a custom slider to be able to update tabIndex value
                         ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
@@ -154,7 +154,6 @@ public struct ReaderView: View {
             .offset(x: 0, y: vm.showToolBar ? 0 : -150)
             .background(.thickMaterial)
             .transition(.move(edge: vm.showToolBar ? .top : .bottom))
-            .statusBar(hidden: false)
         }
     }
 }
