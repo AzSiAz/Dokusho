@@ -43,6 +43,7 @@ struct HistoryTabView: View {
             .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
             .mirrorAppearanceState(to: $list.isAutoupdating)
         }
+        .navigationViewStyle(.columns)
     }
     
     @ViewBuilder
@@ -55,7 +56,9 @@ struct HistoryTabView: View {
                 
                 VStack(alignment: .leading) {
                     Text(data.manga.title)
+                        .lineLimit(2)
                     Text(data.chapter.title)
+                        .lineLimit(1)
                     
                     if $list.filter.wrappedValue == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
                     if $list.filter.wrappedValue == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
