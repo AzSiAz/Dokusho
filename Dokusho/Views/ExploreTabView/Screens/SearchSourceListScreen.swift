@@ -69,20 +69,7 @@ struct ScraperSearch: View {
                             .padding(.leading, 15)
                     }
                     else {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack {
-                                ForEach(vm.mangas) { manga in
-                                    MangaCard(manga: manga)
-                                        .onTapGesture {
-                                            vm.selectedManga = manga
-                                        }
-                                }
-                                
-                                if vm.isLoading && !vm.mangas.isEmpty {
-                                    ProgressView()
-                                }
-                            }
-                        }
+                        SearchResult()
                     }
                 }
                 .frame(height: !vm.isLoading && vm.mangas.isEmpty ? 50 : 180)
@@ -102,23 +89,25 @@ struct ScraperSearch: View {
     }
     
     @ViewBuilder
-    func MangaCard(manga: SourceSmallManga) -> some View {
-        ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
-            .frame(width: 120, height: 180)
-            .contextMenu { ContextMenu(manga: manga) }
-            .task { await vm.fetchMoreIfPossible(for: manga) }
-            .overlay(alignment: .topTrailing) {
-                let found = mangasInCollection.first { $0.mangaId == manga.id }
-                if found != nil {
-                    Text(found!.collectionName)
-                        .lineLimit(1)
-                        .padding(2)
-                        .foregroundColor(.primary)
-                        .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]) )
+    func SearchResult() -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack {
+                ForEach(vm.mangas) { manga in
+                    let found = mangasInCollection.first { $0.mangaId == manga.id }
+                    MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
+                        .mangaCardFrame()
+                        .contextMenu { ContextMenu(manga: manga) }
+                        .task { await vm.fetchMoreIfPossible(for: manga) }
+                        .onTapGesture { vm.selectedManga = manga }
+                        .padding(.trailing, vm.mangas.last == manga ? 15 : 0)
+                        .padding(.leading, vm.mangas.first == manga ? 15 : 0)
+                }
+
+                if vm.isLoading && !vm.mangas.isEmpty {
+                    ProgressView()
                 }
             }
-            .padding(.trailing, vm.mangas.last == manga ? 15 : 0)
-            .padding(.leading, vm.mangas.first == manga ? 15 : 0)
+        }
     }
     
     @ViewBuilder

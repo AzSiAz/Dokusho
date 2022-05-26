@@ -46,19 +46,10 @@ struct ExploreSourceView: View {
                     ForEach(vm.mangas) { manga in
                         NavigationLink(destination: MangaDetailView(mangaId: manga.id, scraper: vm.scraper)) {
                             let found = mangas.first { $0.mangaId == manga.id }
-                            ImageWithTextOver(title: manga.title, imageUrl: manga.thumbnailUrl)
-                                .frame(height: 180)
+                            MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
+                                .mangaCardFrame()
                                 .contextMenu { ContextMenu(manga: manga) }
                                 .task { await vm.fetchMoreIfPossible(for: manga) }
-                                .overlay(alignment: .topTrailing) {
-                                    if found != nil {
-                                        Text(found!.collectionName)
-                                            .lineLimit(1)
-                                            .padding(2)
-                                            .foregroundColor(.primary)
-                                            .background(.thinMaterial, in: RoundedCorner(radius: 10, corners: [.topRight, .bottomLeft]) )
-                                    }
-                                }
                         }
                         .buttonStyle(.plain)
                     }

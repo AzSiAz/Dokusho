@@ -42,7 +42,9 @@ struct CollectionPage: View {
                     LazyVGrid(columns: columns) {
                         ForEach(list) { data in
                             Button(action: { selected = data }){
-                                MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                                MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                                    .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+                                    .mangaCardFrame()
                             }
                             .buttonStyle(.plain)
                             .id(data.id)
@@ -70,7 +72,7 @@ struct CollectionPage: View {
     
     @ViewBuilder
     func cell(at indexPath: IndexPath, for item: DetailedMangaInList) -> some View {
-        MangaCardView(manga: item.manga, count: item.unreadChapterCount)
+        MangaCard(title: item.manga.title, imageUrl: item.manga.cover.absoluteString, chapterCount: item.unreadChapterCount)
             .onTapGesture {
                 selected = item
             }

@@ -22,16 +22,17 @@ public class ReaderVM: ObservableObject {
     private let database = AppDatabase.shared.database
     
     @Published var chapter: MangaChapter
-    @Published var images = [SourceChapterImage]()
+    @Published var images = [String]()
     @Published var isLoading = true
     @Published var showToolBar = false
-    @Published var tabIndex: SourceChapterImage = .init(index: 0, imageUrl: "")
+    @Published var tabIndex: String = ""
     @Published var direction: ReadingDirection = .vertical
     @Published var showReaderDirectionChoice = false
 
     var manga: Manga
     private var scraper: Scraper
     private var chapters: [MangaChapter]
+    private var runningTask: Task<(), Never>?
 
     public init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.chapter = chapter
@@ -43,29 +44,41 @@ public class ReaderVM: ObservableObject {
     
     @MainActor
     func fetchChapter() async {
+        runningTask?.cancel()
+
         if !isLoading { isLoading = true }
 
         do {
-            images = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
-            guard let firstImage = images.first else { throw "First image not found" }
-            tabIndex = firstImage
+            let data = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
+            guard let firstImage = data.first else { throw "First image not found" }
 
-            for image in images {
-                Logger.reader.info("Loading \(image.imageUrl)")
-                _ = try? await ImagePipeline.inMemory.image(for: image.imageUrl)
-            }
+            images = data.map { $0.imageUrl }
+            tabIndex = firstImage.imageUrl
+            
+            backgroundFetchImage()
         } catch {
             Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
         }
         
-        isLoading.toggle()
+        isLoading = false
+    }
+    
+    func backgroundFetchImage() {
+        runningTask = Task {
+            for image in images {
+                if Task.isCancelled { break }
+
+                Logger.reader.info("Loading \(image)")
+                _ = try? await ImagePipeline.inMemory.image(for: image)
+            }
+        }
     }
     
     func progressBarCurrent() -> Double {
         return Double(images.firstIndex { $0 == tabIndex } ?? 0) + 1
     }
 
-    func updateChapterStatus(image: SourceChapterImage) {
+    func updateChapterStatus(image: String) {
         if images.last == image {
             withAnimation {
                 showToolBar = true
@@ -83,7 +96,7 @@ public class ReaderVM: ObservableObject {
         }
     }
     
-    func getImagesOrderForDirection() -> [SourceChapterImage] {
+    func getImagesOrderForDirection() -> [String] {
         return direction == .rightToLeft ? images.reversed() : images
     }
     
@@ -125,11 +138,11 @@ public class ReaderVM: ObservableObject {
             }
         }
     }
-    
+
     func changeChapters(chapter: MangaChapter) {
         withAnimation {
             self.images = []
-            self.tabIndex = .init(index: 0, imageUrl: "")
+            self.tabIndex = ""
             self.chapter = chapter
             self.showToolBar = true
         }

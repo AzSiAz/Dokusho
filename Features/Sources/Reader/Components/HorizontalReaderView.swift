@@ -9,12 +9,12 @@ import SwiftUI
 
 struct HorizontalReaderView: View {
     @ObservedObject var vm: ReaderVM
-
+    
     var body: some View {
         TabView(selection: $vm.tabIndex) {
             ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
                 GeometryReader { proxy in
-                    ChapterImageView(url: image.imageUrl, contentMode: .fit)
+                    ChapterImageView(url: image, contentMode: .fit)
                         .frame(
                             minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                             minHeight: proxy.size.height,

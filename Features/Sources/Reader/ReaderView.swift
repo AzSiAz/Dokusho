@@ -30,6 +30,9 @@ public struct ReaderView: View {
         Group {
             if (vm.images.isEmpty && !vm.isLoading) {
                 Text("No images found in this chapter")
+            } else if(vm.isLoading) {
+                ProgressView()
+                    .scaleEffect(2)
             }
             else {
                 if vm.direction == .vertical {

@@ -8,6 +8,7 @@
 import SwiftUI
 import GRDBQuery
 import DataKit
+import SharedUI
 
 struct MangaInCollectionForGenre: View {
     @Environment(\.dismiss) var dismiss
@@ -17,7 +18,7 @@ struct MangaInCollectionForGenre: View {
     
     var genre: String
     var showDismiss: Bool
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 120, maximum: 120))]
+    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
     init(genre: String, showDismiss: Bool = true) {
         self.showDismiss = showDismiss
@@ -41,7 +42,8 @@ struct MangaInCollectionForGenre: View {
             LazyVGrid(columns: columns) {
                 ForEach(list) { data in
                     NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
-                        MangaCardView(manga: data.manga, count: data.unreadChapterCount)
+                        MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                            .mangaCardFrame()
                     }
                     .buttonStyle(.plain)
                 }
