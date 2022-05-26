@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIX
 
 public struct MangaCard: View {
     var imageUrl: String
@@ -39,7 +40,11 @@ public struct MangaCard: View {
                 .overlay(alignment: .bottomLeading) { OverlayTitle(width: proxy.size.width) }
                 .overlay(alignment: .topTrailing) { ChapterCounter() }
                 .overlay(alignment: .topLeading) { CollectionName() }
-                .cornerRadius(radius)
+                .overlay(
+                    RoundedRectangle(cornerRadius: radius)
+                        .stroke(.gray, lineWidth: 0.2)
+                )
+                .removeIfNotInDisplay()
         }
     }
     
@@ -56,6 +61,7 @@ public struct MangaCard: View {
             }
             .frame(width: width)
             .background(.ultraThinMaterial)
+            .clipShape(RoundedCorner(radius: radius, corners: [.bottomRight, .bottomLeft]))
         }
     }
     

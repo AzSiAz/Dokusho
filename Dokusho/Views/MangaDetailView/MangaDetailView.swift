@@ -112,10 +112,8 @@ struct MangaDetailView: View {
     @ViewBuilder
     func HeaderRow(_ data: MangaWithDetail) -> some View {
         HStack(alignment: .top) {
-            RemoteImageCacheView(url: data.manga.cover.absoluteString, contentMode: .aspectFit)
-                .frame(width: 120, height: 180)
-                .cornerRadius(10)
-                .clipped()
+            MangaCard(imageUrl: data.manga.cover.absoluteString)
+                .mangaCardFrame()
                 .padding(.leading, 10)
             
             VStack(spacing: 0) {

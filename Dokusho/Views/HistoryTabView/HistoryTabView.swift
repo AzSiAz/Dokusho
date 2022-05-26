@@ -13,9 +13,7 @@ import SharedUI
 
 struct HistoryTabView: View {
     @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
-    
-    @State var searchTitle: String = ""
-    
+
     var body: some View {
         NavigationView {
             List {
