@@ -8,9 +8,9 @@
 import SwiftUI
 
 public struct MangaCard: View {
-    var title: String
     var imageUrl: String
 
+    var title: String?
     var chapterCount: Int?
     var collectionName: String?
     
@@ -28,8 +28,7 @@ public struct MangaCard: View {
         self.imageUrl = imageUrl
     }
     
-    public init(title: String, imageUrl: String) {
-        self.title = title
+    public init(imageUrl: String) {
         self.imageUrl = imageUrl
     }
     
@@ -46,16 +45,18 @@ public struct MangaCard: View {
     
     @ViewBuilder
     func OverlayTitle(width: Double) -> some View {
-        VStack {
-            Text(title)
-                .lineLimit(2)
-                .multilineTextAlignment(.leading)
-                .clipped()
-                .padding(.leading, 2)
-                .padding(.top, 1)
+        if let title = title, !title.isEmpty {
+            VStack {
+                Text(title)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .clipped()
+                    .padding(.leading, 2)
+                    .padding(.top, 1)
+            }
+            .frame(width: width)
+            .background(.ultraThinMaterial)
         }
-        .frame(width: width)
-        .background(.ultraThinMaterial)
     }
     
     @ViewBuilder
@@ -82,9 +83,9 @@ public struct MangaCard: View {
 }
 
 public extension View {
-    func mangaCardFrame() -> some View {
+    func mangaCardFrame(width: Double = 130, height: Double = 180) -> some View {
         return self
-            .frame(width: 130, height: 180)
+            .frame(width: width, height: height)
     }
 }
 
