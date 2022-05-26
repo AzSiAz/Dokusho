@@ -10,14 +10,20 @@ import DataKit
 import Reader
 
 
-struct ChapterListRow: View {
+public struct ChapterListRow: View {
     @EnvironmentObject var readerManager: ReaderManager
     @ObservedObject var vm: ChapterListVM
 
     var chapter: MangaChapter
     var chapters: [MangaChapter]
     
-    var body: some View {
+    public init(vm: ChapterListVM, chapter: MangaChapter, chapters: [MangaChapter]) {
+        self.chapter = chapter
+        self.chapters = chapters
+        self._vm = .init(wrappedValue: vm)
+    }
+    
+    public var body: some View {
         HStack {
             if let url = chapter.externalUrl {
                 Link(destination: URL(string: url)!) {

@@ -14,7 +14,7 @@ struct ByGenreListPage: View {
 
     var body: some View {
         List(genres) { genre in
-            NavigationLink(destination: MangaInCollectionForGenre(genre: genre.genre, showDismiss: false)) {
+            NavigationLink(destination: MangaInCollectionForGenre(genre: genre.genre, inModal: false)) {
                 Text(genre.genre)
                     .badge("\(genre.mangaCount)")
             }

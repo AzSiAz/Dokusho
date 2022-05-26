@@ -10,7 +10,7 @@ import GRDBQuery
 import DataKit
 import Reader
 
-struct ChapterListInformation: View {
+public struct ChapterListInformation: View {
     @EnvironmentObject var readerManager: ReaderManager
     
     @Query<MangaChaptersRequest> var chapters: [MangaChapter]
@@ -19,14 +19,14 @@ struct ChapterListInformation: View {
     var manga: Manga
     var scraper: Scraper
     
-    init(manga: Manga, scraper: Scraper) {
+    public init(manga: Manga, scraper: Scraper) {
         self.manga = manga
         self.scraper = scraper
         _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
         _chapters = Query(MangaChaptersRequest(manga: manga))
     }
 
-    var body: some View {
+    public var body: some View {
         LazyVStack {
             HStack {
                 Text("Chapter List")

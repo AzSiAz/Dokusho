@@ -10,6 +10,7 @@ import GRDBQuery
 import Combine
 import DataKit
 import SharedUI
+import MangaDetail
 
 struct HistoryTabView: View {
     @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
@@ -45,7 +46,7 @@ struct HistoryTabView: View {
     
     @ViewBuilder
     func ChapterRow(_ data: ChaptersHistory) -> some View {
-        NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+        NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
             HStack {
                 MangaCard(imageUrl: data.manga.cover.absoluteString)
                     .mangaCardFrame(width: 80, height: 120)

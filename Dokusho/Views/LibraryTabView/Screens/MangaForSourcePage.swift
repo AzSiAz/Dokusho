@@ -10,6 +10,7 @@ import MangaScraper
 import GRDBQuery
 import DataKit
 import SharedUI
+import MangaDetail
 
 struct MangaForSourcePage: View {
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
@@ -26,7 +27,7 @@ struct MangaForSourcePage: View {
         ScrollView {
             LazyVGrid(columns: columns) {
                 ForEach(list) { data in
-                    NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+                    NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
                         MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
                             .mangaCardFrame()
                     }

@@ -13,8 +13,9 @@ import AidokuReader
 import Common
 import SharedUI
 
-struct MangaDetailView: View {
+public struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var sizeClass
+    
     @Preference(\.useAidokuReader) var useAidokuReader
 
     @Query(MangaCollectionRequest()) var collections
@@ -24,12 +25,16 @@ struct MangaDetailView: View {
     @StateObject var orientation: DeviceOrientation = DeviceOrientation()
     @StateObject var readerManager = ReaderManager()
     
-    init(mangaId: String, scraper: Scraper) {
+    let selectGenre: ((_ genre: String) -> Void)?
+    
+    public init(mangaId: String, scraper: Scraper, selectGenre: ((_ genre: String) -> Void)? = nil) {
         _data = .init(.init(mangaId: mangaId, scraper: scraper))
         _vm = .init(wrappedValue: .init(for: scraper, mangaId: mangaId))
+        
+        self.selectGenre = selectGenre
     }
     
-    var body: some View {
+    public var body: some View {
         Group {
             if vm.error {
                 VStack {
@@ -240,11 +245,8 @@ struct MangaDetailView: View {
             .padding(.horizontal)
             
             FlexibleView(data: data.manga.genres, availableWidth: availableWidth, spacing: 5, alignment: .center) { genre in
-                Button(genre, action: { vm.selectedGenre = genre })
+                Button(genre, action: { selectGenre?(genre) })
                     .buttonStyle(.bordered)
-            }
-            .sheetSizeAware(item: $vm.selectedGenre) { genre in
-                MangaInCollectionForGenre(genre: genre)
             }
         }
     }

@@ -9,6 +9,7 @@ import SwiftUI
 import GRDBQuery
 import DataKit
 import SharedUI
+import MangaDetail
 
 struct MangaInCollectionForGenre: View {
     @Environment(\.dismiss) var dismiss
@@ -16,18 +17,18 @@ struct MangaInCollectionForGenre: View {
 
     @State var selectedManga: DetailedMangaInList?
     
+    var inModal: Bool
     var genre: String
-    var showDismiss: Bool
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
-    init(genre: String, showDismiss: Bool = true) {
-        self.showDismiss = showDismiss
+    init(genre: String, inModal: Bool = true) {
+        self.inModal = inModal
         self.genre = genre
         _list = Query(DetailedMangaInListRequest(genre: genre))
     }
     
     var body: some View {
-        if showDismiss {
+        if inModal {
             NavigationView {
                 content
             }
@@ -41,7 +42,7 @@ struct MangaInCollectionForGenre: View {
         ScrollView {
             LazyVGrid(columns: columns) {
                 ForEach(list) { data in
-                    NavigationLink(destination: MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+                    NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
                         MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
                             .mangaCardFrame()
                     }
@@ -51,14 +52,5 @@ struct MangaInCollectionForGenre: View {
         }
         .navigationTitle("\(genre) (\(list.count))")
         .navigationBarTitleDisplayMode(.automatic)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                if showDismiss {
-                    Button(action: dismiss.callAsFunction) {
-                        Image(systemName: "xmark")
-                    }
-                }
-            }
-        }
     }
 }

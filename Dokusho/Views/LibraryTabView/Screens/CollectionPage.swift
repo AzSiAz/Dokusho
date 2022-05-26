@@ -12,6 +12,7 @@ import SwiftUIKit
 import DataKit
 import Common
 import SharedUI
+import MangaDetail
 
 struct CollectionPage: View {
     typealias Row = CollectionViewRow<Int, DetailedMangaInList>
@@ -25,6 +26,7 @@ struct CollectionPage: View {
     @State var showFilter = false
     @State var reload = true
     @State var selected: DetailedMangaInList?
+    @State var selectedGenre: String?
     @Preference(\.useNewCollectionView) var useNewCollectionView
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
@@ -67,6 +69,7 @@ struct CollectionPage: View {
         .toolbar { toolbar }
         .navigationTitle("\(collection?.name ?? "") (\(list.count))")
         .navigationBarTitleDisplayMode(.automatic)
+        .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
         .mirrorAppearanceState(to: $list.isAutoupdating, $collection.isAutoupdating)
     }
     
@@ -79,7 +82,7 @@ struct CollectionPage: View {
     }
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {
-        MangaDetailView(mangaId: data.manga.mangaId, scraper: data.scraper)
+        MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: selectGenre(genre:))
     }
     
     var toolbar: some ToolbarContent {
@@ -160,5 +163,9 @@ struct CollectionPage: View {
         } catch(let err) {
             print(err)
         }
+    }
+    
+    func selectGenre(genre: String) -> Void {
+        self.selectedGenre = genre
     }
 }

@@ -12,6 +12,7 @@ import GRDBQuery
 import MangaScraper
 import DataKit
 import SharedUI
+import MangaDetail
 
 struct SearchSourceListScreen: View {
     @Query(MangaCollectionRequest()) var collections
@@ -83,7 +84,7 @@ struct ScraperSearch: View {
         }
         .sheet(item: $vm.selectedManga) { manga in
             NavigationView {
-                MangaDetailView(mangaId: manga.id, scraper: vm.scraper)
+                MangaDetail(mangaId: manga.id, scraper: vm.scraper)
             }
         }
     }

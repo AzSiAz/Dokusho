@@ -10,6 +10,7 @@ import MangaScraper
 import GRDBQuery
 import DataKit
 import SharedUI
+import MangaDetail
 
 struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
@@ -44,7 +45,7 @@ struct ExploreSourceView: View {
             if !vm.error && !vm.mangas.isEmpty {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetailView(mangaId: manga.id, scraper: vm.scraper)) {
+                        NavigationLink(destination: MangaDetail(mangaId: manga.id, scraper: vm.scraper)) {
                             let found = mangas.first { $0.mangaId == manga.id }
                             MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
                                 .mangaCardFrame()

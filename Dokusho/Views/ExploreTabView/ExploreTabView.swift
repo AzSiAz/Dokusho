@@ -30,7 +30,6 @@ struct ExploreTabView: View {
                         }
                         .onMove(perform: { vm.onMove(scrapers: favoriteScrapers, offsets: $0, position: $1) })
                     }
-                    .animation(.easeIn, value: favoriteScrapers)
                 }
 
                 if activeScrapers.count >= 1 {
@@ -41,7 +40,6 @@ struct ExploreTabView: View {
                         }
                         .onMove(perform: { vm.onMove(scrapers: activeScrapers, offsets: $0, position: $1) })
                     }
-                    .animation(.easeIn, value: activeScrapers)
                 }
 
                 if vm.onlyGetThirdPartyScraper(favorite: favoriteScrapers, active: activeScrapers).count >= 1 {
@@ -141,9 +139,9 @@ struct ExploreTabView: View {
     }
 }
 
-struct ExploreTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        ExploreTabView()
-            .environment(\.appDatabase, .uiTest())
-    }
-}
+//struct ExploreTabView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ExploreTabView()
+//            .environment(\.appDatabase, .uiTest())
+//    }
+//}

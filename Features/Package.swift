@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "DataKit", targets: ["DataKit"]),
         .library(name: "AidokuReader", targets: ["AidokuReader"]),
         .library(name: "Reader", targets: ["Reader"]),
+        .library(name: "MangaDetail", targets: ["MangaDetail"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -33,10 +34,6 @@ let package = Package(
                 .byName(name: "Nuke")
             ]
         ),
-        .testTarget(
-            name: "CommonTests",
-            dependencies: ["Common"]
-        ),
 
         .target(
             name: "SharedUI",
@@ -53,7 +50,8 @@ let package = Package(
             dependencies: [
                 .byName(name: "Kingfisher"),
                 .byName(name: "DataKit")
-            ]),
+            ]
+        ),
         
         .target(
             name: "Reader",
@@ -61,7 +59,8 @@ let package = Package(
                 .byName(name: "Kingfisher"),
                 .byName(name: "DataKit"),
                 .byName(name: "Nuke")
-            ]),
+            ]
+        ),
         
         .target(
             name: "DataKit",
@@ -70,9 +69,20 @@ let package = Package(
                 .byName(name: "MangaScraper"),
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .byName(name: "GRDBQuery")
-            ]),
-        .testTarget(
-            name: "DataKitTests",
-            dependencies: ["DataKit"]),
+            ]
+        ),
+        
+        .target(
+            name: "MangaDetail",
+            dependencies: [
+                .byName(name: "MangaScraper"),
+                .byName(name: "DataKit"),
+                .byName(name: "GRDBQuery"),
+                .byName(name: "Common"),
+                .byName(name: "SharedUI"),
+                .byName(name: "Reader"),
+                .byName(name: "AidokuReader")
+            ]
+        )
     ]
 )
