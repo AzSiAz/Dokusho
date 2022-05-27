@@ -55,11 +55,17 @@ struct HistoryTabView: View {
                 VStack(alignment: .leading) {
                     Text(data.manga.title)
                         .lineLimit(2)
+                        .font(.body)
+                        .allowsTightening(true)
                     Text(data.chapter.title)
                         .lineLimit(1)
+                        .font(.callout.italic())
                     
-                    if $list.filter.wrappedValue == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
-                    if $list.filter.wrappedValue == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
+                    Group {
+                        if $list.filter.wrappedValue == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
+                        if $list.filter.wrappedValue == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
+                    }
+                    .font(.footnote)
                 }
             }
             .frame(height: 120)
