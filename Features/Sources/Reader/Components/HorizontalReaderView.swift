@@ -11,20 +11,25 @@ struct HorizontalReaderView: View {
     @ObservedObject var vm: ReaderVM
     
     var body: some View {
-        TabView(selection: $vm.tabIndex) {
-            ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
-                GeometryReader { proxy in
-                    ChapterImageView(url: image, contentMode: .fit)
-                        .frame(
-                            minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
-                            minHeight: proxy.size.height,
-                            alignment: .center
-                        )
-                        .id(image)
-                        .tag(image)
+        if vm.images.isEmpty || vm.isLoading {
+            ProgressView()
+                .scaleEffect(2)
+        } else {
+            TabView(selection: $vm.tabIndex) {
+                ForEach(vm.getImagesOrderForDirection()) { image in
+                    GeometryReader { proxy in
+                        ChapterImageView(url: image, contentMode: .fit)
+                            .frame(
+                                minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                                minHeight: proxy.size.height,
+                                alignment: .center
+                            )
+                            .id(image)
+                            .tag(image)
+                    }
                 }
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
     }
 }

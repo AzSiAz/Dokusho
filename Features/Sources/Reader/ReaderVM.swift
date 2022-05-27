@@ -60,7 +60,7 @@ public class ReaderVM: ObservableObject {
             Logger.reader.info("Error loading chapter \(self.chapter.chapterId): \(error.localizedDescription)")
         }
         
-        isLoading = false
+        if isLoading { isLoading = false }
     }
     
     func backgroundFetchImage() {

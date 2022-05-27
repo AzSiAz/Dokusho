@@ -14,10 +14,6 @@ typealias OnProgress = (_ status: ChapterStatus) -> Void
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     
-    @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
-    @Preference(\.useNewVerticalReader) var useNewVerticalReader
-
-    
     @StateObject public var vm: ReaderVM
     @ObservedObject public var readerManager: ReaderManager
     
@@ -28,28 +24,8 @@ public struct ReaderView: View {
     
     public var body: some View {
         Group {
-            if (vm.images.isEmpty && !vm.isLoading) {
-                Text("No images found in this chapter")
-            } else if(vm.isLoading) {
-                ProgressView()
-                    .scaleEffect(2)
-            }
-            else {
-                if vm.direction == .vertical {
-                    if useNewVerticalReader {
-                        VerticalReaderView(vm: vm)
-                    } else {
-                        VerticalReaderView(vm: vm)
-                    }
-                }
-                else {
-                    if userNewHorizontalReader {
-                        HorizontalReaderView(vm: vm)
-                    } else {
-                        HorizontalReaderView(vm: vm)
-                    }
-                }
-            }
+            if vm.direction == .vertical { VerticalReaderView(vm: vm) }
+            else { HorizontalReaderView(vm: vm) }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black.ignoresSafeArea())
@@ -60,7 +36,7 @@ public struct ReaderView: View {
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
         .onReceive(vm.$tabIndex) { vm.updateChapterStatus(image: $0) }
-        .onReceive(vm.$chapter) { _ in Task { await vm.fetchChapter() } }
+        .onChange(of: vm.chapter) { _ in Task { await vm.fetchChapter() } }
         .preferredColorScheme(.dark)
     }
     
@@ -77,16 +53,14 @@ public struct ReaderView: View {
 
                     Spacer()
 
-                    VStack {
-                        if vm.images.isEmpty {
-                            Text("Loading...")
-                        } else {
+                    if !vm.images.isEmpty {
+                        VStack {
                             // TODO: Add a custom slider to be able to update tabIndex value
                             ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
                                 .rotationEffect(.degrees(vm.direction == .rightToLeft ? 180 : 0))
                         }
+                        .frame(height: 25)
                     }
-                    .frame(height: 25)
 
                     Spacer()
                     
@@ -97,18 +71,18 @@ public struct ReaderView: View {
                     .disabled(!vm.hasNextChapter())
                 }
                 
-                Text("\(Int(vm.progressBarCurrent())) of \(vm.images.count)")
-                    .padding(.leading)
-                    .font(.footnote.italic())
+                if !vm.images.isEmpty {
+                    Text("\(Int(vm.progressBarCurrent())) of \(vm.images.count)")
+                        .padding(.leading)
+                        .font(.footnote.italic())
+                }
             }
             .padding([.horizontal, .top])
             .background(.thickMaterial)
             .offset(x: 0, y: vm.showToolBar ? 0 : 500)
             .transition(.move(edge: vm.showToolBar ? .bottom : .top))
         } else {
-            if vm.images.isEmpty {
-                Text("Loading...")
-            } else {
+            if !vm.images.isEmpty {
                 Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
                     .transition(.move(edge: !vm.showToolBar ? .bottom : .top))
                     .glowBorder(color: .black, lineWidth: 3)
