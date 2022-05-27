@@ -67,36 +67,41 @@ public struct ReaderView: View {
     @ViewBuilder
     func BottomOverlay() -> some View {
         if vm.showToolBar {
-            HStack {
-                Button(action: { vm.goToChapter(.previous) }) {
-                    Image(systemName: "chevron.left")
-                        .padding(.trailing)
-                }
-                .disabled(!vm.hasPreviousChapter())
+            VStack(alignment: .center, spacing: 1) {
+                HStack(alignment: .center) {
+                    Button(action: { vm.goToChapter(.previous) }) {
+                        Image(systemName: "chevron.left")
+                            .padding(.trailing)
+                    }
+                    .disabled(!vm.hasPreviousChapter())
 
-                Spacer()
+                    Spacer()
 
-                HStack {
-                    if vm.images.isEmpty {
-                        Text("Loading...")
-                    } else {
-                        // TODO: Add a custom slider to be able to update tabIndex value
-                        ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
-                        Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
+                    VStack {
+                        if vm.images.isEmpty {
+                            Text("Loading...")
+                        } else {
+                            // TODO: Add a custom slider to be able to update tabIndex value
+                            ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
+                                .rotationEffect(.degrees(vm.direction == .rightToLeft ? 180 : 0))
+                        }
+                    }
+                    .frame(height: 25)
+
+                    Spacer()
+                    
+                    Button(action: { vm.goToChapter(.next) }) {
+                        Image(systemName: "chevron.right")
                             .padding(.leading)
                     }
+                    .disabled(!vm.hasNextChapter())
                 }
-                .frame(height: 25)
-
-                Spacer()
                 
-                Button(action: { vm.goToChapter(.next) }) {
-                    Image(systemName: "chevron.right")
-                        .padding(.leading)
-                }
-                .disabled(!vm.hasNextChapter())
+                Text("\(Int(vm.progressBarCurrent())) of \(vm.images.count)")
+                    .padding(.leading)
+                    .font(.footnote.italic())
             }
-            .padding(.all)
+            .padding([.horizontal, .top])
             .background(.thickMaterial)
             .offset(x: 0, y: vm.showToolBar ? 0 : 500)
             .transition(.move(edge: vm.showToolBar ? .bottom : .top))
@@ -107,6 +112,7 @@ public struct ReaderView: View {
                 Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
                     .transition(.move(edge: !vm.showToolBar ? .bottom : .top))
                     .glowBorder(color: .black, lineWidth: 3)
+                    .font(.footnote.italic())
             }
         }
         
