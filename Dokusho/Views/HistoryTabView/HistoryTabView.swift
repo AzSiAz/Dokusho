@@ -49,7 +49,7 @@ struct HistoryTabView: View {
         NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
             HStack {
                 MangaCard(imageUrl: data.manga.cover.absoluteString)
-                    .mangaCardFrame(width: 80, height: 120)
+                    .mangaCardFrame(width: 90, height: 120)
                     .id(data.id)
 
                 VStack(alignment: .leading) {
