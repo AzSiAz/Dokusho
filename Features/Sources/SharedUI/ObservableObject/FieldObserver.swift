@@ -24,4 +24,3 @@ public class FieldObserver : ObservableObject {
             .store(in: &subscriptions)
     }
 }
-

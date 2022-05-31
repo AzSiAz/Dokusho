@@ -28,44 +28,59 @@ struct ExploreSourceView: View {
     
     var body: some View {
         ScrollView {
-            if vm.error {
-                VStack {
-                    Text("Something weird happened, try again")
-                    AsyncButton(action: { await vm.fetchList(clean: true) }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
-            }
-            
-            if !vm.error && vm.mangas.isEmpty && !vm.fromRefresher {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity)
-            }
-            
-            if !vm.error && !vm.mangas.isEmpty {
-                LazyVGrid(columns: columns, spacing: 10) {
-                    ForEach(vm.mangas) { manga in
-                        NavigationLink(destination: MangaDetail(mangaId: manga.id, scraper: vm.scraper)) {
-                            let found = mangas.first { $0.mangaId == manga.id }
-                            MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
-                                .mangaCardFrame()
-                                .contextMenu { ContextMenu(manga: manga) }
-                                .task { await vm.fetchMoreIfPossible(for: manga) }
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
+            switch(vm.error, vm.fromSegment, vm.fromRefresher) {
+            case (true, true, true): ErrorBlock()
+            case (true, false, false): ErrorBlock()
+            case (false, false, false): MangaListBlock()
+            case (false, false, true): MangaListBlock()
+            case (false, true, false): LoadingBlock()
+            case (false, true, true): MangaListBlock()
+            case (true, false, true): ErrorBlock()
+            case (true, true, false): ErrorBlock()
             }
         }
         .refresher(style: .system, action: vm.refresh(done:))
-        .task { await vm.fetchList() }
-        .toolbar {
-            ToolbarItem(placement: .principal) { Header() }
-        }
+        .task(id: vm.type) { await vm.fetchList(clean: true) }
+        .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
     }
     
+    @ViewBuilder
+    func MangaListBlock() -> some View {
+        LazyVGrid(columns: columns, spacing: 10) {
+            ForEach(vm.mangas) { manga in
+                NavigationLink(destination: MangaDetail(mangaId: manga.id, scraper: vm.scraper)) {
+                    let found = mangas.first { $0.mangaId == manga.id }
+                    MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
+                        .mangaCardFrame()
+                        .contextMenu { ContextMenu(manga: manga) }
+                        .task { await vm.fetchMoreIfPossible(for: manga) }
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func LoadingBlock() -> some View {
+        ProgressView()
+            .progressViewStyle(.circular)
+            .frame(maxWidth: .infinity)
+            .scaleEffect(1.5)
+            .padding(.bottom, 10)
+    }
+    
+    @ViewBuilder
+    func ErrorBlock() -> some View {
+        VStack {
+            Text("Something weird happened, try again")
+            AsyncButton(action: { await vm.fetchList(clean: true) }) {
+                Image(systemName: "arrow.clockwise")
+            }
+        }
+    }
+    
+    @ViewBuilder
     func Header() -> some View {
         Picker("Order", selection: $vm.type) {
             ForEach(SourceFetchType.allCases) { type in
@@ -74,9 +89,6 @@ struct ExploreSourceView: View {
         }
         .pickerStyle(.segmented)
         .frame(maxWidth: 160)
-        .onChange(of: vm.type) { _ in
-            Task { await vm.fetchList(clean: true) }
-        }
     }
     
     @ViewBuilder

@@ -8,16 +8,13 @@
 import SwiftUI
 import GRDBQuery
 import Combine
-import SwiftUIKit
 import DataKit
 import Common
 import SharedUI
 import MangaDetail
 import Refresher
 
-struct CollectionPage: View {
-    typealias Row = CollectionViewRow<Int, DetailedMangaInList>
-    
+struct CollectionPage: View {    
     @Environment(\.appDatabase) var appDatabase
     @EnvironmentObject var libraryUpdater: LibraryUpdater
 

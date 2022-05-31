@@ -10,44 +10,55 @@ import SwiftUI
 import MangaScraper
 import DataKit
 import Collections
+import Common
 
 class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
-
-    let scraper: Scraper
+    private var nextPage = 1
     
-    @Published var nextPage = 1
     @Published var mangas = OrderedSet<SourceSmallManga>()
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
     @Published var fromRefresher: Bool = false
+    @Published var fromSegment: Bool = false
+    
+    let scraper: Scraper
     
     init(for scraper: Scraper) {
         self.scraper = scraper
     }
     
-    @MainActor
+
     func fetchList(clean: Bool = false) async {
         if clean {
             nextPage = 1
         }
         
-        self.error = false
+        await asyncChange {
+            self.error = false
+            self.fromSegment = true
+        }
         
         do {
-            let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) :  scraper.asSource()?.fetchPopularManga(page: nextPage)
+            guard let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) : scraper.asSource()?.fetchPopularManga(page: nextPage) else {
+                throw "Error fetching page \(nextPage)"
+            }
             
-            if clean { mangas = OrderedSet(newManga!.mangas) }
-            else { mangas.append(contentsOf: newManga!.mangas) }
-            
-            self.nextPage += 1
+            await asyncChange {
+                if clean { self.mangas = OrderedSet(newManga.mangas) }
+                else { self.mangas.append(contentsOf: newManga.mangas) }
+
+                self.nextPage += 1
+                self.fromSegment = false
+            }
         } catch {
-            self.error = true
+            await animateAsyncChange {
+                self.error = true
+            }
         }
     }
-    
-    @MainActor
+
     func fetchMoreIfPossible(for manga: SourceSmallManga) async {
         if mangas.last == manga {
             return await fetchList()
@@ -64,21 +75,16 @@ class ExploreSourceVM: ObservableObject {
         do {
             try await database.write { db -> Void in
                 guard var manga = try Manga.all().forMangaId(smallManga.id, self.scraper.id).fetchOne(db) else {
-                    var manga = Manga(from: sourceManga, sourceId: self.scraper.id)
-                    manga.mangaCollectionId = collection.id
-                    try manga.save(db)
-                    
-                    for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: self.scraper.id)
-                        try chapter.save(db)
+                    var manga = try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+                    try manga.updateChanges(db) {
+                        $0.mangaCollectionId = collection.id
                     }
-
                     return
                 }
 
-                manga.mangaCollectionId = collection.id
-
-                return try manga.save(db)
+                try manga.updateChanges(db) {
+                    $0.mangaCollectionId = collection.id
+                }
             }
         } catch(let err) {
             print(err)
@@ -86,12 +92,16 @@ class ExploreSourceVM: ObservableObject {
     }
     
     func refresh(done: @escaping () -> Void) {
-        fromRefresher = true
+        withAnimation {
+            fromRefresher = true
+        }
+
         Task {
             await fetchList(clean: true)
-            await MainActor.run {
-                done()
-                fromRefresher = false
+            done()
+            
+            await asyncChange {
+                self.fromRefresher = false
             }
         }
     }
