@@ -13,21 +13,33 @@ let package = Package(
         .library(name: "DataKit", targets: ["DataKit"]),
         .library(name: "AidokuReader", targets: ["AidokuReader"]),
         .library(name: "Reader", targets: ["Reader"]),
-        .library(name: "MangaDetail", targets: ["MangaDetail"])
+        .library(name: "MangaDetail", targets: ["MangaDetail"]),
+        .library(name: "MangaScraper", targets: ["MangaScraper"])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
          .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.2.2"),
          .package(url: "https://github.com/groue/GRDB.swift.git", from: "5.24.0"),
          .package(url: "https://github.com/groue/GRDBQuery.git", from: "0.2.0"),
          .package(url: "https://github.com/kean/Nuke", branch: "master"),
          .package(url: "https://github.com/kean/NukeUI", from: "0.8.1"),
-         .package(url: "https://github.com/AzSiAz/MangaScraper", branch: "main"),
-         .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master")
+         .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
+         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", branch: "master"),
+         .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
+         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
+        .target(
+            name: "MangaScraper",
+            dependencies: [
+                "SwiftyJSON",
+                "SwiftSoup",
+                .product(name: "Collections", package: "swift-collections")
+            ]
+        ),
+        .testTarget(
+            name: "MangaScraperTests",
+            dependencies: ["MangaScraper"]),
+
         .target(
             name: "Common",
             dependencies: [

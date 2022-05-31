@@ -37,21 +37,12 @@
       }
     },
     {
-      "identity" : "mangascraper",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AzSiAz/MangaScraper",
-      "state" : {
-        "branch" : "main",
-        "revision" : "91b237e89108796beabac20c16b6048829554335"
-      }
-    },
-    {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
         "branch" : "master",
-        "revision" : "dd5068b0b5d33aae7ad2e940df8697893ff75ce4"
+        "revision" : "26bffb04e89fa09f34f5e03fe2516f0bf4f31ab0"
       }
     },
     {
@@ -87,7 +78,7 @@
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
         "branch" : "master",
-        "revision" : "13ba661fd1146967270fca92ce8195b223631436"
+        "revision" : "41e7c263fb8c277e980ebcb9b0b5f6031d3d4886"
       }
     },
     {
@@ -123,7 +114,7 @@
       "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
       "state" : {
         "branch" : "master",
-        "revision" : "9b2358f116461c4b1aa451fb5fb1921e5616fea0"
+        "revision" : "2d4d0e20c29a66db3cfa59cb764f77dffa64707e"
       }
     },
     {
