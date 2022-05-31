@@ -42,7 +42,7 @@ public struct MangaDex: Source {
         
         guard let detail = try JSONDecoder().decode(MangaDexMangaDetailREST.self, from: data).data else { throw SourceError.fetchError }
         
-        let title = detail.attributes?.title?.en
+        let title = detail.attributes?.title?.en ?? detail.attributes?.altTitles?.first(where: { $0.en != nil })?.en ?? "No title found"
         
         let coverFileName = detail.relationships?
             .filter { $0.type == "cover_art" }
@@ -78,7 +78,7 @@ public struct MangaDex: Source {
         
         return SourceManga(
             id: detail.id!,
-            title: title ?? "No title found",
+            title: title,
             cover: getCover(mangaId: id, fileName: coverFileName),
             genres: genres ?? [],
             authors: authors ?? [],
