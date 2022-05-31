@@ -11,6 +11,7 @@ import GRDBQuery
 import DataKit
 import SharedUI
 import MangaDetail
+import Refresher
 
 struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
@@ -36,7 +37,7 @@ struct ExploreSourceView: View {
                 }
             }
             
-            if !vm.error && vm.mangas.isEmpty {
+            if !vm.error && vm.mangas.isEmpty && !vm.fromRefresher {
                 ProgressView()
                     .progressViewStyle(.circular)
                     .frame(maxWidth: .infinity)
@@ -57,14 +58,10 @@ struct ExploreSourceView: View {
                 }
             }
         }
+        .refresher(style: .system, action: vm.refresh(done:))
         .task { await vm.fetchList() }
         .toolbar {
             ToolbarItem(placement: .principal) { Header() }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                AsyncButton(action: { await vm.fetchList(clean: true) }) {
-                    Image(systemName: "arrow.clockwise")
-                }
-            }
         }
         .navigationTitle(vm.getTitle())
     }

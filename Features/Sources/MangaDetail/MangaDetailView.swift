@@ -12,6 +12,7 @@ import Reader
 import AidokuReader
 import Common
 import SharedUI
+import Refresher
 
 public struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var sizeClass
@@ -89,6 +90,7 @@ public struct MangaDetail: View {
                 .frame(maxWidth: 500, alignment: .leading)
                 .id("Detail")
             }
+            .refresher(style: .system, action: vm.updateFromRefresher(done:))
             
             Divider()
             
@@ -112,6 +114,7 @@ public struct MangaDetail: View {
                 .disabled(vm.refreshing)
                 .padding(.bottom)
         }
+        .refresher(style: .system, action: vm.updateFromRefresher(done:))
     }
     
     @ViewBuilder
@@ -191,16 +194,6 @@ public struct MangaDetail: View {
 
                 return ActionSheet(title: Text("Choose collection"), buttons: actions)
             }
-
-            Divider()
-                .padding(.horizontal)
-            
-            AsyncButton(action: { await vm.update() }) {
-                VStack(alignment: .center, spacing: 1) {
-                    Image(systemName: "arrow.clockwise")
-                    Text("Refresh")
-                }
-            }
             
             Divider()
                 .padding(.horizontal)
@@ -214,6 +207,7 @@ public struct MangaDetail: View {
         }
         .controlGroupStyle(.navigation)
         .frame(height: 50)
+        .padding(.top)
         .padding(.bottom, 5)
         .padding(.horizontal)
     }

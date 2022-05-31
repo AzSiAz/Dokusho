@@ -11,7 +11,6 @@ import MangaScraper
 import GRDB
 import DataKit
 
-@MainActor
 public class MangaDetailVM: ObservableObject {
     private let database = AppDatabase.shared.database
     
@@ -23,7 +22,6 @@ public class MangaDetailVM: ObservableObject {
     @Published var addToCollection = false
     @Published var refreshing = false
     @Published var selectedChapter: MangaChapter?
-//    @Published var selectedGenre: String?
     
     public init(for scraper: Scraper, mangaId: String) {
         self.scraper = scraper
@@ -31,9 +29,11 @@ public class MangaDetailVM: ObservableObject {
     }
 
     func update() async {
-        withAnimation {
-            self.error = false
-            self.refreshing = true
+        await MainActor.run {
+            withAnimation {
+                self.error = false
+                self.refreshing = true
+            }
         }
 
         do {
@@ -50,10 +50,19 @@ public class MangaDetailVM: ObservableObject {
                 }
             }
         } catch {
-            withAnimation {
-                self.error = true
-                self.refreshing = false
+            await MainActor.run {
+                withAnimation {
+                    self.error = true
+                    self.refreshing = false
+                }
             }
+        }
+    }
+    
+    func updateFromRefresher(done: @escaping () -> Void) {
+        Task {
+            await update()
+            done()
         }
     }
     

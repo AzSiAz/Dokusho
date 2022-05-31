@@ -67,9 +67,6 @@ public final class Preferences {
         self.userDefaults = userDefaults
     }
     
-    @UserDefault("NEW_COLLECTION_VIEW")
-    public var useNewCollectionView: Bool = false
-    
     @UserDefault("USE_AIDOKU_READER")
     public var useAidokuReader: Bool = false
     

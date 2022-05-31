@@ -21,6 +21,7 @@ class ExploreSourceVM: ObservableObject {
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
+    @Published var fromRefresher: Bool = false
     
     init(for scraper: Scraper) {
         self.scraper = scraper
@@ -29,7 +30,6 @@ class ExploreSourceVM: ObservableObject {
     @MainActor
     func fetchList(clean: Bool = false) async {
         if clean {
-            mangas = []
             nextPage = 1
         }
         
@@ -37,7 +37,9 @@ class ExploreSourceVM: ObservableObject {
         
         do {
             let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) :  scraper.asSource()?.fetchPopularManga(page: nextPage)
-            mangas.append(contentsOf: newManga!.mangas)
+            
+            if clean { mangas = OrderedSet(newManga!.mangas) }
+            else { mangas.append(contentsOf: newManga!.mangas) }
             
             self.nextPage += 1
         } catch {
@@ -80,6 +82,17 @@ class ExploreSourceVM: ObservableObject {
             }
         } catch(let err) {
             print(err)
+        }
+    }
+    
+    func refresh(done: @escaping () -> Void) {
+        fromRefresher = true
+        Task {
+            await fetchList(clean: true)
+            await MainActor.run {
+                done()
+                fromRefresher = false
+            }
         }
     }
 }

@@ -17,6 +17,7 @@
 		E2187EC126CC6243009604A9 /* ExploreSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EB726CC6243009604A9 /* ExploreSourceView.swift */; };
 		E2187EC726CC6243009604A9 /* ExploreTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EBE26CC6243009604A9 /* ExploreTabView.swift */; };
 		E23AD6F526EE069E0042453A /* HistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23AD6F426EE069E0042453A /* HistoryTabView.swift */; };
+		E24804C22846697C0017F4E2 /* Refresher in Frameworks */ = {isa = PBXBuildFile; productRef = E24804C12846697C0017F4E2 /* Refresher */; };
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E261654B281161F2002482C8 /* SearchScraperVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654A281161F2002482C8 /* SearchScraperVM.swift */; };
 		E261654F28118A01002482C8 /* SearchSourceListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654E28118A01002482C8 /* SearchSourceListScreen.swift */; };
@@ -112,6 +113,7 @@
 				E270C0DA282BDF1300E3093E /* Reader in Frameworks */,
 				E28A23D32832D2AC002A7C9B /* AidokuReader in Frameworks */,
 				E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */,
+				E24804C22846697C0017F4E2 /* Refresher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +317,7 @@
 				E2D6D37228311A7C000D7D3E /* Collections */,
 				E28A23D22832D2AC002A7C9B /* AidokuReader */,
 				E29D727B283FBE2D0052EBED /* MangaDetail */,
+				E24804C12846697C0017F4E2 /* Refresher */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -354,6 +357,7 @@
 				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
 				E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */,
 				E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */,
+				E24804C02846697C0017F4E2 /* XCRemoteSwiftPackageReference "SwiftUI-Refresher" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -642,6 +646,14 @@
 				kind = branch;
 			};
 		};
+		E24804C02846697C0017F4E2 /* XCRemoteSwiftPackageReference "SwiftUI-Refresher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gh123man/SwiftUI-Refresher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielsaidi/SwiftUIKit.git";
@@ -710,6 +722,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
+		};
+		E24804C12846697C0017F4E2 /* Refresher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E24804C02846697C0017F4E2 /* XCRemoteSwiftPackageReference "SwiftUI-Refresher" */;
+			productName = Refresher;
 		};
 		E25B0C82282BC4360080A71A /* DataKit */ = {
 			isa = XCSwiftPackageProductDependency;

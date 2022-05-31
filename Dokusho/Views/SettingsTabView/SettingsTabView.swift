@@ -11,7 +11,6 @@ import Common
 
 struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()
-    @Preference(\.useNewCollectionView) var useNewCollectionView
     @Preference(\.useAidokuReader) var useAidokuReader
     @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
     @Preference(\.useNewVerticalReader) var useNewVerticalReader
@@ -32,7 +31,6 @@ struct SettingsTabView: View {
                 }
                 
                 Section("Experimental") {
-                    Toggle("Use new collection view", isOn: $useNewCollectionView)
                     Toggle("Use aidoku reader (not Working)", isOn: $useAidokuReader)
                     Toggle("Use new horizontal reader", isOn: $userNewHorizontalReader)
                     Toggle("Use new vertical reader", isOn: $useNewVerticalReader)

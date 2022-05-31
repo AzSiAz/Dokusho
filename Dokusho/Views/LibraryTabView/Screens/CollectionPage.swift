@@ -13,6 +13,7 @@ import DataKit
 import Common
 import SharedUI
 import MangaDetail
+import Refresher
 
 struct CollectionPage: View {
     typealias Row = CollectionViewRow<Int, DetailedMangaInList>
@@ -27,10 +28,8 @@ struct CollectionPage: View {
     @State var reload = true
     @State var selected: DetailedMangaInList?
     @State var selectedGenre: String?
-    @Preference(\.useNewCollectionView) var useNewCollectionView
     
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
-    var rows: [Row] { [Row(section: 0, items: list)] }
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -38,32 +37,20 @@ struct CollectionPage: View {
     }
     
     var body: some View {
-        Group {
-            if !useNewCollectionView {
-                ScrollView {
-                    LazyVGrid(columns: columns) {
-                        ForEach(list) { data in
-                            Button(action: { selected = data }){
-                                MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-                                    .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
-                                    .mangaCardFrame()
-                            }
-                            .buttonStyle(.plain)
-                            .id(data.id)
-                        }
+        ScrollView {
+            LazyVGrid(columns: columns) {
+                ForEach(list) { data in
+                    Button(action: { selected = data }){
+                        MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                            .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+                            .mangaCardFrame()
                     }
+                    .buttonStyle(.plain)
+                    .id(data.id)
                 }
             }
-            else {
-                CollectionView(
-                    rows: rows,
-                    layout: .verticalGrid(itemsPerRow: getItemPerRows(), itemHeight: 190, itemInsets: .init(.all(5))),
-                    cell: cell,
-                    supplementaryView: { _ in Text("Test") }
-                )
-                .edgesIgnoringSafeArea(.all)
-            }
         }
+        .refresher(style: .system, action: refreshLibrary(done:))
         .navigate(item: $selected, destination: makeMangaDetailView(data:))
         .searchable(text: $list.searchTerm)
         .toolbar { toolbar }
@@ -73,12 +60,11 @@ struct CollectionPage: View {
         .mirrorAppearanceState(to: $list.isAutoupdating, $collection.isAutoupdating)
     }
     
-    @ViewBuilder
-    func cell(at indexPath: IndexPath, for item: DetailedMangaInList) -> some View {
-        MangaCard(title: item.manga.title, imageUrl: item.manga.cover.absoluteString, chapterCount: item.unreadChapterCount)
-            .onTapGesture {
-                selected = item
-            }
+    func refreshLibrary(done: @escaping () -> Void) {
+        Task {
+            try? await libraryUpdater.refreshCollection(collection: collection!)
+            done()
+        }
     }
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {
@@ -87,10 +73,6 @@ struct CollectionPage: View {
     
     var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            AsyncButton(action: { try? await libraryUpdater.refreshCollection(collection: collection!) }) {
-                Image(systemName: "arrow.clockwise")
-            }
-            
             Button(action: { showFilter.toggle() }) {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .symbolVariant(collection!.filter != .all ? .fill : .none)
