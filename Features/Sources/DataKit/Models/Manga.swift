@@ -82,7 +82,7 @@ public struct Manga: Identifiable, Equatable, Codable {
             case .doujinshi:
                 return .rightToLeft
             default:
-                return .vertical
+                return .rightToLeft
         }
     }
     
