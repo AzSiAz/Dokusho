@@ -15,6 +15,7 @@ import Common
 class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
     private var nextPage = 1
+    private var inited = false
     
     @Published var mangas = OrderedSet<SourceSmallManga>()
     @Published var error = false
@@ -37,20 +38,16 @@ class ExploreSourceVM: ObservableObject {
         
         await asyncChange {
             self.error = false
-            self.fromSegment = true
         }
         
         do {
-            guard let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) : scraper.asSource()?.fetchPopularManga(page: nextPage) else {
-                throw "Error fetching page \(nextPage)"
-            }
+            let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) : scraper.asSource()?.fetchPopularManga(page: nextPage)
             
             await asyncChange {
-                if clean { self.mangas = OrderedSet(newManga.mangas) }
-                else { self.mangas.append(contentsOf: newManga.mangas) }
+                if clean { self.mangas = OrderedSet(newManga!.mangas) }
+                else { self.mangas.append(contentsOf: newManga!.mangas) }
 
                 self.nextPage += 1
-                self.fromSegment = false
             }
         } catch {
             await animateAsyncChange {
@@ -102,6 +99,30 @@ class ExploreSourceVM: ObservableObject {
             
             await asyncChange {
                 self.fromRefresher = false
+            }
+        }
+    }
+    
+    func segmentChange(type: SourceFetchType? = nil) {
+        withAnimation {
+            fromSegment = true
+        }
+
+        Task {
+            await fetchList(clean: true)
+            
+            await asyncChange {
+                self.fromSegment = false
+            }
+        }
+    }
+    
+    func initView() async {
+        if !inited && mangas.isEmpty {
+            await fetchList()
+            
+            await asyncChange {
+                self.inited = true
             }
         }
     }

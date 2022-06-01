@@ -28,21 +28,18 @@ struct ExploreSourceView: View {
     
     var body: some View {
         ScrollView {
-            switch(vm.error, vm.fromSegment, vm.fromRefresher) {
-            case (true, true, true): ErrorBlock()
-            case (true, false, false): ErrorBlock()
-            case (false, false, false): MangaListBlock()
-            case (false, false, true): MangaListBlock()
-            case (false, true, false): LoadingBlock()
-            case (false, true, true): MangaListBlock()
-            case (true, false, true): ErrorBlock()
-            case (true, true, false): ErrorBlock()
+            switch(vm.error, vm.fromSegment, vm.fromRefresher, vm.mangas.isEmpty) {
+            case (true, _, _, _): ErrorBlock()
+            case (false, true, false, _): LoadingBlock()
+            case (_, _, _, true): LoadingBlock()
+            case (false, _, _, _): MangaListBlock()
             }
         }
         .refresher(style: .system, action: vm.refresh(done:))
-        .task(id: vm.type) { await vm.fetchList(clean: true) }
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
+        .task { await vm.initView() }
+        .onChange(of: vm.type, perform: vm.segmentChange(type:))
     }
     
     @ViewBuilder

@@ -174,7 +174,6 @@ public struct MangaDex: Source {
         
         repeat {
             let oldOffset = offset
-            print(getChapterRequestUrl(mangaId: mangaId, offset: oldOffset))
             let html = try await fetchHtml(url: getChapterRequestUrl(mangaId: mangaId, offset: oldOffset))
             guard let data = html.data(using: .utf8) else { throw SourceError.parseError(error: "[MangaDex] error getting data for `mangaDexChapterListREST` ") }
             
@@ -222,9 +221,8 @@ public struct MangaDex: Source {
     
     private func fetchHtml(url: String) async throws -> String {
         guard let url = URL(string: url) else { throw "Not a url: \(url)" }
-        print(url.absoluteString)
 
-        var req = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+        var req = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         headers.forEach { key, value in
             req.setValue(value, forHTTPHeaderField: key)
         }

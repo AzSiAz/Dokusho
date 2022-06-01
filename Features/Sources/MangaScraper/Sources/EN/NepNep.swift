@@ -342,7 +342,7 @@ public class NepNepSource: MultiSource {
     private func fetchHtml(url: String) async throws -> String {
         guard let url = URL(string: url) else { throw "Not a url: \(url)" }
 
-        var req = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+        var req = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         headers.forEach { key, value in
             req.setValue(value, forHTTPHeaderField: key)
         }
