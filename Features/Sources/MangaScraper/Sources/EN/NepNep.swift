@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftSoup
-import SwiftyJSON
+import JAYSON
 
 private struct MangaSeeDirectoryManga: Codable {
     let id: String
@@ -170,21 +170,28 @@ public class NepNepSource: MultiSource {
             .replacingOccurrences(of: ";", with: "", options: .literal)
             .replacingOccurrences(of: "\"", with: "", options: .literal)
 
-        let vmCurrChapterJSON = try JSON(data: vmCurrChapterRaw)
+        do {
+            let vmCurrChapterJSON = try JSON(data: vmCurrChapterRaw)
+            print(vmCurrChapterJSON)
+            let seasonURIRaw = (try? vmCurrChapterJSON.next("Directory").getString()) ?? ""
+            let seasonURI = seasonURIRaw.isEmpty ? "" : seasonURIRaw
+            let path = "\(vmCurrPathName)/manga/\(mangaId)/\(seasonURI)"
+            let chNum = chapterImage(try vmCurrChapterJSON.next("Chapter").getString())
 
-        let seasonURI = vmCurrChapterJSON.dictionaryValue["Directory"]!.stringValue.isEmpty ? "" : "\(vmCurrChapterJSON.dictionaryValue["Directory"]!.stringValue)/"
-        let path = "\(vmCurrPathName)/manga/\(mangaId)/\(seasonURI)"
-        let chNum = chapterImage(vmCurrChapterJSON.dictionaryValue["Chapter"]!.stringValue)
+            // ideal: https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-001.png / https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-010.png
+            let maxImagePages = try vmCurrChapterJSON.next("Page").get { Int(try $0.getString()) }!
+            let images = (1 ... maxImagePages).map { number -> SourceChapterImage in
+                let i = "000\(number)"
+                let imageNum = i[i.index(i.endIndex, offsetBy: -3)...]
+                
+                return SourceChapterImage(index: number, imageUrl: "https://\(path)\(chNum)-\(imageNum).png")
+            }
 
-        // ideal: https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-001.png / https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-010.png
-        let images = (1 ... vmCurrChapterJSON["Page"].intValue).map { number -> SourceChapterImage in
-            let i = "000\(number)"
-            let imageNum = i[i.index(i.endIndex, offsetBy: -3)...]
-            
-            return SourceChapterImage(index: number, imageUrl: "https://\(path)\(chNum)-\(imageNum).png")
+            return images
+        } catch(let error) {
+            debugPrint(error)
+            throw error
         }
-
-        return images
     }
 
     public func mangaUrl(mangaId: String) -> URL {
@@ -219,16 +226,23 @@ public class NepNepSource: MultiSource {
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: ";", with: "")
 
-        let vmChapter = try! JSON(data: jsonData.data(using: .utf8)!)
+        do {
+            let vmChapter = try JSON(data: jsonData.data(using: .utf8)!)
 
-        return try vmChapter.arrayValue.map { rawChapter -> SourceChapter in
-            let chapter = rawChapter["Chapter"].stringValue
-            let date = rawChapter["Date"].stringValue
-            let type = rawChapter["Type"].stringValue
-            let chapterName = rawChapter["ChapterName"].stringValue.isEmpty ? "\(type) \(chapterImage(chapter, clean: true))" : rawChapter["ChapterName"].stringValue
-            let chapterId = "\(id)\(try chapterURLEncode(chapter))"
+            return try vmChapter.getArray().map { rawChapter -> SourceChapter in
+                let chapter = try rawChapter.next("Chapter").getString()
+                let date = try rawChapter.next("Date").getString()
+                let type = try rawChapter.next("Type").getString()
+                let chapterNameRaw = (try? rawChapter.next("ChapterName").getString()) ?? ""
+                let chapterName = chapterNameRaw.isEmpty ? "\(type) \(chapterImage(chapter, clean: true))" : chapterNameRaw
+                
+                let chapterId = "\(id)\(try chapterURLEncode(chapter))"
 
-            return SourceChapter(name: chapterName, id: chapterId, dateUpload: convertToDate(date), externalUrl: nil)
+                return SourceChapter(name: chapterName, id: chapterId, dateUpload: convertToDate(date), externalUrl: nil)
+            }
+        } catch(let error) {
+            debugPrint(error)
+            throw error
         }
     }
 

@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "jayson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muukii/JAYSON",
+      "state" : {
+        "revision" : "14c6f0f0ac80b487d0f05845f2bc933a4297f6f6",
+        "version" : "2.4.0"
+      }
+    },
+    {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher.git",
