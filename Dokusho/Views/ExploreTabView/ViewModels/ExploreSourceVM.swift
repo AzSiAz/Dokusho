@@ -88,18 +88,15 @@ class ExploreSourceVM: ObservableObject {
         }
     }
     
-    func refresh(done: @escaping () -> Void) {
-        withAnimation {
-            fromRefresher = true
+    func refresh() async {
+        await animateAsyncChange {
+            self.fromRefresher = true
         }
 
-        Task {
-            await fetchList(clean: true)
-            done()
+        await fetchList(clean: true)
             
-            await asyncChange {
-                self.fromRefresher = false
-            }
+        await asyncChange {
+            self.fromRefresher = false
         }
     }
     

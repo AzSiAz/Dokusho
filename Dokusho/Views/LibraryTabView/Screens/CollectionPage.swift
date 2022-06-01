@@ -47,21 +47,18 @@ struct CollectionPage: View {
                 }
             }
         }
-        .refresher(style: .system, action: refreshLibrary(done:))
+        .refresher(style: .system, action: refreshLibrary)
         .navigate(item: $selected, destination: makeMangaDetailView(data:))
         .searchable(text: $list.searchTerm)
         .toolbar { toolbar }
         .navigationTitle("\(collection?.name ?? "") (\(list.count))")
-        .navigationBarTitleDisplayMode(.automatic)
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
         .mirrorAppearanceState(to: $list.isAutoupdating, $collection.isAutoupdating)
     }
     
-    func refreshLibrary(done: @escaping () -> Void) {
-        Task {
-            try? await libraryUpdater.refreshCollection(collection: collection!)
-            done()
-        }
+    func refreshLibrary() async {
+        try? await libraryUpdater.refreshCollection(collection: collection!)
     }
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {
