@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import MangaScraper
+import SettingsTab
+import HistoryTab
 
 struct RootView: View {
     enum ActiveTab: String {

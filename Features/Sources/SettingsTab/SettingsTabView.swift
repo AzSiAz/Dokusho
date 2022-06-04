@@ -9,12 +9,14 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Common
 
-struct SettingsTabView: View {
+public struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()
     @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
     @Preference(\.useNewVerticalReader) var useNewVerticalReader
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         NavigationView {
             List {
                 Section("Data") {

@@ -12,10 +12,12 @@ import DataKit
 import SharedUI
 import MangaDetail
 
-struct HistoryTabView: View {
+public struct HistoryTabView: View {
     @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
+    
+    public init() {}
 
-    var body: some View {
+    public var body: some View {
         NavigationView {
             List {
                 ForEach(list) { data in
