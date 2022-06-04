@@ -26,7 +26,7 @@ struct CollectionPage: View {
     @State var selected: DetailedMangaInList?
     @State var selectedGenre: String?
     
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
+//    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -35,16 +35,11 @@ struct CollectionPage: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(list) { data in
-                    Button(action: { selected = data }){
-                        MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-                            .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
-                            .mangaCardFrame()
-                    }
-                    .buttonStyle(.plain)
-                    .id(data.id)
-                }
+            MangaList(mangas: list) { data in
+                MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                    .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+                    .mangaCardFrame()
+                    .onTapGesture { selected = data }
             }
         }
         .refresher(style: .system, action: refreshLibrary)

@@ -25,14 +25,12 @@ struct MangaForSourcePage: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(list) { data in
-                    NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
-                        MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-                            .mangaCardFrame()
-                    }
-                    .buttonStyle(.plain)
+            MangaList(mangas: list) { data in
+                NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+                    MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                        .mangaCardFrame()
                 }
+                .buttonStyle(.plain)
             }
             .navigationTitle("\(scraper.name) (\(list.count))")
             .navigationBarTitleDisplayMode(.automatic)

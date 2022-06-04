@@ -65,9 +65,3 @@ struct SettingsTabView: View {
         .navigationViewStyle(.stack)
     }
 }
-
-//struct SettingsTabView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsTabView(vm: .init())
-//    }
-//}
