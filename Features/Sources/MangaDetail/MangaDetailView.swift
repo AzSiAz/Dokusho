@@ -9,15 +9,12 @@ import SwiftUI
 import GRDBQuery
 import DataKit
 import Reader
-import AidokuReader
 import Common
 import SharedUI
 import Refresher
 
 public struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var sizeClass
-    
-    @Preference(\.useAidokuReader) var useAidokuReader
 
     @Query(MangaCollectionRequest()) var collections
     @Query<MangaDetailRequest> var data: MangaWithDetail?
@@ -67,13 +64,7 @@ public struct MangaDetail: View {
             }
         }
         .fullScreenCover(item: $readerManager.selectedChapter) { data in
-            if (useAidokuReader) {
-                AidokuReaderViewController(manga: data.manga, scraper: data.scraper, chapter: data.chapter, chapterList: data.chapters) {
-                    readerManager.dismiss()
-                }
-            } else {
-                ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
-            }
+            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
         }
         .environmentObject(readerManager)
     }

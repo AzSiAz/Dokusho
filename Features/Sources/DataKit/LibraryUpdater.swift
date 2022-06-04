@@ -32,6 +32,8 @@ public class LibraryUpdater: ObservableObject {
     @Published public var refreshStatus: RefreshStatus?
     
     public func refreshCollection(collection: MangaCollection) async throws {
+        guard refreshStatus == nil else { return }
+
         var status = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 1, refreshTitle: "Refreshing...", collectionId: collection.id)
         
         await updateRefreshStatus(status)

@@ -11,13 +11,11 @@ let package = Package(
         .library(name: "Common", targets: ["Common"]),
         .library(name: "SharedUI", targets: ["SharedUI"]),
         .library(name: "DataKit", targets: ["DataKit"]),
-        .library(name: "AidokuReader", targets: ["AidokuReader"]),
         .library(name: "Reader", targets: ["Reader"]),
         .library(name: "MangaDetail", targets: ["MangaDetail"]),
         .library(name: "MangaScraper", targets: ["MangaScraper"])
     ],
     dependencies: [
-         .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.2.2"),
          .package(url: "https://github.com/groue/GRDB.swift.git", from: "5.24.0"),
          .package(url: "https://github.com/groue/GRDBQuery.git", from: "0.2.0"),
          .package(url: "https://github.com/kean/Nuke", branch: "master"),
@@ -25,7 +23,8 @@ let package = Package(
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
          .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
-         .package(url: "https://github.com/muukii/JAYSON", exact: "2.4.0")
+         .package(url: "https://github.com/muukii/JAYSON", exact: "2.4.0"),
+         .package(url: "https://github.com/gh123man/SwiftUI-Refresher", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         .target(
@@ -56,19 +55,10 @@ let package = Package(
                 .byName(name: "NukeUI"),
             ]
         ),
-
-        .target(
-            name: "AidokuReader",
-            dependencies: [
-                .byName(name: "Kingfisher"),
-                .byName(name: "DataKit")
-            ]
-        ),
         
         .target(
             name: "Reader",
             dependencies: [
-                .byName(name: "Kingfisher"),
                 .byName(name: "DataKit"),
                 .byName(name: "Nuke")
             ]
@@ -93,7 +83,7 @@ let package = Package(
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
                 .byName(name: "Reader"),
-                .byName(name: "AidokuReader")
+                .product(name: "Refresher", package: "SwiftUI-Refresher")
             ]
         )
     ]

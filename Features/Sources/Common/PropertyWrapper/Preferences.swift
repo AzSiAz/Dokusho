@@ -67,9 +67,6 @@ public final class Preferences {
         self.userDefaults = userDefaults
     }
     
-    @UserDefault("USE_AIDOKU_READER")
-    public var useAidokuReader: Bool = false
-    
     @UserDefault("USE_NEW_HORIZONTAL_READER")
     public var useNewHorizontalReader: Bool = false
     
