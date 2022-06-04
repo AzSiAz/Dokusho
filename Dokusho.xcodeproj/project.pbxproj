@@ -20,6 +20,7 @@
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46C8284B68FE004C594C /* SettingsTab */; };
 		E25E46CB284B697C004C594C /* HistoryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46CA284B697C004C594C /* HistoryTab */; };
+		E25E46CD284B7215004C594C /* CollectionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E46CC284B7215004C594C /* CollectionSettings.swift */; };
 		E261654B281161F2002482C8 /* SearchScraperVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654A281161F2002482C8 /* SearchScraperVM.swift */; };
 		E261654F28118A01002482C8 /* SearchSourceListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E261654E28118A01002482C8 /* SearchSourceListScreen.swift */; };
 		E2633308280975DB00B80AD4 /* ExploreTabVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2633307280975DB00B80AD4 /* ExploreTabVM.swift */; };
@@ -70,6 +71,7 @@
 		E2187EBE26CC6243009604A9 /* ExploreTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreTabView.swift; sourceTree = "<group>"; };
 		E2187ED726CC69C4009604A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E25B0C81282BB7D00080A71A /* Features */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Features; sourceTree = "<group>"; };
+		E25E46CC284B7215004C594C /* CollectionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSettings.swift; sourceTree = "<group>"; };
 		E261654A281161F2002482C8 /* SearchScraperVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScraperVM.swift; sourceTree = "<group>"; };
 		E261654E28118A01002482C8 /* SearchSourceListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSourceListScreen.swift; sourceTree = "<group>"; };
 		E2633307280975DB00B80AD4 /* ExploreTabVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTabVM.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				E26D7E72270B4FCE0003C6C1 /* DynamicCollection */,
 				E2DA94EA26D6689F0083F2F7 /* CollectionPage.swift */,
 				E26D7E6E270B466A0003C6C1 /* MangaForSourcePage.swift */,
+				E25E46CC284B7215004C594C /* CollectionSettings.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E25E46CD284B7215004C594C /* CollectionSettings.swift in Sources */,
 				E2187EC126CC6243009604A9 /* ExploreSourceView.swift in Sources */,
 				E2633308280975DB00B80AD4 /* ExploreTabVM.swift in Sources */,
 				E2DA94E626D667FE0083F2F7 /* MangaLibraryContextMenu.swift in Sources */,

@@ -24,7 +24,7 @@ struct MangaInCollectionForGenre: View {
     init(genre: String, inModal: Bool = true) {
         self.inModal = inModal
         self.genre = genre
-        _list = Query(DetailedMangaInListRequest(genre: genre))
+        _list = Query(DetailedMangaInListRequest(requestType: .genre(genre: genre)))
     }
     
     var body: some View {

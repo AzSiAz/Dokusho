@@ -19,18 +19,16 @@ struct CollectionPage: View {
     @EnvironmentObject var libraryUpdater: LibraryUpdater
 
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
-    @Query<DetailedMangaInCollectionRequest> var list: [DetailedMangaInList]
+    @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
 
     @State var showFilter = false
     @State var reload = true
     @State var selected: DetailedMangaInList?
     @State var selectedGenre: String?
     
-//    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
-    
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
-        _list = Query(DetailedMangaInCollectionRequest(collection: collection))
+        _list = Query(DetailedMangaInListRequest(requestType: .collection(collectionId: collection.id)))
     }
     
     var body: some View {
@@ -67,73 +65,13 @@ struct CollectionPage: View {
                     .symbolVariant(collection!.filter != .all ? .fill : .none)
             }
             .sheet(isPresented: $showFilter) {
-                NavigationView {
-                    List {
-                        Section("Filter") {
-                            Picker("Change collection filter", selection: $list.collectionFilter) {
-                                ForEach(MangaCollectionFilter.allCases, id: \.self) { filter in
-                                    Text(filter.rawValue).tag(filter)
-                                }
-                            }
-                        }
-
-                        Section("Order") {
-                            Picker("Change collection order field", selection: $list.collectionOrder.field) {
-                                ForEach(MangaCollectionOrder.Field.allCases, id: \.self) { filter in
-                                    Text(filter.rawValue).tag(filter)
-                                }
-                            }
-                            Picker("Change collection order direction", selection: $list.collectionOrder.direction) {
-                                ForEach(MangaCollectionOrder.Direction.allCases, id: \.self) { filter in
-                                    Text(filter.rawValue).tag(filter)
-                                }
-                            }
-                        }
-                    }
-                    .navigationTitle(Text("Modify Filter"))
-                    .onChange(of: $list.collectionFilter.wrappedValue, perform: { updateCollectionFilter(newFilter: $0) })
-                    .onChange(of: $list.collectionOrder.field.wrappedValue, perform: { updateCollectionOrder(direction: nil, field: $0) })
-                    .onChange(of: $list.collectionOrder.direction.wrappedValue, perform: { updateCollectionOrder(direction: $0, field: nil) })
-                }
+                CollectionSettings(collection: collection!)
             }
         }
     }
     
     func getItemPerRows() -> Int {
         UIScreen.isLargeScreen ? 6 : 3
-    }
-    
-    func updateCollectionFilter(newFilter: MangaCollectionFilter) {
-        guard let collection = collection else { return }
-
-        do {
-            try appDatabase.database.write { db in
-                guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
-                print(foundCollection)
-                foundCollection.filter = newFilter
-                print(foundCollection)
-
-                try foundCollection.save(db)
-            }
-        } catch(let err) {
-            print(err)
-        }
-    }
-    
-    func updateCollectionOrder(direction: MangaCollectionOrder.Direction? = nil, field: MangaCollectionOrder.Field? = nil) {
-        guard let collection = collection else { return }
-        
-        do {
-            try appDatabase.database.write { db in
-                guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
-                if let direction = direction { foundCollection.order.direction = direction }
-                if let field = field { foundCollection.order.field = field }
-
-                try foundCollection.save(db)
-            }
-        } catch(let err) {
-            print(err)
-        }
     }
     
     func selectGenre(genre: String) -> Void {

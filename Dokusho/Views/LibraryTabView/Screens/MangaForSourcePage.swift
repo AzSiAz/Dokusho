@@ -20,7 +20,7 @@ struct MangaForSourcePage: View {
     
     init(scraper: Scraper) {
         self.scraper = scraper
-        _list = Query(DetailedMangaInListRequest(scraper: scraper))
+        _list = Query(DetailedMangaInListRequest(requestType: .scraper(scraper: scraper)))
     }
     
     var body: some View {
