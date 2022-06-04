@@ -19,11 +19,13 @@ struct CollectionSettings: View {
     
     @State var collectionOrder: MangaCollectionOrder
     @State var collectionFilter: MangaCollectionFilter
+    @State var useList: Bool
     
     init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
         _collectionOrder = .init(initialValue: collection.order)
         _collectionFilter = .init(initialValue: collection.filter)
+        _useList = .init(initialValue: collection.useList ?? false)
     }
     
     var body: some View {
@@ -49,11 +51,34 @@ struct CollectionSettings: View {
                         }
                     }
                 }
+                
+                Section("Presentation") {
+                    Toggle("Show as list", isOn: $useList)
+                }
             }
             .navigationTitle(Text("Modify Filter"))
             .onChange(of: $collectionFilter.wrappedValue, perform: { updateCollectionFilter(newFilter: $0) })
             .onChange(of: $collectionOrder.field.wrappedValue, perform: { updateCollectionOrder(direction: nil, field: $0) })
             .onChange(of: $collectionOrder.direction.wrappedValue, perform: { updateCollectionOrder(direction: $0, field: nil) })
+            .onChange(of: $useList.wrappedValue, perform: { updateCollectionUseList(d: $0) })
+        }
+    }
+    
+    func updateCollectionUseList(d: Bool) {
+        Task {
+            guard let collection = collection else { return }
+
+            do {
+                try await appDatabase.database.write { db in
+                    guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
+                    
+                    try foundCollection.updateChanges(db) {
+                        $0.useList = d
+                    }
+                }
+            } catch(let err) {
+                print(err)
+            }
         }
     }
     

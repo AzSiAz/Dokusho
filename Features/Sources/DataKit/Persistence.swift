@@ -103,6 +103,13 @@ public struct AppDatabase {
                 t.add(column: "externalUrl", .text)
             }
         }
+        
+        Logger.migration.info("Registering  migration")
+        migrator.registerMigration("add_useList_to_mangaCollection") { db in
+            try db.alter(table: "mangaCollection") { t in
+                t.add(column: "useList", .boolean).notNull().defaults(to: "false")
+            }
+        }
 
         return migrator
     }

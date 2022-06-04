@@ -32,30 +32,51 @@ struct CollectionPage: View {
     }
     
     var body: some View {
-        ScrollView {
-            MangaList(mangas: list) { data in
-                MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-                    .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
-                    .mangaCardFrame()
-                    .onTapGesture { selected = data }
+        if let collection = collection {
+            Group {
+                if collection.useList ?? false {
+                    List(list) { data in
+                        MangaInList(data: data)
+                    }
+                    .refreshable { await refreshLibrary() }
+                    .listStyle(.plain)
+                } else {
+                    ScrollView {
+                        MangaList(mangas: list) { data in
+                            MangaInGrid(data: data)
+                        }
+                    }
+                    .refresher(style: .system, action: refreshLibrary)
+                }
             }
+            .navigate(item: $selected, destination: makeMangaDetailView(data:))
+            .searchable(text: $list.searchTerm)
+            .toolbar { toolbar }
+            .navigationTitle("\(collection.name) (\(list.count))")
+            .navigationBarTitleDisplayMode(.inline)
+            .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
+            .queryObservation(.onAppear)
         }
-        .refresher(style: .system, action: refreshLibrary)
-        .navigate(item: $selected, destination: makeMangaDetailView(data:))
-        .searchable(text: $list.searchTerm)
-        .toolbar { toolbar }
-        .navigationTitle("\(collection?.name ?? "") (\(list.count))")
-        .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
-        .queryObservation(.onAppear)
     }
     
-    func refreshLibrary() async {
-        try? await libraryUpdater.refreshCollection(collection: collection!)
+    @ViewBuilder
+    func MangaInGrid(data: DetailedMangaInList) -> some View {
+        MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+            .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+            .mangaCardFrame()
+            .onTapGesture { selected = data }
     }
     
-    func makeMangaDetailView(data: DetailedMangaInList) -> some View {
-        MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: selectGenre(genre:))
+    @ViewBuilder
+    func MangaInList(data: DetailedMangaInList) -> some View {
+        HStack {
+            MangaCard(imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                .mangaCardFrame(width: 90, height: 120)
+                .id(data.id)
+            
+            Text(data.manga.title)
+        }
+        .frame(height: 120)
     }
     
     var toolbar: some ToolbarContent {
@@ -70,8 +91,12 @@ struct CollectionPage: View {
         }
     }
     
-    func getItemPerRows() -> Int {
-        UIScreen.isLargeScreen ? 6 : 3
+    func refreshLibrary() async {
+        try? await libraryUpdater.refreshCollection(collection: collection!)
+    }
+    
+    func makeMangaDetailView(data: DetailedMangaInList) -> some View {
+        MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: selectGenre(genre:))
     }
     
     func selectGenre(genre: String) -> Void {

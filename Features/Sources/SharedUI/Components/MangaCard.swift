@@ -29,6 +29,11 @@ public struct MangaCard: View {
         self.imageUrl = imageUrl
     }
     
+    public init(imageUrl: String, chapterCount: Int) {
+        self.imageUrl = imageUrl
+        self.chapterCount = chapterCount
+    }
+    
     public init(imageUrl: String) {
         self.imageUrl = imageUrl
     }
