@@ -23,7 +23,6 @@ let package = Package(
          .package(url: "https://github.com/kean/Nuke", branch: "master"),
          .package(url: "https://github.com/kean/NukeUI", from: "0.8.1"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
-         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
          .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.4.0")
@@ -32,7 +31,6 @@ let package = Package(
         .target(
             name: "MangaScraper",
             dependencies: [
-                "SwiftyJSON",
                 "SwiftSoup",
                 "JAYSON",
                 .product(name: "Collections", package: "swift-collections")

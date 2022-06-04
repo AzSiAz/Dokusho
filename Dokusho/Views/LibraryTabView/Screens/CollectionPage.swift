@@ -54,7 +54,7 @@ struct CollectionPage: View {
         .navigationTitle("\(collection?.name ?? "") (\(list.count))")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
-        .mirrorAppearanceState(to: $list.isAutoupdating, $collection.isAutoupdating)
+        .queryObservation(.onAppear)
     }
     
     func refreshLibrary() async {

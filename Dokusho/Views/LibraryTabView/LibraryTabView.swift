@@ -64,7 +64,7 @@ struct LibraryTabView: View {
             }
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
-            .mirrorAppearanceState(to: $collections.isAutoupdating)
+            .queryObservation(.always)
         }
     }
     

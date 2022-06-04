@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "fead2ea634c1bf7dd81a3e02f796154992165ffd",
-        "version" : "5.24.0"
+        "revision" : "2ac5c773537622b1520fdde3efc1a216119359ff",
+        "version" : "5.24.1"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDBQuery.git",
       "state" : {
-        "revision" : "dbc3cd1800e8ea20dd4cee659293af4b987c6074",
-        "version" : "0.2.0"
+        "revision" : "85e4df0331b579a8520edac2b9e10770f9552881",
+        "version" : "0.4.0"
       }
     },
     {
@@ -124,15 +124,6 @@
       "state" : {
         "branch" : "master",
         "revision" : "2d4d0e20c29a66db3cfa59cb764f77dffa64707e"
-      }
-    },
-    {
-      "identity" : "swiftyjson",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07"
       }
     }
   ],
