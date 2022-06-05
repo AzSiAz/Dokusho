@@ -15,7 +15,8 @@ let package = Package(
         .library(name: "MangaDetail", targets: ["MangaDetail"]),
         .library(name: "MangaScraper", targets: ["MangaScraper"]),
         .library(name: "SettingsTab", targets: ["SettingsTab"]),
-        .library(name: "HistoryTab", targets: ["HistoryTab"])
+        .library(name: "HistoryTab", targets: ["HistoryTab"]),
+        .library(name: "Backup", targets: ["Backup"])
     ],
     dependencies: [
          .package(url: "https://github.com/groue/GRDB.swift.git", from: "5.24.0"),
@@ -32,14 +33,12 @@ let package = Package(
         .target(
             name: "MangaScraper",
             dependencies: [
-                "SwiftSoup",
-                "JAYSON",
+                .byName(name: "SwiftSoup"),
+                .byName(name: "JAYSON"),
                 .product(name: "Collections", package: "swift-collections")
             ]
         ),
-        .testTarget(
-            name: "MangaScraperTests",
-            dependencies: ["MangaScraper"]),
+        .testTarget(name: "MangaScraperTests", dependencies: ["MangaScraper"]),
 
         .target(
             name: "Common",
@@ -95,7 +94,8 @@ let package = Package(
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
-                .byName(name: "Nuke")
+                .byName(name: "Nuke"),
+                .byName(name: "Backup")
             ]
         ),
         
@@ -106,6 +106,14 @@ let package = Package(
                 .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
                 .byName(name: "MangaDetail")
+            ]
+        ),
+        
+        .target(
+            name: "Backup",
+            dependencies: [
+                .byName(name: "DataKit"),
+                .byName(name: "Common"),
             ]
         )
     ]

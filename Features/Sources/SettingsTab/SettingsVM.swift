@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Nuke
 import DataKit
+import Backup
 
 class SettingsVM: ObservableObject {
     @Published var actionInProgress = false

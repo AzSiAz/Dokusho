@@ -129,7 +129,6 @@
 		E2187EAB26CC5E5B009604A9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E26E1F192773F3780092FA99 /* MangaInCollectionForGenre */,
 				E2DA94DC26D667FE0083F2F7 /* LibraryTabView */,
 				E2187EB226CC6243009604A9 /* ExploreTabView */,
 				E2187EAD26CC5E7D009604A9 /* RootView.swift */,
@@ -224,18 +223,11 @@
 		E26D7E72270B4FCE0003C6C1 /* DynamicCollection */ = {
 			isa = PBXGroup;
 			children = (
+				E26D7E69270B3C530003C6C1 /* MangaInCollectionForGenre.swift */,
 				E26D7E6C270B46540003C6C1 /* BySource.swift */,
 				E26D7E70270B46810003C6C1 /* ByGenre.swift */,
 			);
 			path = DynamicCollection;
-			sourceTree = "<group>";
-		};
-		E26E1F192773F3780092FA99 /* MangaInCollectionForGenre */ = {
-			isa = PBXGroup;
-			children = (
-				E26D7E69270B3C530003C6C1 /* MangaInCollectionForGenre.swift */,
-			);
-			path = MangaInCollectionForGenre;
 			sourceTree = "<group>";
 		};
 		E2DA94DC26D667FE0083F2F7 /* LibraryTabView */ = {
@@ -505,7 +497,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -545,7 +537,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;

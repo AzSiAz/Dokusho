@@ -210,7 +210,8 @@ public struct MangaDetail: View {
         VStack {
             VStack(spacing: 5) {
                 Text(data.manga.synopsis)
-                    .lineLimit(vm.showMoreDesc ? .max : 4)
+                    .lineLimit(vm.showMoreDesc ? nil : 4)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 HStack {
                     Spacer()

@@ -10,6 +10,8 @@ import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 import MangaScraper
+import DataKit
+import Common
 
 public struct Backup: FileDocument {
     public static var readableContentTypes = [UTType.json]
@@ -27,7 +29,7 @@ public struct Backup: FileDocument {
     }
     
     public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = try! JSONEncoder().encode(data)
+        let data = try JSONEncoder().encode(data)
 
         return FileWrapper(regularFileWithContents: data)
     }
@@ -56,10 +58,16 @@ public struct BackupTask {
 
 public typealias BackupResult = Result<BackupTask, Error>
 
-public struct BackupManager {
+public class BackupManager: ObservableObject {
     public static let shared = BackupManager()
     
     private let database = AppDatabase.shared.database
+    
+    @Published public var isImporting: Bool = false
+    @Published public var total: Double = 0
+    @Published public var progress: Double = 0
+    
+    public init() {}
     
     public func createBackup() -> BackupData {
         var backupCollections = [BackupCollectionData]()
@@ -90,6 +98,10 @@ public struct BackupManager {
     }
 
     public func importBackup(backup: BackupData) async {
+        await animateAsyncChange {
+            self.isImporting = true
+        }
+
         await withTaskGroup(of: BackupResult.self) { group in
             
             for scraper in backup.scrapers {
@@ -101,6 +113,9 @@ public struct BackupManager {
                 
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
+                        await self.asyncChange {
+                            self.total += 1
+                        }
                         return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
                     }
                 }
@@ -117,11 +132,18 @@ public struct BackupManager {
                             let _ = try task.mangaBackup.manga.saved(db)
                             try task.mangaBackup.chapters.forEach { try $0.save(db) }
                         }
+                        await self.asyncChange {
+                            self.progress += 1
+                        }
                     } catch(let err) {
                         print(err)
                     }
                 }
             }
+        }
+        
+        await animateAsyncChange {
+            self.isImporting = false
         }
     }
 }

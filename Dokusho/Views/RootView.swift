@@ -10,15 +10,24 @@ import SwiftUI
 import MangaScraper
 import SettingsTab
 import HistoryTab
+import Backup
+import SwiftUIKit
+
+fileprivate enum ActiveTab: String {
+    case explore, library, history, settings
+}
 
 struct RootView: View {
-    enum ActiveTab: String {
-        case explore, library, history, settings
-    }
-
+    @EnvironmentObject var backupManager: BackupManager
     @AppStorage("selectedTab") private var tab: ActiveTab = .library
 
     var body: some View {
+        if backupManager.isImporting { BackupImporter(backupManager: backupManager) }
+        else { TabsView() }
+    }
+    
+    @ViewBuilder
+    func TabsView() -> some View {
         TabView(selection: $tab) {
             LibraryTabView()
                 .tabItem { Label("Library", systemImage: "books.vertical") }

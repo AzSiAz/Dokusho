@@ -49,11 +49,14 @@ struct CollectionPage: View {
                     .refresher(style: .system, action: refreshLibrary)
                 }
             }
+            .sheet(isPresented: $showFilter) {
+                CollectionSettings(collection: collection)
+            }
             .navigate(item: $selected, destination: makeMangaDetailView(data:))
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(collection.useList ?? false ? .automatic : .inline)
             .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
             .queryObservation(.onAppear)
         }
@@ -69,24 +72,24 @@ struct CollectionPage: View {
     
     @ViewBuilder
     func MangaInList(data: DetailedMangaInList) -> some View {
-        HStack {
-            MangaCard(imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-                .mangaCardFrame(width: 90, height: 120)
-                .id(data.id)
-            
-            Text(data.manga.title)
+        NavigationLink(destination: makeMangaDetailView(data: data)) {
+            HStack {
+                MangaCard(imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                    .mangaCardFrame(width: 90, height: 120)
+                    .id(data.id)
+                
+                Text(data.manga.title)
+                    .lineLimit(3)
+            }
+            .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+            .frame(height: 120)
         }
-        .frame(height: 120)
     }
     
     var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             Button(action: { showFilter.toggle() }) {
-                Image(systemName: "line.3.horizontal.decrease.circle")
-                    .symbolVariant(collection!.filter != .all ? .fill : .none)
-            }
-            .sheet(isPresented: $showFilter) {
-                CollectionSettings(collection: collection!)
+                Image(systemName: "line.3.horizontal.decrease")
             }
         }
     }

@@ -19,7 +19,6 @@ struct MangaInCollectionForGenre: View {
     
     var inModal: Bool
     var genre: String
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
     init(genre: String, inModal: Bool = true) {
         self.inModal = inModal

@@ -8,10 +8,12 @@
 import SwiftUI
 import TelemetryClient
 import DataKit
+import Backup
 
 @main
 struct DokushoApp: App {
     @StateObject var libraryUpdater = LibraryUpdater.shared
+    @StateObject var backupManager = BackupManager.shared
     
     init() {
         TelemetryManager.initialize(with: TelemetryManagerConfiguration.init(appID: "B004B7C1-9A6A-42BF-8234-1B21FC94C6DF"))
@@ -22,6 +24,7 @@ struct DokushoApp: App {
             RootView()
                 .environment(\.appDatabase, .shared)
                 .environmentObject(libraryUpdater)
+                .environmentObject(backupManager)
         }
     }
 }
