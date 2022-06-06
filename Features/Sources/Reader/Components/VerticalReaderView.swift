@@ -15,7 +15,7 @@ struct VerticalReaderView: View {
     var body: some View {
         if vm.images.isEmpty || vm.isLoading {
             ProgressView()
-                .scaleEffect(2)
+                .scaleEffect(3)
         } else {
             GeometryReader { proxy in
                 ScrollViewReader { scrollProxy in

@@ -49,7 +49,7 @@ public class ReaderVM: ObservableObject {
         if !isLoading { isLoading = true }
 
         do {
-            let data = try await scraper.asSource()!.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId)
+            guard let data = try await scraper.asSource()?.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapter.chapterId) else { throw "Error fetching image for scraper" }
             guard let firstImage = data.first else { throw "First image not found" }
 
             images = data.map { $0.imageUrl }
