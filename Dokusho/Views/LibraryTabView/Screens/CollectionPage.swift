@@ -34,24 +34,10 @@ struct CollectionPage: View {
     var body: some View {
         if let collection = collection {
             Group {
-                if collection.useList ?? false {
-                    List(list) { data in
-                        MangaInList(data: data)
-                    }
-                    .refreshable { await refreshLibrary() }
-                    .listStyle(PlainListStyle())
-                } else {
-                    ScrollView {
-                        MangaList(mangas: list) { data in
-                            MangaInGrid(data: data)
-                        }
-                    }
-                    .refresher(style: .system2, action: refreshLibrary)
-                }
+                if collection.useList ?? false { ListView() }
+                else { GridView() }
             }
-            .sheet(isPresented: $showFilter) {
-                CollectionSettings(collection: collection)
-            }
+            .sheet(isPresented: $showFilter) { CollectionSettings(collection: collection) }
             .navigate(item: $selected, destination: makeMangaDetailView(data:))
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
@@ -62,11 +48,30 @@ struct CollectionPage: View {
     }
     
     @ViewBuilder
+    func GridView() -> some View {
+        ScrollView {
+            MangaList(mangas: list) { data in
+                MangaInGrid(data: data)
+            }
+        }
+        .refresher(style: .system2, action: refreshLibrary)
+    }
+    
+    @ViewBuilder
     func MangaInGrid(data: DetailedMangaInList) -> some View {
         MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
             .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
             .mangaCardFrame()
             .onTapGesture { selected = data }
+    }
+    
+    @ViewBuilder
+    func ListView() -> some View {
+        List(list) { data in
+            MangaInList(data: data)
+        }
+        .refreshable { await refreshLibrary() }
+        .listStyle(PlainListStyle())
     }
     
     @ViewBuilder
@@ -92,7 +97,9 @@ struct CollectionPage: View {
             }
         }
     }
-    
+}
+
+extension CollectionPage {
     func refreshLibrary() async {
         try? await libraryUpdater.refreshCollection(collection: collection!)
     }

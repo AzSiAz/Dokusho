@@ -19,7 +19,10 @@ struct ExploreSourceView: View {
     
     @StateObject var vm: ExploreSourceVM
     
-    var columns: [GridItem] = [GridItem(.adaptive(130))]
+    var columns: [GridItem] {
+        let size: Double = UIScreen.isLargeScreen ? 130*1.3 : 130
+        return [GridItem(.adaptive(size))]
+    }
     
     init(scraper: Scraper) {
         _vm = .init(wrappedValue: .init(for: scraper))

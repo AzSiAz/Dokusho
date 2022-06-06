@@ -12,7 +12,10 @@ public struct MangaList<MangaContent: View, T: Identifiable>: View {
     var mangas: [T]
     var mangaContent: (T) -> MangaContent
     
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
+    var columns: [GridItem] {
+        let size: Double = UIScreen.isLargeScreen ? 130*1.3 : 130
+        return [GridItem(.adaptive(size))]
+    }
     
     public init(mangas: [T], @ViewBuilder mangaRender: @escaping (T) -> MangaContent) {
         self.mangas = mangas

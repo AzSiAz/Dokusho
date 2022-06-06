@@ -95,8 +95,16 @@ public struct MangaCard: View {
 
 public extension View {
     func mangaCardFrame(width: Double = 130, height: Double = 180) -> some View {
-        return self
-            .frame(width: width, height: height)
+        if width != 130 && height != 180 {
+            return self
+                .frame(width: width, height: height)
+        } else if UIScreen.isLargeScreen {
+            return self
+                .frame(width: 130*1.3, height: 180*1.3)
+        } else {
+            return self
+                .frame(width: 130, height: 180)
+        }
     }
 }
 
