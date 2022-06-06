@@ -11,8 +11,7 @@ import DataKit
 import SharedUI
 import MangaDetail
 
-struct MangaInCollectionForGenre: View {
-    @Environment(\.dismiss) var dismiss
+public struct MangaInCollectionForGenre: View {
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
 
     @State var selectedManga: DetailedMangaInList?
@@ -20,13 +19,13 @@ struct MangaInCollectionForGenre: View {
     var inModal: Bool
     var genre: String
     
-    init(genre: String, inModal: Bool = true) {
+    public init(genre: String, inModal: Bool = true) {
         self.inModal = inModal
         self.genre = genre
         _list = Query(DetailedMangaInListRequest(requestType: .genre(genre: genre)))
     }
     
-    var body: some View {
+    public var body: some View {
         if inModal {
             NavigationView {
                 content

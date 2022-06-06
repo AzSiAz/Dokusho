@@ -12,10 +12,9 @@ import SettingsTab
 import HistoryTab
 import Backup
 import SwiftUIKit
-
-fileprivate enum ActiveTab: String {
-    case explore, library, history, settings
-}
+import LibraryTab
+import ExploreTab
+import Common
 
 struct RootView: View {
     @EnvironmentObject var backupManager: BackupManager
@@ -23,11 +22,12 @@ struct RootView: View {
 
     var body: some View {
         if backupManager.isImporting { BackupImporter(backupManager: backupManager) }
-        else { TabsView() }
+        else if UIScreen.isLargeScreen { iPadView() }
+        else { iPhoneView() }
     }
     
     @ViewBuilder
-    func TabsView() -> some View {
+    func iPhoneView() -> some View {
         TabView(selection: $tab) {
             LibraryTabView()
                 .tabItem { Label("Library", systemImage: "books.vertical") }
@@ -46,5 +46,11 @@ struct RootView: View {
                 .tag(ActiveTab.settings)
         }
         .navigationViewStyle(.stack)
+    }
+    
+    // TODO: Change to double sidebar to avoid using a not ergonomic tab bar for iPadOS & MacOS
+    @ViewBuilder
+    func iPadView() -> some View {
+        iPhoneView()
     }
 }

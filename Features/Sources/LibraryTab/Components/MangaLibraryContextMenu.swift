@@ -8,13 +8,18 @@
 import SwiftUI
 import DataKit
 
-struct MangaLibraryContextMenu: View {
+public struct MangaLibraryContextMenu: View {
     @Environment(\.appDatabase) var appDB
 
     var manga: PartialManga
     var count: Int
+    
+    public init(manga: PartialManga, count: Int) {
+        self.manga = manga
+        self.count = count
+    }
 
-    var body: some View {
+    public var body: some View {
         if count != 0 {
             Button(action: { markAllChapterAs(newSatus: .read) }) {
                 Text("Mark as read")

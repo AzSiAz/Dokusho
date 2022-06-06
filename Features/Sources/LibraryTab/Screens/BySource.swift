@@ -9,11 +9,14 @@ import SwiftUI
 import MangaScraper
 import GRDBQuery
 import DataKit
+import DynamicCollection
 
-struct BySourceListPage: View {
+public struct BySourceListPage: View {
     @Query(ScraperWithMangaInCollection()) var scrapers
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         List {
             ForEach(scrapers) { scraper in
                 NavigationLink(destination: MangaForSourcePage(scraper: scraper.scraper)) {

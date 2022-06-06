@@ -8,11 +8,14 @@
 import SwiftUI
 import GRDBQuery
 import DataKit
+import DynamicCollection
 
-struct ByGenreListPage: View {
+public struct ByGenreListPage: View {
     @Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]
+    
+    public init() {}
 
-    var body: some View {
+    public var body: some View {
         List(genres) { genre in
             NavigationLink(destination: MangaInCollectionForGenre(genre: genre.genre, inModal: false)) {
                 Text(genre.genre)

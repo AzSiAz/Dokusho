@@ -13,13 +13,15 @@ import Combine
 import DataKit
 import SharedUI
 
-struct ExploreTabView: View {
+public struct ExploreTabView: View {
     @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers
     @Query(ScraperRequest(type: .onlyActive)) var activeScrapers
     
     @StateObject var vm = ExploreTabVM()
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         NavigationView {
             List {
                 if favoriteScrapers.count >= 1 {

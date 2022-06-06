@@ -64,6 +64,8 @@ public struct DetailedMangaInListRequest: Queryable {
             .joining(optional: Manga.chapters)
             .including(required: Manga.scraper)
             .group(Manga.Columns.id)
+        
+        if !searchTerm.isEmpty { request = request.filterByName(searchTerm) }
 
         switch requestType {
         case .genre(let genre):
@@ -74,8 +76,6 @@ public struct DetailedMangaInListRequest: Queryable {
             let collection = try? MangaCollection.all().filter(id: collectionId).fetchOne(db)
             
             request = request.forCollectionId(collectionId)
-
-            if !searchTerm.isEmpty { request = request.filterByName(searchTerm) }
 
             if let filter = collection?.filter {
                 switch filter {

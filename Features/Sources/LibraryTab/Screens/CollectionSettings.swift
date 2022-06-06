@@ -13,7 +13,7 @@ import DataKit
 import Common
 import SharedUI
 
-struct CollectionSettings: View {
+public struct CollectionSettings: View {
     @Environment(\.appDatabase) var appDatabase
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     
@@ -21,14 +21,14 @@ struct CollectionSettings: View {
     @State var collectionFilter: MangaCollectionFilter
     @State var useList: Bool
     
-    init(collection : MangaCollection) {
+    public init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
         _collectionOrder = .init(initialValue: collection.order)
         _collectionFilter = .init(initialValue: collection.filter)
         _useList = .init(initialValue: collection.useList ?? false)
     }
     
-    var body: some View {
+    public var body: some View {
         NavigationView {
             List {
                 Section("Filter") {
@@ -63,7 +63,9 @@ struct CollectionSettings: View {
             .onChange(of: $useList.wrappedValue, perform: { updateCollectionUseList(d: $0) })
         }
     }
-    
+}
+
+extension CollectionSettings {
     func updateCollectionUseList(d: Bool) {
         Task {
             guard let collection = collection else { return }

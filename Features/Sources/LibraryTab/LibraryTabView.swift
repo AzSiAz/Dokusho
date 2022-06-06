@@ -11,7 +11,7 @@ import GRDBQuery
 import DataKit
 import SharedUI
 
-struct LibraryTabView: View {
+public struct LibraryTabView: View {
     @Environment(\.appDatabase) var appDB
     @EnvironmentObject var libraryRefresh: LibraryUpdater
 
@@ -20,7 +20,9 @@ struct LibraryTabView: View {
     @State var editMode: EditMode = .inactive
     @State var newCollectionName = ""
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         NavigationView {
             List {
                 Section("User Collection") {

@@ -16,7 +16,10 @@ let package = Package(
         .library(name: "MangaScraper", targets: ["MangaScraper"]),
         .library(name: "SettingsTab", targets: ["SettingsTab"]),
         .library(name: "HistoryTab", targets: ["HistoryTab"]),
-        .library(name: "Backup", targets: ["Backup"])
+        .library(name: "Backup", targets: ["Backup"]),
+        .library(name: "DynamicCollection", targets: ["DynamicCollection"]),
+        .library(name: "LibraryTab", targets: ["LibraryTab"]),
+        .library(name: "ExploreTab", targets: ["ExploreTab"]),
     ],
     dependencies: [
          .package(url: "https://github.com/groue/GRDB.swift.git", from: "5.24.0"),
@@ -115,6 +118,46 @@ let package = Package(
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
             ]
-        )
+        ),
+        
+        .target(
+            name: "DynamicCollection",
+            dependencies: [
+                .byName(name: "DataKit"),
+                .byName(name: "Common"),
+                .byName(name: "GRDBQuery"),
+                .byName(name: "SharedUI"),
+                .byName(name: "MangaDetail"),
+                .byName(name: "MangaScraper")
+            ]
+        ),
+        
+        .target(
+            name: "LibraryTab",
+            dependencies: [
+                .byName(name: "DataKit"),
+                .byName(name: "Common"),
+                .product(name: "GRDB", package: "GRDB.swift"),
+                .byName(name: "GRDBQuery"),
+                .byName(name: "SharedUI"),
+                .byName(name: "MangaDetail"),
+                .byName(name: "MangaScraper"),
+                .byName(name: "DynamicCollection")
+            ]
+        ),
+        
+        .target(
+            name: "ExploreTab",
+            dependencies: [
+                .byName(name: "DataKit"),
+                .byName(name: "Common"),
+                .product(name: "GRDB", package: "GRDB.swift"),
+                .byName(name: "GRDBQuery"),
+                .byName(name: "SharedUI"),
+                .byName(name: "MangaDetail"),
+                .byName(name: "MangaScraper"),
+                .product(name: "Collections", package: "swift-collections")
+            ]
+        ),
     ]
 )

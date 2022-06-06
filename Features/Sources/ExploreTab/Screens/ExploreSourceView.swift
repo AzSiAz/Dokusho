@@ -13,7 +13,7 @@ import SharedUI
 import MangaDetail
 import Refresher
 
-struct ExploreSourceView: View {
+public struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
     @Query(MangaCollectionRequest()) var collections
     
@@ -24,12 +24,12 @@ struct ExploreSourceView: View {
         return [GridItem(.adaptive(size))]
     }
     
-    init(scraper: Scraper) {
+    public init(scraper: Scraper) {
         _vm = .init(wrappedValue: .init(for: scraper))
         _mangas = Query(MangaInCollectionsRequest(srcId: scraper.id))
     }
     
-    var body: some View {
+    public var body: some View {
         ScrollView {
             switch(vm.error, vm.fromSegment, vm.fromRefresher, vm.mangas.isEmpty) {
             case (true, _, _, _): ErrorBlock()

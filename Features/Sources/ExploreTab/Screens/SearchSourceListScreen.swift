@@ -14,15 +14,19 @@ import DataKit
 import SharedUI
 import MangaDetail
 
-struct SearchSourceListScreen: View {
+public struct SearchSourceListScreen: View {
     @Query(MangaCollectionRequest()) var collections
     
     @State var searchText: String = ""
     @State var isSearchFocused: Bool = true
     
     var scrapers: [Scraper]
+    
+    public init(scrapers: [Scraper]) {
+        self.scrapers = scrapers
+    }
 
-    var body: some View {
+    public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             DebouncedSearchBar(debouncedText: $searchText, isFocused: $isSearchFocused)
                 .padding(.top, 10)
@@ -35,7 +39,7 @@ struct SearchSourceListScreen: View {
     }
 }
 
-struct ScraperSearch: View {
+public struct ScraperSearch: View {
     @Query<MangaInCollectionsRequest> var mangasInCollection: [MangaInCollection]
 
     @StateObject var vm: SearchScraperVM
@@ -43,14 +47,14 @@ struct ScraperSearch: View {
     
     var collections: [MangaCollection]
     
-    init(scraper: Scraper, textToSearch: Binding<String>, collections: [MangaCollection]) {
+    public init(scraper: Scraper, textToSearch: Binding<String>, collections: [MangaCollection]) {
         self.collections = collections
         _textToSearch = textToSearch
         _vm = .init(wrappedValue: .init(scraper: scraper))
         _mangasInCollection = Query(MangaInCollectionsRequest(srcId: scraper.id))
     }
     
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading) {
             if textToSearch.isEmpty {
                 EmptyView()

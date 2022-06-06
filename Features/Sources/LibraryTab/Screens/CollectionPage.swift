@@ -13,8 +13,9 @@ import Common
 import SharedUI
 import MangaDetail
 import Refresher
+import DynamicCollection
 
-struct CollectionPage: View {    
+public struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
     @EnvironmentObject var libraryUpdater: LibraryUpdater
 
@@ -26,12 +27,12 @@ struct CollectionPage: View {
     @State var selected: DetailedMangaInList?
     @State var selectedGenre: String?
     
-    init(collection : MangaCollection) {
+    public init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
         _list = Query(DetailedMangaInListRequest(requestType: .collection(collectionId: collection.id)))
     }
     
-    var body: some View {
+    public var body: some View {
         if let collection = collection {
             Group {
                 if collection.useList ?? false { ListView() }
@@ -42,7 +43,6 @@ struct CollectionPage: View {
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
-            .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
             .queryObservation(.onAppear)
         }
     }
@@ -106,6 +106,7 @@ extension CollectionPage {
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {
         MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: selectGenre(genre:))
+            .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
     }
     
     func selectGenre(genre: String) -> Void {
