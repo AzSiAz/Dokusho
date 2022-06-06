@@ -35,7 +35,7 @@ struct ExploreSourceView: View {
             case (false, _, _, _): MangaListBlock()
             }
         }
-        .refresher(style: .default, action: vm.refresh)
+        .refresher(style: .system2, action: vm.refresh)
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
         .task { await vm.initView() }

@@ -46,7 +46,7 @@ struct CollectionPage: View {
                             MangaInGrid(data: data)
                         }
                     }
-                    .refresher(style: .system, action: refreshLibrary)
+                    .refresher(style: .system2, action: refreshLibrary)
                 }
             }
             .sheet(isPresented: $showFilter) {
@@ -56,7 +56,6 @@ struct CollectionPage: View {
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
-            .navigationBarTitleDisplayMode(collection.useList ?? false ? .automatic : .inline)
             .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
             .queryObservation(.onAppear)
         }

@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gh123man/SwiftUI-Refresher",
       "state" : {
-        "revision" : "d54b29f3ac918cbf86e06b7ed367d911825510c5",
-        "version" : "1.0.8"
+        "revision" : "a8fd7935ece9a255da9a6dc06a6b56f00caae95d",
+        "version" : "1.0.10"
       }
     },
     {
