@@ -1,24 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "ascollectionview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apptekstudios/ASCollectionView",
-      "state" : {
-        "branch" : "master",
-        "revision" : "2742a1233b76855ae80af93df0a89ecc329ea7f7"
-      }
-    },
-    {
-      "identity" : "differencekit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ra1028/DifferenceKit",
-      "state" : {
-        "revision" : "62745d7780deef4a023a792a1f8f763ec7bf9705",
-        "version" : "1.2.0"
-      }
-    },
-    {
       "identity" : "gifu",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kaishin/Gifu",
@@ -32,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "4472d3a60ec4cc383503eba5072ce17f781b9ddc",
-        "version" : "5.23.0"
+        "revision" : "2ac5c773537622b1520fdde3efc1a216119359ff",
+        "version" : "5.24.1"
       }
     },
     {
@@ -41,35 +23,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDBQuery.git",
       "state" : {
-        "revision" : "dbc3cd1800e8ea20dd4cee659293af4b987c6074",
-        "version" : "0.2.0"
+        "revision" : "85e4df0331b579a8520edac2b9e10770f9552881",
+        "version" : "0.4.0"
       }
     },
     {
-      "identity" : "imagescrollview",
+      "identity" : "jayson",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/huynguyencong/ImageScrollView.git",
+      "location" : "https://github.com/muukii/JAYSON",
       "state" : {
-        "branch" : "master",
-        "revision" : "3b5bf7e1bf719facb736e43bda9403c0c661fae6"
-      }
-    },
-    {
-      "identity" : "inject",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/krzysztofzablocki/Inject.git",
-      "state" : {
-        "revision" : "e3e8f4c4504f5c2bb24fa6c110ec0726f072667c",
-        "version" : "1.0.6"
-      }
-    },
-    {
-      "identity" : "mangascraper",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AzSiAz/MangaScraper",
-      "state" : {
-        "branch" : "main",
-        "revision" : "01b9f524cf44db34ac1805c56a0dfdcd562d70d8"
+        "revision" : "14c6f0f0ac80b487d0f05845f2bc933a4297f6f6",
+        "version" : "2.4.0"
       }
     },
     {
@@ -78,7 +42,7 @@
       "location" : "https://github.com/kean/Nuke",
       "state" : {
         "branch" : "master",
-        "revision" : "dd5068b0b5d33aae7ad2e940df8697893ff75ce4"
+        "revision" : "26bffb04e89fa09f34f5e03fe2516f0bf4f31ab0"
       }
     },
     {
@@ -88,6 +52,15 @@
       "state" : {
         "revision" : "17f26c07e6b1d3b9258287f99f528111fcd7b7ad",
         "version" : "0.8.1"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
+        "version" : "1.0.2"
       }
     },
     {
@@ -105,7 +78,34 @@
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
         "branch" : "master",
-        "revision" : "13ba661fd1146967270fca92ce8195b223631436"
+        "revision" : "41e7c263fb8c277e980ebcb9b0b5f6031d3d4886"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
+      "state" : {
+        "revision" : "f2616860a41f9d9932da412a8978fec79c06fe24",
+        "version" : "0.1.4"
+      }
+    },
+    {
+      "identity" : "swiftui-refresher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gh123man/SwiftUI-Refresher",
+      "state" : {
+        "revision" : "a8fd7935ece9a255da9a6dc06a6b56f00caae95d",
+        "version" : "1.0.10"
+      }
+    },
+    {
+      "identity" : "swiftuikit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/SwiftUIKit.git",
+      "state" : {
+        "revision" : "5507a2e4d75e11d58390437591e5ab0b79586db0",
+        "version" : "2.6.0"
       }
     },
     {
@@ -114,25 +114,7 @@
       "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
       "state" : {
         "branch" : "master",
-        "revision" : "9b2358f116461c4b1aa451fb5fb1921e5616fea0"
-      }
-    },
-    {
-      "identity" : "swiftyjson",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07"
-      }
-    },
-    {
-      "identity" : "zoomableimageview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rushairer/ZoomableImageView.git",
-      "state" : {
-        "revision" : "4544906abfa6891b9a536ed467947f7d926e4da3",
-        "version" : "1.0.2"
+        "revision" : "2d4d0e20c29a66db3cfa59cb764f77dffa64707e"
       }
     }
   ],
