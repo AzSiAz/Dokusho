@@ -39,7 +39,7 @@ struct CollectionPage: View {
                         MangaInList(data: data)
                     }
                     .refreshable { await refreshLibrary() }
-                    .listStyle(.plain)
+                    .listStyle(PlainListStyle())
                 } else {
                     ScrollView {
                         MangaList(mangas: list) { data in

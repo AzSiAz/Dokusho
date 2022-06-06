@@ -172,13 +172,13 @@ public class NepNepSource: MultiSource {
 
         do {
             let vmCurrChapterJSON = try JSON(data: vmCurrChapterRaw)
-            print(vmCurrChapterJSON)
             let seasonURIRaw = (try? vmCurrChapterJSON.next("Directory").getString()) ?? ""
-            let seasonURI = seasonURIRaw.isEmpty ? "" : seasonURIRaw
+            let seasonURI = seasonURIRaw.isEmpty ? "" : "\(seasonURIRaw)/"
             let path = "\(vmCurrPathName)/manga/\(mangaId)/\(seasonURI)"
             let chNum = chapterImage(try vmCurrChapterJSON.next("Chapter").getString())
 
             // ideal: https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-001.png / https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-010.png
+            // with season https://scans-manhwa.lowee.us/manga/The-Gamer/S5/0077-001.png / https://scans-manhwa.lowee.us/manga/The-Gamer/S5/0077-020.png
             let maxImagePages = try vmCurrChapterJSON.next("Page").get { Int(try $0.getString()) }!
             let images = (1 ... maxImagePages).map { number -> SourceChapterImage in
                 let i = "000\(number)"
