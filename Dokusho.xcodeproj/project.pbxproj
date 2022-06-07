@@ -10,12 +10,10 @@
 		E20837B426E3BF2000E6DCEE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E20837B226E3BF2000E6DCEE /* README.md */; };
 		E20837B526E3BF2000E6DCEE /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E20837B326E3BF2000E6DCEE /* LICENSE */; };
 		E2187E8E26CC5850009604A9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2187E8D26CC5850009604A9 /* Preview Assets.xcassets */; };
-		E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = E2187E9126CC5ACC009604A9 /* Nuke */; };
 		E2187EAE26CC5E7D009604A9 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2187EAD26CC5E7D009604A9 /* RootView.swift */; };
 		E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */ = {isa = PBXBuildFile; productRef = E2474C9F284E5C5F0090E032 /* DynamicCollection */; };
 		E2474CA2284E62820090E032 /* LibraryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA1284E62820090E032 /* LibraryTab */; };
 		E2474CA4284E64080090E032 /* ExploreTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA3284E64080090E032 /* ExploreTab */; };
-		E24804C22846697C0017F4E2 /* Refresher in Frameworks */ = {isa = PBXBuildFile; productRef = E24804C12846697C0017F4E2 /* Refresher */; };
 		E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E24804C32846D2E80017F4E2 /* MangaScraper */; };
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46C8284B68FE004C594C /* SettingsTab */; };
@@ -24,26 +22,19 @@
 		E26662D126CC58160054868A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E26662D026CC58160054868A /* Assets.xcassets */; };
 		E270C0D8282BDEFE00E3093E /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D7282BDEFE00E3093E /* Common */; };
 		E270C0DA282BDF1300E3093E /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D9282BDF1300E3093E /* Reader */; };
-		E270C0DF282C264F00E3093E /* SwiftUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0DE282C264F00E3093E /* SwiftUIKit */; };
 		E270C0E1282C471400E3093E /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0E0282C471400E3093E /* SharedUI */; };
-		E272716D282577A400D6F09E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = E272716C282577A400D6F09E /* NukeUI */; };
-		E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = E27A5DCE26FBA77700F95361 /* SwiftUIX */; };
-		E27FF712277244630035DB99 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = E27FF711277244630035DB99 /* GRDB */; };
-		E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */ = {isa = PBXBuildFile; productRef = E27FF7142772453B0035DB99 /* GRDBQuery */; };
-		E28E4C8627E0A6D7004B9397 /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = E28E4C8527E0A6D7004B9397 /* TelemetryClient */; };
 		E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E29D727B283FBE2D0052EBED /* MangaDetail */; };
-		E2D6D37328311A7C000D7D3E /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = E2D6D37228311A7C000D7D3E /* Collections */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E203415F270C4F9F00990F80 /* Embed App Extensions */ = {
+		E203415F270C4F9F00990F80 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -74,22 +65,13 @@
 				E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */,
 				E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */,
 				E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */,
-				E2D6D37328311A7C000D7D3E /* Collections in Frameworks */,
 				E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */,
-				E28E4C8627E0A6D7004B9397 /* TelemetryClient in Frameworks */,
-				E2187E9226CC5ACC009604A9 /* Nuke in Frameworks */,
 				E270C0E1282C471400E3093E /* SharedUI in Frameworks */,
 				E25B0C83282BC4360080A71A /* DataKit in Frameworks */,
 				E270C0D8282BDEFE00E3093E /* Common in Frameworks */,
-				E27A5DCF26FBA77700F95361 /* SwiftUIX in Frameworks */,
-				E27FF712277244630035DB99 /* GRDB in Frameworks */,
-				E272716D282577A400D6F09E /* NukeUI in Frameworks */,
-				E270C0DF282C264F00E3093E /* SwiftUIKit in Frameworks */,
 				E270C0DA282BDF1300E3093E /* Reader in Frameworks */,
 				E25E46CB284B697C004C594C /* HistoryTab in Frameworks */,
-				E27FF7152772453B0035DB99 /* GRDBQuery in Frameworks */,
 				E2474CA2284E62820090E032 /* LibraryTab in Frameworks */,
-				E24804C22846697C0017F4E2 /* Refresher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +140,7 @@
 				E26662B226CC36830054868A /* Sources */,
 				E26662B326CC36830054868A /* Frameworks */,
 				E26662B426CC36830054868A /* Resources */,
-				E203415F270C4F9F00990F80 /* Embed App Extensions */,
+				E203415F270C4F9F00990F80 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -166,20 +148,11 @@
 			);
 			name = Dokusho;
 			packageProductDependencies = (
-				E2187E9126CC5ACC009604A9 /* Nuke */,
-				E27A5DCE26FBA77700F95361 /* SwiftUIX */,
-				E27FF711277244630035DB99 /* GRDB */,
-				E27FF7142772453B0035DB99 /* GRDBQuery */,
-				E28E4C8527E0A6D7004B9397 /* TelemetryClient */,
-				E272716C282577A400D6F09E /* NukeUI */,
 				E25B0C82282BC4360080A71A /* DataKit */,
 				E270C0D7282BDEFE00E3093E /* Common */,
 				E270C0D9282BDF1300E3093E /* Reader */,
-				E270C0DE282C264F00E3093E /* SwiftUIKit */,
 				E270C0E0282C471400E3093E /* SharedUI */,
-				E2D6D37228311A7C000D7D3E /* Collections */,
 				E29D727B283FBE2D0052EBED /* MangaDetail */,
-				E24804C12846697C0017F4E2 /* Refresher */,
 				E24804C32846D2E80017F4E2 /* MangaScraper */,
 				E25E46C8284B68FE004C594C /* SettingsTab */,
 				E25E46CA284B697C004C594C /* HistoryTab */,
@@ -199,7 +172,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					E26662B526CC36830054868A = {
 						CreatedOnToolsVersion = 13.0;
@@ -216,15 +189,6 @@
 			);
 			mainGroup = E26662AD26CC36830054868A;
 			packageReferences = (
-				E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */,
-				E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
-				E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
-				E27FF7132772453B0035DB99 /* XCRemoteSwiftPackageReference "GRDBQuery" */,
-				E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */,
-				E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */,
-				E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */,
-				E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */,
-				E24804C02846697C0017F4E2 /* XCRemoteSwiftPackageReference "SwiftUI-Refresher" */,
 			);
 			productRefGroup = E26662B726CC36830054868A /* Products */;
 			projectDirPath = "";
@@ -313,7 +277,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -368,7 +333,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -386,7 +352,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -401,7 +367,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -410,7 +376,8 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -426,7 +393,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -441,7 +408,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -449,7 +416,8 @@
 				MARKETING_VERSION = 1.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = tech.azsiaz.Dokusho;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -480,87 +448,7 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kean/Nuke";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		E24804C02846697C0017F4E2 /* XCRemoteSwiftPackageReference "SwiftUI-Refresher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gh123man/SwiftUI-Refresher";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielsaidi/SwiftUIKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-		E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kean/NukeUI";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.1;
-			};
-		};
-		E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift.git";
-			requirement = {
-				kind = exactVersion;
-				version = 5.24.1;
-			};
-		};
-		E27FF7132772453B0035DB99 /* XCRemoteSwiftPackageReference "GRDBQuery" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDBQuery.git";
-			requirement = {
-				kind = exactVersion;
-				version = 0.4.0;
-			};
-		};
-		E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TelemetryDeck/SwiftClient";
-			requirement = {
-				kind = exactVersion;
-				version = 1.1.6;
-			};
-		};
-		E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		E2187E9126CC5ACC009604A9 /* Nuke */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2187E9026CC5ACC009604A9 /* XCRemoteSwiftPackageReference "Nuke" */;
-			productName = Nuke;
-		};
 		E2474C9F284E5C5F0090E032 /* DynamicCollection */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DynamicCollection;
@@ -572,11 +460,6 @@
 		E2474CA3284E64080090E032 /* ExploreTab */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ExploreTab;
-		};
-		E24804C12846697C0017F4E2 /* Refresher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E24804C02846697C0017F4E2 /* XCRemoteSwiftPackageReference "SwiftUI-Refresher" */;
-			productName = Refresher;
 		};
 		E24804C32846D2E80017F4E2 /* MangaScraper */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -602,48 +485,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Reader;
 		};
-		E270C0DE282C264F00E3093E /* SwiftUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E270C0DD282C264F00E3093E /* XCRemoteSwiftPackageReference "SwiftUIKit" */;
-			productName = SwiftUIKit;
-		};
 		E270C0E0282C471400E3093E /* SharedUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedUI;
 		};
-		E272716C282577A400D6F09E /* NukeUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E272716B282577A400D6F09E /* XCRemoteSwiftPackageReference "NukeUI" */;
-			productName = NukeUI;
-		};
-		E27A5DCE26FBA77700F95361 /* SwiftUIX */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E27A5DCD26FBA77700F95361 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
-			productName = SwiftUIX;
-		};
-		E27FF711277244630035DB99 /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E27FF70227723E650035DB99 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = GRDB;
-		};
-		E27FF7142772453B0035DB99 /* GRDBQuery */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E27FF7132772453B0035DB99 /* XCRemoteSwiftPackageReference "GRDBQuery" */;
-			productName = GRDBQuery;
-		};
-		E28E4C8527E0A6D7004B9397 /* TelemetryClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E28E4C8427E0A6D7004B9397 /* XCRemoteSwiftPackageReference "SwiftClient" */;
-			productName = TelemetryClient;
-		};
 		E29D727B283FBE2D0052EBED /* MangaDetail */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MangaDetail;
-		};
-		E2D6D37228311A7C000D7D3E /* Collections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2D6D37128311A7C000D7D3E /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = Collections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -11,7 +11,6 @@ import MangaScraper
 import SettingsTab
 import HistoryTab
 import Backup
-import SwiftUIKit
 import LibraryTab
 import ExploreTab
 import Common
