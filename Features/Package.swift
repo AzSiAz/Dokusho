@@ -1,11 +1,11 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "Features",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Common", targets: ["Common"]),
@@ -142,7 +142,8 @@ let package = Package(
                 .byName(name: "SharedUI"),
                 .byName(name: "MangaDetail"),
                 .byName(name: "MangaScraper"),
-                .byName(name: "DynamicCollection")
+                .byName(name: "DynamicCollection"),
+                .product(name: "Refresher", package: "SwiftUI-Refresher")
             ]
         ),
         

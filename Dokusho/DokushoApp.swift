@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import TelemetryClient
+//import TelemetryClient
 import DataKit
 import Backup
 
@@ -16,7 +16,7 @@ struct DokushoApp: App {
     @StateObject var backupManager = BackupManager.shared
     
     init() {
-        TelemetryManager.initialize(with: TelemetryManagerConfiguration.init(appID: "B004B7C1-9A6A-42BF-8234-1B21FC94C6DF"))
+//        TelemetryManager.initialize(with: TelemetryManagerConfiguration.init(appID: "B004B7C1-9A6A-42BF-8234-1B21FC94C6DF"))
     }
     
     var body: some Scene {

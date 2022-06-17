@@ -16,6 +16,7 @@ class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
     private var nextPage = 1
     private var inited = false
+    private var isLoading = false
     
     @Published var mangas = OrderedSet<SourceSmallManga>()
     @Published var error = false
@@ -32,6 +33,9 @@ class ExploreSourceVM: ObservableObject {
     
 
     func fetchList(clean: Bool = false) async {
+        guard isLoading == false else { return }
+        self.isLoading = true
+
         if clean {
             nextPage = 1
         }
@@ -48,6 +52,7 @@ class ExploreSourceVM: ObservableObject {
                 else { self.mangas.append(contentsOf: newManga!.mangas) }
 
                 self.nextPage += 1
+                self.isLoading = false
             }
         } catch {
             await animateAsyncChange {
