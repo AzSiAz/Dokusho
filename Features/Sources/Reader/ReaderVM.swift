@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import CoreData
 import SwiftUI
 import OSLog
 import MangaScraper
 import Nuke
 import DataKit
 import Common
+import SwiftUIPager
 
 enum GoToChapterDirection {
     case next, previous
@@ -71,6 +71,13 @@ public class ReaderVM: ObservableObject {
                 Logger.reader.info("Loading \(image)")
                 _ = try? await ImagePipeline.inMemory.image(for: image)
             }
+        }
+    }
+    
+    func getHorizontalDirection() -> HorizontalSwipeDirection {
+        switch manga.type {
+        case .manhua: return .startToEnd
+        default: return .endToStart
         }
     }
     

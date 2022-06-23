@@ -33,8 +33,8 @@ public extension View {
     }
     
     
-    func addPinchAndPan() -> some View {
-        self.modifier(PinchAndPanImage())
+    func addPinchAndPan(isZooming: Binding<Bool>) -> some View {
+        self.modifier(PinchAndPanImage(isZooming: isZooming))
     }
     
     func readSize(global: Bool = false, onChange: @escaping (CGSize) -> Void) -> some View {

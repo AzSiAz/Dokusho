@@ -9,7 +9,9 @@ public struct PinchAndPanImage: ViewModifier {
     // For magnification Gesture
     @State var scale: CGFloat = 1
     @State var lastScale: CGFloat = 1
-
+    
+    @Binding var isZooming: Bool
+    
     public func body(content: Content) -> some View {
         content
             .readSize { size = $0 }
@@ -21,11 +23,15 @@ public struct PinchAndPanImage: ViewModifier {
     func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged({ value in
+                isZooming = true
                 // MARK: It Starts With Existing Scaling which is 1
                 // Removing That to Retreive Exact Scaling
                 scale = lastScale + (value - 1)
             }).onEnded({ value in
                 lastScale = scale
+                if scale == 1 {
+                    isZooming = false
+                }
             })
     }
     
@@ -44,6 +50,7 @@ public struct PinchAndPanImage: ViewModifier {
             offset = .zero
             lastScale = scale
             lastOffset = offset
+            isZooming = false
         }
     }
     

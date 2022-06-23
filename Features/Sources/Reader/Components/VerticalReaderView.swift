@@ -27,6 +27,7 @@ struct VerticalReaderView: View {
                                         width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                                         alignment: .center
                                     )
+                                    .addPinchAndPan(isZooming: .constant(false))
                                     .id(image)
                                     .tag(image)
                                     .onAppear { vm.tabIndex = image }

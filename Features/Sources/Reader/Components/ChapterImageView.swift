@@ -39,7 +39,6 @@ struct ChapterImageView: View {
                     Image(uiImage: res.image)
                         .resizable()
                         .aspectRatio(contentMode: contentMode)
-                        .addPinchAndPan()
                         .contextMenu { ContextMenu(image: res.image) }
             case .failure(let err):
                     VStack {
