@@ -16,6 +16,7 @@ public struct ReaderView: View {
     
     @StateObject public var vm: ReaderVM
     @ObservedObject public var readerManager: ReaderManager
+    @Namespace private var overlayAnimation
     
     public init(vm: ReaderVM, readerManager: ReaderManager) {
         _vm = .init(wrappedValue: vm)
@@ -24,19 +25,25 @@ public struct ReaderView: View {
     
     public var body: some View {
         Group {
-            if vm.direction == .vertical { VerticalReaderView(vm: vm) }
-            else { HorizontalReaderView(vm: vm) }
+            if vm.images.isEmpty || vm.isLoading {
+                ProgressView()
+                    .scaleEffect(3)
+            } else {
+                if vm.direction == .vertical { VerticalReaderView(vm: vm) }
+                else { HorizontalReaderView(vm: vm) }
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black.ignoresSafeArea())
         .navigationBarHidden(true)
         .onTapGesture { vm.toggleToolbar() }
         .task { await vm.fetchChapter() }
+        .onDisappear { vm.cancelTasks() }
         .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
-        .onReceive(vm.$tabIndex) { vm.updateChapterStatus(image: $0) }
-        .onChange(of: vm.chapter) { _ in Task { await vm.fetchChapter() } }
+        .onChange(of: vm.tabIndex) { vm.updateChapterStatus(image: $0) }
+        .onChange(of: vm.currentChapter) { _ in Task { await vm.fetchChapter() } }
         .preferredColorScheme(.dark)
     }
     
@@ -56,7 +63,7 @@ public struct ReaderView: View {
                     if !vm.images.isEmpty {
                         VStack {
                             // TODO: Add a custom slider to be able to update tabIndex value
-                            ProgressView(value: vm.progressBarCurrent(), total: Double(vm.images.count))
+                            ProgressView(value: vm.progressBarCurrent(), total: vm.progressBarCount())
                                 .rotationEffect(.degrees(vm.direction == .rightToLeft ? 180 : 0))
                         }
                         .frame(height: 25)
@@ -72,7 +79,7 @@ public struct ReaderView: View {
                 }
                 
                 if !vm.images.isEmpty {
-                    Text("\(Int(vm.progressBarCurrent())) of \(vm.images.count)")
+                    Text("\(Int(vm.progressBarCurrent())) of \(Int(vm.progressBarCount()))")
                         .padding(.leading)
                         .font(.footnote.italic())
                 }
@@ -83,54 +90,60 @@ public struct ReaderView: View {
             .transition(.move(edge: vm.showToolBar ? .bottom : .top))
         } else {
             if !vm.images.isEmpty {
-                Text("\(Int(vm.progressBarCurrent())) / \(vm.images.count)")
+                Text("\(Int(vm.progressBarCurrent())) / \(Int(vm.progressBarCount()))")
                     .transition(.move(edge: !vm.showToolBar ? .bottom : .top))
                     .glowBorder(color: .black, lineWidth: 3)
                     .font(.footnote.italic())
             }
         }
-        
     }
     
     @ViewBuilder
     func TopOverlay() -> some View {
         if vm.showToolBar {
-            HStack(alignment: .center) {
-                Button(action: dismiss.callAsFunction) {
-                    Image(systemName: "xmark")
-                }
-
-                Spacer()
-                
-                VStack(alignment: .center, spacing: 0) {
-                    Text(vm.manga.title)
-                        .font(.subheadline)
-                        .allowsTightening(true)
-                        .lineLimit(1)
-                        .foregroundColor(.primary)
-                    Text(vm.chapter.title)
-                        .font(.subheadline)
-                        .italic()
-                        .allowsTightening(true)
-                        .lineLimit(1)
-                        .foregroundColor(.primary)
-                }
-                
-                Spacer()
-                Button(action: { vm.showReaderDirectionChoice.toggle() }) {
-                    Image(systemName: "slider.horizontal.3")
-                }
-                .actionSheet(isPresented: $vm.showReaderDirectionChoice) {
-                    var actions: [ActionSheet.Button] = ReadingDirection.allCases.map { dir in
-                        return .default(Text(dir.rawValue), action: { self.vm.direction = dir })
+            Group {
+                HStack(alignment: .center) {
+                    Button(action: dismiss.callAsFunction) {
+                        Image(systemName: "xmark")
                     }
-                    actions.append(.cancel())
                     
-                    return ActionSheet(
-                        title: Text("Choose reader direction"),
-                        message: Text("Not saved for now"),
-                        buttons: actions
-                    )
+                    Spacer()
+                    
+                    VStack(alignment: .center, spacing: 0) {
+                        Text(vm.manga.title)
+                            .font(.subheadline)
+                            .allowsTightening(true)
+                            .lineLimit(1)
+                            .foregroundColor(.primary)
+                        Text(vm.currentChapter.title)
+                            .font(.subheadline)
+                            .italic()
+                            .allowsTightening(true)
+                            .lineLimit(1)
+                            .foregroundColor(.primary)
+                    }
+                    
+                    Spacer()
+                    
+                    Menu {
+                        Menu("Chapters") {
+                            ForEach(vm.getChapters()) { chapter in
+                                Button(action: { vm.goToChapter(to: chapter) }) {
+                                    SelectedMenuItem(text: chapter.title, comparaison: vm.currentChapter == chapter)
+                                }
+                            }
+                        }
+                        
+                        Menu("Reader direction") {
+                            ForEach(ReadingDirection.allCases, id: \.self) { direction in
+                                Button(action: { vm.setReadingDirection(new: direction) }) {
+                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.direction == direction)
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                    }
                 }
             }
             .padding(.all)
@@ -138,5 +151,11 @@ public struct ReaderView: View {
             .background(.thickMaterial)
             .transition(.move(edge: vm.showToolBar ? .top : .bottom))
         }
+    }
+    
+    @ViewBuilder
+    func SelectedMenuItem(text: String, comparaison: Bool, systemImage: String = "checkmark") -> some View {
+        if comparaison && !systemImage.isEmpty { Label(text, systemImage: systemImage) }
+        else { Text(text) }
     }
 }

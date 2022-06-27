@@ -7,37 +7,16 @@
 
 import SwiftUI
 import Common
-import SwiftUIPager
 
 struct HorizontalReaderView: View {
     @ObservedObject var vm: ReaderVM
-    @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
-    @StateObject var page: Page = .first()
     @State var isZooming = false
-    
+
     var body: some View {
-        if vm.images.isEmpty || vm.isLoading {
-            ProgressView()
-                .scaleEffect(3)
-        } else {
-            if userNewHorizontalReader { NewReader() }
-            else { OldReader() }
-        }
-    }
-    
-    @ViewBuilder
-    func OldReader() -> some View {
         TabView(selection: $vm.tabIndex) {
-            ForEach(vm.getImagesOrderForDirection()) { image in
+            ForEach(vm.getImagesOrderForDirection(), id: \.self) { image in
                 GeometryReader { proxy in
-                    ChapterImageView(url: image, contentMode: .fit)
-                        .frame(
-                            minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
-                            minHeight: proxy.size.height,
-                            alignment: .center
-                        )
-                        .id(image)
-                        .tag(image)
+                    ReaderLinkRender(image: image, proxy: proxy)
                 }
             }
         }
@@ -45,26 +24,42 @@ struct HorizontalReaderView: View {
     }
     
     @ViewBuilder
-    func NewReader() -> some View {
-        Pager(page: page, data: vm.images, id: \.id) { image in
-            GeometryReader { proxy in
-                ChapterImageView(url: image, contentMode: .fit)
-                    .frame(
-                        minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
-                        minHeight: proxy.size.height,
-                        alignment: .center
-                    )
-                    .addPinchAndPan(isZooming: $isZooming)
-                    .id(image)
-                    .tag(image)
+    func ReaderLinkRender(image: ReaderLink, proxy: GeometryProxy) -> some View {
+        Group {
+            switch image {
+            case .image(let url):
+                ImageView(image: url, proxy: proxy)
+            case .previous(let chapter):
+                DirectionView(title: "Previous chapter \(chapter.title)", direction: .previous, proxy: proxy)
+            case .next(let chapter):
+                DirectionView(title: "Next chapter \(chapter.title)", direction: .next, proxy: proxy)
             }
         }
-        .draggingAnimation(.steep(duration: 0.75))
-        .horizontal(vm.getHorizontalDirection())
-        .pagingPriority(.simultaneous)
-        .allowsDragging(!isZooming)
-        .onChange(of: page.index) { index in
-            vm.tabIndex = vm.images[index]
-        }
+        .id(image)
+        .tag(image)
+    }
+    
+    func ImageView(image: String, proxy: GeometryProxy) -> some View {
+        ChapterImageView(url: image, contentMode: .fit)
+            .frame(
+                minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                minHeight: proxy.size.height,
+                alignment: .center
+            )
+            .addPinchAndPan(isZooming: $isZooming)
+    }
+    
+    func DirectionView(title: String, direction: GoToChapterDirection, proxy: GeometryProxy) -> some View {
+        Rectangle()
+            .fill(.black)
+            .frame(
+                minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                minHeight: proxy.size.height,
+                alignment: .center
+            )
+            .overlay(alignment: .center) {
+                Text(title)
+            }
+            .onTapGesture(count: 3) { vm.goToChapter(direction) }
     }
 }

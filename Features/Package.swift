@@ -31,7 +31,6 @@ let package = Package(
          .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.4.0"),
          .package(url: "https://github.com/gh123man/SwiftUI-Refresher", .upToNextMajor(from: "1.0.0")),
-         .package(url: "https://github.com/fermoya/SwiftUIPager", branch: "main")
     ],
     targets: [
         .target(
@@ -67,8 +66,7 @@ let package = Package(
                 .byName(name: "Common"),
                 .byName(name: "DataKit"),
                 .byName(name: "Nuke"),
-                .byName(name: "MangaScraper"),
-                .byName(name: "SwiftUIPager")
+                .byName(name: "MangaScraper")
             ]
         ),
         
