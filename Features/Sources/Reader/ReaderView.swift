@@ -9,8 +9,6 @@ import SwiftUI
 import DataKit
 import Common
 
-typealias OnProgress = (_ status: ChapterStatus) -> Void
-
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     

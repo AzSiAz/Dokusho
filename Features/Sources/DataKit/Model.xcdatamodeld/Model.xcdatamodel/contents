@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21223.12" systemVersion="22A5286j" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AlternateTitleEntity" representedClassName="AlternateTitleEntity" syncable="YES">
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <attribute name="unique" attributeType="String" defaultValueString=""/>
+        <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="alternatesTitles" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="unique"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ChapterEntity" representedClassName="ChapterEntity" syncable="YES">
+        <attribute name="chapterId" attributeType="String" defaultValueString=""/>
+        <attribute name="dateSourceUpload" attributeType="Date" defaultDateTimeInterval="678279420" usesScalarValueType="NO"/>
+        <attribute name="externalUrl" optional="YES" attributeType="URI"/>
+        <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="readAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="status" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="chapters" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="chapterId"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="CollectionEntity" representedClassName="CollectionEntity" syncable="YES">
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="mangas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="collection" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="GenreEntity" representedClassName="GenreEntity" syncable="YES">
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="unique" optional="YES" attributeType="String"/>
+        <relationship name="mangas" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="genres" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="unique"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="MangaEntity" representedClassName="MangaEntity" syncable="YES">
+        <attribute name="cover" attributeType="URI" defaultValueString="https://i.imgur.com/6TrIues.png"/>
+        <attribute name="mangaId" attributeType="String" defaultValueString=""/>
+        <attribute name="readChapters" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="scraperId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="status" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="synopsis" attributeType="String" defaultValueString=""/>
+        <attribute name="title" attributeType="String" defaultValueString="No Title"/>
+        <attribute name="type" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="unreadChapters" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="alternatesTitles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AlternateTitleEntity" inverseName="manga" inverseEntity="AlternateTitleEntity"/>
+        <relationship name="chapters" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ChapterEntity" inverseName="manga" inverseEntity="ChapterEntity"/>
+        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CollectionEntity" inverseName="mangas" inverseEntity="CollectionEntity"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GenreEntity" inverseName="mangas" inverseEntity="GenreEntity"/>
+        <relationship name="peoples" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PeopleEntity" inverseName="manga" inverseEntity="PeopleEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="mangaId"/>
+                <constraint value="scraperId"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="PeopleEntity" representedClassName="PeopleEntity" syncable="YES">
+        <attribute name="isArtist" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isAuthor" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="unique" optional="YES" attributeType="String"/>
+        <relationship name="manga" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MangaEntity" inverseName="peoples" inverseEntity="MangaEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="unique"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ScraperEntity" representedClassName="ScraperEntity" syncable="YES">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isActive" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isFavorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="position" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <configuration name="Cloud" usedWithCloudKit="YES">
+        <memberEntity name="AlternateTitleEntity"/>
+        <memberEntity name="ChapterEntity"/>
+        <memberEntity name="CollectionEntity"/>
+        <memberEntity name="GenreEntity"/>
+        <memberEntity name="MangaEntity"/>
+        <memberEntity name="PeopleEntity"/>
+    </configuration>
+    <configuration name="Local">
+        <memberEntity name="ScraperEntity"/>
+    </configuration>
+    <elements>
+        <element name="AlternateTitleEntity" positionX="36" positionY="81" width="128" height="74"/>
+        <element name="ChapterEntity" positionX="-54" positionY="-9" width="128" height="149"/>
+        <element name="CollectionEntity" positionX="-36" positionY="9" width="128" height="74"/>
+        <element name="GenreEntity" positionX="18" positionY="63" width="128" height="74"/>
+        <element name="MangaEntity" positionX="-63" positionY="-18" width="128" height="239"/>
+        <element name="PeopleEntity" positionX="0" positionY="45" width="128" height="104"/>
+        <element name="ScraperEntity" positionX="-18" positionY="27" width="128" height="104"/>
+    </elements>
+</model>
