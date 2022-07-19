@@ -46,7 +46,7 @@ class ExploreSourceVM: ObservableObject {
         
         do {
             let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) : scraper.asSource()?.fetchPopularManga(page: nextPage)
-            
+
             await asyncChange {
                 if clean { self.mangas = OrderedSet(newManga!.mangas) }
                 else { self.mangas.append(contentsOf: newManga!.mangas) }

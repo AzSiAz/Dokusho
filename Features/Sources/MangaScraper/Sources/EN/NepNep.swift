@@ -207,7 +207,7 @@ public class NepNepSource: MultiSource {
             })
         }.chunked(into: 24)
         
-        let mangas = chunks.count >= 1 ? chunks[page - 1].map { SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://cover.nep.li/cover/\($0.id).jpg") } : []
+        let mangas = chunks.count >= 1 ? chunks[page - 1].map { SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://temp.compsci88.com/cover/\($0.id).jpg") } : []
         
         return SourcePaginatedSmallManga(mangas: mangas, hasNextPage: page < chunks.count)
     }
@@ -342,7 +342,7 @@ public class NepNepSource: MultiSource {
         }.chunked(into: 24)
 
         return SourcePaginatedSmallManga(mangas: chunks[page - 1].map {
-            SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://cover.nep.li/cover/\($0.id).jpg")
+            SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://temp.compsci88.com/cover/\($0.id).jpg")
         }, hasNextPage: page < chunks.count)
     }
 
