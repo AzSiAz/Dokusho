@@ -26,6 +26,14 @@ public struct PartialManga: Decodable, Identifiable, Hashable {
     public var scraperId: UUID?
 }
 
+public struct RefreshManga: Identifiable, Hashable, FetchableRecord, Decodable {
+    public var id: String { mangaId }
+    public var title: String
+    public var mangaId: String
+    public var scraper: Scraper
+    public var unreadChapterCount: Int
+}
+
 public struct Manga: Identifiable, Equatable, Codable {
     public var id: UUID
     public var mangaId: String
@@ -184,6 +192,28 @@ public struct MangaWithDetail: Decodable, FetchableRecord {
 }
 
 public extension Manga {
+    static func fetchForUpdate(_ db: Database, collectionId: UUID, onlyAllRead: Bool = true) throws -> [RefreshManga] {
+        let unreadChapterCount = "DISTINCT \"mangaChapter\".\"rowid\") FILTER (WHERE mangaChapter.status = 'unread'"
+
+        var query = Manga
+            .select([
+                Manga.Columns.title,
+                Manga.Columns.scraperId,
+                Manga.Columns.mangaId,
+                count(SQL(sql: unreadChapterCount)).forKey("unreadChapterCount"),
+            ])
+            .joining(optional: Manga.chapters)
+            .including(required: Manga.scraper)
+            .forCollectionId(collectionId)
+            .group(Manga.Columns.id)
+        
+        if onlyAllRead {
+            query = query.having(sql: "unreadChapterCount = 0")
+        }
+        
+        return try RefreshManga.fetchAll(db, query)
+    }
+    
     static func fetchOne(_ db: Database, mangaId: String, scraperId: UUID) throws -> Manga? {
         return try Manga.all().forMangaId(mangaId, scraperId).fetchOne(db)
     }

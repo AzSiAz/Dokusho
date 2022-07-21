@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import MangaScraper
 import OSLog
+import Common
 
 public class LibraryUpdater: ObservableObject {
     public static let shared = LibraryUpdater()
@@ -21,58 +22,68 @@ public class LibraryUpdater: ObservableObject {
         public var collectionId: MangaCollection.ID
     }
     
-    public struct RefreshManga {
+    public struct RefreshData {
         public var source: Source
-        public var manga: Manga
-        public var scraper: Scraper
+        public var toRefresh: RefreshManga
     }
 
     private let database = AppDatabase.shared.database
 
     @Published public var refreshStatus: RefreshStatus?
     
-    public func refreshCollection(collection: MangaCollection) async throws {
+    public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
+        defer {
+            Task {
+                await self.updateRefreshStatus()
+            }
+        }
+        
         guard refreshStatus == nil else { return }
 
         var status = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 1, refreshTitle: "Refreshing...", collectionId: collection.id)
         
         await updateRefreshStatus(status)
         
-        let mangas = try await database.read { db in
-            try Manga.all().forCollectionId(collection.id).fetchAll(db)
+        let data = try await database.read { db in
+            try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
         
-        status.refreshCount = Double(mangas.count)
+        status.refreshCount = Double(data.count)
         await updateRefreshStatus(status)
         
-        try await withThrowingTaskGroup(of: RefreshManga.self) { group in
-            for manga in mangas {
-                guard let scraperId = manga.scraperId else { throw "Manga without a scraper" }
-                let scraper = try await database.read { try Scraper.fetchOne($0, sourceId: scraperId) }
-                guard let source = scraper.asSource() else { throw "Source not found from scraper with id: \(scraperId)" }
+        if data.count != 0 {
+            try await withThrowingTaskGroup(of: RefreshData.self) { group in
+                for row in data {
+                    guard let source = row.scraper.asSource() else { throw "Source not found from scraper with id: \(row.scraper.id)" }
 
-                _ = group.addTaskUnlessCancelled(priority: .background) {
-                    return .init(source: source, manga: manga, scraper: scraper)
-                }
-            }
-            
-            
-            for try await data in group {
-                status.refreshTitle = "Updating: \(data.manga.title)"
-                await updateRefreshStatus(status)
-
-                let mangaSource = try await data.source.fetchMangaDetail(id: data.manga.mangaId)
-
-                let _ = try await database.write {
-                    try Manga.updateFromSource(db: $0, scraper: data.scraper, data: mangaSource)
+                    _ = group.addTaskUnlessCancelled(priority: .background) {
+                        return .init(source: source, toRefresh: row)
+                    }
                 }
                 
-                status.refreshProgress+=1
-                await updateRefreshStatus(status)
+                for try await data in group {
+                    do {
+                        status.refreshTitle = "Updating: \(data.toRefresh.title)"
+                        await updateRefreshStatus(status)
+
+                        let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
+
+                        let _ = try await database.write { db in
+                            try Manga.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
+                        }
+                        
+                        status.refreshProgress+=1
+                        await updateRefreshStatus(status)
+                    } catch (let error) {
+                        print(error)
+
+                        status.refreshProgress+=1
+                        await updateRefreshStatus(status)
+                    }
+                }
             }
         }
 
-        await updateRefreshStatus()
     }
     
     @MainActor

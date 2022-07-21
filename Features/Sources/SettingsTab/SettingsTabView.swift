@@ -13,6 +13,7 @@ public struct SettingsTabView: View {
     @StateObject var vm = SettingsVM()
     @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
     @Preference(\.useNewVerticalReader) var useNewVerticalReader
+    @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
     
     public init() {}
     
@@ -40,6 +41,10 @@ public struct SettingsTabView: View {
                     Button(action: { vm.clearImageCache() }) {
                         Text("Clear image cache")
                     }
+                }
+                
+                Section("Collection Update") {
+                    Toggle("Only update when manga has no unread chapter", isOn: $onlyUpdateAllRead)
                 }
             }
             .fileExporter(isPresented: $vm.showExportfile, document: vm.file, contentType: .json, defaultFilename: vm.fileName) { res in

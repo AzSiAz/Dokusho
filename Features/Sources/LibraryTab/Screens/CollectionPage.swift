@@ -18,6 +18,7 @@ import DynamicCollection
 public struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
     @EnvironmentObject var libraryUpdater: LibraryUpdater
+    @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
 
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
@@ -101,7 +102,7 @@ public struct CollectionPage: View {
 
 extension CollectionPage {
     func refreshLibrary() async {
-        try? await libraryUpdater.refreshCollection(collection: collection!)
+        try? await libraryUpdater.refreshCollection(collection: collection!, onlyAllRead: onlyUpdateAllRead)
     }
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {

@@ -72,6 +72,9 @@ public final class Preferences {
     
     @UserDefault("USE_NEW_VERTICAL_READER")
     public var useNewVerticalReader: Bool = false
+    
+    @UserDefault("ONLY_UPDATE_ALL_READ")
+    public var onlyUpdateAllRead: Bool = true
 }
 
 @propertyWrapper
