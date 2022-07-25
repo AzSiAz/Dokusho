@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "gifu",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kaishin/Gifu",
-      "state" : {
-        "revision" : "51f2eab32903e336f590c013267cfa4d7f8b06c4",
-        "version" : "3.3.1"
-      }
-    },
-    {
       "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
@@ -41,17 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
-        "branch" : "master",
-        "revision" : "26bffb04e89fa09f34f5e03fe2516f0bf4f31ab0"
-      }
-    },
-    {
-      "identity" : "nukeui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/NukeUI",
-      "state" : {
-        "revision" : "17f26c07e6b1d3b9258287f99f528111fcd7b7ad",
-        "version" : "0.8.1"
+        "revision" : "c1c36dff9fa838c9d5d01a4096a9a9bab84d5a5e",
+        "version" : "11.0.1"
       }
     },
     {

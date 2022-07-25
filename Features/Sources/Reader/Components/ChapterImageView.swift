@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Nuke
+import NukeUI
 import Common
 
 struct ChapterImageView: View {
