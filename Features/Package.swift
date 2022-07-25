@@ -24,8 +24,7 @@ let package = Package(
     dependencies: [
          .package(url: "https://github.com/groue/GRDB.swift.git", from: "5.24.0"),
          .package(url: "https://github.com/groue/GRDBQuery.git", from: "0.2.0"),
-         .package(url: "https://github.com/kean/Nuke", branch: "master"),
-         .package(url: "https://github.com/kean/NukeUI", from: "0.8.1"),
+         .package(url: "https://github.com/kean/Nuke", exact: "11.0.1"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
          .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
@@ -46,7 +45,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: [
-                .byName(name: "Nuke")
+                .product(name: "Nuke", package: "Nuke")
             ]
         ),
 
@@ -55,8 +54,8 @@ let package = Package(
             dependencies: [
                 .byName(name: "Common"),
                 .byName(name: "SwiftUIX"),
-                .byName(name: "Nuke"),
-                .byName(name: "NukeUI"),
+                .product(name: "Nuke", package: "Nuke"),
+                .product(name: "NukeUI", package: "Nuke")
             ]
         ),
         
@@ -65,8 +64,9 @@ let package = Package(
             dependencies: [
                 .byName(name: "Common"),
                 .byName(name: "DataKit"),
-                .byName(name: "Nuke"),
-                .byName(name: "MangaScraper")
+                .byName(name: "MangaScraper"),
+                .product(name: "Nuke", package: "Nuke"),
+                .product(name: "NukeUI", package: "Nuke")
             ]
         ),
         
@@ -99,8 +99,8 @@ let package = Package(
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
-                .byName(name: "Nuke"),
-                .byName(name: "Backup")
+                .byName(name: "Backup"),
+                .product(name: "Nuke", package: "Nuke")
             ]
         ),
         

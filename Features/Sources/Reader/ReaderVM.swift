@@ -128,7 +128,7 @@ public class ReaderVM: ObservableObject {
                 if Task.isCancelled { break }
 
                 Logger.reader.info("Loading \(image)")
-                _ = try? await ImagePipeline.inMemory.image(for: image)
+                _ = try? await ImagePipeline.inMemory.image(for: image.asImageRequest())
             }
         }
     }
