@@ -29,27 +29,22 @@ public class LibraryUpdater: ObservableObject {
 
     private let database = AppDatabase.shared.database
 
-    @Published public var refreshStatus: RefreshStatus?
+    @Published public var refreshStatus: [MangaCollection.ID: Bool] = [:]
     
     public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
         defer {
             Task {
-                await self.updateRefreshStatus()
+                await self.updateRefreshStatus(collectionID: collection.id, refreshing: false)
             }
         }
         
-        guard refreshStatus == nil else { return }
-
-        var status = RefreshStatus(isRefreshing: true, refreshProgress: 0, refreshCount: 1, refreshTitle: "Refreshing...", collectionId: collection.id)
+        guard refreshStatus[collection.id] == nil else { return }
         
-        await updateRefreshStatus(status)
+        await updateRefreshStatus(collectionID: collection.id, refreshing: true)
         
         let data = try await database.read { db in
             try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
-        
-        status.refreshCount = Double(data.count)
-        await updateRefreshStatus(status)
         
         if data.count != 0 {
             try await withThrowingTaskGroup(of: RefreshData.self) { group in
@@ -63,22 +58,16 @@ public class LibraryUpdater: ObservableObject {
                 
                 for try await data in group {
                     do {
-                        status.refreshTitle = "Updating: \(data.toRefresh.title)"
-                        await updateRefreshStatus(status)
-
                         let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
 
                         let _ = try await database.write { db in
                             try Manga.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
                         }
                         
-                        status.refreshProgress+=1
-                        await updateRefreshStatus(status)
+                        await updateRefreshStatus(collectionID: collection.id, refreshing: false)
                     } catch (let error) {
                         print(error)
-
-                        status.refreshProgress+=1
-                        await updateRefreshStatus(status)
+                        await updateRefreshStatus(collectionID: collection.id, refreshing: false)
                     }
                 }
             }
@@ -87,7 +76,7 @@ public class LibraryUpdater: ObservableObject {
     }
     
     @MainActor
-    public func updateRefreshStatus(_ newStatus: RefreshStatus? = nil) {
-        self.refreshStatus = newStatus
+    public func updateRefreshStatus(collectionID: MangaCollection.ID, refreshing: Bool) {
+        self.refreshStatus[collectionID] = refreshing
     }
 }
