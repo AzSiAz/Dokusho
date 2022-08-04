@@ -14,8 +14,6 @@ import SharedUI
 import Refresher
 
 public struct MangaDetail: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
-
     @Query(MangaCollectionRequest()) var collections
     @Query<MangaDetailRequest> var data: MangaWithDetail?
 
@@ -34,7 +32,7 @@ public struct MangaDetail: View {
     
     public var body: some View {
         Group {
-            if vm.error {
+            if vm.error && data == nil {
                 VStack {
                     Text("Something weird happened, try again")
                     AsyncButton(action: { await vm.update() }) {
@@ -43,10 +41,9 @@ public struct MangaDetail: View {
                 }
             }
             else if let data = data {
-                if sizeClass == .compact || (UIDevice.current.userInterfaceIdiom == .pad && orientation.orientation == .portrait) {
-                    CompactBody(data)
-                } else {
+                ViewThatFits(in: .horizontal) {
                     LargeBody(data)
+                    CompactBody(data)
                 }
             }
             else {
@@ -78,10 +75,10 @@ public struct MangaDetail: View {
                     ActionRow(data)
                     SynopsisRow(data, isLarge: true)
                 }
-                .frame(maxWidth: 500, alignment: .leading)
                 .id("Detail")
             }
-            .refresher(style: .system, action: vm.updateFromRefresher(done:))
+            .refresher(style: .system, action: vm.update)
+            .frame(minWidth: 250, alignment: .leading)
             
             Divider()
             
@@ -92,7 +89,6 @@ public struct MangaDetail: View {
             }
             .id("Chapter")
         }
-        .frame(alignment: .leading)
     }
     
     @ViewBuilder
@@ -105,7 +101,7 @@ public struct MangaDetail: View {
                 .disabled(vm.refreshing)
                 .padding(.bottom)
         }
-        .refresher(style: .system, action: vm.updateFromRefresher(done:))
+        .refresher(style: .system, action: vm.update)
     }
     
     @ViewBuilder

@@ -59,13 +59,6 @@ public class MangaDetailVM: ObservableObject {
         }
     }
     
-    func updateFromRefresher(done: @escaping () -> Void) {
-        Task {
-            await update()
-            done()
-        }
-    }
-    
     func getMangaURL() -> URL {
         return scraper.asSource()?.mangaUrl(mangaId: self.mangaId) ?? URL(string: "")!
     }
