@@ -201,13 +201,12 @@ public struct MangaDetail: View {
     
     @ViewBuilder
     func SynopsisRow(_ data: MangaWithDetail , isLarge: Bool) -> some View {
-        let availableWidth = isLarge ? 490 : UIScreen.main.bounds.width
-        
         VStack {
             VStack(spacing: 5) {
                 Text(data.manga.synopsis)
                     .lineLimit(vm.showMoreDesc ? nil : 4)
                     .fixedSize(horizontal: false, vertical: true)
+                    .frame(width: .greedy, alignment: .leading)
                 
                 HStack {
                     Spacer()
@@ -226,10 +225,14 @@ public struct MangaDetail: View {
             }
             .padding(.horizontal)
             
-            FlexibleView(data: data.manga.genres, availableWidth: availableWidth, spacing: 5, alignment: .center) { genre in
-                Button(genre, action: { selectGenre?(genre) })
-                    .buttonStyle(.bordered)
+            GeometryReader { proxy in
+                FlexibleView(data: data.manga.genres, availableWidth: proxy.size.width, spacing: 5, alignment: .center) { genre in
+                    Button(genre, action: { selectGenre?(genre) })
+                        .buttonStyle(.bordered)
+                }
+                .frame(width: .greedy, alignment: .center)
             }
+            .padding(.leading)
         }
     }
 }
