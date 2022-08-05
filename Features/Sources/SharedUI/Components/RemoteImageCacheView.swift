@@ -25,7 +25,7 @@ public struct RemoteImageCacheView: View {
     public var body: some View {
         GeometryReader { proxy in
             LazyImage(request: url.asImageRequest(), resizingMode: contentMode)
-                .processors([ImageProcessors.Resize(size: proxy.size), ImageProcessors.RoundedCorners(radius: radius)])
+                .processors([ImageProcessors.Resize(size: proxy.size), ImageProcessors.RoundedCorners(radius: radius, border: .init(color: .gray, width: 0.2))])
                 .pipeline(pipeline)
                 .cornerRadius(radius)
                 .id(url)

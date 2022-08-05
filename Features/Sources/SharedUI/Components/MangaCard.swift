@@ -39,22 +39,15 @@ public struct MangaCard: View {
     }
     
     public var body: some View {
-        GeometryReader { proxy in
-            RemoteImageCacheView(url: self.imageUrl, contentMode: .fill, radius: radius)
-                .frame(minWidth: proxy.size.width, minHeight: proxy.size.height, alignment: .center)
-                .overlay(alignment: .bottomLeading) { OverlayTitle(width: proxy.size.width) }
-                .overlay(alignment: .topTrailing) { ChapterCounter() }
-                .overlay(alignment: .topLeading) { CollectionName() }
-                .overlay(
-                    RoundedRectangle(cornerRadius: radius)
-                        .stroke(.gray, lineWidth: 0.2)
-                )
-                .removeIfNotInDisplay()
-        }
+        RemoteImageCacheView(url: self.imageUrl, contentMode: .fill, radius: radius)
+            .overlay(alignment: .bottomLeading) { OverlayTitle() }
+            .overlay(alignment: .topTrailing) { ChapterCounter() }
+            .overlay(alignment: .topLeading) { CollectionName() }
+            .removeIfNotInDisplay()
     }
     
     @ViewBuilder
-    func OverlayTitle(width: Double) -> some View {
+    func OverlayTitle() -> some View {
         if let title = title, !title.isEmpty {
             VStack {
                 Text(title)
@@ -64,7 +57,7 @@ public struct MangaCard: View {
                     .padding(.leading, 2)
                     .padding(.top, 1)
             }
-            .frame(width: width)
+            .frame(maxWidth: .infinity, alignment: .center)
             .background(.ultraThinMaterial)
             .clipShape(RoundedCorner(radius: radius, corners: [.bottomRight, .bottomLeft]))
         }
