@@ -20,7 +20,7 @@ public struct MangaDetail: View {
     @StateObject var vm: MangaDetailVM
     @StateObject var orientation: DeviceOrientation = DeviceOrientation()
     @StateObject var readerManager = ReaderManager()
-    
+
     let selectGenre: ((_ genre: String) -> Void)?
     
     public init(mangaId: String, scraper: Scraper, selectGenre: ((_ genre: String) -> Void)? = nil) {
@@ -73,7 +73,8 @@ public struct MangaDetail: View {
                 VStack {
                     HeaderRow(data)
                     ActionRow(data)
-                    SynopsisRow(data, isLarge: true)
+                    SynopsisRow(synopsis: data.manga.synopsis)
+                    GenreRow(genres: data.manga.genres)
                 }
                 .id("Detail")
             }
@@ -96,7 +97,8 @@ public struct MangaDetail: View {
         ScrollView {
             HeaderRow(data)
             ActionRow(data)
-            SynopsisRow(data, isLarge: false)
+            SynopsisRow(synopsis: data.manga.synopsis)
+            GenreRow(genres: data.manga.genres)
             ChapterListInformation(manga: data.manga, scraper: data.scraper!)
                 .disabled(vm.refreshing)
                 .padding(.bottom)
@@ -115,6 +117,7 @@ public struct MangaDetail: View {
                 VStack(alignment: .leading) {
                     Text(data.manga.title)
                         .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
                         .font(.subheadline.bold())
                 }
                 .padding(.bottom, 5)
@@ -200,39 +203,41 @@ public struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func SynopsisRow(_ data: MangaWithDetail , isLarge: Bool) -> some View {
-        VStack {
-            VStack(spacing: 5) {
-                Text(data.manga.synopsis)
-                    .lineLimit(vm.showMoreDesc ? nil : 4)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(width: .greedy, alignment: .leading)
-                
-                HStack {
-                    Spacer()
-                    Button(action: { withAnimation {
-                        vm.showMoreDesc.toggle()
-                    } }) {
-                        Text("Show \(!vm.showMoreDesc ? "more" : "less")")
-                    }
+    func SynopsisRow(synopsis: String) -> some View {
+        VStack(spacing: 5) {
+            Text(synopsis)
+                .lineLimit(vm.showMoreDesc ? nil : 4)
+                .fixedSize(horizontal: false, vertical: true)
+            
+            HStack {
+                Spacer()
+                Button(action: { withAnimation {
+                    vm.showMoreDesc.toggle()
+                } }) {
+                    Text("Show \(!vm.showMoreDesc ? "more" : "less")")
                 }
             }
-            .padding([.bottom, .horizontal])
-
+        }
+        .padding([.bottom, .horizontal])
+    }
+    
+    @ViewBuilder
+    func GenreRow(genres: [String]) -> some View {
+        VStack {
             HStack {
                 Text("Genres:")
                 Spacer()
             }
             .padding(.horizontal)
             
-            GeometryReader { proxy in
-                FlexibleView(data: data.manga.genres, availableWidth: proxy.size.width, spacing: 5, alignment: .center) { genre in
+            TagView {
+                ForEach(genres) { genre in
                     Button(genre, action: { selectGenre?(genre) })
                         .buttonStyle(.bordered)
                 }
-                .frame(width: .greedy, alignment: .center)
             }
-            .padding(.leading)
+            .padding(.horizontal, 2)
         }
     }
 }
+
