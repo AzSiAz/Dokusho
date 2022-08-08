@@ -11,7 +11,6 @@ import GRDBQuery
 import DataKit
 import SharedUI
 import MangaDetail
-import Refresher
 
 public struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]

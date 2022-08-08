@@ -55,6 +55,15 @@
       }
     },
     {
+      "identity" : "swiftuilayouts",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:apptekstudios/SwiftUILayouts",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ea2aee25571471e7cb80e963332c7eb6cabb913b"
+      }
+    },
+    {
       "identity" : "swiftuix",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftUIX/SwiftUIX.git",

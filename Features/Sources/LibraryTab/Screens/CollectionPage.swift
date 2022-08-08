@@ -12,7 +12,6 @@ import DataKit
 import Common
 import SharedUI
 import MangaDetail
-import Refresher
 import DynamicCollection
 
 public struct CollectionPage: View {

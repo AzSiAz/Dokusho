@@ -11,7 +11,7 @@ import DataKit
 import Reader
 import Common
 import SharedUI
-import Refresher
+import SwiftUILayouts
 
 public struct MangaDetail: View {
     @Query(MangaCollectionRequest()) var collections
@@ -223,20 +223,11 @@ public struct MangaDetail: View {
     
     @ViewBuilder
     func GenreRow(genres: [String]) -> some View {
-        VStack {
-            HStack {
-                Text("Genres:")
-                Spacer()
+        FlowLayout(alignment: .center) {
+            ForEach(genres) { genre in
+                Button(genre, action: { selectGenre?(genre) })
+                    .buttonStyle(.bordered)
             }
-            .padding(.horizontal)
-            
-            TagView {
-                ForEach(genres) { genre in
-                    Button(genre, action: { selectGenre?(genre) })
-                        .buttonStyle(.bordered)
-                }
-            }
-            .padding(.horizontal, 2)
         }
     }
 }

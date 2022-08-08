@@ -54,11 +54,11 @@ public struct ChapterListInformation: View {
                 Group {
                     if let url = chapter.externalUrl {
                         Link(destination: URL(string: url)!) {
-                            NextButtonContent()
+                            NextUnreadChapter()
                         }
                     } else {
                         Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
-                            NextButtonContent()
+                            NextUnreadChapter()
                         }
                     }
                 }
@@ -74,7 +74,7 @@ public struct ChapterListInformation: View {
     }
     
     @ViewBuilder
-    func NextButtonContent() -> some View {
+    func NextUnreadChapter() -> some View {
         Text("Read next unread chapter")
             .frame(minWidth: 0, maxWidth: .infinity)
     }
