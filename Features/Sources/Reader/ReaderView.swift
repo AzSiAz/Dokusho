@@ -25,7 +25,7 @@ public struct ReaderView: View {
     
     public var body: some View {
         Group {
-            if vm.images.isEmpty || vm.isLoading {
+            if vm.isLoading {
                 ProgressView()
                     .scaleEffect(3)
             } else {
@@ -37,13 +37,12 @@ public struct ReaderView: View {
         .background(Color.black.ignoresSafeArea())
         .navigationBarHidden(true)
         .onTapGesture { vm.toggleToolbar() }
-        .task { await vm.fetchChapter() }
+        .task(id: vm.currentChapter) { await vm.fetchChapter() }
+        .task(id: vm.tabIndex) { await vm.updateChapterStatus() }
         .onDisappear { vm.cancelTasks() }
         .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
-        .onChange(of: vm.tabIndex) { vm.updateChapterStatus(image: $0) }
-        .onChange(of: vm.currentChapter) { _ in Task { await vm.fetchChapter() } }
         .preferredColorScheme(.dark)
     }
     

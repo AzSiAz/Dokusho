@@ -21,6 +21,7 @@ struct HorizontalReaderView: View {
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
+        .id(vm.images)
     }
     
     @ViewBuilder

@@ -62,14 +62,11 @@ public class ReaderVM: ObservableObject {
         runningTask?.cancel()
     }
     
+    @MainActor
     func fetchChapter() async {
         cancelTasks()
 
-        if !isLoading {
-            await asyncChange {
-                self.isLoading = true
-            }
-        }
+        self.isLoading = true
 
         do {
             guard let data = try await scraper.asSource()?.fetchChapterImages(mangaId: manga.mangaId, chapterId: currentChapter.chapterId) else { throw "Error fetching image for scraper" }
@@ -77,14 +74,10 @@ public class ReaderVM: ObservableObject {
             let urls = data.map { $0.imageUrl }
             let readerLinks = try buildReaderLinks(data: urls)
             
-            await asyncChange {
-                self.images = readerLinks
-            }
+            self.images = readerLinks
             
             guard let firstImage = getOnlyImagesUrl().first else { throw "First Image not found" }
-            await asyncChange {
-                self.tabIndex = firstImage
-            }
+            self.tabIndex = firstImage
             
             backgroundFetchImage(urls)
         } catch {
@@ -92,9 +85,7 @@ public class ReaderVM: ObservableObject {
         }
         
         if isLoading {
-            await asyncChange {
-                self.isLoading = false
-            }
+            self.isLoading = false
         }
     }
     
@@ -151,21 +142,19 @@ public class ReaderVM: ObservableObject {
         let onlyUrl = getOnlyImagesUrl()
         return Double(onlyUrl.count)
     }
-
-    func updateChapterStatus(image: ReaderLink) {
+    
+    func updateChapterStatus() async {
         if progressBarCount() == progressBarCurrent() {
-            withAnimation {
-                showToolBar = true
+            await asyncChange {
+                self.showToolBar = true
             }
 
-            Task(priority: .background) {
-                do {
-                    try await self.database.write { db in
-                        try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: self.currentChapter.id)
-                    }
-                } catch(let err) {
-                    print(err)
+            do {
+                try await self.database.write { db in
+                    try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: self.currentChapter.id)
                 }
+            } catch(let err) {
+                print(err)
             }
         }
     }
@@ -241,6 +230,8 @@ public class ReaderVM: ObservableObject {
     }
 
     func changeChapters(chapter: MangaChapter) {
+        self.isLoading = true
+        
         withAnimation {
             self.images = []
             self.currentChapter = chapter
