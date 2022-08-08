@@ -55,7 +55,7 @@ public struct CollectionPage: View {
                 MangaInGrid(data: data)
             }
         }
-        .refresher(style: .system2, action: refreshLibrary)
+        .refreshable { await refreshLibrary() }
     }
     
     @ViewBuilder

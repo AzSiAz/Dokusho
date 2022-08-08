@@ -78,7 +78,7 @@ public struct MangaDetail: View {
                 }
                 .id("Detail")
             }
-            .refresher(style: .system, action: vm.update)
+            .refreshable { await vm.update() }
             .frame(minWidth: 250, alignment: .leading)
             
             Divider()
@@ -103,7 +103,7 @@ public struct MangaDetail: View {
                 .disabled(vm.refreshing)
                 .padding(.bottom)
         }
-        .refresher(style: .system, action: vm.update)
+        .refreshable { await vm.update() }
     }
     
     @ViewBuilder

@@ -38,7 +38,7 @@ public struct ExploreSourceView: View {
             case (false, _, _, _): MangaListBlock()
             }
         }
-        .refresher(style: .system2, action: vm.refresh)
+        .refreshable { await vm.refresh() }
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
         .task { await vm.initView() }
