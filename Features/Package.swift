@@ -29,7 +29,8 @@ let package = Package(
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
          .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.4.0"),
-         .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main")
+         .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main"),
+         .package(url: "https://github.com/gh123man/SwiftUI-Refresher", .upToNextMajor(from: "1.0.0")),
     ],
     targets: [
         .target(
@@ -90,6 +91,7 @@ let package = Package(
                 .byName(name: "SharedUI"),
                 .byName(name: "Reader"),
                 .byName(name: "SwiftUILayouts"),
+                .product(name: "Refresher", package: "SwiftUI-Refresher")
             ]
         ),
         
@@ -144,7 +146,8 @@ let package = Package(
                 .byName(name: "SharedUI"),
                 .byName(name: "MangaDetail"),
                 .byName(name: "MangaScraper"),
-                .byName(name: "DynamicCollection")
+                .byName(name: "DynamicCollection"),
+                .product(name: "Refresher", package: "SwiftUI-Refresher")
             ]
         ),
         
@@ -158,7 +161,8 @@ let package = Package(
                 .byName(name: "SharedUI"),
                 .byName(name: "MangaDetail"),
                 .byName(name: "MangaScraper"),
-                .product(name: "Collections", package: "swift-collections")
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "Refresher", package: "SwiftUI-Refresher")
             ]
         ),
     ]

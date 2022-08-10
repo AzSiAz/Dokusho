@@ -11,6 +11,7 @@ import GRDBQuery
 import DataKit
 import SharedUI
 import MangaDetail
+import Refresher
 
 public struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
@@ -37,7 +38,9 @@ public struct ExploreSourceView: View {
             case (false, _, _, _): MangaListBlock()
             }
         }
-        .refreshable { await vm.refresh() }
+//        TODO: Remove when iOS 16 is out
+        .refresher(style: .system2, action: vm.refresh)
+//        .refreshable { await vm.refresh() }
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
         .task { await vm.initView() }

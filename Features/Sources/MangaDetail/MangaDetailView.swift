@@ -12,6 +12,7 @@ import Reader
 import Common
 import SharedUI
 import SwiftUILayouts
+import Refresher
 
 public struct MangaDetail: View {
     @Query(MangaCollectionRequest()) var collections
@@ -79,10 +80,10 @@ public struct MangaDetail: View {
                     }
                     .id("Detail")
                 }
+//                TODO: Remove when iOS 16 is out
+//                .refreshable { await vm.update() }
+                .refresher(style: .system, action: vm.update)
                 .gridCellColumns(4)
-                .refreshable {
-                    await vm.update()
-                }
                 
                 HStack {
                     Divider()
@@ -111,9 +112,9 @@ public struct MangaDetail: View {
                 .disabled(vm.refreshing)
                 .padding(.bottom)
         }
-        .refreshable {
-            await vm.update()
-        }
+//        TODO: Remove when iOS 16 is out
+//        .refreshable { await vm.update() }
+        .refresher(style: .system, action: vm.update)
     }
     
     @ViewBuilder

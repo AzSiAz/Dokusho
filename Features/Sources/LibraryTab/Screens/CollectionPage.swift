@@ -13,6 +13,7 @@ import Common
 import SharedUI
 import MangaDetail
 import DynamicCollection
+import Refresher
 
 public struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
@@ -54,7 +55,9 @@ public struct CollectionPage: View {
                 MangaInGrid(data: data)
             }
         }
-        .refreshable { await refreshLibrary() }
+//        TODO: Remove when iOS 16 is out
+//        .refreshable { await refreshLibrary() }
+        .refresher(style: .system2, action: refreshLibrary)
     }
     
     @ViewBuilder
