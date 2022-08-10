@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "2ac5c773537622b1520fdde3efc1a216119359ff",
-        "version" : "5.24.1"
+        "revision" : "23f4254ae36fa19aecd73047c0577a9f49850d1c",
+        "version" : "5.26.0"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
-        "revision" : "c1c36dff9fa838c9d5d01a4096a9a9bab84d5a5e",
-        "version" : "11.0.1"
+        "revision" : "8ea514737c2011ff7d7544aa065ad44905bdae0b",
+        "version" : "11.1.0"
       }
     },
     {
@@ -57,7 +57,7 @@
     {
       "identity" : "swiftuilayouts",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:apptekstudios/SwiftUILayouts",
+      "location" : "https://github.com/apptekstudios/SwiftUILayouts",
       "state" : {
         "branch" : "main",
         "revision" : "ea2aee25571471e7cb80e963332c7eb6cabb913b"

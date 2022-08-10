@@ -41,7 +41,7 @@ public struct MangaDetail: View {
                 }
             }
             else if let data = data {
-                ViewThatFits(in: .horizontal) {
+                ViewThatFits {
                     LargeBody(data)
                     CompactBody(data)
                 }
@@ -68,27 +68,35 @@ public struct MangaDetail: View {
     
     @ViewBuilder
     func LargeBody(_ data: MangaWithDetail) -> some View {
-        HStack(alignment: .top, spacing: 5) {
-            ScrollView {
-                VStack {
-                    HeaderRow(data)
-                    ActionRow(data)
-                    SynopsisRow(synopsis: data.manga.synopsis)
-                    GenreRow(genres: data.manga.genres)
+        Grid {
+            GridRow {
+                ScrollView {
+                    VStack {
+                        HeaderRow(data)
+                        ActionRow(data)
+                        SynopsisRow(synopsis: data.manga.synopsis)
+                        GenreRow(genres: data.manga.genres)
+                    }
+                    .id("Detail")
                 }
-                .id("Detail")
+                .gridCellColumns(4)
+                .refreshable {
+                    await vm.update()
+                }
+                
+                HStack {
+                    Divider()
+                }
+                .gridCellColumns(1)
+
+                ScrollView {
+                    ChapterListInformation(manga: data.manga, scraper: vm.scraper)
+                        .disabled(vm.refreshing)
+                        .padding(.bottom)
+                }
+                .id("Chapter")
+                .gridCellColumns(3)
             }
-            .refreshable { await vm.update() }
-            .frame(minWidth: 250, alignment: .leading)
-            
-            Divider()
-            
-            ScrollView {
-                ChapterListInformation(manga: data.manga, scraper: vm.scraper)
-                    .disabled(vm.refreshing)
-                    .padding(.bottom)
-            }
-            .id("Chapter")
         }
     }
     
@@ -103,7 +111,9 @@ public struct MangaDetail: View {
                 .disabled(vm.refreshing)
                 .padding(.bottom)
         }
-        .refreshable { await vm.update() }
+        .refreshable {
+            await vm.update()
+        }
     }
     
     @ViewBuilder
@@ -135,7 +145,6 @@ public struct MangaDetail: View {
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     
-                    // TODO: Change to source name
                     Text(data.scraper?.name ?? "No Name")
                         .font(.callout.bold())
                 }
