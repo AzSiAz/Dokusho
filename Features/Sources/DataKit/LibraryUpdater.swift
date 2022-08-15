@@ -32,13 +32,11 @@ public class LibraryUpdater: ObservableObject {
     @Published public var refreshStatus: [MangaCollection.ID: Bool] = [:]
     
     public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
-        defer {
-            Task {
-                await self.updateRefreshStatus(collectionID: collection.id, refreshing: false)
-            }
-        }
-        
         guard refreshStatus[collection.id] == nil else { return }
+
+        await MainActor.run {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
         
         await updateRefreshStatus(collectionID: collection.id, refreshing: true)
         
@@ -70,6 +68,11 @@ public class LibraryUpdater: ObservableObject {
                         await updateRefreshStatus(collectionID: collection.id, refreshing: false)
                     }
                 }
+            }
+            
+            await self.updateRefreshStatus(collectionID: collection.id, refreshing: false)
+            await MainActor.run {
+                UIApplication.shared.isIdleTimerDisabled = false
             }
         }
 
