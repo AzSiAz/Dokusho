@@ -15,6 +15,7 @@ import SwiftUILayouts
 import Refresher
 
 public struct MangaDetail: View {
+    @Environment(\.horizontalSizeClass) var horizontalSize
     @Query(MangaCollectionRequest()) var collections
     @Query<MangaDetailRequest> var data: MangaWithDetail?
 
@@ -42,8 +43,9 @@ public struct MangaDetail: View {
                 }
             }
             else if let data = data {
-                ViewThatFits {
+                if horizontalSize == .regular {
                     LargeBody(data)
+                } else {
                     CompactBody(data)
                 }
             }
