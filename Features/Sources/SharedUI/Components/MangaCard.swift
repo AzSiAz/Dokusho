@@ -15,6 +15,7 @@ public struct MangaCard: View {
     var collectionName: String?
     
     var radius: Double = 5
+    var opacity: Double = 0.83
     
     public init(title: String, imageUrl: String, chapterCount: Int) {
         self.title = title
@@ -38,50 +39,55 @@ public struct MangaCard: View {
     }
     
     public var body: some View {
-//        VStack {
-            RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
-                .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
-                .overlay(alignment: .topTrailing) { ChapterCounter() }
-                .overlay(alignment: .topLeading) { CollectionName() }
-                .overlay(alignment: .bottomLeading) { Title() }
-//            Title()
-//        }
+        RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
+            .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
+            .overlay(alignment: .topTrailing) { ChapterCounter() }
+            .overlay(alignment: .topLeading) { CollectionName() }
+            .overlay(alignment: .bottomLeading) { Title() }
     }
     
     @ViewBuilder
     func Title() -> some View {
         if let title = title, !title.isEmpty {
-            Text(title)
-                .lineLimit(2)
-                .multilineTextAlignment(.leading)
-                .clipped()
-                .padding(.leading, 2)
-                .padding(.top, 1)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .foregroundColor(.white)
-                .background(Color.darkGray.opacity(0.7), in: RoundedCorner(radius: radius, corners: [.bottomRight, .bottomLeft]))
-                .fixedSize(horizontal: false, vertical: true)
+            VStack {
+                Text(title)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .clipped()
+                    .padding(.leading, 2)
+                    .padding(.top, 1)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(.white)
+                    .background(Color.darkGray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
+            }
+            .padding(2)
         }
     }
     
     @ViewBuilder
     func ChapterCounter() -> some View {
         if let count = chapterCount, count != 0  {
-            Text(String(count))
-                .padding(2)
-                .foregroundColor(.white)
-                .background(Color.darkGray.opacity(0.7), in: RoundedCorner(radius: radius, corners: [.topRight, .bottomLeft]))
+            VStack {
+                Text(String(count))
+                    .padding(2)
+                    .foregroundColor(.white)
+                    .background(Color.darkGray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
+            }
+            .padding(2)
         }
     }
     
     @ViewBuilder
     func CollectionName() -> some View {
         if let collectionName = collectionName, !collectionName.isEmpty {
-            Text(collectionName)
-                .lineLimit(1)
-                .padding(2)
-                .foregroundColor(.white)
-                .background(Color.darkGray.opacity(0.7), in: RoundedCorner(radius: radius, corners: [.topLeft, .bottomRight]) )
+            VStack {
+                Text(collectionName)
+                    .lineLimit(1)
+                    .padding(2)
+                    .foregroundColor(.white)
+                    .background(Color.darkGray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]) )
+            }
+            .padding(2)
         }
     }
 }

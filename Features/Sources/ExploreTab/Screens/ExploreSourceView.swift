@@ -18,12 +18,7 @@ public struct ExploreSourceView: View {
     @Query(MangaCollectionRequest()) var collections
     
     @StateObject var vm: ExploreSourceVM
-    
-    var columns: [GridItem] {
-        let size: Double = UIScreen.isLargeScreen ? 130*1.3 : 130
-        return [GridItem(.adaptive(size))]
-    }
-    
+
     public init(scraper: Scraper) {
         _vm = .init(wrappedValue: .init(for: scraper))
         _mangas = Query(MangaInCollectionsRequest(srcId: scraper.id))
@@ -49,17 +44,15 @@ public struct ExploreSourceView: View {
     
     @ViewBuilder
     func MangaListBlock() -> some View {
-        LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(vm.mangas) { manga in
-                NavigationLink(destination: MangaDetail(mangaId: manga.id, scraper: vm.scraper)) {
-                    let found = mangas.first { $0.mangaId == manga.id }
-                    MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
-                        .mangaCardFrame()
-                        .contextMenu { ContextMenu(manga: manga) }
-                        .task { await vm.fetchMoreIfPossible(for: manga) }
-                }
-                .buttonStyle(.plain)
+        MangaList(mangas: vm.mangas) { manga in
+            NavigationLink(destination: MangaDetail(mangaId: manga.id, scraper: vm.scraper)) {
+                let found = mangas.first { $0.mangaId == manga.id }
+                MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
+                    .mangaCardFrame()
+                    .contextMenu { ContextMenu(manga: manga) }
+                    .task { await vm.fetchMoreIfPossible(for: manga) }
             }
+            .buttonStyle(.plain)
         }
     }
     

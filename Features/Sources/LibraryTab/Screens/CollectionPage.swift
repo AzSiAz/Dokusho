@@ -44,7 +44,7 @@ public struct CollectionPage: View {
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
-            .queryObservation(.onAppear)
+            .queryObservation(.always)
         }
     }
     

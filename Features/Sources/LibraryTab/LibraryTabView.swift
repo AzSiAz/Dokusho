@@ -63,6 +63,7 @@ public struct LibraryTabView: View {
             .environment(\.editMode, $editMode)
             .queryObservation(.always)
         }
+        .navigationViewStyle(.stack)
     }
     
     func saveNewCollection() {

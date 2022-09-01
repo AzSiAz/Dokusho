@@ -38,18 +38,20 @@ public class MangaDetailVM: ObservableObject {
 
         do {
             guard let source = scraper.asSource() else { throw "Source Not found" }
+
             let sourceManga = try await source.fetchMangaDetail(id: mangaId)
-            
+
             try _ = await database.write { db in
                 try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
             }
 
-            Task { @MainActor in
+            await MainActor.run {
                 withAnimation {
                     self.refreshing = false
                 }
             }
         } catch {
+            print(error)
             await MainActor.run {
                 withAnimation {
                     self.error = true

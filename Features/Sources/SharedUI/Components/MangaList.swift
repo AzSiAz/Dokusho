@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-public struct MangaList<MangaContent: View, T: Identifiable>: View {
-    var mangas: [T]
+public struct MangaList<MangaContent: View, T: Identifiable, Y: RandomAccessCollection<T>>: View {
+    var mangas: Y
     var mangaContent: (T) -> MangaContent
     
     var columns: [GridItem] {
@@ -17,7 +17,7 @@ public struct MangaList<MangaContent: View, T: Identifiable>: View {
         return [GridItem(.adaptive(size))]
     }
     
-    public init(mangas: [T], @ViewBuilder mangaRender: @escaping (T) -> MangaContent) {
+    public init(mangas: Y, @ViewBuilder mangaRender: @escaping (T) -> MangaContent) {
         self.mangas = mangas
         self.mangaContent = mangaRender
     }

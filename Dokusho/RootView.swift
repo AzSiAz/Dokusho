@@ -44,7 +44,6 @@ struct RootView: View {
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(ActiveTab.settings)
         }
-        .navigationViewStyle(.stack)
     }
     
     // TODO: Change to double sidebar to avoid using a not ergonomic tab bar for iPadOS & MacOS

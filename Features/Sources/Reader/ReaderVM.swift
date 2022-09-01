@@ -60,6 +60,7 @@ public class ReaderVM: ObservableObject {
     
     func cancelTasks() {
         runningTask?.cancel()
+        ImagePipeline.inMemory.cache.removeAll()
     }
     
     @MainActor
@@ -79,11 +80,11 @@ public class ReaderVM: ObservableObject {
             guard let firstImage = getOnlyImagesUrl().first else { throw "First Image not found" }
             self.tabIndex = firstImage
             
-            backgroundFetchImage(urls)
+            backgroundFetchImage(urls.chunked(into: 6).first ?? [])
         } catch {
             Logger.reader.info("Error loading chapter \(self.currentChapter.chapterId): \(error)")
         }
-        
+
         if isLoading {
             self.isLoading = false
         }
