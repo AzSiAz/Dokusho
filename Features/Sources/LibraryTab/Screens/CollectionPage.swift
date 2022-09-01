@@ -66,6 +66,7 @@ public struct CollectionPage: View {
             .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
             .mangaCardFrame()
             .onTapGesture { selected = data }
+            .id(data.id)
     }
     
     @ViewBuilder

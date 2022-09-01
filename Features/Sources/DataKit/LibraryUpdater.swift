@@ -39,7 +39,7 @@ public class LibraryUpdater: ObservableObject {
         }
         
         await updateRefreshStatus(collectionID: collection.id, refreshing: true)
-        
+
         let data = try await database.read { db in
             try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
@@ -55,6 +55,8 @@ public class LibraryUpdater: ObservableObject {
                 }
                 
                 for try await data in group {
+                    await Task.yield()
+
                     do {
                         let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
 
@@ -63,6 +65,7 @@ public class LibraryUpdater: ObservableObject {
                         }
                         
                         await updateRefreshStatus(collectionID: collection.id, refreshing: false)
+                        await Task.yield()
                     } catch (let error) {
                         print(error)
                         await updateRefreshStatus(collectionID: collection.id, refreshing: false)
@@ -70,7 +73,7 @@ public class LibraryUpdater: ObservableObject {
                 }
             }
             
-            await self.updateRefreshStatus(collectionID: collection.id, refreshing: false)
+            await self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
             await MainActor.run {
                 UIApplication.shared.isIdleTimerDisabled = false
             }
@@ -79,7 +82,7 @@ public class LibraryUpdater: ObservableObject {
     }
     
     @MainActor
-    public func updateRefreshStatus(collectionID: MangaCollection.ID, refreshing: Bool) {
+    public func updateRefreshStatus(collectionID: MangaCollection.ID, refreshing: Bool? = nil) {
         self.refreshStatus[collectionID] = refreshing
     }
 }

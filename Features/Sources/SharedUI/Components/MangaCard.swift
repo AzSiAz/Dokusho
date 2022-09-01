@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUIX
 
 public struct MangaCard: View {
     var imageUrl: String
@@ -39,27 +38,29 @@ public struct MangaCard: View {
     }
     
     public var body: some View {
-        RemoteImageCacheView(url: self.imageUrl, contentMode: .fill, radius: radius)
-            .overlay(alignment: .bottomLeading) { OverlayTitle() }
-            .overlay(alignment: .topTrailing) { ChapterCounter() }
-            .overlay(alignment: .topLeading) { CollectionName() }
-            .removeIfNotInDisplay()
+//        VStack {
+            RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
+                .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
+                .overlay(alignment: .topTrailing) { ChapterCounter() }
+                .overlay(alignment: .topLeading) { CollectionName() }
+                .overlay(alignment: .bottomLeading) { Title() }
+//            Title()
+//        }
     }
     
     @ViewBuilder
-    func OverlayTitle() -> some View {
+    func Title() -> some View {
         if let title = title, !title.isEmpty {
-            VStack {
-                Text(title)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
-                    .clipped()
-                    .padding(.leading, 2)
-                    .padding(.top, 1)
-            }
-            .frame(maxWidth: .infinity, alignment: .center)
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedCorner(radius: radius, corners: [.bottomRight, .bottomLeft]))
+            Text(title)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .clipped()
+                .padding(.leading, 2)
+                .padding(.top, 1)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .foregroundColor(.white)
+                .background(Color.darkGray.opacity(0.7), in: RoundedCorner(radius: radius, corners: [.bottomRight, .bottomLeft]))
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
     
@@ -68,9 +69,8 @@ public struct MangaCard: View {
         if let count = chapterCount, count != 0  {
             Text(String(count))
                 .padding(2)
-                .foregroundColor(.primary)
-                .background(.thinMaterial, in: RoundedCorner(radius: radius, corners: [.topRight, .bottomLeft]))
-                .clipShape(RoundedCorner(radius: radius, corners: [.topRight, .bottomLeft]))
+                .foregroundColor(.white)
+                .background(Color.darkGray.opacity(0.7), in: RoundedCorner(radius: radius, corners: [.topRight, .bottomLeft]))
         }
     }
     
@@ -80,15 +80,15 @@ public struct MangaCard: View {
             Text(collectionName)
                 .lineLimit(1)
                 .padding(2)
-                .foregroundColor(.primary)
-                .background(.thinMaterial, in: RoundedCorner(radius: radius, corners: [.topLeft, .bottomRight]) )
+                .foregroundColor(.white)
+                .background(Color.darkGray.opacity(0.7), in: RoundedCorner(radius: radius, corners: [.topLeft, .bottomRight]) )
         }
     }
 }
 
 public extension View {
     func mangaCardFrame(width: Double = 130, height: Double = 180) -> some View {
-        if width != 130 && height != 180 {
+        if width != 130 || height != 180 {
             return self
                 .frame(width: width, height: height)
         } else if UIScreen.isLargeScreen {
