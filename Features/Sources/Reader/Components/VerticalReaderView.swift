@@ -44,12 +44,11 @@ struct VerticalReaderView: View {
     }
 
     func ImageView(image: String, proxy: GeometryProxy) -> some View {
-        ChapterImageView(url: image, contentMode: .fit)
+        ChapterImageView(url: image, contentMode: .fit, isZooming: .constant(false))
             .frame(
                 width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                 alignment: .center
             )
-            .addPinchAndPan(isZooming: .constant(false))
     }
     
     func DirectionView(title: String, direction: GoToChapterDirection, size: CGSize) -> some View {

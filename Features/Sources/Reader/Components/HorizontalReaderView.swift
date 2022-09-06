@@ -41,13 +41,12 @@ struct HorizontalReaderView: View {
     }
     
     func ImageView(image: String, proxy: GeometryProxy) -> some View {
-        ChapterImageView(url: image, contentMode: .fit)
+        ChapterImageView(url: image, contentMode: .fit, isZooming: $isZooming)
             .frame(
                 minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                 minHeight: proxy.size.height,
                 alignment: .center
             )
-            .addPinchAndPan(isZooming: $isZooming)
     }
     
     func DirectionView(title: String, direction: GoToChapterDirection, proxy: GeometryProxy) -> some View {

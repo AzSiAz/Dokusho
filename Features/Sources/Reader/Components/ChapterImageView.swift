@@ -15,22 +15,24 @@ struct ChapterImageView: View {
     
     @StateObject private var image: FetchImage
     @State var id = UUID()
+    @Binding var isZooming: Bool
     
     let url: URL
     let contentMode: ContentMode
     
-    init(url: URL?, contentMode: ContentMode) {
+    init(url: URL?, contentMode: ContentMode, isZooming: Binding<Bool>) {
         self.url = url ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
         self.contentMode = contentMode
+        self._isZooming = isZooming
         
         let image = FetchImage()
         image.pipeline = ImagePipeline.inMemory
         _image = .init(wrappedValue: image)
     }
     
-    init(url: String?, contentMode: ContentMode) {
+    init(url: String?, contentMode: ContentMode, isZooming: Binding<Bool>) {
         let url = URL(string: url ?? "") ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
-        self.init(url: url, contentMode: contentMode)
+        self.init(url: url, contentMode: contentMode, isZooming: isZooming)
     }
     
     var body: some View {
@@ -41,6 +43,7 @@ struct ChapterImageView: View {
                         .resizable()
                         .aspectRatio(contentMode: contentMode)
                         .contextMenu { ContextMenu(image: res.image) }
+                        .addPinchAndPan(isZooming: $isZooming)
             case .failure(let err):
                     VStack {
                         Button(action: { id = UUID() }) {
