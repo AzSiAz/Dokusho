@@ -22,15 +22,15 @@ let package = Package(
         .library(name: "ExploreTab", targets: ["ExploreTab"]),
     ],
     dependencies: [
-         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "5.26.0"),
-         .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.4.0"),
-         .package(url: "https://github.com/kean/Nuke", exact: "11.1.0"),
+         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "5.26.1"),
+         .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.5.1"),
+         .package(url: "https://github.com/kean/Nuke", exact: "11.3.1"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
-         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
-         .package(url: "https://github.com/muukii/JAYSON", exact: "2.4.0"),
+         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
+         .package(url: "https://github.com/muukii/JAYSON", exact: "2.5.0"),
          .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main"),
-         .package(url: "https://github.com/gh123man/SwiftUI-Refresher", .upToNextMajor(from: "1.0.0")),
+         .package(url: "https://github.com/gh123man/SwiftUI-Refresher", .upToNextMajor(from: "1.0.10")),
     ],
     targets: [
         .target(

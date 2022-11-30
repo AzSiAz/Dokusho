@@ -16,7 +16,6 @@ public struct ChaptersHistory: Decodable, FetchableRecord, Identifiable {
     public var scraper: Scraper
 }
 
-
 public struct ChaptersHistoryRequest: Queryable {
     public var filter: ChapterStatusHistory = .all
     public var searchTerm: String
