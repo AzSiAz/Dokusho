@@ -23,7 +23,7 @@ let package = Package(
     ],
     dependencies: [
          .package(url: "https://github.com/groue/GRDB.swift.git", exact: "5.26.1"),
-         .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.5.1"),
+         .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.7.0"),
          .package(url: "https://github.com/kean/Nuke", exact: "11.3.1"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
