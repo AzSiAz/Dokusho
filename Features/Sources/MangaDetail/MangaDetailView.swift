@@ -42,7 +42,11 @@ public struct MangaDetail: View {
                 }
             }
             else if let data = data {
-                CompactBody(data)
+                if horizontalSize == .regular {
+                    LargeBody(data)
+                } else {
+                    CompactBody(data)
+                }
             }
             else {
                 ProgressView()
