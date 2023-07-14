@@ -16,7 +16,8 @@ class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
     private var nextPage = 1
     private var isLoading = false
-
+    private var initialized = false
+    
     @Published var mangas = OrderedSet<SourceSmallManga>()
     @Published var error = false
     @Published var type: SourceFetchType = .latest
@@ -61,6 +62,16 @@ class ExploreSourceVM: ObservableObject {
         } catch {
             withAnimation {
                 self.error = true
+            }
+        }
+    }
+    
+    func initView() async {
+        if !initialized && mangas.isEmpty {
+            await fetchList()
+            
+            await asyncChange {
+                self.initialized = true
             }
         }
     }

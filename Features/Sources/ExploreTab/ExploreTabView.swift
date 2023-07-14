@@ -22,7 +22,7 @@ public struct ExploreTabView: View {
     public init() {}
     
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 if favoriteScrapers.count >= 1 {
                     Section("Favorite") {

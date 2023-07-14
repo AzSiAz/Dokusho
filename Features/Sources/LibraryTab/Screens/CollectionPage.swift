@@ -19,7 +19,6 @@ public class CollectionPageViewModel: ObservableObject {
     
     @Published var showFilter = false
     @Published var reload = true
-    @Published var selected: DetailedMangaInList?
     @Published var selectedGenre: String?
     
     public func refreshLibrary(libraryUpdater: LibraryUpdater, collection: MangaCollection, onlyUpdateAllRead: Bool) async {
@@ -63,7 +62,6 @@ public struct CollectionPage: View {
                 else { GridView() }
             }
             .sheet(isPresented: $vm.showFilter) { CollectionSettings(collection: collection) }
-            .navigate(item: $vm.selected, destination: makeMangaDetailView(data:))
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
@@ -84,11 +82,12 @@ public struct CollectionPage: View {
     
     @ViewBuilder
     func MangaInGrid(data: DetailedMangaInList) -> some View {
-        MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-            .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
-            .mangaCardFrame()
-            .onTapGesture { vm.selected = data }
-            .id(data.id)
+        NavigationLink(value: data) {
+            MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+                .mangaCardFrame()
+                .id(data.id)
+        }
     }
     
     @ViewBuilder
@@ -102,7 +101,7 @@ public struct CollectionPage: View {
     
     @ViewBuilder
     func MangaInList(data: DetailedMangaInList) -> some View {
-        NavigationLink(destination: makeMangaDetailView(data: data)) {
+        NavigationLink(value: data) {
             HStack {
                 MangaCard(imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
                     .mangaCardFrame(width: 90, height: 120)
@@ -122,10 +121,5 @@ public struct CollectionPage: View {
                 Image(systemName: "line.3.horizontal.decrease")
             }
         }
-    }
-    
-    func makeMangaDetailView(data: DetailedMangaInList) -> some View {
-        MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: vm.selectGenre(genre:))
-            .sheet(item: $vm.selectedGenre) { MangaInCollectionForGenre(genre: $0) }
     }
 }

@@ -36,7 +36,7 @@ public struct ExploreSourceView: View {
         .refreshable { await vm.fetchList(clean: true) }
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
-        .task { await vm.fetchList(clean: true) }
+        .task { await vm.initView() }
         .onChange(of: vm.type) { _ in Task { await vm.fetchList(clean: true, typeChange: true) } }
     }
     

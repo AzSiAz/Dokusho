@@ -8,7 +8,7 @@
 import Foundation
 import GRDB
 
-public enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, DatabaseValueConvertible {
+public enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, DatabaseValueConvertible, Hashable {
     case onlyUnReadChapter = "Only Unread Chapter", all = "All", completed = "Only Completed"
     
     public init(rawValue: String) {
@@ -24,8 +24,8 @@ public enum MangaCollectionFilter: String, Codable, Equatable, CaseIterable, Dat
     }
 }
 
-public struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible {
-    public enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
+public struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible, Hashable {
+    public enum Field: String, Codable, CaseIterable, DatabaseValueConvertible, Hashable {
         case unreadChapters = "By unread chapter", lastUpdate = "By last update", title = "By title", chapterCount = "By chapter count"
 
         public init(rawValue: String) {
@@ -47,7 +47,7 @@ public struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible
         }
     }
 
-    public enum Direction: String, Codable, CaseIterable, DatabaseValueConvertible {
+    public enum Direction: String, Codable, CaseIterable, DatabaseValueConvertible, Hashable {
         case ASC = "Ascending", DESC = "Descending"
         
         public init(rawValue: String) {
@@ -67,7 +67,7 @@ public struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible
     public var direction: Direction = .DESC
 }
 
-public struct MangaCollection: Codable, Identifiable, Equatable {
+public struct MangaCollection: Codable, Identifiable, Equatable, Hashable {
     public var id: UUID
     public var name: String
     public var position: Int

@@ -10,6 +10,7 @@ import MangaScraper
 import GRDBQuery
 import DataKit
 import SharedUI
+import MangaDetail
 
 public struct LibraryTabView: View {
     @Environment(\.appDatabase) var appDB
@@ -23,11 +24,11 @@ public struct LibraryTabView: View {
     public init() {}
     
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section("User Collection") {
                     ForEach(collections) { info in
-                        NavigationLink(destination: CollectionPage(collection: info.mangaCollection)) {
+                        NavigationLink(value: info.mangaCollection) {
                             Label(info.mangaCollection.name, systemImage: "square.grid.2x2")
                                 .badge("\(info.mangaCount)")
                                 .padding(.vertical)
@@ -62,6 +63,12 @@ public struct LibraryTabView: View {
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
             .queryObservation(.always)
+            .navigationDestination(for: DetailedMangaInList.self) { data in
+                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
+            }
+            .navigationDestination(for: MangaCollection.self) { data in
+                CollectionPage(collection: data)
+            }
         }
         .navigationViewStyle(.stack)
     }
