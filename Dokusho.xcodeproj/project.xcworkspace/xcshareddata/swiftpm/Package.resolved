@@ -55,24 +55,6 @@
       }
     },
     {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
-      "state" : {
-        "revision" : "f2616860a41f9d9932da412a8978fec79c06fe24",
-        "version" : "0.1.4"
-      }
-    },
-    {
-      "identity" : "swiftui-refresher",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/gh123man/SwiftUI-Refresher",
-      "state" : {
-        "revision" : "a8fd7935ece9a255da9a6dc06a6b56f00caae95d",
-        "version" : "1.0.10"
-      }
-    },
-    {
       "identity" : "swiftuilayouts",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apptekstudios/SwiftUILayouts",

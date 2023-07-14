@@ -11,7 +11,6 @@ import GRDBQuery
 import DataKit
 import SharedUI
 import MangaDetail
-import Refresher
 
 public struct ExploreSourceView: View {
     @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
@@ -26,20 +25,27 @@ public struct ExploreSourceView: View {
     
     public var body: some View {
         ScrollView {
-            switch(vm.error, vm.fromSegment, vm.fromRefresher, vm.mangas.isEmpty) {
-            case (true, _, _, _): ErrorBlock()
-            case (false, true, false, _): LoadingBlock()
-            case (_, _, _, true): LoadingBlock()
-            case (false, _, _, _): MangaListBlock()
+            switch(vm.error, vm.fromSegment, vm.mangas.isEmpty) {
+            case (true, _, true): ErrorBlock()
+            case (true, _, false): ErrorWithMangaInListBlock()
+            case (false, true, _): LoadingBlock()
+            case (_, _, true): LoadingBlock()
+            case (false, _, _): MangaListBlock()
             }
         }
-//        TODO: Remove when iOS 16 is out
-        .refresher(style: .system2, action: vm.refresh)
-//        .refreshable { await vm.refresh() }
+        .refreshable { await vm.fetchList(clean: true) }
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
-        .task { await vm.initView() }
-        .onChange(of: vm.type, perform: vm.segmentChange(type:))
+        .task { await vm.fetchList(clean: true) }
+        .onChange(of: vm.type) { _ in Task { await vm.fetchList(clean: true, typeChange: true) } }
+    }
+    
+    @ViewBuilder
+    func ErrorWithMangaInListBlock() -> some View {
+        Group {
+            MangaListBlock()
+            ErrorBlock()
+        }
     }
     
     @ViewBuilder

@@ -9,14 +9,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>17</integer>
+			<integer>27</integer>
 		</dict>
 		<key>Associations (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>18</integer>
+			<integer>28</integer>
 		</dict>
 		<key>Associations (Playground) 3.xcscheme</key>
 		<dict>
@@ -65,21 +65,21 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>26</integer>
 		</dict>
 		<key>CustomizedDecodingOfDatabaseRows (Playground) 1.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>21</integer>
 		</dict>
 		<key>CustomizedDecodingOfDatabaseRows (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>22</integer>
 		</dict>
 		<key>CustomizedDecodingOfDatabaseRows (Playground) 3.xcscheme</key>
 		<dict>
@@ -128,7 +128,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>20</integer>
 		</dict>
 		<key>DifferenceKit (Playground) 1.xcscheme</key>
 		<dict>
@@ -238,7 +238,7 @@
 		<key>Dokusho.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<key>DokushoIntentHandler.xcscheme_^#shared#^_</key>
 		<dict>
@@ -255,7 +255,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>15</integer>
 		</dict>
 		<key>JAYSON (Playground) 10.xcscheme</key>
 		<dict>
@@ -332,7 +332,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>16</integer>
 		</dict>
 		<key>JAYSON (Playground) 20.xcscheme</key>
 		<dict>
@@ -395,21 +395,21 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>14</integer>
 		</dict>
 		<key>MyPlayground (Playground) 1.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>20</integer>
+			<integer>24</integer>
 		</dict>
 		<key>MyPlayground (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>21</integer>
+			<integer>25</integer>
 		</dict>
 		<key>MyPlayground (Playground) 3.xcscheme</key>
 		<dict>
@@ -458,7 +458,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>19</integer>
+			<integer>23</integer>
 		</dict>
 		<key>Playground (Playground) 1.xcscheme</key>
 		<dict>
@@ -570,14 +570,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>14</integer>
+			<integer>18</integer>
 		</dict>
 		<key>Tour (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>15</integer>
+			<integer>19</integer>
 		</dict>
 		<key>Tour (Playground) 3.xcscheme</key>
 		<dict>
@@ -626,21 +626,21 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>13</integer>
+			<integer>17</integer>
 		</dict>
 		<key>TransactionObserver (Playground) 1.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>30</integer>
 		</dict>
 		<key>TransactionObserver (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>31</integer>
 		</dict>
 		<key>TransactionObserver (Playground) 3.xcscheme</key>
 		<dict>
@@ -689,7 +689,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>29</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

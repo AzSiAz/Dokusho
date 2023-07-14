@@ -12,7 +12,6 @@ import Reader
 import Common
 import SharedUI
 import SwiftUILayouts
-import Refresher
 
 public struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
@@ -43,10 +42,12 @@ public struct MangaDetail: View {
                 }
             }
             else if let data = data {
-                if horizontalSize == .regular {
-                    LargeBody(data)
-                } else {
-                    CompactBody(data)
+                Group {
+                    if horizontalSize == .regular {
+                        LargeBody(data)
+                    } else {
+                        CompactBody(data)
+                    }
                 }
             }
             else {
@@ -74,18 +75,13 @@ public struct MangaDetail: View {
         Grid {
             GridRow {
                 ScrollView {
-                    VStack {
-                        HeaderRow(data)
-                        ActionRow(data)
-                        SynopsisRow(synopsis: data.manga.synopsis)
-                        GenreRow(genres: data.manga.genres)
-                    }
-                    .id("Detail")
+                    HeaderRow(data)
+                    ActionRow(data)
+                    SynopsisRow(synopsis: data.manga.synopsis)
+                    GenreRow(genres: data.manga.genres)
                 }
-//                TODO: Remove when iOS 16 is out
-//                .refreshable { await vm.update() }
-                .refresher(style: .system, action: vm.update)
-                .gridCellColumns(4)
+                .id("Detail")
+                .gridCellColumns(6)
                 
                 HStack {
                     Divider()
@@ -98,7 +94,8 @@ public struct MangaDetail: View {
                         .padding(.bottom)
                 }
                 .id("Chapter")
-                .gridCellColumns(3)
+                .refreshable { await vm.update() }
+                .gridCellColumns(5)
             }
         }
     }
@@ -114,9 +111,7 @@ public struct MangaDetail: View {
                 .disabled(vm.refreshing)
                 .padding(.bottom)
         }
-//        TODO: Remove when iOS 16 is out
-//        .refreshable { await vm.update() }
-        .refresher(style: .system, action: vm.update)
+        .refreshable { await vm.update() }
     }
     
     @ViewBuilder
@@ -170,10 +165,11 @@ public struct MangaDetail: View {
                     Text(data.mangaCollection?.name ?? "Favoris")
                 }
             }
+            .disabled(collections.count == 0)
             .buttonStyle(.plain)
             .actionSheet(isPresented: $vm.addToCollection) {
                 var actions: [ActionSheet.Button] = []
-
+                    
                 collections.forEach { col in
                     actions.append(.default(
                         Text(col.name),
@@ -206,6 +202,7 @@ public struct MangaDetail: View {
                     Text("Reset cache")
                 }
             }
+            .disabled(true)
         }
         .controlGroupStyle(.navigation)
         .frame(height: 50)

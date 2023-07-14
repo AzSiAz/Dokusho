@@ -13,7 +13,33 @@ import Common
 import SharedUI
 import MangaDetail
 import DynamicCollection
-import Refresher
+
+public class CollectionPageViewModel: ObservableObject {
+    private var refreshTask: Task<Void, Error>?
+    
+    @Published var showFilter = false
+    @Published var reload = true
+    @Published var selected: DetailedMangaInList?
+    @Published var selectedGenre: String?
+    
+    public func refreshLibrary(libraryUpdater: LibraryUpdater, collection: MangaCollection, onlyUpdateAllRead: Bool) async {
+        guard refreshTask == nil else { return }
+        
+        refreshTask = Task {
+            try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
+        }
+        
+        try? await refreshTask?.value
+    }
+    
+    public func cancelRefresh() {
+        refreshTask?.cancel()
+    }
+    
+    public func selectGenre(genre: String) -> Void {
+        self.selectedGenre = genre
+    }
+}
 
 public struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
@@ -22,11 +48,8 @@ public struct CollectionPage: View {
 
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
-
-    @State var showFilter = false
-    @State var reload = true
-    @State var selected: DetailedMangaInList?
-    @State var selectedGenre: String?
+    
+    @StateObject var vm: CollectionPageViewModel = .init()
     
     public init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -39,12 +62,13 @@ public struct CollectionPage: View {
                 if collection.useList ?? false { ListView() }
                 else { GridView() }
             }
-            .sheet(isPresented: $showFilter) { CollectionSettings(collection: collection) }
-            .navigate(item: $selected, destination: makeMangaDetailView(data:))
+            .sheet(isPresented: $vm.showFilter) { CollectionSettings(collection: collection) }
+            .navigate(item: $vm.selected, destination: makeMangaDetailView(data:))
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
             .queryObservation(.always)
+            .onDisappear { vm.cancelRefresh() }
         }
     }
     
@@ -55,9 +79,7 @@ public struct CollectionPage: View {
                 MangaInGrid(data: data)
             }
         }
-//        TODO: Remove when iOS 16 is out
-//        .refreshable { await refreshLibrary() }
-        .refresher(style: .system2, action: refreshLibrary)
+        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
     }
     
     @ViewBuilder
@@ -65,7 +87,7 @@ public struct CollectionPage: View {
         MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
             .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
             .mangaCardFrame()
-            .onTapGesture { selected = data }
+            .onTapGesture { vm.selected = data }
             .id(data.id)
     }
     
@@ -74,7 +96,7 @@ public struct CollectionPage: View {
         List(list) { data in
             MangaInList(data: data)
         }
-        .refreshable { await refreshLibrary() }
+        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
         .listStyle(PlainListStyle())
     }
     
@@ -96,24 +118,14 @@ public struct CollectionPage: View {
     
     var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(action: { showFilter.toggle() }) {
+            Button(action: { vm.showFilter.toggle() }) {
                 Image(systemName: "line.3.horizontal.decrease")
             }
         }
     }
-}
-
-extension CollectionPage {
-    func refreshLibrary() async {
-        try? await libraryUpdater.refreshCollection(collection: collection!, onlyAllRead: onlyUpdateAllRead)
-    }
     
     func makeMangaDetailView(data: DetailedMangaInList) -> some View {
-        MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: selectGenre(genre:))
-            .sheet(item: $selectedGenre) { MangaInCollectionForGenre(genre: $0) }
-    }
-    
-    func selectGenre(genre: String) -> Void {
-        self.selectedGenre = genre
+        MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper, selectGenre: vm.selectGenre(genre:))
+            .sheet(item: $vm.selectedGenre) { MangaInCollectionForGenre(genre: $0) }
     }
 }

@@ -15,14 +15,12 @@ import Common
 class ExploreSourceVM: ObservableObject {
     private let database = AppDatabase.shared.database
     private var nextPage = 1
-    private var inited = false
     private var isLoading = false
-    
+
     @Published var mangas = OrderedSet<SourceSmallManga>()
     @Published var error = false
     @Published var type: SourceFetchType = .latest
     @Published var selectedManga: SourceSmallManga?
-    @Published var fromRefresher: Bool = false
     @Published var fromSegment: Bool = false
     
     let scraper: Scraper
@@ -31,31 +29,37 @@ class ExploreSourceVM: ObservableObject {
         self.scraper = scraper
     }
     
-
-    func fetchList(clean: Bool = false) async {
+    @MainActor
+    func fetchList(clean: Bool = false, typeChange: Bool = false) async {
         guard isLoading == false else { return }
-        self.isLoading = true
-
-        if clean {
-            nextPage = 1
+        
+        defer {
+            self.fromSegment = false
+            self.isLoading = false
         }
         
-        await asyncChange {
+        if clean {
+            nextPage = 1
+            if typeChange {
+                self.fromSegment = true
+                self.error = false
+            }
+        } else {
+            self.isLoading = true
             self.error = false
         }
         
         do {
             let newManga = try await type == .latest ? scraper.asSource()?.fetchLatestUpdates(page: nextPage) : scraper.asSource()?.fetchPopularManga(page: nextPage)
-
-            await asyncChange {
+            
+            withAnimation {
                 if clean { self.mangas = OrderedSet(newManga!.mangas) }
                 else { self.mangas.append(contentsOf: newManga!.mangas) }
 
                 self.nextPage += 1
-                self.isLoading = false
             }
         } catch {
-            await animateAsyncChange {
+            withAnimation {
                 self.error = true
             }
         }
@@ -90,42 +94,6 @@ class ExploreSourceVM: ObservableObject {
             }
         } catch(let err) {
             print(err)
-        }
-    }
-    
-    func refresh() async {
-        await animateAsyncChange {
-            self.fromRefresher = true
-        }
-
-        await fetchList(clean: true)
-            
-        await asyncChange {
-            self.fromRefresher = false
-        }
-    }
-    
-    func segmentChange(type: SourceFetchType? = nil) {
-        withAnimation {
-            fromSegment = true
-        }
-
-        Task {
-            await fetchList(clean: true)
-            
-            await asyncChange {
-                self.fromSegment = false
-            }
-        }
-    }
-    
-    func initView() async {
-        if !inited && mangas.isEmpty {
-            await fetchList()
-            
-            await asyncChange {
-                self.inited = true
-            }
         }
     }
 }

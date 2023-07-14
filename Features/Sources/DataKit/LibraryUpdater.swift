@@ -28,8 +28,7 @@ public class LibraryUpdater: ObservableObject {
     }
 
     private let database = AppDatabase.shared.database
-
-    @Published public var refreshStatus: [MangaCollection.ID: Bool] = [:]
+    private var refreshStatus: [MangaCollection.ID: Bool] = [:]
     
     public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }
@@ -43,6 +42,7 @@ public class LibraryUpdater: ObservableObject {
         let data = try await database.read { db in
             try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
+        print("---------------------Fetching--------------------------")
         
         if data.count != 0 {
             try await withThrowingTaskGroup(of: RefreshData.self) { group in
@@ -64,7 +64,6 @@ public class LibraryUpdater: ObservableObject {
                             try Manga.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
                         }
                         
-                        await updateRefreshStatus(collectionID: collection.id, refreshing: false)
                         await Task.yield()
                     } catch (let error) {
                         print(error)
@@ -72,6 +71,8 @@ public class LibraryUpdater: ObservableObject {
                     }
                 }
             }
+            
+            print("---------------------Fetched--------------------------")
             
             await self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
             await MainActor.run {
