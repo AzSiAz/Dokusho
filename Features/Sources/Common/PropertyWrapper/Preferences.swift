@@ -75,6 +75,9 @@ public final class Preferences {
     
     @UserDefault("ONLY_UPDATE_ALL_READ")
     public var onlyUpdateAllRead: Bool = true
+    
+    @UserDefault("NUMBER_OF_PRELOADED_IMAGES")
+    public var numberOfPreloadedImages: Int = 3
 }
 
 @propertyWrapper

@@ -39,16 +39,19 @@ public struct ReaderView: View {
         .onTapGesture { vm.toggleToolbar() }
         .task(id: vm.currentChapter) { await vm.fetchChapter() }
         .task(id: vm.tabIndex) { await vm.updateChapterStatus() }
-        .onDisappear { vm.cancelTasks() }
         .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
         .preferredColorScheme(.dark)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
+            vm.cancelTasks()
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
+        }
+        .task(id: vm.tabIndex) {
+            await vm.backgroundFetchImage()
         }
     }
     

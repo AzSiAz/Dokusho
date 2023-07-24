@@ -14,6 +14,7 @@ public struct SettingsTabView: View {
     @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
     @Preference(\.useNewVerticalReader) var useNewVerticalReader
     @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
+    @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
     
     public init() {}
     
@@ -30,6 +31,7 @@ public struct SettingsTabView: View {
                     Button(action: { vm.cleanOrphanData() }) {
                         Text("Clean orphan data")
                     }
+                    Stepper("\(numberOfPreloadedImages) preloaded images", value: $numberOfPreloadedImages, in: 3...6, step: 1)
                 }
                 
                 Section("Experimental") {

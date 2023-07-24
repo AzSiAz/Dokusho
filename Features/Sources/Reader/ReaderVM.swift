@@ -44,11 +44,12 @@ public class ReaderVM: ObservableObject {
     @Published var tabIndex = ReaderLink.image(url: "")
     @Published var direction: ReadingDirection = .vertical
     @Published var showReaderDirectionChoice = false
+    
+    @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
 
     var manga: Manga
     private var scraper: Scraper
     private var chapters: [MangaChapter]
-    private var runningTask: Task<(), Never>?
 
     public init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.currentChapter = chapter
@@ -59,8 +60,7 @@ public class ReaderVM: ObservableObject {
     }
     
     func cancelTasks() {
-        runningTask?.cancel()
-        ImagePipeline.inMemory.cache.removeAll()
+        ImagePipeline.inMemory.cache.removeAll(caches: [.all])
     }
     
     @MainActor
@@ -79,8 +79,6 @@ public class ReaderVM: ObservableObject {
             
             guard let firstImage = getOnlyImagesUrl().first else { throw "First Image not found" }
             self.tabIndex = firstImage
-            
-            backgroundFetchImage(urls.chunked(into: 6).first ?? [])
         } catch {
             Logger.reader.info("Error loading chapter \(self.currentChapter.chapterId): \(error)")
         }
@@ -114,14 +112,16 @@ public class ReaderVM: ObservableObject {
         return base
     }
     
-    func backgroundFetchImage(_ urls: [String]) {
-        runningTask = Task {
-            for image in urls {
-                if Task.isCancelled { break }
+    func backgroundFetchImage() async {
+        guard let nextLoadingIndex = self.images.firstIndex(of: self.tabIndex) else { return }
+        let images = self.images[nextLoadingIndex...].prefix(numberOfPreloadedImages)
+        
+        for image in images {
+            if Task.isCancelled { break }
+            guard case let .image(url) = image else { return }
 
-                Logger.reader.info("Loading \(image)")
-                _ = try? await ImagePipeline.inMemory.image(for: image.asImageRequest())
-            }
+            Logger.reader.info("Loading \(url)")
+            _ = try? await ImagePipeline.inMemory.image(for: url.asImageRequest())
         }
     }
     
@@ -151,8 +151,8 @@ public class ReaderVM: ObservableObject {
             }
 
             do {
-                try await self.database.write { db in
-                    try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: self.currentChapter.id)
+                try await self.database.write { [currentChapter] db in
+                    try MangaChapter.markChapterAs(newStatus: .read, db: db, chapterId: currentChapter.id)
                 }
             } catch(let err) {
                 print(err)
