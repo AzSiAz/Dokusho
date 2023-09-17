@@ -73,9 +73,8 @@ public class ReaderVM: ObservableObject {
             guard let data = try await scraper.asSource()?.fetchChapterImages(mangaId: manga.mangaId, chapterId: currentChapter.chapterId) else { throw "Error fetching image for scraper" }
 
             let urls = data.map { $0.imageUrl }
-            let readerLinks = try buildReaderLinks(data: urls)
             
-            self.images = readerLinks
+            self.images = try buildReaderLinks(data: urls)
             
             guard let firstImage = getOnlyImagesUrl().first else { throw "First Image not found" }
             self.tabIndex = firstImage
@@ -89,27 +88,20 @@ public class ReaderVM: ObservableObject {
     }
     
     func buildReaderLinks(data: [String]) throws -> [ReaderLink] {
-        var base = [ReaderLink]()
-        base.append(contentsOf: data.map { ReaderLink.image(url: $0) })
+        var images = [ReaderLink]()
+        let (previous, next) = getChapters()
         
-        switch direction {
-        case .rightToLeft:
-            if let previousChapter = getChapter(.next) {
-                base.insert(.previous(chapter: previousChapter), at: 0)
-            }
-            if let nextChapter = getChapter(.previous) {
-                base.append(.next(chapter: nextChapter))
-            }
-        case .leftToRight, .vertical:
-            if let previousChapter = getChapter(.previous) {
-                base.insert(.previous(chapter: previousChapter), at: 0)
-            }
-            if let nextChapter = getChapter(.next) {
-                base.append(.next(chapter: nextChapter))
-            }
+        if let previous {
+            images.append(.previous(chapter: previous))
         }
 
-        return base
+        images.append(contentsOf: data.map { .image(url: $0) })
+        
+        if let next {
+            images.append(.next(chapter: next))
+        }
+
+        return images
     }
     
     func backgroundFetchImage() async {
@@ -167,6 +159,21 @@ public class ReaderVM: ObservableObject {
     func toggleToolbar() {
         withAnimation {
             showToolBar.toggle()
+        }
+    }
+    
+    func getChapters() -> (previous: MangaChapter?, next: MangaChapter?) {
+        switch direction {
+        case .rightToLeft:
+            let previousChapter = getChapter(.next)
+            let nextChapter = getChapter(.previous)
+
+            return (previous: previousChapter, next: nextChapter)
+        case .leftToRight, .vertical:
+            let previousChapter = getChapter(.previous)
+            let nextChapter = getChapter(.next)
+            
+            return (previous: previousChapter, next: nextChapter)
         }
     }
     
