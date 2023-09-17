@@ -113,14 +113,14 @@ public class ReaderVM: ObservableObject {
     }
     
     func backgroundFetchImage() async {
-        guard let nextLoadingIndex = self.images.firstIndex(of: self.tabIndex) else { return }
-        let images = self.images[nextLoadingIndex...].prefix(numberOfPreloadedImages)
+        guard let currentImageIndex = self.images.firstIndex(of: self.tabIndex) else { return }
+        let nextLoadingIndex = currentImageIndex <= self.images.endIndex && currentImageIndex != 0 ? self.images.index(after: currentImageIndex) : currentImageIndex
+        let imagesToLoad = self.images[nextLoadingIndex...].prefix(numberOfPreloadedImages)
         
-        for image in images {
+        for image in imagesToLoad {
             if Task.isCancelled { break }
             guard case let .image(url) = image else { return }
 
-            Logger.reader.info("Loading \(url)")
             _ = try? await ImagePipeline.inMemory.image(for: url.asImageRequest())
         }
     }
