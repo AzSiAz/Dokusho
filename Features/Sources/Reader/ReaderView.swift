@@ -49,6 +49,7 @@ public struct ReaderView: View {
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
+            vm.cancelTasks()
         }
         .task(id: vm.tabIndex) {
             await vm.backgroundFetchImage()

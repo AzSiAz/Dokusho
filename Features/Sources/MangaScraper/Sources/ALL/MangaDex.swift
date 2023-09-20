@@ -173,19 +173,18 @@ public struct MangaDex: Source {
         // If the title has a translated english title use it
         if let enTitle = try? data.next("attributes").next("title").next("en").getString(), !enTitle.isEmpty { return enTitle }
         if let altEnTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("en").isNull) })?.next("en").getString(), !altEnTitle.isEmpty { return altEnTitle }
-        
+
         // Most likely for Japanese title when original language is `ko`
         if let jaRo = try? data.next("attributes").next("title").next("ja-ro").getString(), !jaRo.isEmpty { return jaRo }
         if let jaTitle = try? data.next("attributes").next("title").next("ja").getString(), !jaTitle.isEmpty { return jaTitle }
         if let altJaRoTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("ja-ro").isNull) })?.next("ja-ro").getString(), !altJaRoTitle.isEmpty { return altJaRoTitle }
         if let altJaTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("ja").isNull) })?.next("ja").getString(), !altJaTitle.isEmpty { return altJaTitle }
-        
+
         // Most likely for Korean title when original language is `ko`
         if let koTitle = try? data.next("attributes").next("title").next("ko").getString(), !koTitle.isEmpty { return koTitle }
         if let altkoTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("ko").isNull) })?.next("ko").getString(), !altkoTitle.isEmpty { return altkoTitle }
 
         return "No title found"
-        
     }
     
     private func fetchChapters(mangaId: String) async throws -> [SourceChapter] {
