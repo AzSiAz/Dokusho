@@ -8,13 +8,15 @@
 import SwiftUI
 import Combine
 
-public final class DeviceOrientation: ObservableObject {
+@Observable
+public final class DeviceOrientation {
     public enum Orientation {
         case portrait, landscape
     }
     
-    @Published public var orientation: Orientation
+    public var orientation: Orientation
    
+    @ObservationIgnored
     private var listener: AnyCancellable?
     
     public init() {

@@ -13,10 +13,10 @@ import SharedUI
 import MangaDetail
 
 public struct LibraryTabView: View {
-    @Environment(\.appDatabase) var appDB
-    @EnvironmentObject var libraryRefresh: LibraryUpdater
+    @Environment(\.appDatabase) private var appDB
+    @Environment(LibraryUpdater.self) private var libraryRefresh
 
-    @Query(DetailedMangaCollectionRequest()) var collections
+    @GRDBQuery.Query(DetailedMangaCollectionRequest()) var collections
 
     @State var editMode: EditMode = .inactive
     @State var newCollectionName = ""

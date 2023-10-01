@@ -11,18 +11,19 @@ import Nuke
 import DataKit
 import Backup
 
-class SettingsVM: ObservableObject {
-    @Published var actionInProgress = false
-    @Published var showExportfile = false
-    @Published var file: Backup?
-    @Published var fileName: String?
-    @Published var showImportfile = false
+@Observable
+class SettingsViewModel {
+    var actionInProgress = false
+    var showExportfile = false
+    var file: Backup?
+    var fileName: String?
+    var showImportfile = false
     
     @MainActor
-    func createBackup() {
+    func createBackup(manager: BackupManager) {
         actionInProgress.toggle()
         
-        let backup = BackupManager.shared.createBackup()
+        let backup = manager.createBackup()
 
         fileName = "dokusho-backup-\(Date.now.ISO8601Format()).json"
         file = Backup(data: backup)
@@ -32,7 +33,7 @@ class SettingsVM: ObservableObject {
     }
     
     @MainActor
-    func importBackup(url: URL) async {
+    func importBackup(url: URL, manager: BackupManager) async {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
             actionInProgress.toggle()
@@ -40,7 +41,7 @@ class SettingsVM: ObservableObject {
             let backup = try JSONDecoder().decode(BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
 
-            await BackupManager.shared.importBackup(backup: backup)
+            await manager.importBackup(backup: backup)
 
             self.actionInProgress.toggle()
         } catch {

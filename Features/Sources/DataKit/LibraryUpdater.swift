@@ -10,10 +10,10 @@ import SwiftUI
 import MangaScraper
 import OSLog
 import Common
+import Observation
 
-public class LibraryUpdater: ObservableObject {
-    public static let shared = LibraryUpdater()
-    
+@Observable
+public class LibraryUpdater {
     public struct RefreshStatus {
         public var isRefreshing: Bool
         public var refreshProgress: Double
@@ -29,6 +29,9 @@ public class LibraryUpdater: ObservableObject {
 
     private let database = AppDatabase.shared.database
     private var refreshStatus: [MangaCollection.ID: Bool] = [:]
+    public static let shared = LibraryUpdater()
+    
+    private init() {}
     
     public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }

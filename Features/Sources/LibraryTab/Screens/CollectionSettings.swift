@@ -15,7 +15,7 @@ import SharedUI
 
 public struct CollectionSettings: View {
     @Environment(\.appDatabase) var appDatabase
-    @Query<OneMangaCollectionRequest> var collection: MangaCollection?
+    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollection?
     
     @State var collectionOrder: MangaCollectionOrder
     @State var collectionFilter: MangaCollectionFilter
@@ -57,10 +57,10 @@ public struct CollectionSettings: View {
                 }
             }
             .navigationTitle(Text("Modify Filter"))
-            .onChange(of: $collectionFilter.wrappedValue, perform: { updateCollectionFilter(newFilter: $0) })
-            .onChange(of: $collectionOrder.field.wrappedValue, perform: { updateCollectionOrder(direction: nil, field: $0) })
-            .onChange(of: $collectionOrder.direction.wrappedValue, perform: { updateCollectionOrder(direction: $0, field: nil) })
-            .onChange(of: $useList.wrappedValue, perform: { updateCollectionUseList(d: $0) })
+            .onChange(of: $collectionFilter.wrappedValue){ updateCollectionFilter(newFilter: $1) }
+            .onChange(of: $collectionOrder.field.wrappedValue) { updateCollectionOrder(direction: nil, field: $1) }
+            .onChange(of: $collectionOrder.direction.wrappedValue) { updateCollectionOrder(direction: $1, field: nil) }
+            .onChange(of: $useList.wrappedValue) { updateCollectionUseList(d: $1) }
         }
     }
 }

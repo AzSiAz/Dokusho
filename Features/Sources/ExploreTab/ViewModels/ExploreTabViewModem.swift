@@ -9,10 +9,15 @@ import Foundation
 import MangaScraper
 import DataKit
 
-class ExploreTabVM: ObservableObject {
-    var database = AppDatabase.shared.database
+@Observable
+class ExploreTabViewModel {
+    private var database = AppDatabase.shared.database
 
-    @Published var showSourceMangaSearchModal = false
+    var showSourceMangaSearchModal: Bool
+    
+    public init(showSourceMangaSearchModal: Bool = false) {
+        self.showSourceMangaSearchModal = showSourceMangaSearchModal
+    }
     
     func onlyGetThirdPartyScraper(favorite: [Scraper], active: [Scraper]) -> [Source] {
         return MangaScraperService.shared.list

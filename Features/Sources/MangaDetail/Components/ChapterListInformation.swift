@@ -11,10 +11,10 @@ import DataKit
 import Reader
 
 public struct ChapterListInformation: View {
-    @EnvironmentObject var readerManager: ReaderManager
+    @Environment(ReaderManager.self) var readerManager
     
-    @Query<MangaChaptersRequest> var chapters: [MangaChapter]
-    @StateObject var vm: ChapterListVM
+    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapter]
+    @State var vm: ChapterListVM
     
     var manga: Manga
     var scraper: Scraper

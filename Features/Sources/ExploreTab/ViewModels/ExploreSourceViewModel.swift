@@ -12,25 +12,26 @@ import DataKit
 import Collections
 import Common
 
-class ExploreSourceVM: ObservableObject {
+@MainActor
+@Observable
+class ExploreSourceViewModel {
     private let database = AppDatabase.shared.database
     private var nextPage = 1
     private var isLoading = false
     private var initialized = false
     
-    @Published var mangas = OrderedSet<SourceSmallManga>()
-    @Published var error = false
-    @Published var type: SourceFetchType = .latest
-    @Published var selectedManga: SourceSmallManga?
-    @Published var fromSegment: Bool = false
-    
+    var mangas = OrderedSet<SourceSmallManga>()
+    var error = false
+    var type: SourceFetchType = .latest
+    var selectedManga: SourceSmallManga?
+    var fromSegment: Bool = false
+
     let scraper: Scraper
     
     init(for scraper: Scraper) {
         self.scraper = scraper
     }
-    
-    @MainActor
+
     func fetchList(clean: Bool = false, typeChange: Bool = false) async {
         guard isLoading == false else { return }
         
@@ -65,12 +66,12 @@ class ExploreSourceVM: ObservableObject {
             }
         }
     }
-    
+
     func initView() async {
         if !initialized && mangas.isEmpty {
             await fetchList()
             
-            await asyncChange {
+            withAnimation {
                 self.initialized = true
             }
         }

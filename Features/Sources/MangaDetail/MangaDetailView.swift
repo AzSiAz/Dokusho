@@ -15,12 +15,13 @@ import SwiftUILayouts
 
 public struct MangaDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
-    @Query(MangaCollectionRequest()) var collections
-    @Query<MangaDetailRequest> var data: MangaWithDetail?
 
-    @StateObject var vm: MangaDetailVM
-    @StateObject var orientation: DeviceOrientation = DeviceOrientation()
-    @StateObject var readerManager = ReaderManager()
+    @GRDBQuery.Query(MangaCollectionRequest()) var collections
+    @GRDBQuery.Query<MangaDetailRequest> var data: MangaWithDetail?
+
+    @State var vm: MangaDetailVM
+    @State var orientation: DeviceOrientation = DeviceOrientation()
+    @State var readerManager = ReaderManager()
 
     let selectGenre: ((_ genre: String) -> Void)?
     
@@ -63,9 +64,10 @@ public struct MangaDetail: View {
             }
         }
         .fullScreenCover(item: $readerManager.selectedChapter) { data in
-            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
+            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters))
+                .environment(readerManager)
         }
-        .environmentObject(readerManager)
+        .environment(readerManager)
     }
     
     @ViewBuilder

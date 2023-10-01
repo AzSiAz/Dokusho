@@ -13,14 +13,13 @@ typealias OnProgress = (_ status: ChapterStatus) -> Void
 
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(ReaderManager.self) public var readerManager
     
-    @StateObject public var vm: ReaderVM
-    @ObservedObject public var readerManager: ReaderManager
+    @State private var vm: ReaderViewModel
     @Namespace private var overlayAnimation
     
-    public init(vm: ReaderVM, readerManager: ReaderManager) {
+    public init(vm: ReaderViewModel) {
         _vm = .init(wrappedValue: vm)
-        _readerManager = .init(wrappedValue: readerManager)
     }
     
     public var body: some View {
@@ -107,7 +106,7 @@ public struct ReaderView: View {
         }
     }
     
-    @ViewBuilder
+    @MainActor @ViewBuilder
     func TopOverlay() -> some View {
         if vm.showToolBar {
             Group {

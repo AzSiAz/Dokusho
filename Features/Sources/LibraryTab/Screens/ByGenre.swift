@@ -11,7 +11,7 @@ import DataKit
 import DynamicCollection
 
 public struct ByGenreListPage: View {
-    @Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]
+    @GRDBQuery.Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]
     
     public init() {}
 

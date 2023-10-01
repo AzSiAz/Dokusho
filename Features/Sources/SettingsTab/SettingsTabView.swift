@@ -1,28 +1,26 @@
-    //
-    //  SettingsView.swift
-    //  Dokusho (iOS)
-    //
-    //  Created by Stephan Deumier on 28/06/2021.
-    //
-
+import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 import Common
+import Backup
+import DataKit
+import GRDBQuery
+import GRDB
 
 public struct SettingsTabView: View {
-    @StateObject var vm = SettingsVM()
-    @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
-    @Preference(\.useNewVerticalReader) var useNewVerticalReader
-    @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
-    @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
+    @Environment(BackupManager.self) private var backupManager
+    @Environment(UserPreferences.self) private var userPreference
+    
+    @State private var vm = SettingsViewModel()
     
     public init() {}
     
     public var body: some View {
         NavigationView {
+            @Bindable var userPreferences = userPreference
             List {
                 Section("Data") {
-                    Button(action: { vm.createBackup() }) {
+                    Button(action: { vm.createBackup(manager: backupManager) }) {
                         Text("Create Backup")
                     }
                     Button(action: { vm.showImportfile.toggle() }) {
@@ -31,12 +29,12 @@ public struct SettingsTabView: View {
                     Button(action: { vm.cleanOrphanData() }) {
                         Text("Clean orphan data")
                     }
-                    Stepper("\(numberOfPreloadedImages) preloaded images", value: $numberOfPreloadedImages, in: 3...6, step: 1)
+                    Stepper("\(userPreference.numberOfPreloadedImages) preloaded images", value: $userPreferences.numberOfPreloadedImages, in: 3...6, step: 1)
                 }
                 
                 Section("Experimental") {
-                    Toggle("Use new horizontal reader", isOn: $userNewHorizontalReader)
-                    Toggle("Use new vertical reader", isOn: $useNewVerticalReader)
+                    Toggle("Use new horizontal reader", isOn: $userPreferences.useNewHorizontalReader)
+                    Toggle("Use new vertical reader", isOn: $userPreferences.useNewVerticalReader)
                 }
                 
                 Section("Cache") {
@@ -46,7 +44,7 @@ public struct SettingsTabView: View {
                 }
                 
                 Section("Collection Update") {
-                    Toggle("Only update when manga has no unread chapter", isOn: $onlyUpdateAllRead)
+                    Toggle("Only update when manga has no unread chapter", isOn: $userPreferences.onlyUpdateAllRead)
                 }
             }
             .fileExporter(isPresented: $vm.showExportfile, document: vm.file, contentType: .json, defaultFilename: vm.fileName) { res in
@@ -54,7 +52,7 @@ public struct SettingsTabView: View {
             }
             .fileImporter(isPresented: $vm.showImportfile, allowedContentTypes: [.json], allowsMultipleSelection: false) { res in
                 let url = try! res.get().first!
-                Task { await vm.importBackup(url: url) }
+                Task { await vm.importBackup(url: url, manager: backupManager) }
             }
             .overlay {
                 if vm.actionInProgress {

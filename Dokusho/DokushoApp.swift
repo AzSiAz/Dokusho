@@ -6,21 +6,24 @@
 //
 
 import SwiftUI
-//import TelemetryClient
 import DataKit
 import Backup
+import Common
 
 @main
 struct DokushoApp: App {
-    @StateObject var libraryUpdater = LibraryUpdater.shared
-    @StateObject var backupManager = BackupManager.shared
-    
+    @State private var userPreferences = UserPreferences.shared
+    @State private var backupManager = BackupManager.shared
+    @State private var libraryUpdater = LibraryUpdater.shared
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(\.appDatabase, .shared)
-                .environmentObject(libraryUpdater)
-                .environmentObject(backupManager)
+                .environment(libraryUpdater)
+                .environment(backupManager)
+                .environment(userPreferences)
+                .dokushoModelContainer()
         }
     }
 }

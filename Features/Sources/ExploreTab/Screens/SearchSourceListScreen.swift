@@ -15,7 +15,7 @@ import SharedUI
 import MangaDetail
 
 public struct SearchSourceListScreen: View {
-    @Query(MangaCollectionRequest()) var collections
+    @GRDBQuery.Query(MangaCollectionRequest()) var collections
     
     @State var searchText: String = ""
     @State var isSearchFocused: Bool = true
@@ -32,7 +32,7 @@ public struct SearchSourceListScreen: View {
                 .padding(.top, 10)
                 .padding(.horizontal, 10)
             ForEach(scrapers) { scraper in
-                ScraperSearch(scraper: scraper, textToSearch: $searchText, collections: collections)
+                ScraperSearch(scraper: scraper, textToSearch: searchText, collections: collections)
             }
         }
         .padding(.top, 5)
@@ -40,16 +40,16 @@ public struct SearchSourceListScreen: View {
 }
 
 public struct ScraperSearch: View {
-    @Query<MangaInCollectionsRequest> var mangasInCollection: [MangaInCollection]
+    @GRDBQuery.Query<MangaInCollectionsRequest> var mangasInCollection: [MangaInCollection]
 
-    @StateObject var vm: SearchScraperVM
-    @Binding var textToSearch: String
+    @State var vm: SearchScraperViewModel
+    var textToSearch: String
     
     var collections: [MangaCollection]
     
-    public init(scraper: Scraper, textToSearch: Binding<String>, collections: [MangaCollection]) {
+    public init(scraper: Scraper, textToSearch: String, collections: [MangaCollection]) {
         self.collections = collections
-        _textToSearch = textToSearch
+        self.textToSearch = textToSearch
         _vm = .init(wrappedValue: .init(scraper: scraper))
         _mangasInCollection = Query(MangaInCollectionsRequest(srcId: scraper.id))
     }
@@ -81,9 +81,9 @@ public struct ScraperSearch: View {
             }
         }
         .padding(.bottom, 10)
-        .onChange(of: textToSearch) { text in
+        .onChange(of: textToSearch) { _, text in
             Task {
-                await vm.fetchData(textToSearch: textToSearch)
+                await vm.fetchData(textToSearch: text)
             }
         }
         .sheet(item: $vm.selectedManga) { manga in

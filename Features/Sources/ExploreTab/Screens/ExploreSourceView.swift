@@ -13,10 +13,10 @@ import SharedUI
 import MangaDetail
 
 public struct ExploreSourceView: View {
-    @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
-    @Query(MangaCollectionRequest()) var collections
-    
-    @StateObject var vm: ExploreSourceVM
+    @GRDBQuery.Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
+    @GRDBQuery.Query(MangaCollectionRequest()) var collections
+
+    @State var vm: ExploreSourceViewModel
 
     public init(scraper: Scraper) {
         _vm = .init(wrappedValue: .init(for: scraper))
@@ -37,7 +37,7 @@ public struct ExploreSourceView: View {
         .toolbar { ToolbarItem(placement: .principal) { Header() } }
         .navigationTitle(vm.getTitle())
         .task { await vm.initView() }
-        .onChange(of: vm.type) { _ in Task { await vm.fetchList(clean: true, typeChange: true) } }
+        .onChange(of: vm.type) { _, _ in Task { await vm.fetchList(clean: true, typeChange: true) } }
     }
     
     @ViewBuilder

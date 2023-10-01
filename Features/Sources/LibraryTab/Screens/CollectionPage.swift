@@ -42,11 +42,11 @@ public class CollectionPageViewModel: ObservableObject {
 
 public struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
-    @EnvironmentObject var libraryUpdater: LibraryUpdater
-    @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
+    @Environment(LibraryUpdater.self) var libraryUpdater
+    @Environment(UserPreferences.self) var userPreference
 
-    @Query<OneMangaCollectionRequest> var collection: MangaCollection?
-    @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
+    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollection?
+    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
     @StateObject var vm: CollectionPageViewModel = .init()
     
@@ -77,7 +77,7 @@ public struct CollectionPage: View {
                 MangaInGrid(data: data)
             }
         }
-        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
+        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: userPreference.onlyUpdateAllRead) }
     }
     
     @ViewBuilder
@@ -95,7 +95,7 @@ public struct CollectionPage: View {
         List(list) { data in
             MangaInList(data: data)
         }
-        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
+        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: userPreference.onlyUpdateAllRead) }
         .listStyle(PlainListStyle())
     }
     

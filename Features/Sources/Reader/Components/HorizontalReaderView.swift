@@ -9,7 +9,7 @@ import SwiftUI
 import Common
 
 struct HorizontalReaderView: View {
-    @ObservedObject var vm: ReaderVM
+    @Bindable var vm: ReaderViewModel
     @State var isZooming = false
 
     var body: some View {

@@ -13,7 +13,7 @@ import SharedUI
 import MangaDetail
 
 public struct MangaForSourcePage: View {
-    @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
+    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
     var scraper: Scraper
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]

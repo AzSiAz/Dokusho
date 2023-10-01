@@ -9,14 +9,18 @@ import Foundation
 import SwiftUI
 import DataKit
 
-public class ChapterListVM: ObservableObject {
+@Observable
+public class ChapterListVM {
+    @ObservationIgnored
     private let database = AppDatabase.shared.database
 
+    @ObservationIgnored
     var manga: Manga
+    @ObservationIgnored
     var scraper: Scraper
     
-    @Published var error: Error?
-    @Published var selectedChapter: MangaChapter?
+    var error: Error?
+    var selectedChapter: MangaChapter?
 
     public init(manga: Manga, scraper: Scraper) {
         self.manga = manga

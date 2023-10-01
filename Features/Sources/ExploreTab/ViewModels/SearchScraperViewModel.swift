@@ -10,17 +10,18 @@ import MangaScraper
 import SwiftUI
 import DataKit
 
-class SearchScraperVM: ObservableObject {
+@MainActor
+@Observable
+class SearchScraperViewModel {
     private var database = AppDatabase.shared.database
+    private var nextPage = 1
+    private var oldSearch: String?
     
-    var scraper: Scraper
-    var nextPage = 1
-    var oldSearch: String?
-    
-    @Published var isLoading = true
-    @Published var hasNextPage = false
-    @Published var mangas = [SourceSmallManga]()
-    @Published var selectedManga: SourceSmallManga?
+    let scraper: Scraper
+    var isLoading = true
+    var hasNextPage = false
+    var mangas = [SourceSmallManga]()
+    var selectedManga: SourceSmallManga?
     
     init(scraper: Scraper) {
         self.scraper = scraper
@@ -40,14 +41,12 @@ class SearchScraperVM: ObservableObject {
             
             guard let data = try await scraper.asSource()?.fetchSearchManga(query: textToSearch, page: nextPage) else { throw "Error searching for \(textToSearch)" }
             
-            Task { @MainActor in
-                withAnimation {
-                    self.hasNextPage = data.hasNextPage
-                    self.mangas += data.mangas
-                    self.isLoading = false
-                    self.nextPage += 1
-                    self.oldSearch = textToSearch
-                }
+            withAnimation {
+                self.hasNextPage = data.hasNextPage
+                self.mangas += data.mangas
+                self.isLoading = false
+                self.nextPage += 1
+                self.oldSearch = textToSearch
             }
         } catch {
             print(error)
@@ -61,19 +60,19 @@ class SearchScraperVM: ObservableObject {
             return await fetchData(textToSearch: oldSearch)
         }
     }
-    
+
     func addToCollection(smallManga: SourceSmallManga, collection: MangaCollection) async {
         guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 
         do {
-            try await database.write { db -> Void in
-                guard var manga = try Manga.all().forMangaId(smallManga.id, self.scraper.id).fetchOne(db) else {
-                    var manga = Manga(from: sourceManga, sourceId: self.scraper.id)
+            try await database.write { [scraper] db -> Void in
+                guard var manga = try Manga.all().forMangaId(smallManga.id, scraper.id).fetchOne(db) else {
+                    var manga = Manga(from: sourceManga, sourceId: scraper.id)
                     manga.mangaCollectionId = collection.id
                     try manga.save(db)
                     
                     for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: self.scraper.id)
+                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
                         try chapter.save(db)
                     }
 

@@ -14,10 +14,10 @@ import DataKit
 import SharedUI
 
 public struct ExploreTabView: View {
-    @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers
-    @Query(ScraperRequest(type: .onlyActive)) var activeScrapers
-    
-    @StateObject var vm = ExploreTabVM()
+    @GRDBQuery.Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers
+    @GRDBQuery.Query(ScraperRequest(type: .onlyActive)) var activeScrapers
+
+    @State var vm = ExploreTabViewModel()
     
     public init() {}
     
@@ -78,7 +78,8 @@ public struct ExploreTabView: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { vm.toogleActive(source: source) }) {
                     Label("Activate", systemImage: "checkmark")
-                }.tint(.purple)
+                }
+                .tint(.purple)
             }
     }
     
@@ -90,12 +91,14 @@ public struct ExploreTabView: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { vm.toogleActive(source: source) }) {
                     Label("Deactivate", systemImage: "xmark")
-                }.tint(.purple)
+                }
+                .tint(.purple)
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: { vm.toogleFavorite(source: source) }) {
                     Label("Favorite", systemImage: "hand.thumbsup")
-                }.tint(.blue)
+                }
+                .tint(.blue)
             }
     }
     
@@ -107,19 +110,21 @@ public struct ExploreTabView: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: { vm.toogleActive(source: source) }) {
                     Label("Deactivate", systemImage: "xmark")
-                }.tint(.purple)
+                }
+                .tint(.purple)
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: { vm.toogleFavorite(source: source) }) {
                     Label("Unfavorite", systemImage: "hand.thumbsdown")
-                }.tint(.blue)
+                }
+                .tint(.blue)
             }
     }
     
     @ViewBuilder
     func SourceRow(src: Source) -> some View {
         HStack {
-            RemoteImageCacheView(url: src.icon, contentMode: .aspectFit)
+            RemoteImageCacheView(url: src.icon, contentMode: .fit)
                 .frame(width: 32, height: 32)
                 .padding(.trailing)
             
@@ -134,16 +139,10 @@ public struct ExploreTabView: View {
     
     @ViewBuilder
     func ScraperRow(scraper: Scraper) -> some View {
-        let src = scraper.asSource()!
-        NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
-            SourceRow(src: src)
+        if let src = scraper.asSource() {
+            NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
+                SourceRow(src: src)
+            }
         }
     }
 }
-
-//struct ExploreTabView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ExploreTabView()
-//            .environment(\.appDatabase, .uiTest())
-//    }
-//}

@@ -12,7 +12,7 @@ import SharedUI
 import MangaDetail
 
 public struct MangaInCollectionForGenre: View {
-    @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
+    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
 
     @State var selectedManga: DetailedMangaInList?
     

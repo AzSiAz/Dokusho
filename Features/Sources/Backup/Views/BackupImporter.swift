@@ -8,20 +8,12 @@
 import SwiftUI
 
 public struct BackupImporter: View {
-    @ObservedObject var backupManager: BackupManager
+    @Environment(BackupManager.self) var backupManager
     
-    public init(backupManager: BackupManager) {
-        _backupManager = .init(wrappedValue: backupManager)
-    }
+    public init() {}
     
     public var body: some View {
         ProgressView("Importing backup", value: backupManager.progress, total: backupManager.total)
             .padding()
-    }
-}
-
-struct SwiftUIView_Previews: PreviewProvider {
-    static var previews: some View {
-        BackupImporter(backupManager: .shared)
     }
 }

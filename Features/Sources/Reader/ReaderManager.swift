@@ -9,7 +9,8 @@ import Foundation
 import DataKit
 import SwiftUI
 
-public class ReaderManager: ObservableObject {
+@Observable
+public class ReaderManager {
     public struct SelectedChapter: Identifiable {
         public var chapter: MangaChapter
         public var manga: Manga
@@ -21,9 +22,10 @@ public class ReaderManager: ObservableObject {
     
     public init() {}
     
+    @ObservationIgnored
     private var database = AppDatabase.shared.database
     
-    @Published public var selectedChapter: SelectedChapter?
+    public var selectedChapter: SelectedChapter?
 
     public func selectChapter(chapter: MangaChapter, manga: Manga, scraper: Scraper, chapters: [MangaChapter]) {
         self.selectedChapter = .init(chapter: chapter, manga: manga, scraper: scraper, chapters: chapters)

@@ -12,7 +12,7 @@ import DataKit
 import DynamicCollection
 
 public struct BySourceListPage: View {
-    @Query(ScraperWithMangaInCollection()) var scrapers
+    @GRDBQuery.Query(ScraperWithMangaInCollection()) var scrapers
     
     public init() {}
     

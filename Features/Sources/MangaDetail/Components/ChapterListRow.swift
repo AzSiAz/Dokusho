@@ -11,8 +11,8 @@ import Reader
 
 
 public struct ChapterListRow: View {
-    @EnvironmentObject var readerManager: ReaderManager
-    @ObservedObject var vm: ChapterListVM
+    @Environment(ReaderManager.self) var readerManager
+    @Bindable var vm: ChapterListVM
 
     var chapter: MangaChapter
     var chapters: [MangaChapter]

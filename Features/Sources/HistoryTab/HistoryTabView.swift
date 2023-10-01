@@ -13,7 +13,7 @@ import SharedUI
 import MangaDetail
 
 public struct HistoryTabView: View {
-    @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
+    @GRDBQuery.Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
     
     public init() {}
 

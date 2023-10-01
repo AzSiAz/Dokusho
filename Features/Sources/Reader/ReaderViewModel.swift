@@ -34,22 +34,20 @@ enum ReaderLink: Equatable, Hashable {
     }
 }
 
-public class ReaderVM: ObservableObject {
+@Observable
+public class ReaderViewModel {
     private let database = AppDatabase.shared.database
+    let manga: Manga
+    let scraper: Scraper
+    let chapters: [MangaChapter]
     
-    @Published var currentChapter: MangaChapter
-    @Published var images = [ReaderLink]()
-    @Published var isLoading = true
-    @Published var showToolBar = false
-    @Published var tabIndex = ReaderLink.image(url: "")
-    @Published var direction: ReadingDirection = .vertical
-    @Published var showReaderDirectionChoice = false
-    
-    @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
-
-    var manga: Manga
-    private var scraper: Scraper
-    private var chapters: [MangaChapter]
+    var currentChapter: MangaChapter
+    var images = [ReaderLink]()
+    var isLoading = true
+    var showToolBar = false
+    var tabIndex = ReaderLink.image(url: "")
+    var direction: ReadingDirection = .vertical
+    var showReaderDirectionChoice = false
 
     public init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.currentChapter = chapter
@@ -63,7 +61,6 @@ public class ReaderVM: ObservableObject {
         ImagePipeline.inMemory.cache.removeAll(caches: [.all])
     }
     
-    @MainActor
     func fetchChapter() async {
         cancelTasks()
 
@@ -107,13 +104,14 @@ public class ReaderVM: ObservableObject {
     func backgroundFetchImage() async {
         guard let currentImageIndex = self.images.firstIndex(of: self.tabIndex) else { return }
         let nextLoadingIndex = currentImageIndex <= self.images.endIndex && currentImageIndex != 0 ? self.images.index(after: currentImageIndex) : currentImageIndex
-        let imagesToLoad = self.images[nextLoadingIndex...].prefix(numberOfPreloadedImages)
+        let imagesToLoad = self.images[nextLoadingIndex...].prefix(UserPreferences.shared.numberOfPreloadedImages)
         
         for image in imagesToLoad {
             if Task.isCancelled { break }
             guard case let .image(url) = image else { return }
+            guard let url = URL(string: url) else { return }
 
-            _ = try? await ImagePipeline.inMemory.image(for: url.asImageRequest())
+            _ = try? await ImagePipeline.inMemory.image(for: url)
         }
     }
     
@@ -138,7 +136,7 @@ public class ReaderVM: ObservableObject {
     
     func updateChapterStatus() async {
         if progressBarCount() == progressBarCurrent() {
-            await asyncChange {
+            withAnimation {
                 self.showToolBar = true
             }
 

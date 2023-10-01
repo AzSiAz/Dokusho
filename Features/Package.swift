@@ -1,11 +1,11 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "Features",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v17)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Common", targets: ["Common"]),
@@ -22,12 +22,12 @@ let package = Package(
         .library(name: "ExploreTab", targets: ["ExploreTab"]),
     ],
     dependencies: [
-         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "5.26.1"),
+         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.18.0"),
          .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.7.0"),
-         .package(url: "https://github.com/kean/Nuke", exact: "11.3.1"),
+         .package(url: "https://github.com/kean/Nuke", exact: "12.1.6"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
-         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
+         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.0.4"),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.5.0"),
          .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main"),
     ],
@@ -45,7 +45,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Nuke", package: "Nuke")
+                .product(name: "Nuke", package: "Nuke"),
             ]
         ),
 
@@ -100,7 +100,7 @@ let package = Package(
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
                 .byName(name: "Backup"),
-                .product(name: "Nuke", package: "Nuke")
+                .product(name: "Nuke", package: "Nuke"),
             ]
         ),
         

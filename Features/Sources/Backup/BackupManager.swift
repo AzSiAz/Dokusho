@@ -58,16 +58,21 @@ public struct BackupTask {
 
 public typealias BackupResult = Result<BackupTask, Error>
 
-public class BackupManager: ObservableObject {
+@Observable
+public class BackupManager {
     public static let shared = BackupManager()
-    
+
     private let database = AppDatabase.shared.database
     
-    @Published public var isImporting: Bool = false
-    @Published public var total: Double = 0
-    @Published public var progress: Double = 0
+    public var isImporting: Bool
+    public var total: Double
+    public var progress: Double
     
-    public init() {}
+    private init() {
+        self.isImporting = false
+        self.total = 0
+        self.progress = 0
+    }
     
     public func createBackup() -> BackupData {
         var backupCollections = [BackupCollectionData]()
@@ -98,7 +103,7 @@ public class BackupManager: ObservableObject {
     }
 
     public func importBackup(backup: BackupData) async {
-        await animateAsyncChange {
+        withAnimation {
             self.isImporting = true
         }
 
@@ -113,7 +118,7 @@ public class BackupManager: ObservableObject {
                 
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
-                        await self.asyncChange {
+                        withAnimation {
                             self.total += 1
                         }
                         return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
@@ -132,7 +137,7 @@ public class BackupManager: ObservableObject {
                             let _ = try task.mangaBackup.manga.saved(db)
                             try task.mangaBackup.chapters.forEach { try $0.save(db) }
                         }
-                        await self.asyncChange {
+                        withAnimation {
                             self.progress += 1
                         }
                     } catch(let err) {
@@ -142,7 +147,7 @@ public class BackupManager: ObservableObject {
             }
         }
         
-        await animateAsyncChange {
+        withAnimation {
             self.isImporting = false
         }
     }

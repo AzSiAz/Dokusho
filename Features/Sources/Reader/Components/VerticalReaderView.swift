@@ -9,7 +9,7 @@ import SwiftUI
 import Common
 
 struct VerticalReaderView: View {
-    @ObservedObject var vm: ReaderVM
+    @Bindable var vm: ReaderViewModel
     
     var body: some View {
         GeometryReader { proxy in
