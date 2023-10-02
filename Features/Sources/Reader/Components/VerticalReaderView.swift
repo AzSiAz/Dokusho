@@ -43,7 +43,7 @@ struct VerticalReaderView: View {
         .onAppear { vm.updateTabIndex(image: image) }
     }
 
-    func ImageView(image: String, proxy: GeometryProxy) -> some View {
+    func ImageView(image: URL?, proxy: GeometryProxy) -> some View {
         ChapterImageView(url: image, contentMode: .fit, isZooming: .constant(false))
             .frame(
                 width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,

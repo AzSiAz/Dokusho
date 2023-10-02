@@ -50,7 +50,7 @@ public struct HistoryTabView: View {
     func ChapterRow(_ data: ChaptersHistory) -> some View {
         NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
             HStack {
-                MangaCard(imageUrl: data.manga.cover.absoluteString)
+                MangaCard(imageUrl: data.manga.cover)
                     .mangaCardFrame(width: 90, height: 120)
                     .id(data.id)
 

@@ -67,7 +67,7 @@ public struct Manga: Identifiable, Equatable, Codable {
         self.id = UUID()
         self.mangaId = data.id
         self.title = data.title
-        self.cover = URL(string: data.cover)!
+        self.cover = data.cover
         self.synopsis = data.synopsis
         self.alternateTitles = data.alternateNames
         self.genres = data.genres
@@ -96,7 +96,7 @@ public struct Manga: Identifiable, Equatable, Codable {
     
     public mutating func updateFromSource(from data: SourceManga) {
         self.title = data.title
-        self.cover = URL(string: data.cover)!
+        self.cover = data.cover
         self.synopsis = data.synopsis
         self.alternateTitles = data.alternateNames
         self.genres = data.genres

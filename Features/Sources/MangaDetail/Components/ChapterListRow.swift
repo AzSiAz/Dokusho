@@ -26,7 +26,7 @@ public struct ChapterListRow: View {
     public var body: some View {
         HStack {
             if let url = chapter.externalUrl {
-                Link(destination: URL(string: url)!) {
+                Link(destination: url) {
                     Content()
                 }
                 .buttonStyle(.plain)

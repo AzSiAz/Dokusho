@@ -44,7 +44,7 @@ struct RootView: View {
 //                .tabItem { Label("Explore", systemImage: "safari") }
 //                .tag(ActiveTab.explore)
 
-            SettingsTabView()
+            SettingsTabScreen()
                 .tabItem { Label("Settings", systemImage: "gear") }
                 .tag(ActiveTab.settings)
         }

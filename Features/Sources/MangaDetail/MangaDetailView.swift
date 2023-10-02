@@ -117,7 +117,7 @@ public struct MangaDetail: View {
     @ViewBuilder
     func HeaderRow(_ data: MangaWithDetail) -> some View {
         HStack(alignment: .top) {
-            MangaCard(imageUrl: data.manga.cover.absoluteString)
+            MangaCard(imageUrl: data.manga.cover)
                 .mangaCardFrame()
                 .padding(.leading, 10)
             

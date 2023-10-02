@@ -40,7 +40,7 @@ public struct MangaInCollectionForGenre: View {
         ScrollView {
             MangaList(mangas: list) { data in
                 NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
-                    MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                    MangaCard(title: data.manga.title, imageUrl: data.manga.cover, chapterCount: data.unreadChapterCount)
                         .mangaCardFrame()
                 }
                 .buttonStyle(.plain)

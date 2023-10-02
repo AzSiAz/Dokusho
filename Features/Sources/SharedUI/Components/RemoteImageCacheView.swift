@@ -24,6 +24,16 @@ public struct RemoteImageCacheView: View {
         self.contentMode = contentMode
         self.pipeline = pipeline
     }
+    
+    public init(
+        url: URL,
+        contentMode: ContentMode,
+        pipeline: ImagePipeline = .coverCache)
+    {
+        self.url = url
+        self.contentMode = contentMode
+        self.pipeline = pipeline
+    }
 
     public var body: some View {
         GeometryReader { proxy in

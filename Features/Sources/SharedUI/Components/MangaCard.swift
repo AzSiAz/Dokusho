@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct MangaCard: View {
-    var imageUrl: String
+    var imageUrl: URL
 
     var title: String?
     var chapterCount: Int?
@@ -17,24 +17,24 @@ public struct MangaCard: View {
     var radius: Double = 5
     var opacity: Double = 0.83
     
-    public init(title: String, imageUrl: String, chapterCount: Int) {
+    public init(title: String, imageUrl: URL, chapterCount: Int) {
         self.title = title
         self.chapterCount = chapterCount
         self.imageUrl = imageUrl
     }
     
-    public init(title: String, imageUrl: String, collectionName: String) {
+    public init(title: String, imageUrl: URL, collectionName: String) {
         self.title = title
         self.collectionName = collectionName
         self.imageUrl = imageUrl
     }
     
-    public init(imageUrl: String, chapterCount: Int) {
+    public init(imageUrl: URL, chapterCount: Int) {
         self.imageUrl = imageUrl
         self.chapterCount = chapterCount
     }
     
-    public init(imageUrl: String) {
+    public init(imageUrl: URL) {
         self.imageUrl = imageUrl
     }
     
@@ -107,12 +107,12 @@ public extension View {
     }
 }
 
-struct SwiftUIView_Previews: PreviewProvider {
-    static var previews: some View {
-        MangaCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg", collectionName: "Reading")
+#Preview {
+    Group {
+        MangaCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, collectionName: "Reading")
             .mangaCardFrame()
         
-        MangaCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg", chapterCount: 5)
+        MangaCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, chapterCount: 5)
             .mangaCardFrame()
     }
 }

@@ -49,7 +49,7 @@ public struct MangaChapter: Identifiable, Equatable, Codable {
     public var readAt: Date?
     public var status: ChapterStatus
     public var mangaId: UUID
-    public var externalUrl: String?
+    public var externalUrl: URL?
     
     public var isUnread: Bool {
         return status != .read

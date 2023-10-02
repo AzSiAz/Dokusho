@@ -1,28 +1,21 @@
-//
-//  File.swift
-//  
-//
-//  Created by Stef on 02/01/2022.
-//
-
 import Foundation
 import JAYSON
 import Collections
 
-
-public struct MangaDex: Source {
-    public static let shared = MangaDex.init()
+public struct MangaDexSource: Source {
+    static let mangadex: Source = Self()
     
-    public var name: String = "MangaDex"
-    public var id: UUID = UUID(uuidString: "3599756d-8fa0-4ca2-aafc-096c3d776ae1")!
-    public var versionNumber: Float = 1.0
-    public var updatedAt: Date = Date.from(year: 2022, month: 01, day: 02)
-    public var lang: SourceLang = .all
-    public var icon: String = "https://mangadex.org/favicon.ico"
-    public var baseUrl: String = "https://api.mangadex.org"
-    public var supportsLatest: Bool = true
-    public var headers = [String : String]()
-    public var nsfw: Bool = true
+    private(set) public var name: String = "MangaDex"
+    private(set) public var id: UUID = UUID(uuidString: "3599756d-8fa0-4ca2-aafc-096c3d776ae1")!
+    private(set) public var versionNumber: Float = 1.0
+    private(set) public var updatedAt: Date = Date.from(year: 2022, month: 01, day: 02)
+    private(set) public var lang: SourceLang = .all
+    private(set) public var icon: URL = URL(string: "https://mangadex.org/favicon.ico")!
+    private(set) public var baseUrl: URL = URL(string: "https://api.mangadex.org")!
+    private(set) public var supportsLatest: Bool = true
+    private(set) public var headers = [String : String]()
+    private(set) public var nsfw: Bool = true
+    private(set) public var deprecated: Bool = false
     
     public func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga {
         return try await getMangaList(page: page, query: "order[followedCount]=desc")
@@ -47,8 +40,6 @@ public struct MangaDex: Source {
             let genres = try json.next("attributes").next("tags").getArray().compactMap { try? $0.next("attributes").next("name").next("en").getString() }
             let authors = try json.next("relationships").getArray().filter { (try? $0.next("type").getString()) == "author" }.compactMap { try? $0.next("attributes").next("name").getString() }
             let altTitle = try json.next("attributes").next("altTitles").getArray().compactMap { try? $0.next("en").getString() }
-            
-            print(synopsis)
             
             var status: SourceMangaCompletion {
                 let status = try? json.next("attributes").next("status").getString()
@@ -95,7 +86,7 @@ public struct MangaDex: Source {
             let baseURL = try json.next("baseUrl").getString()
 
             return try json.next("chapter").next("data").getArray().enumerated().compactMap { (index, c) throws -> SourceChapterImage in
-                return SourceChapterImage(index: index, imageUrl: "\(baseURL)/data/\(hash)/\(try c.getString())")
+                return SourceChapterImage(index: index, imageUrl: URL(string: "\(baseURL)/data/\(hash)/\(try c.getString())")!)
             }
         } catch(let error) {
             debugPrint(error)
@@ -111,7 +102,7 @@ public struct MangaDex: Source {
         throw SourceError.notImplemented
     }
     
-    // TODO: MangaDex still can't order manga by latest update, workaround is to fetch last 20 chapter and fetch associated manga (no grouped chapter update), so not for now, let hope it's fixed soon
+    // TODO: MangaDex still can't order manga by latest update, workaround is to fetch last X chapters and fetch associated manga (no grouped chapter update), so not for now, let hope it's fixed soon
     private func getMangaList(page: Int, query: String? = nil, limit: Int = 20) async throws -> SourcePaginatedSmallManga {
         let page = page < 1 ? 1 : page
         let offset = (page - 1) * limit;
@@ -163,23 +154,25 @@ public struct MangaDex: Source {
         }
     }
     
-    private func getCover(mangaId: String, data: JSON) -> String {
+    private func getCover(mangaId: String, data: JSON) -> URL {
         let fileName = try? data.next("relationships").getArray().filter { (try? $0.next("type").getString()) == "cover_art" }.first?.next("attributes").next("fileName").getString()
         
-        return fileName != nil ? "https://uploads.mangadex.org/covers/\(mangaId)/\(fileName!).256.jpg" : "https://i.imgur.com/6TrIues.png"
+        let link = fileName != nil ? "https://uploads.mangadex.org/covers/\(mangaId)/\(fileName!).256.jpg" : "https://i.imgur.com/6TrIues.png"
+        
+        return URL(string: link)!
     }
     
     private func getMangaTitle(data: JSON) -> String {
         // If the title has a translated english title use it
         if let enTitle = try? data.next("attributes").next("title").next("en").getString(), !enTitle.isEmpty { return enTitle }
         if let altEnTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("en").isNull) })?.next("en").getString(), !altEnTitle.isEmpty { return altEnTitle }
-
+        
         // Most likely for Japanese title when original language is `ko`
         if let jaRo = try? data.next("attributes").next("title").next("ja-ro").getString(), !jaRo.isEmpty { return jaRo }
         if let jaTitle = try? data.next("attributes").next("title").next("ja").getString(), !jaTitle.isEmpty { return jaTitle }
         if let altJaRoTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("ja-ro").isNull) })?.next("ja-ro").getString(), !altJaRoTitle.isEmpty { return altJaRoTitle }
         if let altJaTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("ja").isNull) })?.next("ja").getString(), !altJaTitle.isEmpty { return altJaTitle }
-
+        
         // Most likely for Korean title when original language is `ko`
         if let koTitle = try? data.next("attributes").next("title").next("ko").getString(), !koTitle.isEmpty { return koTitle }
         if let altkoTitle = try? data.next("attributes").next("altTitles").getArray().first(where: { !(try $0.next("ko").isNull) })?.next("ko").getString(), !altkoTitle.isEmpty { return altkoTitle }
@@ -200,20 +193,20 @@ public struct MangaDex: Source {
             let limit = (try? json.next("limit").getInt()) ?? 500
             let total = (try? json.next("total").getInt()) ?? 500
             
-            chapters += try json.next("data").getArray().compactMap { d throws -> SourceChapter in
-                let chapterId = try d.next("id").getString()
-                let volume = (try? d.next("attributes").next("volume").getString()) ?? ""
+            chapters += try json.next("data").getArray().enumerated().compactMap { d throws -> SourceChapter in
+                let chapterId = try d.element.next("id").getString()
+                let volume = (try? d.element.next("attributes").next("volume").getString()) ?? ""
                 let volumeName = !volume.isEmpty ? "Volume \(volume) " : ""
-                let chapter = (try? d.next("attributes").next("chapter").getString()) ?? ""
+                let chapter = (try? d.element.next("attributes").next("chapter").getString()) ?? ""
                 let chapterName = !chapter.isEmpty ? chapter : "0"
-                let chapterTitle = (try? d.next("attributes").next("title").getString()) ?? ""
+                let chapterTitle = (try? d.element.next("attributes").next("title").getString()) ?? ""
                 let chapterTitleName = !chapterTitle.isEmpty ? " - \(chapterTitle)" : ""
-                let externalUrl = try? d.next("attributes").next("externalUrl").getString()
+                let externalUrl = try? d.element.next("attributes").next("externalUrl").getString() 
                 
                 let title = "\(volumeName)Chapter \(chapterName)\(chapterTitleName)"
                 var date: Date {
-                    guard let rawPublishAt = try? d.next("attributes").next("publishAt").getString() else { return Date.now }
-                    guard let rawCreatedAt = try? d.next("attributes").next("createdAt").getString() else { return Date.now }
+                    guard let rawPublishAt = try? d.element.next("attributes").next("publishAt").getString() else { return Date.now }
+                    guard let rawCreatedAt = try? d.element.next("attributes").next("createdAt").getString() else { return Date.now }
                     
                     do {
                         let publishAt = try Date(rawPublishAt, strategy: .iso8601)
@@ -225,10 +218,12 @@ public struct MangaDex: Source {
                 }
                 
                 return SourceChapter(
-                    name: title,
                     id: chapterId,
+                    name: title,
                     dateUpload: date,
-                    externalUrl: externalUrl
+                    externalUrl: URL(string: externalUrl ?? ""),
+                    chapter: chapter.floatValue ?? 0,
+                    volume: volume.floatValue ?? 0
                 )
             }
 

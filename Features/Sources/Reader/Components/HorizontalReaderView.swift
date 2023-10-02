@@ -40,7 +40,7 @@ struct HorizontalReaderView: View {
         .tag(image)
     }
     
-    func ImageView(image: String, proxy: GeometryProxy) -> some View {
+    func ImageView(image: URL?, proxy: GeometryProxy) -> some View {
         ChapterImageView(url: image, contentMode: .fit, isZooming: $isZooming)
             .frame(
                 minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,

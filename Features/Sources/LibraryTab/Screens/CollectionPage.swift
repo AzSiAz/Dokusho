@@ -83,7 +83,7 @@ public struct CollectionPage: View {
     @ViewBuilder
     func MangaInGrid(data: DetailedMangaInList) -> some View {
         NavigationLink(value: data) {
-            MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+            MangaCard(title: data.manga.title, imageUrl: data.manga.cover, chapterCount: data.unreadChapterCount)
                 .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
                 .mangaCardFrame()
                 .id(data.id)
@@ -103,7 +103,7 @@ public struct CollectionPage: View {
     func MangaInList(data: DetailedMangaInList) -> some View {
         NavigationLink(value: data) {
             HStack {
-                MangaCard(imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
+                MangaCard(imageUrl: data.manga.cover, chapterCount: data.unreadChapterCount)
                     .mangaCardFrame(width: 90, height: 120)
                     .id(data.id)
                 

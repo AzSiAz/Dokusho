@@ -96,7 +96,7 @@ public class BackupManager {
                 }
             }
         } catch(let err) {
-            print(err)
+            Logger.backup.error("Error creating backup: \(err.localizedDescription)")
         }
         
         return .init(collections: backupCollections, scrapers: scrapers)
@@ -116,11 +116,12 @@ public class BackupManager {
             for collectionBackup in backup.collections {
                 guard let collection = try? await database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup.collection) }) else { continue }
                 
+                withAnimation {
+                    self.total += Double(collectionBackup.mangas.count)
+                }
+
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
-                        withAnimation {
-                            self.total += 1
-                        }
                         return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
                     }
                 }
@@ -137,11 +138,12 @@ public class BackupManager {
                             let _ = try task.mangaBackup.manga.saved(db)
                             try task.mangaBackup.chapters.forEach { try $0.save(db) }
                         }
+
                         withAnimation {
                             self.progress += 1
                         }
                     } catch(let err) {
-                        print(err)
+                        Logger.backup.error("Error importing manga \(task.mangaBackup.manga.title): \(err.localizedDescription)")
                     }
                 }
             }

@@ -53,7 +53,7 @@ public struct ChapterListInformation: View {
             if let chapter = vm.nextUnreadChapter(chapters: chapters) {
                 Group {
                     if let url = chapter.externalUrl {
-                        Link(destination: URL(string: url)!) {
+                        Link(destination: url) {
                             NextUnreadChapter()
                         }
                     } else {

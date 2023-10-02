@@ -20,7 +20,7 @@ enum GoToChapterDirection {
 enum ReaderLink: Equatable, Hashable {
     case next(chapter: MangaChapter)
     case previous(chapter: MangaChapter)
-    case image(url: String)
+    case image(url: URL?)
     
     func hash(into hasher: inout Hasher) {
         switch self {
@@ -45,7 +45,7 @@ public class ReaderViewModel {
     var images = [ReaderLink]()
     var isLoading = true
     var showToolBar = false
-    var tabIndex = ReaderLink.image(url: "")
+    var tabIndex = ReaderLink.image(url: nil)
     var direction: ReadingDirection = .vertical
     var showReaderDirectionChoice = false
 
@@ -84,7 +84,7 @@ public class ReaderViewModel {
         }
     }
     
-    func buildReaderLinks(data: [String]) throws -> [ReaderLink] {
+    func buildReaderLinks(data: [URL]) throws -> [ReaderLink] {
         var images = [ReaderLink]()
         let (previous, next) = getChapters()
         
@@ -108,8 +108,7 @@ public class ReaderViewModel {
         
         for image in imagesToLoad {
             if Task.isCancelled { break }
-            guard case let .image(url) = image else { return }
-            guard let url = URL(string: url) else { return }
+            guard case let .image(url) = image, let url else { return }
 
             _ = try? await ImagePipeline.inMemory.image(for: url)
         }
@@ -241,7 +240,7 @@ public class ReaderViewModel {
         withAnimation {
             self.images = []
             self.currentChapter = chapter
-            self.tabIndex = ReaderLink.image(url: "")
+            self.tabIndex = ReaderLink.image(url: nil)
             self.showToolBar = true
         }
         

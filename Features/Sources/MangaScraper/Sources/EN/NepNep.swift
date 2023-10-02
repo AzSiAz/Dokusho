@@ -1,10 +1,3 @@
-//
-//  Mangasee.swift
-//  Hanako
-//
-//  Created by Stephan Deumier on 30/12/2020.
-//
-
 import Foundation
 import SwiftSoup
 import JAYSON
@@ -60,23 +53,34 @@ private struct LDJSONInfo: Codable {
 }
 
 public class NepNepSource: MultiSource {
-    static let MangaSee123Source = NepNepSource(baseUrl: "https://mangasee123.com", icon: "https://mangasee123.com/media/favicon.png", id: UUID(uuidString: "FFAECF22-DBB3-4B13-B4AF-665DC31CE775")!, name: "MangaSee")
-    static let Manga4LifeSource = NepNepSource(baseUrl: "https://manga4life.com", icon: "https://manga4life.com/media/favicon.png", id: UUID(uuidString: "B6127CD7-A9C0-4610-8491-47DFCFD90DBC")!, name: "MangaLife")
+    static let mangasee123: Source = NepNepSource(
+        baseUrl: URL(string: "https://mangasee123.com")!,
+        icon: URL(string: "https://mangasee123.com/media/favicon.png")!,
+        id: UUID(uuidString: "FFAECF22-DBB3-4B13-B4AF-665DC31CE775")!,
+        name: "MangaSee"
+    )
+    static let manga4life: Source = NepNepSource(
+        baseUrl: URL(string: "https://manga4life.com")!,
+        icon: URL(string: "https://manga4life.com/media/favicon.png")!,
+        id: UUID(uuidString: "B6127CD7-A9C0-4610-8491-47DFCFD90DBC")!,
+        name: "MangaLife"
+    )
 
-    public var icon: String
-    public var id: UUID
-    public var name: String
-    public var baseUrl: String
-    public var lang = SourceLang.en
-    public var supportsLatest = true
-    public var headers = ["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"]
-    public var versionNumber: Float = 1.0
-    public var nsfw: Bool = false
-    public var updatedAt = Date.from(year: 2021, month: 12, day: 31)
+    private(set) public var icon: URL
+    private(set) public var id: UUID
+    private(set) public var name: String
+    private(set) public var baseUrl: URL
+    private(set) public var lang = SourceLang.en
+    private(set) public var supportsLatest = true
+    private(set) public var headers = ["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"]
+    private(set) public var versionNumber: Float = 1.0
+    private(set) public var nsfw: Bool = false
+    private(set) public var updatedAt = Date.from(year: 2021, month: 12, day: 31)
+    private(set) public var deprecated: Bool = false
 
     private var directory: [MangaSeeDirectoryManga] = []
 
-    public required init(baseUrl: String, icon: String, id: UUID, name: String) {
+    required public init(baseUrl: URL, icon: URL, id: UUID, name: String) {
         self.baseUrl = baseUrl
         self.icon = icon
         self.id = id
@@ -108,7 +112,9 @@ public class NepNepSource: MultiSource {
         guard let title = try doc.select("\(interestingPart) h1").first()?.text().trimmingCharacters(in: .whitespacesAndNewlines) else {
             throw SourceError.parseError(error: "[NepNep] title not found")
         }
-        guard let cover = try doc.select("\(interestingPart) img").first()?.attr("src") else {
+        guard let coverUrl = try doc.select("\(interestingPart) img").first()?.attr("src"),
+              let cover = URL(string: coverUrl)
+        else {
             throw SourceError.parseError(error: "[NepNep] cover not found")
         }
         guard let synopsis = try doc.select("\(interestingPart) div.Content").first()?.text().trimmingCharacters(in: .whitespacesAndNewlines) else {
@@ -128,7 +134,18 @@ public class NepNepSource: MultiSource {
         let directoryManga = directory.first { $0.id == id }
         let alternateNames = directoryManga?.alternateNames ?? []
 
-        return SourceManga(id: id, title: title, cover: cover, genres: genres, authors: authors, alternateNames: alternateNames, status: parseStatus(rawStatus), synopsis: synopsis, chapters: chapters, type: parseType(rawType))
+        return SourceManga(
+            id: id,
+            title: title,
+            cover: cover,
+            genres: genres,
+            authors: authors,
+            alternateNames: alternateNames,
+            status: parseStatus(rawStatus),
+            synopsis: synopsis,
+            chapters: chapters,
+            type: parseType(rawType)
+        )
     }
 
     public func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage] {
@@ -184,7 +201,7 @@ public class NepNepSource: MultiSource {
                 let i = "000\(number)"
                 let imageNum = i[i.index(i.endIndex, offsetBy: -3)...]
                 
-                return SourceChapterImage(index: number, imageUrl: "https://\(path)\(chNum)-\(imageNum).png")
+                return SourceChapterImage(index: number, imageUrl: URL(string: "https://\(path)\(chNum)-\(imageNum).png")!)
             }
 
             return images
@@ -207,7 +224,9 @@ public class NepNepSource: MultiSource {
             })
         }.chunked(into: 24)
         
-        let mangas = chunks.count >= 1 ? chunks[page - 1].map { SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://temp.compsci88.com/cover/\($0.id).jpg") } : []
+        let mangas = chunks.count >= 1 ? chunks[page - 1].map {
+            SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: URL(string: "https://temp.compsci88.com/cover/\($0.id).jpg")!)
+        } : []
         
         return SourcePaginatedSmallManga(mangas: mangas, hasNextPage: page < chunks.count)
     }
@@ -229,16 +248,23 @@ public class NepNepSource: MultiSource {
         do {
             let vmChapter = try JSON(data: jsonData.data(using: .utf8)!)
 
-            return try vmChapter.getArray().map { rawChapter -> SourceChapter in
-                let chapter = try rawChapter.next("Chapter").getString()
-                let date = try rawChapter.next("Date").getString()
-                let type = try rawChapter.next("Type").getString()
-                let chapterNameRaw = (try? rawChapter.next("ChapterName").getString()) ?? ""
-                let chapterName = chapterNameRaw.isEmpty ? "\(type) \(chapterImage(chapter, clean: true))" : chapterNameRaw
+            return try vmChapter.getArray().reversed().enumerated().map { rawChapter -> SourceChapter in
+                let chapterLong = try rawChapter.element.next("Chapter").getString()
+                let chapter = chapterImage(chapterLong, clean: true)
+                let date = try rawChapter.element.next("Date").getString()
+                let type = try rawChapter.element.next("Type").getString()
+                let chapterNameRaw = (try? rawChapter.element.next("ChapterName").getString()) ?? ""
+                let chapterName = chapterNameRaw.isEmpty ? "\(type) \(chapter)" : chapterNameRaw
                 
-                let chapterId = "\(id)\(try chapterURLEncode(chapter))"
+                let chapterId = "\(id)\(try chapterURLEncode(chapterLong))"
 
-                return SourceChapter(name: chapterName, id: chapterId, dateUpload: convertToDate(date), externalUrl: nil)
+                return SourceChapter(
+                    id: chapterId,
+                    name: chapterName,
+                    dateUpload: convertToDate(date),
+                    externalUrl: nil,
+                    chapter: chapter.floatValue ?? 0
+                )
             }
         } catch(let error) {
             debugPrint(error)
@@ -342,7 +368,11 @@ public class NepNepSource: MultiSource {
         }.chunked(into: 24)
 
         return SourcePaginatedSmallManga(mangas: chunks[page - 1].map {
-            SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: "https://temp.compsci88.com/cover/\($0.id).jpg")
+            SourceSmallManga(
+                id: $0.id,
+                title: $0.title,
+                thumbnailUrl: URL(string: "https://temp.compsci88.com/cover/\($0.id).jpg")!
+            )
         }, hasNextPage: page < chunks.count)
     }
 

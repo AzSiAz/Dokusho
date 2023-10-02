@@ -20,7 +20,7 @@ class ExploreTabViewModel {
     }
     
     func onlyGetThirdPartyScraper(favorite: [Scraper], active: [Scraper]) -> [Source] {
-        return MangaScraperService.shared.list
+        return MangaScraperService.shared.sources
             .filter { src in return !active.contains(where: { scraper in src.id == scraper.id }) }
             .filter { src in return !favorite.contains(where: { scraper in src.id == scraper.id }) }
     }

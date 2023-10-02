@@ -11,34 +11,18 @@ import OSLog
 import MangaScraper
 import Common
 
-/// AppDatabase lets the application access the database.
-///
-/// It applies the pratices recommended at
-/// <https://github.com/groue/GRDB.swift/blob/master/Documentation/GoodPracticesForDesigningRecordTypes.md>
 public struct AppDatabase {
-    /// Creates an `AppDatabase`, and make sure the database schema is ready.
     public init(_ dbWriter: DatabaseWriter) throws {
         self.database = dbWriter
         try migrator.migrate(dbWriter)
     }
 
-    /// Provides access to the database.
-    ///
-    /// Application can use a `DatabasePool`, while SwiftUI previews and tests
-    /// can use a fast in-memory `DatabaseQueue`.
-    ///
-    /// See <https://github.com/groue/GRDB.swift/blob/master/README.md#database-connections>
     public let database: DatabaseWriter
 
-    /// The DatabaseMigrator that defines the database schema.
-    ///
-    /// See <https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md>
     private var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
 
         #if DEBUG
-        // Speed up development by nuking the database when migrations change
-        // See https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md#the-erasedatabaseonschemachange-option
 //        migrator.eraseDatabaseOnSchemaChange = true
         #endif
 
@@ -151,7 +135,6 @@ public extension AppDatabase {
 }
 
 public extension AppDatabase {
-    /// The database for the application
     static let shared = makeShared()
     
     private static func makeShared() -> AppDatabase {
@@ -168,27 +151,11 @@ public extension AppDatabase {
 
             let dbURL = folderURL.appendingPathComponent("db.sqlite")
             Logger.persistence.info("Db is \(dbURL.path)")
-            
-            var config = Configuration()
-            #if DEBUG
-            config.prepareDatabase { db in
-                db.trace { print($0) }
-            }
-            #endif
 
-            let dbPool = try DatabasePool(path: dbURL.path, configuration: config)
+            let dbPool = try DatabasePool(path: dbURL.path, configuration: .init())
 
             return try AppDatabase(dbPool)
         } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate.
-            //
-            // Typical reasons for an error here include:
-            // * The parent directory cannot be created, or disallows writing.
-            // * The database is not accessible, due to permissions or data protection when the device is locked.
-            // * The device is out of space.
-            // * The database could not be migrated to its latest schema version.
-            // Check the error message to determine what the actual problem was.
             fatalError("Unresolved error \(error)")
         }
     }

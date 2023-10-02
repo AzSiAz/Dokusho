@@ -14,6 +14,8 @@ import Observation
 
 @Observable
 public class LibraryUpdater {
+    public static let shared = LibraryUpdater()
+
     public struct RefreshStatus {
         public var isRefreshing: Bool
         public var refreshProgress: Double
@@ -28,8 +30,7 @@ public class LibraryUpdater {
     }
 
     private let database = AppDatabase.shared.database
-    private var refreshStatus: [MangaCollection.ID: Bool] = [:]
-    public static let shared = LibraryUpdater()
+    public var refreshStatus: [MangaCollection.ID: Bool] = [:]
     
     private init() {}
     
@@ -45,44 +46,45 @@ public class LibraryUpdater {
         let data = try await database.read { db in
             try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
-        print("---------------------Fetching--------------------------")
         
-        if data.count != 0 {
-            try await withThrowingTaskGroup(of: RefreshData.self) { group in
-                for row in data {
-                    guard let source = row.scraper.asSource() else { throw "Source not found from scraper with id: \(row.scraper.id)" }
+        Logger.libraryUpdater.debug("---------------------Fetching--------------------------")
+        
+        guard data.count != 0 else { return }
 
-                    _ = group.addTaskUnlessCancelled(priority: .background) {
-                        return .init(source: source, toRefresh: row)
-                    }
-                }
-                
-                for try await data in group {
-                    await Task.yield()
+        try await withThrowingTaskGroup(of: RefreshData.self) { group in
+            for row in data {
+                guard let source = row.scraper.asSource() else { throw "Source not found from scraper with id: \(row.scraper.id)" }
 
-                    do {
-                        let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
-
-                        let _ = try await database.write { db in
-                            try Manga.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
-                        }
-                        
-                        await Task.yield()
-                    } catch (let error) {
-                        print(error)
-                        await updateRefreshStatus(collectionID: collection.id, refreshing: false)
-                    }
+                _ = group.addTaskUnlessCancelled(priority: .background) {
+                    return RefreshData(source: source, toRefresh: row)
                 }
             }
             
-            print("---------------------Fetched--------------------------")
-            
-            await self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
-            await MainActor.run {
-                UIApplication.shared.isIdleTimerDisabled = false
+            for try await data in group {
+                await Task.yield()
+
+                do {
+                    let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
+
+                    let _ = try await database.write { db in
+                        try Manga.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
+                    }
+                    
+                    await Task.yield()
+                } catch (let error) {
+                    Logger.libraryUpdater.error("Error updating \(data.toRefresh.title): \(error)")
+                    await updateRefreshStatus(collectionID: collection.id, refreshing: false)
+                }
             }
         }
+        
+        Logger.libraryUpdater.debug("---------------------Fetched--------------------------")
+        
+        await self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
 
+        await MainActor.run {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
     
     @MainActor

@@ -15,4 +15,5 @@ public extension Logger {
     static let migration = Logger(subsystem: subsystem, category: "db.migration")
     static let reader = Logger(subsystem: subsystem, category: "reader")
     static let backup = Logger(subsystem: subsystem, category: "backup")
+    static let libraryUpdater = Logger(subsystem: subsystem, category: "library.updater")
 }

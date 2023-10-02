@@ -1,10 +1,3 @@
-//
-//  MangaSource.swift
-//  Hanako
-//
-//  Created by Stephan Deumier on 30/12/2020.
-//
-
 import Foundation
 
 public enum SourceError: Error {
@@ -38,7 +31,7 @@ public enum SourceMangaType: String, CaseIterable {
 public struct SourceManga: Identifiable, Equatable, Hashable {
     public var id: String
     public var title: String
-    public var cover: String
+    public var cover: URL
     public var genres: [String]
     public var authors: [String]
     public var alternateNames: [String]
@@ -46,37 +39,62 @@ public struct SourceManga: Identifiable, Equatable, Hashable {
     public var synopsis: String
     public var chapters: [SourceChapter]
     public var type: SourceMangaType
+    
+    public init(id: String, title: String, cover: URL, genres: [String], authors: [String], alternateNames: [String], status: SourceMangaCompletion, synopsis: String, chapters: [SourceChapter], type: SourceMangaType) {
+        self.id = id
+        self.title = title
+        self.cover = cover
+        self.genres = genres
+        self.authors = authors
+        self.alternateNames = alternateNames
+        self.status = status
+        self.synopsis = synopsis
+        self.chapters = chapters
+        self.type = type
+    }
 }
 
 public struct SourceChapter: Identifiable, Equatable, Hashable {
-    public var name: String
     public var id: String
+    public var name: String
     public var dateUpload: Date
-    public var externalUrl: String?
+    public var externalUrl: URL?
+    public var chapter: Float
+    public var volume: Float?
+    public var subTitle: String?
+    
+    public init(id: String, name: String, dateUpload: Date, externalUrl: URL? = nil, chapter: Float, volume: Float? = nil, subTitle: String? = nil) {
+        self.id = id
+        self.name = name
+        self.dateUpload = dateUpload
+        self.externalUrl = externalUrl
+        self.chapter = chapter
+        self.volume = volume
+        self.subTitle = subTitle
+    }
 }
 
 public struct SourceChapterImage: Identifiable, Equatable, Hashable {
-    public var id = UUID()
-    
+    public var id: URL { imageUrl }
     public var index: Int
-    public var imageUrl: String
+    public var imageUrl: URL
     
-    public init(index: Int, imageUrl: String) {
+    public init(index: Int, imageUrl: URL) {
         self.index = index
         self.imageUrl = imageUrl
     }
 }
 
 public struct SourceSmallManga: Identifiable, Equatable, Hashable {
-    public init(id: String, title: String, thumbnailUrl: String) {
+    public var id: String
+    public var title: String
+    public var thumbnailUrl: URL
+    
+    public init(id: String, title: String, thumbnailUrl: URL) {
         self.id = id
         self.title = title
         self.thumbnailUrl = thumbnailUrl
     }
-    
-    public var id: String
-    public var title: String
-    public var thumbnailUrl: String
 }
 
 public enum SourceFetchType: String, CaseIterable, Identifiable {
@@ -94,11 +112,12 @@ public protocol Source {
     var versionNumber: Float { get }
     var updatedAt: Date { get }
     var lang: SourceLang { get }
-    var icon: String { get }
-    var baseUrl: String { get }
+    var icon: URL { get }
+    var baseUrl: URL { get }
     var supportsLatest: Bool  { get }
     var headers: [String:String] { get }
     var nsfw: Bool { get }
+    var deprecated: Bool { get }
     
     func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga
     func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallManga
@@ -110,7 +129,8 @@ public protocol Source {
 }
 
 public protocol MultiSource: Source {
-    init(baseUrl: String, icon: String, id: UUID, name: String)
+    init(baseUrl: URL, icon: URL, id: UUID, name: String)
 }
 
 extension Identifiable where Self: Source {}
+extension Equatable where Self: Source {}
