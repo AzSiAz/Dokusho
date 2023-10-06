@@ -12,14 +12,14 @@ import Foundation
 
 public enum DetailedMangaRequestType: Equatable {
     case genre(genre: String)
-    case scraper(scraper: Scraper)
-    case collection(collectionId: MangaCollection.ID)
+    case scraper(scraper: ScraperDB)
+    case collection(collectionId: MangaCollectionDB.ID)
 }
 
 public struct DetailedMangaInList: Identifiable, Hashable, FetchableRecord, Decodable {
     public var id: UUID { manga.id }
     public var manga: PartialManga
-    public var scraper: Scraper
+    public var scraper: ScraperDB
     public var unreadChapterCount: Int
     public var readChapterCount: Int
     public var chapterCount: Int
@@ -49,21 +49,21 @@ public struct DetailedMangaInListRequest: Queryable {
         let readChapterCount = "DISTINCT \"mangaChapter\".\"rowid\") FILTER (WHERE mangaChapter.status = 'read'"
         let chapterCount = "DISTINCT \"mangaChapter\".\"rowid\""
 
-        var request = Manga
+        var request = MangaDB
             .select([
-                Manga.Columns.id,
-                Manga.Columns.mangaId,
-                Manga.Columns.title,
-                Manga.Columns.scraperId,
-                Manga.Columns.cover,
+                MangaDB.Columns.id,
+                MangaDB.Columns.mangaId,
+                MangaDB.Columns.title,
+                MangaDB.Columns.scraperId,
+                MangaDB.Columns.cover,
                 count(SQL(sql: unreadChapterCount)).forKey("unreadChapterCount"),
                 count(SQL(sql: readChapterCount)).forKey("readChapterCount"),
                 count(SQL(sql: chapterCount)).forKey("chapterCount"),
                 max(SQL(sql: "\"mangaChapter\".\"dateSourceUpload\"")).forKey("lastUpdate")
             ])
-            .joining(optional: Manga.chapters)
-            .including(required: Manga.scraper)
-            .group(Manga.Columns.id)
+            .joining(optional: MangaDB.chapters)
+            .including(required: MangaDB.scraper)
+            .group(MangaDB.Columns.id)
         
         if !searchTerm.isEmpty { request = request.filterByName(searchTerm) }
 
@@ -73,7 +73,7 @@ public struct DetailedMangaInListRequest: Queryable {
         case .scraper(let scraper):
             request = request.orderByTitle().whereSource(scraper.id).isInCollection()
         case .collection(let collectionId):
-            let collection = try? MangaCollection.all().filter(id: collectionId).fetchOne(db)
+            let collection = try? MangaCollectionDB.all().filter(id: collectionId).fetchOne(db)
             
             request = request.forCollectionId(collectionId)
 

@@ -53,13 +53,13 @@ private struct LDJSONInfo: Codable {
 }
 
 public class NepNepSource: MultiSource {
-    static let mangasee123: Source = NepNepSource(
+    public static let mangasee123: Source = NepNepSource(
         baseUrl: URL(string: "https://mangasee123.com")!,
         icon: URL(string: "https://mangasee123.com/media/favicon.png")!,
         id: UUID(uuidString: "FFAECF22-DBB3-4B13-B4AF-665DC31CE775")!,
         name: "MangaSee"
     )
-    static let manga4life: Source = NepNepSource(
+    public static let manga4life: Source = NepNepSource(
         baseUrl: URL(string: "https://manga4life.com")!,
         icon: URL(string: "https://manga4life.com/media/favicon.png")!,
         id: UUID(uuidString: "B6127CD7-A9C0-4610-8491-47DFCFD90DBC")!,

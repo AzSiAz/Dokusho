@@ -17,21 +17,21 @@ public struct ScraperRequest: Queryable {
     
     public var type: Relevant
     
-    public static var defaultValue: [Scraper] { [] }
+    public static var defaultValue: [ScraperDB] { [] }
     
     public init(type: Relevant) {
         self.type = type
     }
     
-    public func publisher(in database: AppDatabase) -> AnyPublisher<[Scraper], Error> {
+    public func publisher(in database: AppDatabase) -> AnyPublisher<[ScraperDB], Error> {
         ValueObservation
             .tracking(fetchValue(_:))
             .publisher(in: AppDatabase.shared.database, scheduling: .immediate)
             .eraseToAnyPublisher()
     }
     
-    public func fetchValue(_ db: Database) throws -> [Scraper] {
-        let request = Scraper.all()
+    public func fetchValue(_ db: Database) throws -> [ScraperDB] {
+        let request = ScraperDB.all()
 
         switch type {
         case .onlyActive:

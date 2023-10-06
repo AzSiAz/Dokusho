@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Stephan Deumier on 01/10/2023.
-//
-
 import Foundation
 import SwiftData
 import SwiftUI
@@ -13,11 +6,28 @@ struct DokushoModelContainerViewModifier: ViewModifier {
     let container: ModelContainer
     
     init(inMemory: Bool) {
+        let localConfiguration = ModelConfiguration(
+            "Local",
+            schema: Schema([Scraper.self]),
+            isStoredInMemoryOnly: inMemory,
+            allowsSave: true,
+            groupContainer: .automatic,
+            cloudKitDatabase: .none
+        )
+        
+        let cloudConfiguration = ModelConfiguration(
+            "Cloud",
+            schema: Schema([]),
+            isStoredInMemoryOnly: inMemory,
+            allowsSave: true,
+            groupContainer: .automatic,
+            cloudKitDatabase: .automatic
+        )
+
         container = try! ModelContainer(
-            for: Schema([]),
-            configurations: [
-                ModelConfiguration(isStoredInMemoryOnly: inMemory)
-            ]
+            for: Schema([Scraper.self], version: .init(0, 0, 1)),
+            migrationPlan: nil,
+            configurations: [localConfiguration, cloudConfiguration]
         )
     }
     

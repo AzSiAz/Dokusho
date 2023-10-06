@@ -35,7 +35,7 @@ public struct MangaLibraryContextMenu: View {
     
     func markAllChapterAs(newSatus: ChapterStatus) {
         try? appDB.database.write { db in
-            try MangaChapter.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
+            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
         }
     }
 }

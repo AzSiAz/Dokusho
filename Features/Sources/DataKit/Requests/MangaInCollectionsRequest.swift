@@ -32,9 +32,9 @@ public struct MangaInCollectionsRequest: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> [MangaInCollection] {
-        return try Manga
-            .select([Manga.Columns.mangaId])
-            .annotated(withRequired: Manga.mangaCollection.select(MangaCollection.Columns.name.forKey("collectionName")))
+        return try MangaDB
+            .select([MangaDB.Columns.mangaId])
+            .annotated(withRequired: MangaDB.mangaCollection.select(MangaCollectionDB.Columns.name.forKey("collectionName")))
             .whereSource(srcId)
             .asRequest(of: MangaInCollection.self)
             .fetchAll(db)

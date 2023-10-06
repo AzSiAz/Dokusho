@@ -14,10 +14,10 @@ public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
     @Bindable var vm: ChapterListVM
 
-    var chapter: MangaChapter
-    var chapters: [MangaChapter]
+    var chapter: MangaChapterDB
+    var chapters: [MangaChapterDB]
     
-    public init(vm: ChapterListVM, chapter: MangaChapter, chapters: [MangaChapter]) {
+    public init(vm: ChapterListVM, chapter: MangaChapterDB, chapters: [MangaChapterDB]) {
         self.chapter = chapter
         self.chapters = chapters
         self._vm = .init(wrappedValue: vm)

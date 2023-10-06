@@ -15,13 +15,13 @@ import SharedUI
 
 public struct CollectionSettings: View {
     @Environment(\.appDatabase) var appDatabase
-    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollection?
+    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
     
     @State var collectionOrder: MangaCollectionOrder
     @State var collectionFilter: MangaCollectionFilter
     @State var useList: Bool
     
-    public init(collection : MangaCollection) {
+    public init(collection : MangaCollectionDB) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
         _collectionOrder = .init(initialValue: collection.order)
         _collectionFilter = .init(initialValue: collection.filter)
@@ -72,7 +72,7 @@ extension CollectionSettings {
 
             do {
                 try await appDatabase.database.write { db in
-                    guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
+                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
                     
                     try foundCollection.updateChanges(db) {
                         $0.useList = d
@@ -90,7 +90,7 @@ extension CollectionSettings {
 
             do {
                 try await appDatabase.database.write { db in
-                    guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
+                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
                     
                     try foundCollection.updateChanges(db) {
                         $0.filter = newFilter
@@ -108,7 +108,7 @@ extension CollectionSettings {
             
             do {
                 try await appDatabase.database.write { db in
-                    guard var foundCollection = try MangaCollection.fetchOne(db, id: collection.id) else { return }
+                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
                     
                     try foundCollection.updateChanges(db) {
                         if let direction = direction { $0.order.direction = direction }

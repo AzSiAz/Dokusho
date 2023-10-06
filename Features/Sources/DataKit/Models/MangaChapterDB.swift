@@ -40,7 +40,7 @@ public enum ChapterStatus: String, CaseIterable, Codable, DatabaseValueConvertib
     }
 }
 
-public struct MangaChapter: Identifiable, Equatable, Codable {
+public struct MangaChapterDB: Identifiable, Equatable, Codable {
     public var id: String
     public var chapterId: String
     public var title: String
@@ -67,11 +67,11 @@ public struct MangaChapter: Identifiable, Equatable, Codable {
     }
 }
 
-extension MangaChapter: FetchableRecord, PersistableRecord {}
+extension MangaChapterDB: FetchableRecord, PersistableRecord {}
 
-extension MangaChapter: TableRecord {
-    public static let manga = belongsTo(Manga.self)
-    public static let scraper = hasOne(Scraper.self, through: manga, using: Manga.scraper)
+extension MangaChapterDB: TableRecord {
+    public static let manga = belongsTo(MangaDB.self)
+    public static let scraper = hasOne(ScraperDB.self, through: manga, using: MangaDB.scraper)
 
     public enum Columns {
         public static let id = Column(CodingKeys.id)
@@ -98,7 +98,7 @@ extension MangaChapter: TableRecord {
     ]
 }
 
-public extension DerivableRequest where RowDecoder == MangaChapter {
+public extension DerivableRequest where RowDecoder == MangaChapterDB {
     func forMangaId(_ mangaId: UUID) -> Self {
         filter(RowDecoder.Columns.mangaId == mangaId)
     }
@@ -112,11 +112,11 @@ public extension DerivableRequest where RowDecoder == MangaChapter {
     }
     
     func orderHistoryAll() -> Self {
-        order(RowDecoder.Columns.dateSourceUpload.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+        order(RowDecoder.Columns.dateSourceUpload.desc, MangaChapterDB.Columns.mangaId, MangaChapterDB.Columns.position.asc)
     }
     
     func orderHistoryRead() -> Self {
-        order(RowDecoder.Columns.readAt.desc, MangaChapter.Columns.mangaId, MangaChapter.Columns.position.asc)
+        order(RowDecoder.Columns.readAt.desc, MangaChapterDB.Columns.mangaId, MangaChapterDB.Columns.position.asc)
     }
     
     func filter(_ status: ChapterStatusHistory) -> Self {
@@ -135,7 +135,7 @@ public extension DerivableRequest where RowDecoder == MangaChapter {
     }
 }
 
-public extension MangaChapter {
+public extension MangaChapterDB {
     
     static func markAllAs(newStatus: ChapterStatus, date: Date = .now, db: Database, mangaId: UUID) throws {
         return try db.execute(sql: """
@@ -149,21 +149,21 @@ public extension MangaChapter {
         """, arguments: [newStatus, newStatus == .unread ? nil : date, newStatus.inverse(), chapterId])
     }
 
-    static func updateFromSource(db: Database, manga: Manga, scraper: Scraper, data: SourceManga) throws {
+    static func updateFromSource(db: Database, manga: MangaDB, scraper: ScraperDB, data: SourceManga) throws {
         // Sometimes all chapters are deleted, I don't know why and it's impossible to reproduce in test
         guard !data.chapters.isEmpty else {
             print("Empty chapters, weird so abort to avoid losing read chapters")
             return
         }
         
-        let oldChapters = try MangaChapter
+        let oldChapters = try MangaChapterDB
             .all()
             .onlyRead()
             .forMangaId(manga.mangaId, scraper.id)
             .fetchAll(db)
 
         for info in data.chapters.enumerated() {
-            var chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)
+            var chapter = MangaChapterDB(from: info.element, position: info.offset, mangaId: manga.id, scraperId: manga.scraperId!)
             if let foundBackup = oldChapters.first(where: { $0.id == chapter.id }) {
                 chapter.readAt = foundBackup.readAt
                 chapter.status = .read
@@ -174,7 +174,7 @@ public extension MangaChapter {
         }
         
         // Clean chapter removed from source
-        let dbChapters = try MangaChapter.all().forMangaId(manga.id).fetchAll(db)
+        let dbChapters = try MangaChapterDB.all().forMangaId(manga.id).fetchAll(db)
         for dbChapter in dbChapters {
             if (data.chapters.first(where: { $0.id == dbChapter.chapterId }) != nil) { continue }
             try dbChapter.delete(db)

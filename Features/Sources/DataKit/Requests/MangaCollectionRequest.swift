@@ -11,13 +11,13 @@ import GRDB
 import SwiftUI
 
 public struct MangaCollectionRequest: Queryable {
-    public static var defaultValue: [MangaCollection] { [] }
+    public static var defaultValue: [MangaCollectionDB] { [] }
     
     public init() {}
     
-    public func publisher(in database: AppDatabase) -> AnyPublisher<[MangaCollection], Error> {
+    public func publisher(in database: AppDatabase) -> AnyPublisher<[MangaCollectionDB], Error> {
         ValueObservation
-            .tracking(MangaCollection.all().orderByPosition().fetchAll(_:))
+            .tracking(MangaCollectionDB.all().orderByPosition().fetchAll(_:))
             .publisher(in: database.database, scheduling: .immediate)
             .eraseToAnyPublisher()
     }

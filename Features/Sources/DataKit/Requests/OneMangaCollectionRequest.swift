@@ -10,7 +10,7 @@ import GRDB
 import Foundation
 
 public struct OneMangaCollectionRequest: Queryable {
-    public static var defaultValue: MangaCollection? { nil }
+    public static var defaultValue: MangaCollectionDB? { nil }
     
     public var collectionId: UUID
     
@@ -18,9 +18,9 @@ public struct OneMangaCollectionRequest: Queryable {
         self.collectionId = collectionId
     }
     
-    public func publisher(in database: AppDatabase) -> DatabasePublishers.Value<MangaCollection?> {
+    public func publisher(in database: AppDatabase) -> DatabasePublishers.Value<MangaCollectionDB?> {
         ValueObservation
-            .tracking(MangaCollection.filter(id: collectionId).fetchOne(_:))
+            .tracking(MangaCollectionDB.filter(id: collectionId).fetchOne(_:))
             .publisher(in: database.database, scheduling: .immediate)
     }
 }

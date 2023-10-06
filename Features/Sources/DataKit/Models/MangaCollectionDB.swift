@@ -67,7 +67,7 @@ public struct MangaCollectionOrder: Codable, Equatable, DatabaseValueConvertible
     public var direction: Direction = .DESC
 }
 
-public struct MangaCollection: Codable, Identifiable, Equatable, Hashable {
+public struct MangaCollectionDB: Codable, Identifiable, Equatable, Hashable {
     public var id: UUID
     public var name: String
     public var position: Int
@@ -91,10 +91,10 @@ public struct MangaCollection: Codable, Identifiable, Equatable, Hashable {
     }
 }
 
-extension MangaCollection: FetchableRecord, PersistableRecord {}
+extension MangaCollectionDB: FetchableRecord, PersistableRecord {}
 
-extension MangaCollection: TableRecord {
-    public static let mangas = hasMany(Manga.self)
+extension MangaCollectionDB: TableRecord {
+    public static let mangas = hasMany(MangaDB.self)
     
     public enum Columns {
         public static let id = Column(CodingKeys.id)
@@ -115,7 +115,7 @@ extension MangaCollection: TableRecord {
     ]
 }
 
-public extension DerivableRequest where RowDecoder == MangaCollection {
+public extension DerivableRequest where RowDecoder == MangaCollectionDB {
     func orderByPosition() -> Self {
         order(
             RowDecoder.Columns.position.ascNullsLast,
@@ -124,12 +124,12 @@ public extension DerivableRequest where RowDecoder == MangaCollection {
     }
 }
 
-public extension MangaCollection {
-    static func fetchOrCreateFromBackup(db: Database, backup: Self) throws -> MangaCollection {
-        if let collection = try MangaCollection.fetchOne(db, id: backup.id) {
+public extension MangaCollectionDB {
+    static func fetchOrCreateFromBackup(db: Database, backup: Self) throws -> MangaCollectionDB {
+        if let collection = try MangaCollectionDB.fetchOne(db, id: backup.id) {
             return collection
         }
         
-        return try MangaCollection(id: backup.id, name: backup.name, position: backup.position, filter: backup.filter, order: backup.order, useList: backup.useList).saved(db)
+        return try MangaCollectionDB(id: backup.id, name: backup.name, position: backup.position, filter: backup.filter, order: backup.order, useList: backup.useList).saved(db)
     }
 }

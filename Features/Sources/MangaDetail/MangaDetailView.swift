@@ -25,7 +25,7 @@ public struct MangaDetail: View {
 
     let selectGenre: ((_ genre: String) -> Void)?
     
-    public init(mangaId: String, scraper: Scraper, selectGenre: ((_ genre: String) -> Void)? = nil) {
+    public init(mangaId: String, scraper: ScraperDB, selectGenre: ((_ genre: String) -> Void)? = nil) {
         _data = .init(.init(mangaId: mangaId, scraper: scraper))
         _vm = .init(wrappedValue: .init(for: scraper, mangaId: mangaId))
         

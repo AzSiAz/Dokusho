@@ -11,7 +11,7 @@ import GRDB
 import SwiftUI
 
 public struct DetailedMangaCollection: Decodable, FetchableRecord, Identifiable {
-    public var mangaCollection: MangaCollection
+    public var mangaCollection: MangaCollectionDB
     public var mangaCount: Int
     public var id: UUID { mangaCollection.id }
 }
@@ -29,9 +29,9 @@ public struct DetailedMangaCollectionRequest: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> [DetailedMangaCollection] {
-        let request = MangaCollection
-            .annotated(with: MangaCollection.mangas.count)
-            .group(MangaCollection.Columns.id)
+        let request = MangaCollectionDB
+            .annotated(with: MangaCollectionDB.mangas.count)
+            .group(MangaCollectionDB.Columns.id)
             .orderByPosition()
 
         return try DetailedMangaCollection

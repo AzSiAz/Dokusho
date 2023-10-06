@@ -9,7 +9,7 @@ import Foundation
 import GRDB
 import MangaScraper
 
-public struct Scraper: Identifiable, Equatable, Codable, Hashable {
+public struct ScraperDB: Identifiable, Equatable, Codable, Hashable {
     public var id: UUID
     public var name: String
     public var position: Int?
@@ -32,14 +32,14 @@ public struct Scraper: Identifiable, Equatable, Codable, Hashable {
     }
     
     public func asSource() -> Source? {
-        return MangaScraperService.shared.getSource(sourceId: self.id)
+        return ScraperService.shared.getSource(sourceId: self.id)
     }
 }
 
-extension Scraper: FetchableRecord, PersistableRecord {}
+extension ScraperDB: FetchableRecord, PersistableRecord {}
 
-extension Scraper: TableRecord {
-    public static let mangas = hasMany(Manga.self)
+extension ScraperDB: TableRecord {
+    public static let mangas = hasMany(MangaDB.self)
     
     public enum Columns: CaseIterable {
         public static let id = Column(CodingKeys.id)
@@ -58,7 +58,7 @@ extension Scraper: TableRecord {
     ]
 }
 
-public extension DerivableRequest where RowDecoder == Scraper {
+public extension DerivableRequest where RowDecoder == ScraperDB {
     func onlyActive(_ bool: Bool = true) -> Self {
         filter(RowDecoder.Columns.isActive == bool)
     }
@@ -75,11 +75,11 @@ public extension DerivableRequest where RowDecoder == Scraper {
     }
 }
 
-public extension Scraper {
+public extension ScraperDB {
     static func fetchOne(_ db: Database, source: Source) throws -> Self {
         if let scraper = try Self.fetchOne(db, id: source.id) { return scraper }
 
-        let source = Scraper(from: source)
+        let source = ScraperDB(from: source)
         return try source.saved(db)
     }
     
@@ -90,12 +90,12 @@ public extension Scraper {
 }
 
 
-public extension Scraper {
-    static func fetchOrCreateFromBackup(db: Database, backup: Self) throws -> Scraper {
-        if let collection = try Scraper.fetchOne(db, id: backup.id) {
+public extension ScraperDB {
+    static func fetchOrCreateFromBackup(db: Database, backup: Self) throws -> ScraperDB {
+        if let collection = try ScraperDB.fetchOne(db, id: backup.id) {
             return collection
         }
         
-        return try Scraper(id: backup.id, name: backup.name, position: backup.position, isFavorite: backup.isFavorite, isActive: backup.isActive).saved(db)
+        return try ScraperDB(id: backup.id, name: backup.name, position: backup.position, isFavorite: backup.isFavorite, isActive: backup.isActive).saved(db)
     }
 }

@@ -66,7 +66,7 @@ public struct LibraryTabView: View {
             .navigationDestination(for: DetailedMangaInList.self) { data in
                 MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
             }
-            .navigationDestination(for: MangaCollection.self) { data in
+            .navigationDestination(for: MangaCollectionDB.self) { data in
                 CollectionPage(collection: data)
             }
         }
@@ -79,7 +79,7 @@ public struct LibraryTabView: View {
         
         do {
             try appDB.database.write { db in
-                let collection = MangaCollection(id: UUID(), name: newCollectionName, position: lastPosition)
+                let collection = MangaCollectionDB(id: UUID(), name: newCollectionName, position: lastPosition)
                 try collection.save(db)
             }
         } catch(let err) {
@@ -105,7 +105,7 @@ public struct LibraryTabView: View {
     
     func onMove(_ offsets: IndexSet, _ position: Int) {
         try? appDB.database.write { db in
-            var revisedItems: [MangaCollection] = collections.map{ $0.mangaCollection }
+            var revisedItems: [MangaCollectionDB] = collections.map{ $0.mangaCollection }
 
 //            change the order of the items in the array
             revisedItems.move(fromOffsets: offsets, toOffset: position)

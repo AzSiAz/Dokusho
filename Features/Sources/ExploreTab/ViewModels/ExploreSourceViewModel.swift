@@ -26,9 +26,9 @@ class ExploreSourceViewModel {
     var selectedManga: SourceSmallManga?
     var fromSegment: Bool = false
 
-    let scraper: Scraper
+    let scraper: ScraperDB
     
-    init(for scraper: Scraper) {
+    init(for scraper: ScraperDB) {
         self.scraper = scraper
     }
 
@@ -87,13 +87,13 @@ class ExploreSourceViewModel {
         return "\(scraper.name) - \(type.rawValue)"
     }
     
-    func addToCollection(smallManga: SourceSmallManga, collection: MangaCollection) async {
+    func addToCollection(smallManga: SourceSmallManga, collection: MangaCollectionDB) async {
         guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 
         do {
             try await database.write { db -> Void in
-                guard var manga = try Manga.all().forMangaId(smallManga.id, self.scraper.id).fetchOne(db) else {
-                    var manga = try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+                guard var manga = try MangaDB.all().forMangaId(smallManga.id, self.scraper.id).fetchOne(db) else {
+                    var manga = try MangaDB.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
                     try manga.updateChanges(db) {
                         $0.mangaCollectionId = collection.id
                     }

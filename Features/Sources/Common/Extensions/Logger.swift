@@ -16,4 +16,6 @@ public extension Logger {
     static let reader = Logger(subsystem: subsystem, category: "reader")
     static let backup = Logger(subsystem: subsystem, category: "backup")
     static let libraryUpdater = Logger(subsystem: subsystem, category: "library.updater")
+    static let scraperService = Logger(subsystem: subsystem, category: "service.scraper_service")
+
 }

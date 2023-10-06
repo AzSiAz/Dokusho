@@ -30,11 +30,11 @@ public struct RefreshManga: Identifiable, Hashable, FetchableRecord, Decodable {
     public var id: String { mangaId }
     public var title: String
     public var mangaId: String
-    public var scraper: Scraper
+    public var scraper: ScraperDB
     public var unreadChapterCount: Int
 }
 
-public struct Manga: Identifiable, Equatable, Codable {
+public struct MangaDB: Identifiable, Equatable, Codable {
     public var id: UUID
     public var mangaId: String
     public var title: String
@@ -107,12 +107,12 @@ public struct Manga: Identifiable, Equatable, Codable {
     }
 }
 
-extension Manga: FetchableRecord, MutablePersistableRecord {}
+extension MangaDB: FetchableRecord, MutablePersistableRecord {}
 
-extension Manga: TableRecord {
-    public static let scraper = belongsTo(Scraper.self)
-    public static let mangaCollection = belongsTo(MangaCollection.self)
-    public static let chapters = hasMany(MangaChapter.self)
+extension MangaDB: TableRecord {
+    public static let scraper = belongsTo(ScraperDB.self)
+    public static let mangaCollection = belongsTo(MangaCollectionDB.self)
+    public static let chapters = hasMany(MangaChapterDB.self)
     
     public enum Columns {
         public static let id = Column(CodingKeys.id)
@@ -147,7 +147,7 @@ extension Manga: TableRecord {
     ]
 }
 
-public extension DerivableRequest where RowDecoder == Manga {
+public extension DerivableRequest where RowDecoder == MangaDB {
     func whereSource(_ srcId: UUID) -> Self {
         filter(RowDecoder.Columns.scraperId == srcId)
     }
@@ -186,26 +186,26 @@ public extension DerivableRequest where RowDecoder == Manga {
 }
 
 public struct MangaWithDetail: Decodable, FetchableRecord {
-    public var manga: Manga
-    public var mangaCollection: MangaCollection?
-    public var scraper: Scraper?
+    public var manga: MangaDB
+    public var mangaCollection: MangaCollectionDB?
+    public var scraper: ScraperDB?
 }
 
-public extension Manga {
+public extension MangaDB {
     static func fetchForUpdate(_ db: Database, collectionId: UUID, onlyAllRead: Bool = true) throws -> [RefreshManga] {
         let unreadChapterCount = "DISTINCT \"mangaChapter\".\"rowid\") FILTER (WHERE mangaChapter.status = 'unread'"
 
-        var query = Manga
+        var query = MangaDB
             .select([
-                Manga.Columns.title,
-                Manga.Columns.scraperId,
-                Manga.Columns.mangaId,
+                MangaDB.Columns.title,
+                MangaDB.Columns.scraperId,
+                MangaDB.Columns.mangaId,
                 count(SQL(sql: unreadChapterCount)).forKey("unreadChapterCount"),
             ])
-            .joining(optional: Manga.chapters)
-            .including(required: Manga.scraper)
+            .joining(optional: MangaDB.chapters)
+            .including(required: MangaDB.scraper)
             .forCollectionId(collectionId)
-            .group(Manga.Columns.id)
+            .group(MangaDB.Columns.id)
         
         if onlyAllRead {
             query = query.having(sql: "unreadChapterCount = 0")
@@ -214,35 +214,35 @@ public extension Manga {
         return try RefreshManga.fetchAll(db, query)
     }
     
-    static func fetchOne(_ db: Database, mangaId: String, scraperId: UUID) throws -> Manga? {
-        return try Manga.all().forMangaId(mangaId, scraperId).fetchOne(db)
+    static func fetchOne(_ db: Database, mangaId: String, scraperId: UUID) throws -> MangaDB? {
+        return try MangaDB.all().forMangaId(mangaId, scraperId).fetchOne(db)
     }
     
     static func fetchMangaWithDetail(for mangaId: String, in scraperId: UUID, _ db: Database) throws -> MangaWithDetail? {
-        let request = Manga
+        let request = MangaDB
             .all()
             .forMangaId(mangaId, scraperId)
-            .including(optional: Manga.scraper)
-            .including(optional: Manga.mangaCollection)
+            .including(optional: MangaDB.scraper)
+            .including(optional: MangaDB.mangaCollection)
         
         return try MangaWithDetail.fetchOne(db, request)
     }
     
     @discardableResult
-    static func updateFromSource(db: Database, scraper: Scraper, data: SourceManga) throws -> Manga {
-        if var manga = try Manga.all().forMangaId(data.id, scraper.id).fetchOne(db) {
+    static func updateFromSource(db: Database, scraper: ScraperDB, data: SourceManga) throws -> MangaDB {
+        if var manga = try MangaDB.all().forMangaId(data.id, scraper.id).fetchOne(db) {
             manga.updateFromSource(from: data)
 
             try manga.save(db)
-            try MangaChapter.updateFromSource(db: db, manga: manga, scraper: scraper, data: data)
+            try MangaChapterDB.updateFromSource(db: db, manga: manga, scraper: scraper, data: data)
             
             return manga
         }
         
-        var manga = Manga(from: data, sourceId: scraper.id)
+        var manga = MangaDB(from: data, sourceId: scraper.id)
         try manga.save(db)
         
-        try MangaChapter.updateFromSource(db: db, manga: manga, scraper: scraper, data: data)
+        try MangaChapterDB.updateFromSource(db: db, manga: manga, scraper: scraper, data: data)
         
         return manga
     }

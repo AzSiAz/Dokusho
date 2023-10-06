@@ -14,35 +14,35 @@ public struct MangaChaptersRequest: Queryable {
         case ASC, DESC
     }
     
-    public var manga: Manga
+    public var manga: MangaDB
     public var ascendingOrder = true
     public var filterAll = true
     
-    public init(manga: Manga) {
+    public init(manga: MangaDB) {
         self.manga = manga
     }
     
-    public static var defaultValue: [MangaChapter] { [] }
+    public static var defaultValue: [MangaChapterDB] { [] }
     
-    public func publisher(in database: AppDatabase) -> AnyPublisher<[MangaChapter], Error> {
+    public func publisher(in database: AppDatabase) -> AnyPublisher<[MangaChapterDB], Error> {
         ValueObservation
             .tracking(fetchValue(_:))
             .publisher(in: database.database, scheduling: .immediate)
             .eraseToAnyPublisher()
     }
     
-    public func fetchValue(_ db: Database) throws -> [MangaChapter] {
-        var request = MangaChapter
+    public func fetchValue(_ db: Database) throws -> [MangaChapterDB] {
+        var request = MangaChapterDB
             .all()
             .forMangaId(manga.id)
         
         if !filterAll {
-            request = request.filter(MangaChapter.Columns.readAt == nil)
+            request = request.filter(MangaChapterDB.Columns.readAt == nil)
         }
         
         switch ascendingOrder {
-        case true: request = request.order(MangaChapter.Columns.position.asc)
-        case false: request = request.order(MangaChapter.Columns.position.desc)
+        case true: request = request.order(MangaChapterDB.Columns.position.asc)
+        case false: request = request.order(MangaChapterDB.Columns.position.desc)
         }
             
         return try request.fetchAll(db)

@@ -84,7 +84,7 @@ public struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func ActiveSourceRowView(scraper: Scraper) -> some View {
+    func ActiveSourceRowView(scraper: ScraperDB) -> some View {
         let source = scraper.asSource()!
 
         ScraperRow(scraper: scraper)
@@ -103,7 +103,7 @@ public struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func FavoriteSourceRowView(scraper: Scraper) -> some View {
+    func FavoriteSourceRowView(scraper: ScraperDB) -> some View {
         let source = scraper.asSource()!
 
         ScraperRow(scraper: scraper)
@@ -138,7 +138,7 @@ public struct ExploreTabView: View {
     }
     
     @ViewBuilder
-    func ScraperRow(scraper: Scraper) -> some View {
+    func ScraperRow(scraper: ScraperDB) -> some View {
         if let src = scraper.asSource() {
             NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
                 SourceRow(src: src)

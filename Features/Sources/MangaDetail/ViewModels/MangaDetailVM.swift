@@ -17,7 +17,7 @@ public class MangaDetailVM {
     private let database = AppDatabase.shared.database
     
     @ObservationIgnored
-    let scraper: Scraper
+    let scraper: ScraperDB
     @ObservationIgnored
     let mangaId: String
     
@@ -25,9 +25,9 @@ public class MangaDetailVM {
     var showMoreDesc = false
     var addToCollection = false
     var refreshing = false
-    var selectedChapter: MangaChapter?
+    var selectedChapter: MangaChapterDB?
     
-    public init(for scraper: Scraper, mangaId: String) {
+    public init(for scraper: ScraperDB, mangaId: String) {
         self.scraper = scraper
         self.mangaId = mangaId
     }
@@ -44,7 +44,7 @@ public class MangaDetailVM {
             let sourceManga = try await source.fetchMangaDetail(id: mangaId)
             
             try _ = await database.write { db in
-                try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+                try MangaDB.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
             }
         } catch {
             print(error)
@@ -63,10 +63,10 @@ public class MangaDetailVM {
     // TODO: Rework reset cache to avoid deleting chapter read/unread info
     func resetCache() async {}
     
-    func updateMangaInCollection(data: MangaWithDetail, _ collectionId: MangaCollection.ID? = nil) {
+    func updateMangaInCollection(data: MangaWithDetail, _ collectionId: MangaCollectionDB.ID? = nil) {
         do {
             try database.write { db in
-                try Manga.updateCollection(id: data.manga.id, collectionId: collectionId, db)
+                try MangaDB.updateCollection(id: data.manga.id, collectionId: collectionId, db)
             }
         } catch {
             withAnimation {

@@ -102,27 +102,27 @@ public struct AppDatabase {
 public extension AppDatabase {
     func createUiDataIfEmpty() throws {
         try database.write { db in
-            if try MangaCollection.all().isEmpty(db) {
+            if try MangaCollectionDB.all().isEmpty(db) {
                 try createUITestMangaCollection(db)
             }
             
-            if try Scraper.all().isEmpty(db) {
+            if try ScraperDB.all().isEmpty(db) {
                 try createUITestScraper(db)
             }
         }
     }
 
     static let uiTestMangaCollection = [
-        MangaCollection(id: UUID(), name: "Reading", position: 1),
-        MangaCollection(id: UUID(), name: "To Read", position: 2),
-        MangaCollection(id: UUID(), name: "Special", position: 3),
-        MangaCollection(id: UUID(), name: "Done", position: 4),
-        MangaCollection(id: UUID(), name: "Paper", position: 5),
+        MangaCollectionDB(id: UUID(), name: "Reading", position: 1),
+        MangaCollectionDB(id: UUID(), name: "To Read", position: 2),
+        MangaCollectionDB(id: UUID(), name: "Special", position: 3),
+        MangaCollectionDB(id: UUID(), name: "Done", position: 4),
+        MangaCollectionDB(id: UUID(), name: "Paper", position: 5),
     ]
     
     static let uiTestScraper = [
-        Scraper(id: UUID(), name: "Favorite", isFavorite: true, isActive: true),
-        Scraper(id: UUID(), name: "Active", isFavorite: false, isActive: true),
+        ScraperDB(id: UUID(), name: "Favorite", isFavorite: true, isActive: true),
+        ScraperDB(id: UUID(), name: "Active", isFavorite: false, isActive: true),
     ]
 
     private func createUITestMangaCollection(_ db: Database) throws {

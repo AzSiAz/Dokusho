@@ -21,7 +21,7 @@ public class LibraryUpdater {
         public var refreshProgress: Double
         public var refreshCount: Double
         public var refreshTitle: String
-        public var collectionId: MangaCollection.ID
+        public var collectionId: MangaCollectionDB.ID
     }
     
     public struct RefreshData {
@@ -30,11 +30,11 @@ public class LibraryUpdater {
     }
 
     private let database = AppDatabase.shared.database
-    public var refreshStatus: [MangaCollection.ID: Bool] = [:]
+    public var refreshStatus: [MangaCollectionDB.ID: Bool] = [:]
     
     private init() {}
     
-    public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
+    public func refreshCollection(collection: MangaCollectionDB, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }
 
         await MainActor.run {
@@ -44,7 +44,7 @@ public class LibraryUpdater {
         await updateRefreshStatus(collectionID: collection.id, refreshing: true)
 
         let data = try await database.read { db in
-            try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
+            try MangaDB.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
         
         Logger.libraryUpdater.debug("---------------------Fetching--------------------------")
@@ -67,7 +67,7 @@ public class LibraryUpdater {
                     let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
 
                     let _ = try await database.write { db in
-                        try Manga.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
+                        try MangaDB.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
                     }
                     
                     await Task.yield()
@@ -88,7 +88,7 @@ public class LibraryUpdater {
     }
     
     @MainActor
-    public func updateRefreshStatus(collectionID: MangaCollection.ID, refreshing: Bool? = nil) {
+    public func updateRefreshStatus(collectionID: MangaCollectionDB.ID, refreshing: Bool? = nil) {
         self.refreshStatus[collectionID] = refreshing
     }
 }

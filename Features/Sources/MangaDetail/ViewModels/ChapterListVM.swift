@@ -15,48 +15,48 @@ public class ChapterListVM {
     private let database = AppDatabase.shared.database
 
     @ObservationIgnored
-    var manga: Manga
+    var manga: MangaDB
     @ObservationIgnored
-    var scraper: Scraper
+    var scraper: ScraperDB
     
     var error: Error?
-    var selectedChapter: MangaChapter?
+    var selectedChapter: MangaChapterDB?
 
-    public init(manga: Manga, scraper: Scraper) {
+    public init(manga: MangaDB, scraper: ScraperDB) {
         self.manga = manga
         self.scraper = scraper
     }
 
-    func changeChapterStatus(for chapter: MangaChapter, status: ChapterStatus) {
+    func changeChapterStatus(for chapter: MangaChapterDB, status: ChapterStatus) {
         do {
             try database.write { db in
-                try MangaChapter.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
+                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
             }
         } catch(let err) {
             print(err)
         }
     }
 
-    func changePreviousChapterStatus(for chapter: MangaChapter, status: ChapterStatus, in chapters: [MangaChapter]) {
+    func changePreviousChapterStatus(for chapter: MangaChapterDB, status: ChapterStatus, in chapters: [MangaChapterDB]) {
         do {
             try database.write { db in
                 try chapters
                     .filter { status == .unread ? !$0.isUnread : $0.isUnread }
                     .filter { chapter.position < $0.position }
-                    .forEach { try MangaChapter.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
+                    .forEach { try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
             }
         } catch(let err) {
             print(err)
         }
     }
 
-    func hasPreviousUnreadChapter(for chapter: MangaChapter, chapters: [MangaChapter]) -> Bool {
+    func hasPreviousUnreadChapter(for chapter: MangaChapterDB, chapters: [MangaChapterDB]) -> Bool {
         return chapters
             .filter { chapter.position < $0.position }
             .contains { $0.isUnread }
     }
 
-    func nextUnreadChapter(chapters: [MangaChapter]) -> MangaChapter? {
+    func nextUnreadChapter(chapters: [MangaChapterDB]) -> MangaChapterDB? {
         return chapters
             .sorted { $0.position > $1.position }
             .first { $0.isUnread }

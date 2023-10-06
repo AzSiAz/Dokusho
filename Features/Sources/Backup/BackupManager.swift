@@ -37,23 +37,23 @@ public struct Backup: FileDocument {
 
 public struct BackupData: Codable {
     var collections: [BackupCollectionData]
-    var scrapers: [Scraper]
+    var scrapers: [ScraperDB]
 }
 
 public struct BackupCollectionData: Codable {
-    var collection: MangaCollection
+    var collection: MangaCollectionDB
     var mangas: [MangaWithChapters]
 }
 
 public struct MangaWithChapters: Codable {
-    var manga: Manga
-    var chapters: [MangaChapter]
+    var manga: MangaDB
+    var chapters: [MangaChapterDB]
 }
 
 
 public struct BackupTask {
     var mangaBackup: MangaWithChapters
-    var collection: MangaCollection
+    var collection: MangaCollectionDB
 }
 
 public typealias BackupResult = Result<BackupTask, Error>
@@ -76,19 +76,19 @@ public class BackupManager {
     
     public func createBackup() -> BackupData {
         var backupCollections = [BackupCollectionData]()
-        var scrapers = [Scraper]()
+        var scrapers = [ScraperDB]()
 
         do {
             try database.read { db in
-                scrapers = try Scraper.all().fetchAll(db)
-                let collections = try MangaCollection.all().fetchAll(db)
+                scrapers = try ScraperDB.all().fetchAll(db)
+                let collections = try MangaCollectionDB.all().fetchAll(db)
                 
                 for collection in collections {
-                    let mangas = try Manga.all().forCollectionId(collection.id).fetchAll(db)
+                    let mangas = try MangaDB.all().forCollectionId(collection.id).fetchAll(db)
                     var mangasBackup = [MangaWithChapters]()
 
                     for manga in mangas {
-                        let chapters = try MangaChapter.all().forMangaId(manga.id).fetchAll(db)
+                        let chapters = try MangaChapterDB.all().forMangaId(manga.id).fetchAll(db)
                         mangasBackup.append(.init(manga: manga, chapters: chapters))
                     }
                     
@@ -110,11 +110,11 @@ public class BackupManager {
         await withTaskGroup(of: BackupResult.self) { group in
             
             for scraper in backup.scrapers {
-                let _ = try? await database.write({ try Scraper.fetchOrCreateFromBackup(db: $0, backup: scraper) })
+                let _ = try? await database.write({ try ScraperDB.fetchOrCreateFromBackup(db: $0, backup: scraper) })
             }
             
             for collectionBackup in backup.collections {
-                guard let collection = try? await database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup.collection) }) else { continue }
+                guard let collection = try? await database.write({ try MangaCollectionDB.fetchOrCreateFromBackup(db: $0, backup: collectionBackup.collection) }) else { continue }
                 
                 withAnimation {
                     self.total += Double(collectionBackup.mangas.count)

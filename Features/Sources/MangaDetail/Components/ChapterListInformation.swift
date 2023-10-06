@@ -13,13 +13,13 @@ import Reader
 public struct ChapterListInformation: View {
     @Environment(ReaderManager.self) var readerManager
     
-    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapter]
+    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapterDB]
     @State var vm: ChapterListVM
     
-    var manga: Manga
-    var scraper: Scraper
+    var manga: MangaDB
+    var scraper: ScraperDB
     
-    public init(manga: Manga, scraper: Scraper) {
+    public init(manga: MangaDB, scraper: ScraperDB) {
         self.manga = manga
         self.scraper = scraper
         _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))

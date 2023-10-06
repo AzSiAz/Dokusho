@@ -11,9 +11,9 @@ import GRDBQuery
 
 public struct ChaptersHistory: Decodable, FetchableRecord, Identifiable {
     public var id: String { chapter.id }
-    public var chapter: MangaChapter
+    public var chapter: MangaChapterDB
     public var manga: PartialManga
-    public var scraper: Scraper
+    public var scraper: ScraperDB
 }
 
 public struct ChaptersHistoryRequest: Queryable {
@@ -35,13 +35,13 @@ public struct ChaptersHistoryRequest: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> [ChaptersHistory] {
-        var request = MangaChapter
+        var request = MangaChapterDB
             .all()
-            .including(required: MangaChapter.manga)
-            .including(required: MangaChapter.scraper)
+            .including(required: MangaChapterDB.manga)
+            .including(required: MangaChapterDB.scraper)
             .filter(filter)
         
-        if !searchTerm.isEmpty { request = request.including(required: MangaChapter.manga.filterByName(searchTerm)) }
+        if !searchTerm.isEmpty { request = request.including(required: MangaChapterDB.manga.filterByName(searchTerm)) }
 
         return try ChaptersHistory.fetchAll(db, request)
     }

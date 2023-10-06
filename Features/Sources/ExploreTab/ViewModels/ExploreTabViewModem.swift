@@ -19,8 +19,8 @@ class ExploreTabViewModel {
         self.showSourceMangaSearchModal = showSourceMangaSearchModal
     }
     
-    func onlyGetThirdPartyScraper(favorite: [Scraper], active: [Scraper]) -> [Source] {
-        return MangaScraperService.shared.sources
+    func onlyGetThirdPartyScraper(favorite: [ScraperDB], active: [ScraperDB]) -> [Source] {
+        return ScraperService.shared.sources
             .filter { src in return !active.contains(where: { scraper in src.id == scraper.id }) }
             .filter { src in return !favorite.contains(where: { scraper in src.id == scraper.id }) }
     }
@@ -28,13 +28,13 @@ class ExploreTabViewModel {
     func toogleActive(source: Source) {
         do {
             try database.write { db in
-                let scraper = try Scraper.fetchOne(db, id: source.id)
+                let scraper = try ScraperDB.fetchOne(db, id: source.id)
                 if var scraper = scraper {
                     scraper.isActive.toggle()
                     scraper.position = 99999
                     try scraper.save(db)
                 } else {
-                    var scraper = Scraper(from: source)
+                    var scraper = ScraperDB(from: source)
                     scraper.isActive = true
                     scraper.position = 99999
                     try scraper.save(db)
@@ -48,13 +48,13 @@ class ExploreTabViewModel {
     func toogleFavorite(source: Source) {
         do {
             try database.write { db in
-                let scraper = try Scraper.fetchOne(db, id: source.id)
+                let scraper = try ScraperDB.fetchOne(db, id: source.id)
                 if var scraper = scraper {
                     scraper.isFavorite.toggle()
                     scraper.position = 99999
                     try scraper.save(db)
                 } else {
-                    var scraper = Scraper(from: source)
+                    var scraper = ScraperDB(from: source)
                     scraper.isFavorite = true
                     scraper.position = 99999
                     try scraper.save(db)
@@ -65,7 +65,7 @@ class ExploreTabViewModel {
         }
     }
     
-    func onMove(scrapers: [Scraper], offsets: IndexSet, position: Int) {
+    func onMove(scrapers: [ScraperDB], offsets: IndexSet, position: Int) {
         do {
             var sc = scrapers
 

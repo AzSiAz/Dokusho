@@ -12,7 +12,7 @@ import SwiftUI
 
 public struct ScraperWithMangaCount: Codable, FetchableRecord, Identifiable {
     public var id: UUID { scraper.id }
-    public var scraper: Scraper
+    public var scraper: ScraperDB
     public var mangaCount: Int
 }
 
@@ -29,10 +29,10 @@ public struct ScraperWithMangaInCollection: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> [ScraperWithMangaCount] {
-        let request = Scraper
-            .select(Scraper.databaseSelection + [count(SQL(sql: "DISTINCT manga.rowid")).forKey("mangaCount")])
-            .joining(required: Scraper.mangas.isInCollection())
-            .group(Scraper.Columns.id)
+        let request = ScraperDB
+            .select(ScraperDB.databaseSelection + [count(SQL(sql: "DISTINCT manga.rowid")).forKey("mangaCount")])
+            .joining(required: ScraperDB.mangas.isInCollection())
+            .group(ScraperDB.Columns.id)
             .orderByPosition()
 
         return try ScraperWithMangaCount.fetchAll(db, request)

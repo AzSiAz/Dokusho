@@ -18,7 +18,7 @@ public struct ExploreSourceView: View {
 
     @State var vm: ExploreSourceViewModel
 
-    public init(scraper: Scraper) {
+    public init(scraper: ScraperDB) {
         _vm = .init(wrappedValue: .init(for: scraper))
         _mangas = Query(MangaInCollectionsRequest(srcId: scraper.id))
     }

@@ -17,13 +17,13 @@ class SearchScraperViewModel {
     private var nextPage = 1
     private var oldSearch: String?
     
-    let scraper: Scraper
+    let scraper: ScraperDB
     var isLoading = true
     var hasNextPage = false
     var mangas = [SourceSmallManga]()
     var selectedManga: SourceSmallManga?
     
-    init(scraper: Scraper) {
+    init(scraper: ScraperDB) {
         self.scraper = scraper
     }
     
@@ -61,18 +61,18 @@ class SearchScraperViewModel {
         }
     }
 
-    func addToCollection(smallManga: SourceSmallManga, collection: MangaCollection) async {
+    func addToCollection(smallManga: SourceSmallManga, collection: MangaCollectionDB) async {
         guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 
         do {
             try await database.write { [scraper] db -> Void in
-                guard var manga = try Manga.all().forMangaId(smallManga.id, scraper.id).fetchOne(db) else {
-                    var manga = Manga(from: sourceManga, sourceId: scraper.id)
+                guard var manga = try MangaDB.all().forMangaId(smallManga.id, scraper.id).fetchOne(db) else {
+                    var manga = MangaDB(from: sourceManga, sourceId: scraper.id)
                     manga.mangaCollectionId = collection.id
                     try manga.save(db)
                     
                     for info in sourceManga.chapters.enumerated() {
-                        let chapter = MangaChapter(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
+                        let chapter = MangaChapterDB(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
                         try chapter.save(db)
                     }
 

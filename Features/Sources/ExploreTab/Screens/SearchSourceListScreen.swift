@@ -20,9 +20,9 @@ public struct SearchSourceListScreen: View {
     @State var searchText: String = ""
     @State var isSearchFocused: Bool = true
     
-    var scrapers: [Scraper]
+    var scrapers: [ScraperDB]
     
-    public init(scrapers: [Scraper]) {
+    public init(scrapers: [ScraperDB]) {
         self.scrapers = scrapers
     }
 
@@ -45,9 +45,9 @@ public struct ScraperSearch: View {
     @State var vm: SearchScraperViewModel
     var textToSearch: String
     
-    var collections: [MangaCollection]
+    var collections: [MangaCollectionDB]
     
-    public init(scraper: Scraper, textToSearch: String, collections: [MangaCollection]) {
+    public init(scraper: ScraperDB, textToSearch: String, collections: [MangaCollectionDB]) {
         self.collections = collections
         self.textToSearch = textToSearch
         _vm = .init(wrappedValue: .init(scraper: scraper))

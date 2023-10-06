@@ -3,7 +3,7 @@ import JAYSON
 import Collections
 
 public struct MangaDexSource: Source {
-    static let mangadex: Source = Self()
+    public static let mangadex: Source = Self()
     
     private(set) public var name: String = "MangaDex"
     private(set) public var id: UUID = UUID(uuidString: "3599756d-8fa0-4ca2-aafc-096c3d776ae1")!
