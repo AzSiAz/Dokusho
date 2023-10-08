@@ -44,6 +44,7 @@ public struct MangaCard: View {
             .overlay(alignment: .topTrailing) { ChapterCounter() }
             .overlay(alignment: .topLeading) { CollectionName() }
             .overlay(alignment: .bottomLeading) { Title() }
+            .mangaCardFrame()
     }
     
     @ViewBuilder

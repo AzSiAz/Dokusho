@@ -13,21 +13,31 @@ public struct SearchSourceListScreen: View {
     @Query(.activeScrapersByPosition()) var scrapers: [Scraper]
     
     @State var searchText: String = ""
-    @State var isSearchFocused: Bool = true
     
     public init() {}
 
     public var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            ForEach(scrapers) { scraper in
-                ScraperSearch(scraper: Bindable(scraper), textToSearch: $searchText)
+        List {
+            if !searchText.isEmpty {
+                ForEach(scrapers) { scraper in
+                    Section(scraper.name) {
+                        ScraperSearch(scraper: Bindable(scraper), textToSearch: $searchText)
+                    }
+                    .listSectionSeparator(.hidden)
+                }
             }
         }
-        .searchable(text: $searchText)
+        .listStyle(.plain)
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .navigationDestination(for: SelectedSearchResult.self) { result in
             MangaDetailScreen(mangaId: result.mangaId, scraperId: result.scraperId)
         }
         .navigationTitle(Text("Search"))
         .navigationBarTitleDisplayMode(.inline)
+        .overlay {
+            if searchText.isEmpty {
+                ContentUnavailableView.search
+            }
+        }
     }
 }

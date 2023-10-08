@@ -104,12 +104,11 @@ public struct ExploreSourceView: View {
     
     @ViewBuilder
     func ErrorBlock() -> some View {
-        VStack {
-            Text("Something weird happened, try again")
-            AsyncButton(action: { await fetchList(clean: true) }) {
-                Image(systemName: "arrow.clockwise")
-            }
-        }
+        ContentUnavailableView(
+            "Refresh",
+            systemImage: "bolt.horizontal.circle",
+            description: Text("Source might be unavailable... \n Please use pull to refresh")
+        )
     }
     
     @ViewBuilder

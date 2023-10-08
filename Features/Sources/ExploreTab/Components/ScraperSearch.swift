@@ -28,32 +28,17 @@ public struct ScraperSearch: View {
     }
     
     public var body: some View {
-        VStack(alignment: .leading) {
-            if text.isEmpty {
-                EmptyView()
-            } else {
-                HStack {
-                    Text(scraper.name)
-                        .padding(.top, 15)
-                        .padding(.leading, 15)
-                    Spacer()
-                }
-                Group {
-                    if isLoading && mangas.isEmpty {
-                        ProgressView()
-                            .padding(.leading, 25)
-                    } else if !isLoading && mangas.isEmpty {
-                        Text("No Results founds")
-                            .padding(.leading, 15)
-                    }
-                    else {
-                        SearchResult()
-                    }
-                }
-                .frame(height: !isLoading && mangas.isEmpty ? 50 : 180)
+        Group {
+            if isLoading && mangas.isEmpty {
+                ProgressView()
+            } else if !isLoading && mangas.isEmpty {
+                Text("No Results founds")
+            }
+            else {
+                SearchResult()
             }
         }
-        .padding(.bottom, 10)
+        .frame(width: .greedy)
         .task(id: text) {
             try? await Task.sleep(for: .seconds(0.3))
             await fetchData(text: text)
@@ -67,14 +52,10 @@ public struct ScraperSearch: View {
                 NavigationLink(value: SelectedSearchResult(scraperId: scraper.id, mangaId: manga.id)) {
                     let found = mangasInCollection.first { $0.mangaId == manga.id }
                     MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collection?.name)
-                        .mangaCardFrame()
                         .contextMenu { ContextMenu(manga: manga) }
                         .task { await fetchMoreIfPossible(for: manga) }
-                        .padding(.trailing, mangas.last == manga ? 15 : 0)
-                        .padding(.leading, mangas.first == manga ? 15 : 0)
                 }
             }
-            .padding(.bottom)
         }
     }
     
