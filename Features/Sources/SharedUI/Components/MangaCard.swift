@@ -17,25 +17,25 @@ public struct MangaCard: View {
     var radius: Double = 5
     var opacity: Double = 0.83
     
-    public init(title: String, imageUrl: URL, chapterCount: Int) {
+    public init(title: String, imageUrl: URL?, chapterCount: Int) {
         self.title = title
         self.chapterCount = chapterCount
-        self.imageUrl = imageUrl
+        self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
     }
     
-    public init(title: String, imageUrl: URL, collectionName: String? = nil) {
+    public init(title: String, imageUrl: URL?, collectionName: String? = nil) {
         self.title = title
         self.collectionName = collectionName
-        self.imageUrl = imageUrl
+        self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
     }
     
-    public init(imageUrl: URL, chapterCount: Int) {
-        self.imageUrl = imageUrl
+    public init(imageUrl: URL?, chapterCount: Int) {
+        self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
         self.chapterCount = chapterCount
     }
     
-    public init(imageUrl: URL) {
-        self.imageUrl = imageUrl
+    public init(imageUrl: URL?) {
+        self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
     }
     
     public var body: some View {

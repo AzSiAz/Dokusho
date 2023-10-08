@@ -24,7 +24,7 @@ public class ChapterListVM {
         self.scraper = scraper
     }
 
-    func changeChapterStatus(for chapter: Chapter, status: Chapter.Status) {
+    func changeChapterStatus(for chapter: Chapter) {
 //        do {
 //            try database.write { db in
 //                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
@@ -34,7 +34,7 @@ public class ChapterListVM {
 //        }
     }
 
-    func changePreviousChapterStatus(for chapter: Chapter, status: Chapter.Status, in chapters: [Chapter]) {
+    func changePreviousChapterStatus(for chapter: Chapter, in chapters: [Chapter]) {
 //        do {
 //            try database.write { db in
 //                try chapters

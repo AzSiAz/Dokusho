@@ -67,7 +67,8 @@ public class ReaderViewModel {
             guard
                 let source = ScraperService.shared.getSource(sourceId: scraper.id),
                 let chapterId = currentChapter.chapterId,
-                let data = try? await source.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapterId)
+                let mangaId = manga.mangaId,
+                let data = try? await source.fetchChapterImages(mangaId: mangaId, chapterId: chapterId)
             else { throw "Error fetching image for scraper" }
 
             let urls = data.map { $0.imageUrl }

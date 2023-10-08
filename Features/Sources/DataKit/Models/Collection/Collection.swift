@@ -8,10 +8,10 @@ public class Collection {
     public var useList: Bool?
     public var filter: Filter
     public var order: Order
-    
-    @Relationship(inverse: \Manga.collection)
+
+    @Relationship(deleteRule: .nullify, inverse: \Manga.collection)
     public var mangas: [Manga] = []
-    
+
     public init(
         name: String,
         position: Int,

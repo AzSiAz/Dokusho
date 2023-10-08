@@ -14,15 +14,6 @@ public class Scraper {
     
     @Attribute(.allowsCloudEncryption)
     var auth: Auth?
-
-    public init(id: UUID, name: String = "", icon: URL, isActive: Bool = false, position: Int = 9999, language: Language = .all) {
-        self.id = id
-        self.name = name
-        self.icon = icon
-        self.isActive = isActive
-        self.position = position
-        self.language = language
-    }
     
     public init(source: Source, isActive: Bool = false, position: Int = 9999) {
         self.id = source.id

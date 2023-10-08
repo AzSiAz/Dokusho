@@ -16,7 +16,11 @@ public struct MockSource: Source {
     private(set) public var nsfw: Bool = true
     private(set) public var deprecated: Bool = false
     
+    private let waitFor: Duration = .seconds(0.5)
+    
     public func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga {
+        try await Task.sleep(for: waitFor)
+
         return SourcePaginatedSmallManga(
             mangas: Array(repeating: (), count: 100).enumerated().map {
                 SourceSmallManga(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
@@ -26,6 +30,8 @@ public struct MockSource: Source {
     }
     
     public func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallManga {
+        try await Task.sleep(for: waitFor)
+
         return SourcePaginatedSmallManga(
             mangas: Array(repeating: (), count: 100).enumerated().map {
                 SourceSmallManga(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
@@ -35,6 +41,8 @@ public struct MockSource: Source {
     }
     
     public func fetchSearchManga(query: String, page: Int) async throws -> SourcePaginatedSmallManga {
+        try await Task.sleep(for: waitFor)
+
         return SourcePaginatedSmallManga(
             mangas: Array(repeating: (), count: 100).enumerated().map {
                 SourceSmallManga(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
@@ -44,6 +52,8 @@ public struct MockSource: Source {
     }
     
     public func fetchMangaDetail(id: String) async throws -> SourceManga {
+        try await Task.sleep(for: waitFor)
+
         return SourceManga(
             id: id,
             title: "ID \(id)",
@@ -61,6 +71,8 @@ public struct MockSource: Source {
     }
     
     public func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage] {
+        try await Task.sleep(for: waitFor)
+
         return Array(repeating: (), count: 100).enumerated().map {
             SourceChapterImage(index: $0.offset, imageUrl: URL(string: "http://localhost:3000/manga/\(mangaId)/\(chapterId)/\($0.offset).png")!)
         }

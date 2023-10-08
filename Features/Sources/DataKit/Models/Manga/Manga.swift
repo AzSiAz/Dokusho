@@ -11,54 +11,26 @@ import MangaScraper
 
 @Model
 public class Manga {
-    public var mangaId: String
-    public var title: String
-    public var cover: URL
-    public var synopsis: String
-    public var alternateTitles: [String]
-    public var genres: [String]
-    public var authors: [String]
-    public var artists: [String]
-    public var status: Status
-    public var kind: Kind
+    public var mangaId: String?
+    public var title: String?
+    public var cover: URL?
+    public var synopsis: String?
+    public var alternateTitles: [String]?
+    public var genres: [String]?
+    public var authors: [String]?
+    public var artists: [String]?
+    public var status: Status?
+    public var kind: Kind?
     public var scraperId: UUID?
     public var readerDirection: ReaderDirection?
-    
+
     @Relationship()
     public var collection: Collection?
-    
-    public init(
-        mangaId: String,
-        title: String,
-        cover: URL,
-        synopsis: String,
-        alternateTitles: [String],
-        genres: [String],
-        authors: [String],
-        artists: [String],
-        scraperId: UUID,
-        status: Status,
-        kind: Kind,
-        readerDirection: ReaderDirection? = nil,
-        collection: Collection? = nil
-    ) {
-        self.mangaId = mangaId
-        self.title = title
-        self.cover = cover
-        self.synopsis = synopsis
-        self.status = status
-        self.kind = kind
-        self.scraperId = scraperId
-        self.readerDirection = readerDirection
 
-        self.alternateTitles = alternateTitles
-        self.genres = genres
-        self.authors = authors
-        self.artists = artists
-        self.collection = collection
-    }
-    
-    public init(from data: SourceManga, scraperId: UUID) {
+    @Relationship(deleteRule: .cascade, inverse: \Chapter.manga)
+    public var chapters: [Chapter]?
+
+    public init(from data: SourceManga, scraperId: UUID, collection: Collection? = nil, chapters: [Chapter] = []) {
         self.mangaId = data.id
         self.title = data.title
         self.cover = data.cover
@@ -72,5 +44,17 @@ public class Manga {
         self.readerDirection = ReaderDirection(from: data.type)
 
         self.scraperId = scraperId
+        
+        self.chapters = []
+        self.collection = collection
+    }
+    
+    public func update(from data: SourceManga) {
+        if (self.title != data.title) { self.title = data.title }
+        if (self.cover != data.cover) { self.cover = data.cover }
+        if (self.synopsis != data.synopsis) { self.synopsis = data.synopsis }
+        if (self.alternateTitles != data.alternateNames) { self.alternateTitles = data.alternateNames }
+        if (self.status != Status(rawValue: data.status)) { self.status = Status(rawValue: data.status) }
+        if (self.kind != Kind(rawValue: data.type)) { self.kind = Kind(rawValue: data.type) }
     }
 }

@@ -9,8 +9,6 @@ import SwiftUI
 import DataKit
 import Common
 
-typealias OnProgress = (_ status: Chapter.Status) -> Void
-
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(ReaderManager.self) public var readerManager
@@ -118,7 +116,7 @@ public struct ReaderView: View {
                     Spacer()
                     
                     VStack(alignment: .center, spacing: 0) {
-                        Text(vm.manga.title)
+                        Text(vm.manga.title ?? "")
                             .font(.subheadline)
                             .allowsTightening(true)
                             .lineLimit(1)

@@ -41,7 +41,7 @@ public struct ChapterListRow: View {
                 .padding(.vertical, 5)
             }
         }
-        .foregroundColor(chapter.status == .read ? Color.gray : Color.blue)
+        .foregroundColor(chapter.readAt != nil ? Color.gray : Color.blue)
         .contextMenu { ChapterRowContextMenu() }
     }
     
@@ -72,24 +72,24 @@ public struct ChapterListRow: View {
     
     @ViewBuilder
     func ChapterRowContextMenu() -> some View {
-        if chapter.status != .read {
-            Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
+        if (chapter.readAt != nil) {
+            Button(action: { vm.changeChapterStatus(for: chapter) }) {
                 Text("Mark as read")
             }
         }
         else {
-            Button(action: { vm.changeChapterStatus(for: chapter, status: .unread) }) {
+            Button(action: { vm.changeChapterStatus(for: chapter) }) {
                 Text("Mark as unread")
             }
         }
 
         if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
-            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .read, in: chapters) }) {
+            Button(action: { vm.changePreviousChapterStatus(for: chapter, in: chapters) }) {
                 Text("Mark previous as read")
             }
         }
         else {
-            Button(action: { vm.changePreviousChapterStatus(for: chapter, status: .unread, in: chapters) }) {
+            Button(action: { vm.changePreviousChapterStatus(for: chapter, in: chapters) }) {
                 Text("Mark previous as unread")
             }
         }

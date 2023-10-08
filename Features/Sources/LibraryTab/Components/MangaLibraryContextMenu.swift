@@ -19,19 +19,25 @@ public struct MangaLibraryContextMenu: View {
 
     public var body: some View {
         if count != 0 {
-            Button(action: { markAllChapterAs(newSatus: .read) }) {
+            Button(action: { markAllChapterAsRead() }) {
                 Text("Mark as read")
             }
         }
         
         if count == 0 {
-            Button(action: { markAllChapterAs(newSatus: .unread) }) {
+            Button(action: { markAllChapterAsUnRead() }) {
                 Text("Mark as unread")
             }
         }
     }
     
-    func markAllChapterAs(newSatus: Chapter.Status) {
+    func markAllChapterAsRead() {
+//        try? appDB.database.write { db in
+//            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
+//        }
+    }
+    
+    func markAllChapterAsUnRead() {
 //        try? appDB.database.write { db in
 //            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
 //        }
