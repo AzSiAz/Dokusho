@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-extension FetchDescriptor where T: Scraper {
+public extension FetchDescriptor where T: Scraper {
     static func activeScrapersByPosition() -> FetchDescriptor<T> {
         FetchDescriptor(
             predicate: #Predicate<T> { $0.isActive == true },

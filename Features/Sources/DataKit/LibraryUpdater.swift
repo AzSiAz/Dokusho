@@ -29,7 +29,7 @@ public class LibraryUpdater {
         public var toRefresh: RefreshManga
     }
 
-    private let database = AppDatabase.shared.database
+//    private let database = AppDatabase.shared.database
     public var refreshStatus: [MangaCollectionDB.ID: Bool] = [:]
     
     private init() {}
@@ -43,40 +43,41 @@ public class LibraryUpdater {
         
         await updateRefreshStatus(collectionID: collection.id, refreshing: true)
 
-        let data = try await database.read { db in
-            try MangaDB.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
-        }
+        let data = [Manga]()
+//        try await database.read { db in
+//            try MangaDB.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
+//        }
         
         Logger.libraryUpdater.debug("---------------------Fetching--------------------------")
         
         guard data.count != 0 else { return }
 
-        try await withThrowingTaskGroup(of: RefreshData.self) { group in
-            for row in data {
-                guard let source = row.scraper.asSource() else { throw "Source not found from scraper with id: \(row.scraper.id)" }
-
-                _ = group.addTaskUnlessCancelled(priority: .background) {
-                    return RefreshData(source: source, toRefresh: row)
-                }
-            }
-            
-            for try await data in group {
-                await Task.yield()
-
-                do {
-                    let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
-
-                    let _ = try await database.write { db in
-                        try MangaDB.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
-                    }
-                    
-                    await Task.yield()
-                } catch (let error) {
-                    Logger.libraryUpdater.error("Error updating \(data.toRefresh.title): \(error)")
-                    await updateRefreshStatus(collectionID: collection.id, refreshing: false)
-                }
-            }
-        }
+//        try await withThrowingTaskGroup(of: RefreshData.self) { group in
+//            for row in data {
+//                guard let source = ScraperService.shared.getSource(sourceId: row.scraperId) else { throw "Source not found from scraper with id: \(row.scraper.id)" }
+//
+//                _ = group.addTaskUnlessCancelled(priority: .background) {
+//                    return RefreshData(source: source, toRefresh: row)
+//                }
+//            }
+//            
+//            for try await data in group {
+//                await Task.yield()
+//
+//                do {
+//                    let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
+//
+//                    let _ = try await database.write { db in
+//                        try MangaDB.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
+//                    }
+//                    
+//                    await Task.yield()
+//                } catch (let error) {
+//                    Logger.libraryUpdater.error("Error updating \(data.toRefresh.title): \(error)")
+//                    await updateRefreshStatus(collectionID: collection.id, refreshing: false)
+//                }
+//            }
+//        }
         
         Logger.libraryUpdater.debug("---------------------Fetched--------------------------")
         

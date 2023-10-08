@@ -23,7 +23,7 @@ public struct MangaCard: View {
         self.imageUrl = imageUrl
     }
     
-    public init(title: String, imageUrl: URL, collectionName: String) {
+    public init(title: String, imageUrl: URL, collectionName: String? = nil) {
         self.title = title
         self.collectionName = collectionName
         self.imageUrl = imageUrl
@@ -103,6 +103,19 @@ public extension View {
         } else {
             return self
                 .frame(width: 130, height: 180)
+        }
+    }
+    
+    func mangaCardHeight(height: Double = 180) -> some View {
+        if height != 180 {
+            return self
+                .frame(height: height)
+        } else if UIScreen.isLargeScreen {
+            return self
+                .frame(height: 180*1.3)
+        } else {
+            return self
+                .frame(height: 180)
         }
     }
 }

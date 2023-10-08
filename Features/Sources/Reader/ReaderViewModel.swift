@@ -36,7 +36,6 @@ enum ReaderLink: Equatable, Hashable {
 
 @Observable
 public class ReaderViewModel {
-    private let database = AppDatabase.shared.database
     let manga: MangaDB
     let scraper: ScraperDB
     let chapters: [MangaChapterDB]
@@ -139,13 +138,13 @@ public class ReaderViewModel {
                 self.showToolBar = true
             }
 
-            do {
-                try await self.database.write { [currentChapter] db in
-                    try MangaChapterDB.markChapterAs(newStatus: .read, db: db, chapterId: currentChapter.id)
-                }
-            } catch(let err) {
-                print(err)
-            }
+//            do {
+//                try await self.database.write { [currentChapter] db in
+//                    try MangaChapterDB.markChapterAs(newStatus: .read, db: db, chapterId: currentChapter.id)
+//                }
+//            } catch(let err) {
+//                print(err)
+//            }
         }
     }
     

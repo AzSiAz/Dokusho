@@ -7,33 +7,26 @@ import DataKit
 import Nuke
 import OSLog
 
-@Observable
-class SettingsViewModel {
-    var showExportfile = false
-    var file: Backup?
-    var fileName: String?
-    var showImportfile = false
-}
-
-
 public struct SettingsTabScreen: View {
     @Environment(BackupManager.self) private var backupManager
     @Environment(UserPreferences.self) private var userPreference
     
-    @State private var vm = SettingsViewModel()
+    @State private var showExportfile = false
+    @State private var file: Backup?
+    @State private var fileName: String?
+    @State private var showImportfile = false
     
     public init() {}
     
     public var body: some View {
-        @Bindable var userPreferences = userPreference
-
-        NavigationView {
+        NavigationStack {
             List {
+                @Bindable var userPreferences = userPreference
                 Section("Backup") {
                     Button(action: { createBackup() }) {
                         Text("Create Backup")
                     }
-                    Button(action: { vm.showImportfile.toggle() }) {
+                    Button(action: { showImportfile.toggle() }) {
                         Text("Import Backup")
                     }
                 }
@@ -58,18 +51,17 @@ public struct SettingsTabScreen: View {
                     Toggle("Only update when manga has no unread chapter", isOn: $userPreferences.onlyUpdateAllRead)
                 }
             }
-            .fileExporter(isPresented: $vm.showExportfile, document: vm.file, contentType: .json, defaultFilename: vm.fileName) { _ in
-                vm.showExportfile.toggle()
-                vm.file = nil
+            .fileExporter(isPresented: $showExportfile, document: file, contentType: .json, defaultFilename: fileName) { _ in
+                showExportfile.toggle()
+                file = nil
             }
-            .fileImporter(isPresented: $vm.showImportfile, allowedContentTypes: [.json], allowsMultipleSelection: false) { res in
+            .fileImporter(isPresented: $showImportfile, allowedContentTypes: [.json], allowsMultipleSelection: false) { res in
                 guard let url = try! res.get().first else { return }
                 Task { await importBackup(url: url) }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
         }
-        .navigationViewStyle(.stack)
     }
 }
 
@@ -77,10 +69,10 @@ extension SettingsTabScreen {
     func createBackup() {
         let backup = backupManager.createBackup()
 
-        vm.fileName = "dokusho-backup-\(Date.now.ISO8601Format()).json"
-        vm.file = Backup(data: backup)
+        fileName = "dokusho-backup-\(Date.now.ISO8601Format()).json"
+        file = Backup(data: backup)
 
-        vm.showExportfile.toggle()
+        showExportfile.toggle()
     }
     
     func importBackup(url: URL) async {

@@ -26,11 +26,11 @@ public struct RemoteImageCacheView: View {
     }
     
     public init(
-        url: URL,
+        url: URL?,
         contentMode: ContentMode,
         pipeline: ImagePipeline = .coverCache)
     {
-        self.url = url
+        self.url = url ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
         self.contentMode = contentMode
         self.pipeline = pipeline
     }
@@ -43,6 +43,10 @@ public struct RemoteImageCacheView: View {
                         .resizable()
                         .aspectRatio(contentMode: self.contentMode)
                 } else if state.isLoading {
+                    Color
+                        .gray
+                        .border(.gray)
+                } else if state.error != nil {
                     Color
                         .gray
                         .border(.gray)

@@ -17,36 +17,30 @@ public struct MockSource: Source {
     private(set) public var deprecated: Bool = false
     
     public func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga {
-        return SourcePaginatedSmallManga(mangas: [
-            SourceSmallManga(id: "ID1", title: "ID 1", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-1.png")!),
-            SourceSmallManga(id: "ID2", title: "ID 2", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-2.png")!),
-            SourceSmallManga(id: "ID3", title: "ID 3", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-3.png")!),
-            SourceSmallManga(id: "ID4", title: "ID 4", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-4.png")!),
-            SourceSmallManga(id: "ID5", title: "ID 5", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-5.png")!),
-            SourceSmallManga(id: "ID6", title: "ID 6", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-6.png")!),
-        ], hasNextPage: page == 1 ? true : false)
+        return SourcePaginatedSmallManga(
+            mangas: Array(repeating: (), count: 100).enumerated().map {
+                SourceSmallManga(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
+            },
+            hasNextPage: page == 1 ? true : false
+        )
     }
     
     public func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallManga {
-        return SourcePaginatedSmallManga(mangas: [
-            SourceSmallManga(id: "ID6", title: "ID 6", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-6.png")!),
-            SourceSmallManga(id: "ID5", title: "ID 5", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-5.png")!),
-            SourceSmallManga(id: "ID4", title: "ID 4", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-4.png")!),
-            SourceSmallManga(id: "ID3", title: "ID 3", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-3.png")!),
-            SourceSmallManga(id: "ID2", title: "ID 2", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-2.png")!),
-            SourceSmallManga(id: "ID1", title: "ID 1", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-1.png")!),
-        ], hasNextPage: page == 1 ? true : false)
+        return SourcePaginatedSmallManga(
+            mangas: Array(repeating: (), count: 100).enumerated().map {
+                SourceSmallManga(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
+            },
+            hasNextPage: page == 1 ? true : false
+        )
     }
     
     public func fetchSearchManga(query: String, page: Int) async throws -> SourcePaginatedSmallManga {
-        return SourcePaginatedSmallManga(mangas: [
-            SourceSmallManga(id: "ID6", title: "ID 6", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-6.png")!),
-            SourceSmallManga(id: "ID5", title: "ID 5", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-5.png")!),
-            SourceSmallManga(id: "ID4", title: "ID 4", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-4.png")!),
-            SourceSmallManga(id: "ID3", title: "ID 3", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-3.png")!),
-            SourceSmallManga(id: "ID2", title: "ID 2", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-2.png")!),
-            SourceSmallManga(id: "ID1", title: "ID 1", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-1.png")!),
-        ], hasNextPage: page == 1 ? true : false)
+        return SourcePaginatedSmallManga(
+            mangas: Array(repeating: (), count: 100).enumerated().map {
+                SourceSmallManga(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
+            },
+            hasNextPage: page == 1 ? true : false
+        )
     }
     
     public func fetchMangaDetail(id: String) async throws -> SourceManga {
@@ -59,18 +53,17 @@ public struct MockSource: Source {
             alternateNames: ["_ID \(id)_"],
             status: .ongoing,
             synopsis: "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum",
-            chapters: [
-                SourceChapter(id: "3", name: "lol 3", dateUpload: .distantPast, chapter: 3),
-                SourceChapter(id: "3", name: "lol 3", dateUpload: .distantPast, chapter: 2),
-                SourceChapter(id: "2", name: "lol 2", dateUpload: .distantPast, chapter: 1),
-                SourceChapter(id: "1", name: "lol 1", dateUpload: .distantPast, chapter: 0)
-            ],
+            chapters: Array(repeating: (), count: 100).enumerated().map {
+                SourceChapter(id: "\($0.offset)", name: "lol \($0.offset)", dateUpload: .distantPast, chapter: 100)
+            },
             type: .manga
         )
     }
     
     public func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage] {
-        return []
+        return Array(repeating: (), count: 100).enumerated().map {
+            SourceChapterImage(index: $0.offset, imageUrl: URL(string: "http://localhost:3000/manga/\(mangaId)/\(chapterId)/\($0.offset).png")!)
+        }
     }
     
     public func mangaUrl(mangaId: String) -> URL {

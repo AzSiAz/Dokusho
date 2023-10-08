@@ -6,28 +6,29 @@ struct DokushoModelContainerViewModifier: ViewModifier {
     let container: ModelContainer
     
     init(inMemory: Bool) {
-        let localConfiguration = ModelConfiguration(
-            "Local",
-            schema: Schema([Scraper.self]),
-            isStoredInMemoryOnly: inMemory,
-            allowsSave: true,
-            groupContainer: .automatic,
-            cloudKitDatabase: .none
-        )
-        
-        let cloudConfiguration = ModelConfiguration(
-            "Cloud",
-            schema: Schema([]),
-            isStoredInMemoryOnly: inMemory,
-            allowsSave: true,
-            groupContainer: .automatic,
-            cloudKitDatabase: .automatic
-        )
+//        let localConfiguration = ModelConfiguration(
+//            "Local",
+//            schema: Schema([Scraper.self]),
+//            isStoredInMemoryOnly: inMemory,
+//            allowsSave: true,
+//            groupContainer: .automatic,
+//            cloudKitDatabase: .none
+//        )
+//        
+//        let cloudConfiguration = ModelConfiguration(
+//            "Cloud",
+//            schema: Schema([MangaCollection.self]),
+//            isStoredInMemoryOnly: inMemory,
+//            allowsSave: true,
+//            groupContainer: .automatic,
+//            cloudKitDatabase: .automatic
+//        )
 
         container = try! ModelContainer(
-            for: Schema([Scraper.self], version: .init(0, 0, 1)),
-            migrationPlan: nil,
-            configurations: [localConfiguration, cloudConfiguration]
+//            for: Schema([Scraper.self], version: .init(0, 0, 1)),
+            for: Schema([Scraper.self, MangaCollection.self, Manga.self])
+//            migrationPlan: nil,
+//            configurations: [localConfiguration, cloudConfiguration]
         )
     }
     

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct BackupImporter: View {
+public struct BackupImporterScreen: View {
     @Environment(BackupManager.self) var backupManager
     
     public init() {}

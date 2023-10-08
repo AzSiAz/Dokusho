@@ -11,18 +11,19 @@ import DataKit
 import DynamicCollection
 
 public struct ByGenreListPage: View {
-    @GRDBQuery.Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]
+//    @GRDBQuery.Query(DistinctMangaGenreRequest()) var genres: [GenreWithMangaCount]
     
     public init() {}
 
     public var body: some View {
-        List(genres) { genre in
-            NavigationLink(destination: MangaInCollectionForGenre(genre: genre.genre, inModal: false)) {
-                Text(genre.genre)
-                    .badge("\(genre.mangaCount)")
-            }
-        }
-        .navigationTitle("By Genres")
-        .navigationBarTitleDisplayMode(.inline)
+//        List(genres) { genre in
+//            NavigationLink(destination: MangaInCollectionForGenre(genre: genre.genre, inModal: false)) {
+//                Text(genre.genre)
+//                    .badge("\(genre.mangaCount)")
+//            }
+//        }
+//        .navigationTitle("By Genres")
+//        .navigationBarTitleDisplayMode(.inline)
+        EmptyView()
     }
 }

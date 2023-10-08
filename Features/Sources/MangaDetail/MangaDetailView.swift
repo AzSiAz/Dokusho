@@ -6,61 +6,94 @@
 //
 
 import SwiftUI
-import GRDBQuery
 import DataKit
 import Reader
 import Common
 import SharedUI
 import SwiftUILayouts
 
-public struct MangaDetail: View {
-    @Environment(\.horizontalSizeClass) var horizontalSize
-
-    @GRDBQuery.Query(MangaCollectionRequest()) var collections
-    @GRDBQuery.Query<MangaDetailRequest> var data: MangaWithDetail?
-
-    @State var vm: MangaDetailVM
-    @State var orientation: DeviceOrientation = DeviceOrientation()
-    @State var readerManager = ReaderManager()
-
-    let selectGenre: ((_ genre: String) -> Void)?
+public struct MangaDetailScreen: View {
+    @Environment(\.modelContext) var modelContext
+    @Environment(ScraperService.self) var scraperService
     
-    public init(mangaId: String, scraper: ScraperDB, selectGenre: ((_ genre: String) -> Void)? = nil) {
-        _data = .init(.init(mangaId: mangaId, scraper: scraper))
-        _vm = .init(wrappedValue: .init(for: scraper, mangaId: mangaId))
-        
-        self.selectGenre = selectGenre
+    @State var scraper: Scraper? = nil
+    @State var manga: Manga? = nil
+
+    var mangaId: String
+    var scraperId: UUID
+    
+    public init(mangaId: String, scraperId: UUID) {
+        self.mangaId = mangaId
+        self.scraperId = scraperId
     }
     
     public var body: some View {
         Group {
-            if vm.error && data == nil {
-                VStack {
-                    Text("Something weird happened, try again")
-                    AsyncButton(action: { await vm.update() }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
-            }
-            else if let data = data {
-                if horizontalSize == .regular {
-                    LargeBody(data)
-                } else {
-                    CompactBody(data)
-                }
-            }
-            else {
+            if let manga, let scraper {
+                InnerMangaDetail(manga: manga, scraper: scraper)
+            } else {
                 ProgressView()
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity)
+            }
+        }
+        .task {
+            guard let source = scraperService.getSource(sourceId: scraperId) else { return }
+            guard
+                let found = try? modelContext.fetch(.getScrapersBySourceId(id: scraperId)),
+                let scraper = found.first
+            else { return }
+            
+            self.scraper = scraper
+            
+            guard
+                let found = try? modelContext.fetch(.mangaBySourceId(scraperId: scraper.id, id: mangaId)),
+                let manga = found.first
+            else {
+                guard let sourceManga = try? await source.fetchMangaDetail(id: mangaId)
+                else { return }
+                
+                let manga = Manga(from: sourceManga, scraperId: scraper.id)
+                modelContext.insert(manga)
+                self.manga = manga
+                
+                return
+            }
+            
+            self.manga = manga
+        }
+    }
+}
+
+public struct InnerMangaDetail: View {
+    @Environment(\.horizontalSizeClass) var horizontalSize
+
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [MangaCollection]
+
+    @Bindable var manga: Manga
+    @Bindable var scraper: Scraper
+
+    @State var orientation = DeviceOrientation()
+    @State var readerManager = ReaderManager()
+    @State var showMoreDesc = false
+    
+    public init(manga: Manga, scraper: Scraper) {
+        self.manga = manga
+        self.scraper = scraper
+    }
+    
+    public var body: some View {
+        Group {
+            if horizontalSize == .regular {
+                LargeBody
+            } else {
+                CompactBody
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Link(destination: self.vm.getMangaURL()) {
-                    Image(systemName: "safari")
-                }
+//                Link(destination: self.vm.getMangaURL()) {
+//                    Image(systemName: "safari")
+//                }
             }
         }
         .fullScreenCover(item: $readerManager.selectedChapter) { data in
@@ -71,14 +104,14 @@ public struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func LargeBody(_ data: MangaWithDetail) -> some View {
+    var LargeBody: some View {
         Grid {
             GridRow {
                 ScrollView {
-                    HeaderRow(data)
-                    ActionRow(data)
-                    SynopsisRow(synopsis: data.manga.synopsis)
-                    GenreRow(genres: data.manga.genres)
+                    HeaderRow
+                    ActionRow
+                    SynopsisRow
+                    GenreRow
                 }
                 .id("Detail")
                 .gridCellColumns(6)
@@ -89,41 +122,41 @@ public struct MangaDetail: View {
                 .gridCellColumns(1)
 
                 ScrollView {
-                    ChapterListInformation(manga: data.manga, scraper: vm.scraper)
-                        .disabled(vm.refreshing)
-                        .padding(.bottom)
+//                    ChapterListInformation(manga: data.manga, scraper: vm.scraper)
+//                        .disabled(vm.refreshing)
+//                        .padding(.bottom)
                 }
                 .id("Chapter")
-                .refreshable { await vm.update() }
+//                .refreshable { await vm.update() }
                 .gridCellColumns(5)
             }
         }
     }
     
     @ViewBuilder
-    func CompactBody(_ data: MangaWithDetail) -> some View {
+    var CompactBody: some View {
         ScrollView {
-            HeaderRow(data)
-            ActionRow(data)
-            SynopsisRow(synopsis: data.manga.synopsis)
-            GenreRow(genres: data.manga.genres)
-            ChapterListInformation(manga: data.manga, scraper: data.scraper!)
-                .disabled(vm.refreshing)
-                .padding(.bottom)
+            HeaderRow
+            ActionRow
+            SynopsisRow
+            GenreRow
+//            ChapterListInformation(manga: data.manga, scraper: data.scraper!)
+//                .disabled(vm.refreshing)
+//                .padding(.bottom)
         }
-        .refreshable { await vm.update() }
+//        .refreshable { await vm.update() }
     }
     
     @ViewBuilder
-    func HeaderRow(_ data: MangaWithDetail) -> some View {
+    var HeaderRow: some View {
         HStack(alignment: .top) {
-            MangaCard(imageUrl: data.manga.cover)
+            MangaCard(imageUrl: manga.cover)
                 .mangaCardFrame()
                 .padding(.leading, 10)
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading) {
-                    Text(data.manga.title)
+                    Text(manga.title)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.subheadline.bold())
@@ -132,18 +165,18 @@ public struct MangaDetail: View {
                 
                 VStack(alignment: .center) {
                     VStack {
-                        ForEach(data.manga.authors) { author in
+                        ForEach(manga.authors) { author in
                             Text(author)
                                 .font(.caption.italic())
                         }
                     }
                     .padding(.bottom, 5)
                     
-                    Text(data.manga.status.rawValue)
+                    Text(manga.status.rawValue)
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     
-                    Text(data.scraper?.name ?? "No Name")
+                    Text(scraper.name)
                         .font(.callout.bold())
                 }
             }
@@ -152,51 +185,53 @@ public struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func ActionRow(_ data: MangaWithDetail) -> some View {
+    var ActionRow: some View {
         ControlGroup {
             Button(action: {
                 withAnimation {
-                    vm.addToCollection.toggle()
+//                    vm.addToCollection.toggle()
                 }
             }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
-                        .symbolVariant(data.mangaCollection != nil ? .fill : .none)
-                    Text(data.mangaCollection?.name ?? "Favoris")
+                        .symbolVariant(manga.collection != nil ? .fill : .none)
+                    Text(manga.collection?.name ?? "Favoris")
                 }
             }
             .disabled(collections.count == 0)
             .buttonStyle(.plain)
-            .actionSheet(isPresented: $vm.addToCollection) {
-                var actions: [ActionSheet.Button] = []
-                    
-                collections.forEach { col in
-                    actions.append(.default(
-                        Text(col.name),
-                        action: {
-                            vm.updateMangaInCollection(data: data, col.id)
-                        }
-                    ))
-                }
-
-                if let collectionName = data.mangaCollection?.name {
-                    actions.append(.destructive(
-                        Text("Remove from \(collectionName)"),
-                        action: {
-                            vm.updateMangaInCollection(data: data)
-                        }
-                    ))
-                }
-
-                actions.append(.cancel())
-
-                return ActionSheet(title: Text("Choose collection"), buttons: actions)
-            }
+//            .actionSheet(isPresented: $vm.addToCollection) {
+//                var actions: [ActionSheet.Button] = []
+//                    
+//                collections.forEach { col in
+//                    actions.append(.default(
+//                        Text(col.name),
+//                        action: {
+//                            vm.updateMangaInCollection(data: data, col.id)
+//                        }
+//                    ))
+//                }
+//
+//                if let collectionName = data.mangaCollection?.name {
+//                    actions.append(.destructive(
+//                        Text("Remove from \(collectionName)"),
+//                        action: {
+//                            vm.updateMangaInCollection(data: data)
+//                        }
+//                    ))
+//                }
+//
+//                actions.append(.cancel())
+//
+//                return ActionSheet(title: Text("Choose collection"), buttons: actions)
+//            }
             
             Divider()
                 .padding(.horizontal)
             
-            AsyncButton(action: { await vm.resetCache() }) {
+            AsyncButton(action: {
+//                await vm.resetCache()
+            }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "xmark.bin.circle")
                     Text("Reset cache")
@@ -212,18 +247,18 @@ public struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func SynopsisRow(synopsis: String) -> some View {
+    var SynopsisRow: some View {
         VStack(spacing: 5) {
-            Text(synopsis)
-                .lineLimit(vm.showMoreDesc ? nil : 4)
+            Text(manga.synopsis)
+                .lineLimit(showMoreDesc ? nil : 4)
                 .fixedSize(horizontal: false, vertical: true)
             
             HStack {
                 Spacer()
                 Button(action: { withAnimation {
-                    vm.showMoreDesc.toggle()
+                    showMoreDesc.toggle()
                 } }) {
-                    Text("Show \(!vm.showMoreDesc ? "more" : "less")")
+                    Text("Show \(!showMoreDesc ? "more" : "less")")
                 }
             }
         }
@@ -231,10 +266,10 @@ public struct MangaDetail: View {
     }
     
     @ViewBuilder
-    func GenreRow(genres: [String]) -> some View {
+    var GenreRow: some View {
         FlowLayout(alignment: .center) {
-            ForEach(genres) { genre in
-                Button(genre, action: { selectGenre?(genre) })
+            ForEach(manga.genres) { genre in
+                Button(genre, action: {  })
                     .buttonStyle(.bordered)
             }
         }

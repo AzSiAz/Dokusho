@@ -13,13 +13,8 @@ import DataKit
 
 @Observable
 public class MangaDetailVM {
-    @ObservationIgnored
-    private let database = AppDatabase.shared.database
-    
-    @ObservationIgnored
-    let scraper: ScraperDB
-    @ObservationIgnored
-    let mangaId: String
+    private let scraper: ScraperDB
+    private let mangaId: String
     
     var error = false
     var showMoreDesc = false
@@ -43,9 +38,9 @@ public class MangaDetailVM {
 
             let sourceManga = try await source.fetchMangaDetail(id: mangaId)
             
-            try _ = await database.write { db in
-                try MangaDB.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
-            }
+//            try _ = await database.write { db in
+//                try MangaDB.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+//            }
         } catch {
             print(error)
             self.error = true
@@ -64,14 +59,14 @@ public class MangaDetailVM {
     func resetCache() async {}
     
     func updateMangaInCollection(data: MangaWithDetail, _ collectionId: MangaCollectionDB.ID? = nil) {
-        do {
-            try database.write { db in
-                try MangaDB.updateCollection(id: data.manga.id, collectionId: collectionId, db)
-            }
-        } catch {
-            withAnimation {
-                self.error = true
-            }
-        }
+//        do {
+//            try database.write { db in
+//                try MangaDB.updateCollection(id: data.manga.id, collectionId: collectionId, db)
+//            }
+//        } catch {
+//            withAnimation {
+//                self.error = true
+//            }
+//        }
     }
 }

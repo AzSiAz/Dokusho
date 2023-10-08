@@ -20,7 +20,6 @@ struct DokushoApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(\.appDatabase, .shared)
                 .environment(libraryUpdater)
                 .environment(backupManager)
                 .environment(userPreferences)

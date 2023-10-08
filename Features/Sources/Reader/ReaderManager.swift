@@ -22,9 +22,6 @@ public class ReaderManager {
     
     public init() {}
     
-    @ObservationIgnored
-    private var database = AppDatabase.shared.database
-    
     public var selectedChapter: SelectedChapter?
 
     public func selectChapter(chapter: MangaChapterDB, manga: MangaDB, scraper: ScraperDB, chapters: [MangaChapterDB]) {

@@ -13,7 +13,7 @@ import Reader
 public struct ChapterListInformation: View {
     @Environment(ReaderManager.self) var readerManager
     
-    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapterDB]
+//    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapterDB]
     @State var vm: ChapterListVM
     
     var manga: MangaDB
@@ -23,7 +23,7 @@ public struct ChapterListInformation: View {
         self.manga = manga
         self.scraper = scraper
         _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
-        _chapters = Query(MangaChaptersRequest(manga: manga))
+//        _chapters = Query(MangaChaptersRequest(manga: manga))
     }
 
     public var body: some View {
@@ -35,7 +35,7 @@ public struct ChapterListInformation: View {
                 Spacer()
                 
                 HStack {
-                    ChaptersButton(filter: $chapters.filterAll, order: $chapters.ascendingOrder)
+//                    ChaptersButton(filter: $chapters.filterAll, order: $chapters.ascendingOrder)
                 }
             }
             .frame(height: 24)
@@ -50,26 +50,26 @@ public struct ChapterListInformation: View {
     @ViewBuilder
     func ChapterCollections() -> some View {
         Group {
-            if let chapter = vm.nextUnreadChapter(chapters: chapters) {
-                Group {
-                    if let url = chapter.externalUrl {
-                        Link(destination: url) {
-                            NextUnreadChapter()
-                        }
-                    } else {
-                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
-                            NextUnreadChapter()
-                        }
-                    }
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .padding(.horizontal)
-            }
+//            if let chapter = vm.nextUnreadChapter(chapters: chapters) {
+//                Group {
+//                    if let url = chapter.externalUrl {
+//                        Link(destination: url) {
+//                            NextUnreadChapter()
+//                        }
+//                    } else {
+//                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
+//                            NextUnreadChapter()
+//                        }
+//                    }
+//                }
+//                .buttonStyle(.bordered)
+//                .controlSize(.large)
+//                .padding(.horizontal)
+//            }
 
-            ForEach(chapters) { chapter in
-                ChapterListRow(vm: vm, chapter: chapter, chapters: chapters)
-            }
+//            ForEach(chapters) { chapter in
+//                ChapterListRow(vm: vm, chapter: chapter, chapters: chapters)
+//            }
         }
     }
     

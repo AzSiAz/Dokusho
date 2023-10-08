@@ -9,8 +9,6 @@ import SwiftUI
 import DataKit
 
 public struct MangaLibraryContextMenu: View {
-    @Environment(\.appDatabase) var appDB
-
     var manga: PartialManga
     var count: Int
     
@@ -34,8 +32,8 @@ public struct MangaLibraryContextMenu: View {
     }
     
     func markAllChapterAs(newSatus: ChapterStatus) {
-        try? appDB.database.write { db in
-            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
-        }
+//        try? appDB.database.write { db in
+//            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
+//        }
     }
 }

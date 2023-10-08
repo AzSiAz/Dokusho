@@ -14,15 +14,14 @@ import Common
 import SharedUI
 
 public struct CollectionSettings: View {
-    @Environment(\.appDatabase) var appDatabase
-    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
+//    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
     
     @State var collectionOrder: MangaCollectionOrder
     @State var collectionFilter: MangaCollectionFilter
     @State var useList: Bool
     
     public init(collection : MangaCollectionDB) {
-        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
+//        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
         _collectionOrder = .init(initialValue: collection.order)
         _collectionFilter = .init(initialValue: collection.filter)
         _useList = .init(initialValue: collection.useList ?? false)
@@ -67,57 +66,57 @@ public struct CollectionSettings: View {
 
 extension CollectionSettings {
     func updateCollectionUseList(d: Bool) {
-        Task {
-            guard let collection = collection else { return }
-
-            do {
-                try await appDatabase.database.write { db in
-                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
-                    
-                    try foundCollection.updateChanges(db) {
-                        $0.useList = d
-                    }
-                }
-            } catch(let err) {
-                print(err)
-            }
-        }
+//        Task {
+//            guard let collection = collection else { return }
+//
+//            do {
+//                try await appDatabase.database.write { db in
+//                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
+//                    
+//                    try foundCollection.updateChanges(db) {
+//                        $0.useList = d
+//                    }
+//                }
+//            } catch(let err) {
+//                print(err)
+//            }
+//        }
     }
     
     func updateCollectionFilter(newFilter: MangaCollectionFilter) {
-        Task {
-            guard let collection = collection else { return }
-
-            do {
-                try await appDatabase.database.write { db in
-                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
-                    
-                    try foundCollection.updateChanges(db) {
-                        $0.filter = newFilter
-                    }
-                }
-            } catch(let err) {
-                print(err)
-            }
-        }
+//        Task {
+//            guard let collection = collection else { return }
+//
+//            do {
+//                try await appDatabase.database.write { db in
+//                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
+//                    
+//                    try foundCollection.updateChanges(db) {
+//                        $0.filter = newFilter
+//                    }
+//                }
+//            } catch(let err) {
+//                print(err)
+//            }
+//        }
     }
     
     func updateCollectionOrder(direction: MangaCollectionOrder.Direction? = nil, field: MangaCollectionOrder.Field? = nil) {
-        Task {
-            guard let collection = collection else { return }
-            
-            do {
-                try await appDatabase.database.write { db in
-                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
-                    
-                    try foundCollection.updateChanges(db) {
-                        if let direction = direction { $0.order.direction = direction }
-                        if let field = field { $0.order.field = field }
-                    }
-                }
-            } catch(let err) {
-                print(err)
-            }
-        }
+//        Task {
+//            guard let collection = collection else { return }
+//            
+//            do {
+//                try await appDatabase.database.write { db in
+//                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
+//                    
+//                    try foundCollection.updateChanges(db) {
+//                        if let direction = direction { $0.order.direction = direction }
+//                        if let field = field { $0.order.field = field }
+//                    }
+//                }
+//            } catch(let err) {
+//                print(err)
+//            }
+//        }
     }
 }

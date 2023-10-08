@@ -9,9 +9,9 @@ import SwiftUI
 import DataKit
 import Reader
 
-
 public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
+
     @Bindable var vm: ChapterListVM
 
     var chapter: MangaChapterDB

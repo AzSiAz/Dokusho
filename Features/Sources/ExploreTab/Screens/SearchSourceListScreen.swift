@@ -1,126 +1,33 @@
-//
-//  SearchSourceList.swift
-//  Dokusho
-//
-//  Created by Stephan Deumier on 21/04/2022.
-//
-
 import Foundation
 import SwiftUI
-import Combine
-import GRDBQuery
-import MangaScraper
 import DataKit
 import SharedUI
 import MangaDetail
 
+struct SelectedSearchResult: Hashable {
+    var scraperId: UUID
+    var mangaId: String
+}
+
 public struct SearchSourceListScreen: View {
-    @GRDBQuery.Query(MangaCollectionRequest()) var collections
+    @Query(.activeScrapersByPosition()) var scrapers: [Scraper]
     
     @State var searchText: String = ""
     @State var isSearchFocused: Bool = true
     
-    var scrapers: [ScraperDB]
-    
-    public init(scrapers: [ScraperDB]) {
-        self.scrapers = scrapers
-    }
+    public init() {}
 
     public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            DebouncedSearchBar(debouncedText: $searchText, isFocused: $isSearchFocused)
-                .padding(.top, 10)
-                .padding(.horizontal, 10)
             ForEach(scrapers) { scraper in
-                ScraperSearch(scraper: scraper, textToSearch: searchText, collections: collections)
+                ScraperSearch(scraper: Bindable(scraper), textToSearch: $searchText)
             }
         }
-        .padding(.top, 5)
-    }
-}
-
-public struct ScraperSearch: View {
-    @GRDBQuery.Query<MangaInCollectionsRequest> var mangasInCollection: [MangaInCollection]
-
-    @State var vm: SearchScraperViewModel
-    var textToSearch: String
-    
-    var collections: [MangaCollectionDB]
-    
-    public init(scraper: ScraperDB, textToSearch: String, collections: [MangaCollectionDB]) {
-        self.collections = collections
-        self.textToSearch = textToSearch
-        _vm = .init(wrappedValue: .init(scraper: scraper))
-        _mangasInCollection = Query(MangaInCollectionsRequest(srcId: scraper.id))
-    }
-    
-    public var body: some View {
-        VStack(alignment: .leading) {
-            if textToSearch.isEmpty {
-                EmptyView()
-            } else {
-                HStack {
-                    Text(vm.scraper.name)
-                        .padding(.top, 15)
-                        .padding(.leading, 15)
-                    Spacer()
-                }
-                Group {
-                    if vm.isLoading && vm.mangas.isEmpty {
-                        ProgressView()
-                            .padding(.leading, 25)
-                    } else if !vm.isLoading && vm.mangas.isEmpty {
-                        Text("No Results founds")
-                            .padding(.leading, 15)
-                    }
-                    else {
-                        SearchResult()
-                    }
-                }
-                .frame(height: !vm.isLoading && vm.mangas.isEmpty ? 50 : 180)
-            }
+        .searchable(text: $searchText)
+        .navigationDestination(for: SelectedSearchResult.self) { result in
+            MangaDetailScreen(mangaId: result.mangaId, scraperId: result.scraperId)
         }
-        .padding(.bottom, 10)
-        .onChange(of: textToSearch) { _, text in
-            Task {
-                await vm.fetchData(textToSearch: text)
-            }
-        }
-        .sheet(item: $vm.selectedManga) { manga in
-            NavigationView {
-                MangaDetail(mangaId: manga.id, scraper: vm.scraper)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func SearchResult() -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack {
-                ForEach(vm.mangas) { manga in
-                    let found = mangasInCollection.first { $0.mangaId == manga.id }
-                    MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
-                        .mangaCardFrame()
-                        .contextMenu { ContextMenu(manga: manga) }
-                        .task { await vm.fetchMoreIfPossible(for: manga) }
-                        .onTapGesture { vm.selectedManga = manga }
-                        .padding(.trailing, vm.mangas.last == manga ? 15 : 0)
-                        .padding(.leading, vm.mangas.first == manga ? 15 : 0)
-                }
-
-                if vm.isLoading && !vm.mangas.isEmpty {
-                    ProgressView()
-                }
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func ContextMenu(manga: SourceSmallManga) -> some View {
-        ForEach(collections) { collection in
-            AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection) }) {
-                Text("Add to \(collection.name)")
-            }
-        }
+        .navigationTitle(Text("Search"))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

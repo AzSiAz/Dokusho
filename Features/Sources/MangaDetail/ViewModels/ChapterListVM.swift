@@ -12,9 +12,6 @@ import DataKit
 @Observable
 public class ChapterListVM {
     @ObservationIgnored
-    private let database = AppDatabase.shared.database
-
-    @ObservationIgnored
     var manga: MangaDB
     @ObservationIgnored
     var scraper: ScraperDB
@@ -28,26 +25,26 @@ public class ChapterListVM {
     }
 
     func changeChapterStatus(for chapter: MangaChapterDB, status: ChapterStatus) {
-        do {
-            try database.write { db in
-                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
-            }
-        } catch(let err) {
-            print(err)
-        }
+//        do {
+//            try database.write { db in
+//                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
+//            }
+//        } catch(let err) {
+//            print(err)
+//        }
     }
 
     func changePreviousChapterStatus(for chapter: MangaChapterDB, status: ChapterStatus, in chapters: [MangaChapterDB]) {
-        do {
-            try database.write { db in
-                try chapters
-                    .filter { status == .unread ? !$0.isUnread : $0.isUnread }
-                    .filter { chapter.position < $0.position }
-                    .forEach { try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
-            }
-        } catch(let err) {
-            print(err)
-        }
+//        do {
+//            try database.write { db in
+//                try chapters
+//                    .filter { status == .unread ? !$0.isUnread : $0.isUnread }
+//                    .filter { chapter.position < $0.position }
+//                    .forEach { try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
+//            }
+//        } catch(let err) {
+//            print(err)
+//        }
     }
 
     func hasPreviousUnreadChapter(for chapter: MangaChapterDB, chapters: [MangaChapterDB]) -> Bool {
