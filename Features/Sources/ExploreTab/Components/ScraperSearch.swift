@@ -10,7 +10,7 @@ public struct ScraperSearch: View {
     @Environment(ScraperService.self) var scraperService
     
     @Query var mangasInCollection: [Manga]
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [MangaCollection]
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [Collection]
 
     @Bindable private var scraper: Scraper
     @Binding var text: String
@@ -103,7 +103,7 @@ extension ScraperSearch {
         }
     }
     
-    func addToCollection(id: SourceSmallManga.ID, collection: MangaCollection) async {
+    func addToCollection(id: SourceSmallManga.ID, collection: Collection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
             let sourceManga = try? await source.fetchMangaDetail(id: id)

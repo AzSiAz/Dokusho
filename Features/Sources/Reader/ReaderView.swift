@@ -9,7 +9,7 @@ import SwiftUI
 import DataKit
 import Common
 
-typealias OnProgress = (_ status: ChapterStatus) -> Void
+typealias OnProgress = (_ status: Chapter.Status) -> Void
 
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
@@ -28,7 +28,7 @@ public struct ReaderView: View {
                 ProgressView()
                     .scaleEffect(3)
             } else {
-                if vm.direction == .vertical { VerticalReaderView(vm: vm) }
+                if vm.manga.readerDirection == .vertical { VerticalReaderView(vm: vm) }
                 else { HorizontalReaderView(vm: vm) }
             }
         }
@@ -72,7 +72,7 @@ public struct ReaderView: View {
                         VStack {
                             // TODO: Add a custom slider to be able to update tabIndex value
                             ProgressView(value: vm.progressBarCurrent(), total: vm.progressBarCount())
-                                .rotationEffect(.degrees(vm.direction == .rightToLeft ? 180 : 0))
+                                .rotationEffect(.degrees(vm.manga.readerDirection == .rightToLeft ? 180 : 0))
                         }
                         .frame(height: 25)
                     }
@@ -123,7 +123,7 @@ public struct ReaderView: View {
                             .allowsTightening(true)
                             .lineLimit(1)
                             .foregroundColor(.primary)
-                        Text(vm.currentChapter.title)
+                        Text(vm.currentChapter.title ?? "")
                             .font(.subheadline)
                             .italic()
                             .allowsTightening(true)
@@ -137,15 +137,15 @@ public struct ReaderView: View {
                         Menu("Chapters") {
                             ForEach(vm.getChapters()) { chapter in
                                 Button(action: { vm.goToChapter(to: chapter) }) {
-                                    SelectedMenuItem(text: chapter.title, comparaison: vm.currentChapter == chapter)
+                                    SelectedMenuItem(text: chapter.title ?? "", comparaison: vm.currentChapter == chapter)
                                 }
                             }
                         }
                         
                         Menu("Reader direction") {
-                            ForEach(ReadingDirection.allCases, id: \.self) { direction in
-                                Button(action: { vm.setReadingDirection(new: direction) }) {
-                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.direction == direction)
+                            ForEach(Manga.ReaderDirection.allCases, id: \.self) { direction in
+                                Button(action: { vm.manga.readerDirection = direction }) {
+                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.manga.readerDirection == direction)
                                 }
                             }
                         }

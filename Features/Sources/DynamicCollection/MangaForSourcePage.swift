@@ -15,10 +15,10 @@ import MangaDetail
 public struct MangaForSourcePage: View {
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
-    var scraper: ScraperDB
+    var scraper: Scraper
     var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
-    public init(scraper: ScraperDB) {
+    public init(scraper: Scraper) {
         self.scraper = scraper
 //        _list = Query(DetailedMangaInListRequest(requestType: .scraper(scraper: scraper)))
     }

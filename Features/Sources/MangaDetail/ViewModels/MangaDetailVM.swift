@@ -13,16 +13,16 @@ import DataKit
 
 @Observable
 public class MangaDetailVM {
-    private let scraper: ScraperDB
+    private let scraper: Scraper
     private let mangaId: String
     
     var error = false
     var showMoreDesc = false
     var addToCollection = false
     var refreshing = false
-    var selectedChapter: MangaChapterDB?
+    var selectedChapter: Chapter?
     
-    public init(for scraper: ScraperDB, mangaId: String) {
+    public init(for scraper: Scraper, mangaId: String) {
         self.scraper = scraper
         self.mangaId = mangaId
     }
@@ -34,9 +34,10 @@ public class MangaDetailVM {
         }
 
         do {
-            guard let source = scraper.asSource() else { throw "Source Not found" }
+            guard let source = ScraperService.shared.getSource(sourceId: scraper.id) else { throw "Source Not found" }
 
             let sourceManga = try await source.fetchMangaDetail(id: mangaId)
+            print(sourceManga)
             
 //            try _ = await database.write { db in
 //                try MangaDB.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
@@ -47,8 +48,12 @@ public class MangaDetailVM {
         }
     }
     
-    func getMangaURL() -> URL {
-        return scraper.asSource()?.mangaUrl(mangaId: self.mangaId) ?? URL(string: "")!
+    func getMangaURL() -> URL? {
+        guard
+            let source = ScraperService.shared.getSource(sourceId: scraper.id)
+        else { return nil }
+
+        return source.mangaUrl(mangaId: self.mangaId)
     }
     
     func getSourceName() -> String {
@@ -58,7 +63,7 @@ public class MangaDetailVM {
     // TODO: Rework reset cache to avoid deleting chapter read/unread info
     func resetCache() async {}
     
-    func updateMangaInCollection(data: MangaWithDetail, _ collectionId: MangaCollectionDB.ID? = nil) {
+    func updateMangaInCollection(data: Manga, _ collectionId: PersistentIdentifier? = nil) {
 //        do {
 //            try database.write { db in
 //                try MangaDB.updateCollection(id: data.manga.id, collectionId: collectionId, db)

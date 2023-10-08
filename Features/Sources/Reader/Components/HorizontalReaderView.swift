@@ -31,9 +31,9 @@ struct HorizontalReaderView: View {
             case .image(let url):
                 ImageView(image: url, proxy: proxy)
             case .previous(let chapter):
-                DirectionView(title: "Previous chapter \(chapter.title)", direction: .previous, proxy: proxy)
+                DirectionView(title: "Previous chapter \(chapter.title ?? "")", direction: .previous, proxy: proxy)
             case .next(let chapter):
-                DirectionView(title: "Next chapter \(chapter.title)", direction: .next, proxy: proxy)
+                DirectionView(title: "Next chapter \(chapter.title ?? "")", direction: .next, proxy: proxy)
             }
         }
         .id(image)

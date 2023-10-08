@@ -26,7 +26,7 @@ struct DokushoModelContainerViewModifier: ViewModifier {
 
         container = try! ModelContainer(
 //            for: Schema([Scraper.self], version: .init(0, 0, 1)),
-            for: Schema([Scraper.self, MangaCollection.self, Manga.self])
+            for: Schema([Scraper.self, Collection.self, Manga.self])
 //            migrationPlan: nil,
 //            configurations: [localConfiguration, cloudConfiguration]
         )

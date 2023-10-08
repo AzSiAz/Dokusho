@@ -15,7 +15,7 @@ import Common
 @MainActor
 @Observable
 class ExploreSourceViewModel {
-    func addToCollection(smallManga: SourceSmallManga, collection: MangaCollectionDB) async {
+    func addToCollection(smallManga: SourceSmallManga, collection: Collection) async {
 //        guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 //
 //        do {

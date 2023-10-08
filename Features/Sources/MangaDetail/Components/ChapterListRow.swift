@@ -14,10 +14,10 @@ public struct ChapterListRow: View {
 
     @Bindable var vm: ChapterListVM
 
-    var chapter: MangaChapterDB
-    var chapters: [MangaChapterDB]
+    var chapter: Chapter
+    var chapters: [Chapter]
     
-    public init(vm: ChapterListVM, chapter: MangaChapterDB, chapters: [MangaChapterDB]) {
+    public init(vm: ChapterListVM, chapter: Chapter, chapters: [Chapter]) {
         self.chapter = chapter
         self.chapters = chapters
         self._vm = .init(wrappedValue: vm)
@@ -32,7 +32,9 @@ public struct ChapterListRow: View {
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
-                Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
+                Button(action: {
+                    readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters)
+                }) {
                     Content()
                 }
                 .buttonStyle(.plain)
@@ -47,8 +49,8 @@ public struct ChapterListRow: View {
     func Content() -> some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(chapter.title)
-                Text(chapter.dateSourceUpload.formatted())
+                Text(chapter.title ?? "")
+                Text(chapter.uploadedAt?.formatted() ?? "")
                     .font(.system(size: 12))
                 if let readAt = chapter.readAt {
                     Text("Read At: \(readAt.formatted())")
@@ -70,7 +72,7 @@ public struct ChapterListRow: View {
     
     @ViewBuilder
     func ChapterRowContextMenu() -> some View {
-        if chapter.isUnread {
+        if chapter.status != .read {
             Button(action: { vm.changeChapterStatus(for: chapter, status: .read) }) {
                 Text("Mark as read")
             }

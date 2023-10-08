@@ -16,11 +16,11 @@ import SharedUI
 public struct CollectionSettings: View {
 //    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
     
-    @State var collectionOrder: MangaCollectionOrder
-    @State var collectionFilter: MangaCollectionFilter
+    @State var collectionOrder: Collection.Order
+    @State var collectionFilter: Collection.Filter
     @State var useList: Bool
     
-    public init(collection : MangaCollectionDB) {
+    public init(collection : Collection) {
 //        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
         _collectionOrder = .init(initialValue: collection.order)
         _collectionFilter = .init(initialValue: collection.filter)
@@ -32,7 +32,7 @@ public struct CollectionSettings: View {
             List {
                 Section("Filter") {
                     Picker("Change collection filter", selection: $collectionFilter) {
-                        ForEach(MangaCollectionFilter.allCases, id: \.self) { filter in
+                        ForEach(Collection.Filter.allCases, id: \.self) { filter in
                             Text(filter.rawValue).tag(filter)
                         }
                     }
@@ -40,12 +40,12 @@ public struct CollectionSettings: View {
 
                 Section("Order") {
                     Picker("Change collection order field", selection: $collectionOrder.field) {
-                        ForEach(MangaCollectionOrder.Field.allCases, id: \.self) { filter in
+                        ForEach(Collection.Order.Field.allCases, id: \.self) { filter in
                             Text(filter.rawValue).tag(filter)
                         }
                     }
                     Picker("Change collection order direction", selection: $collectionOrder.direction) {
-                        ForEach(MangaCollectionOrder.Direction.allCases, id: \.self) { filter in
+                        ForEach(Collection.Order.Direction.allCases, id: \.self) { filter in
                             Text(filter.rawValue).tag(filter)
                         }
                     }
@@ -83,7 +83,7 @@ extension CollectionSettings {
 //        }
     }
     
-    func updateCollectionFilter(newFilter: MangaCollectionFilter) {
+    func updateCollectionFilter(newFilter: Collection.Filter) {
 //        Task {
 //            guard let collection = collection else { return }
 //
@@ -101,7 +101,7 @@ extension CollectionSettings {
 //        }
     }
     
-    func updateCollectionOrder(direction: MangaCollectionOrder.Direction? = nil, field: MangaCollectionOrder.Field? = nil) {
+    func updateCollectionOrder(direction: Collection.Order.Direction? = nil, field: Collection.Order.Field? = nil) {
 //        Task {
 //            guard let collection = collection else { return }
 //            

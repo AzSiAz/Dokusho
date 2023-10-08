@@ -22,9 +22,10 @@ public class Manga {
     public var status: Status
     public var kind: Kind
     public var scraperId: UUID?
+    public var readerDirection: ReaderDirection?
     
     @Relationship()
-    public var collection: MangaCollection?
+    public var collection: Collection?
     
     public init(
         mangaId: String,
@@ -38,7 +39,8 @@ public class Manga {
         scraperId: UUID,
         status: Status,
         kind: Kind,
-        collection: MangaCollection? = nil
+        readerDirection: ReaderDirection? = nil,
+        collection: Collection? = nil
     ) {
         self.mangaId = mangaId
         self.title = title
@@ -47,6 +49,7 @@ public class Manga {
         self.status = status
         self.kind = kind
         self.scraperId = scraperId
+        self.readerDirection = readerDirection
 
         self.alternateTitles = alternateTitles
         self.genres = genres
@@ -66,6 +69,7 @@ public class Manga {
         self.artists = data.authors
         self.status = Status(rawValue: data.status)
         self.kind = Kind(rawValue: data.type)
+        self.readerDirection = ReaderDirection(from: data.type)
 
         self.scraperId = scraperId
     }

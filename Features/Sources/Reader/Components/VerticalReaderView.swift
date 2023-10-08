@@ -33,9 +33,9 @@ struct VerticalReaderView: View {
             case .image(let url):
                 ImageView(image: url, proxy: proxy)
             case .previous(let chapter):
-                DirectionView(title: "Previous chapter \(chapter.title)", direction: .previous, size: .init(width: proxy.size.width, height: 50))
+                DirectionView(title: "Previous chapter \(chapter.title ?? "")", direction: .previous, size: .init(width: proxy.size.width, height: 50))
             case .next(let chapter):
-                DirectionView(title: "Next chapter \(chapter.title)", direction: .next, size: .init(width: proxy.size.width, height: 50))
+                DirectionView(title: "Next chapter \(chapter.title ?? "")", direction: .next, size: .init(width: proxy.size.width, height: 50))
             }
         }
         .id(image)

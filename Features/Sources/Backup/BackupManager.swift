@@ -29,31 +29,30 @@ public struct Backup: FileDocument {
     }
     
     public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = try JSONEncoder().encode(data)
-
-        return FileWrapper(regularFileWithContents: data)
+//        let data = try JSONEncoder().encode(data)
+//        return FileWrapper(regularFileWithContents: data)
+        throw "TODO: BackupData is not Codable"
     }
 }
 
-public struct BackupData: Codable {
+public struct BackupData {
     var collections: [BackupCollectionData]
-    var scrapers: [ScraperDB]
 }
 
-public struct BackupCollectionData: Codable {
-    var collection: MangaCollectionDB
-    var mangas: [MangaWithChapters]
+public struct BackupCollectionData {
+    var collection: Collection
+    var mangas: [Manga]
 }
 
-public struct MangaWithChapters: Codable {
-    var manga: MangaDB
-    var chapters: [MangaChapterDB]
+public struct MangaWithChapters {
+    var manga: Manga
+    var chapters: [Chapter]
 }
 
 
 public struct BackupTask {
     var mangaBackup: MangaWithChapters
-    var collection: MangaCollectionDB
+    var collection: Collection
 }
 
 public typealias BackupResult = Result<BackupTask, Error>
@@ -98,7 +97,7 @@ public class BackupManager {
 //        }
         
 //        return .init(collections: backupCollections, scrapers: scrapers)
-        return .init(collections: [], scrapers: [])
+        return .init(collections: [])
     }
 
     public func importBackup(backup: BackupData) async {

@@ -1,6 +1,6 @@
 import Foundation
 
-public extension MangaCollection {
+public extension Collection {
     enum Filter: String, Codable, CaseIterable {
         case all = "All", onlyUnReadChapter = "Only unread chapter", completed = "Only completed"
     }

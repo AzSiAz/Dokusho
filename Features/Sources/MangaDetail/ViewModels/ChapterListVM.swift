@@ -12,19 +12,19 @@ import DataKit
 @Observable
 public class ChapterListVM {
     @ObservationIgnored
-    var manga: MangaDB
+    var manga: Manga
     @ObservationIgnored
-    var scraper: ScraperDB
+    var scraper: Scraper
     
     var error: Error?
-    var selectedChapter: MangaChapterDB?
+    var selectedChapter: Chapter?
 
-    public init(manga: MangaDB, scraper: ScraperDB) {
+    public init(manga: Manga, scraper: Scraper) {
         self.manga = manga
         self.scraper = scraper
     }
 
-    func changeChapterStatus(for chapter: MangaChapterDB, status: ChapterStatus) {
+    func changeChapterStatus(for chapter: Chapter, status: Chapter.Status) {
 //        do {
 //            try database.write { db in
 //                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
@@ -34,7 +34,7 @@ public class ChapterListVM {
 //        }
     }
 
-    func changePreviousChapterStatus(for chapter: MangaChapterDB, status: ChapterStatus, in chapters: [MangaChapterDB]) {
+    func changePreviousChapterStatus(for chapter: Chapter, status: Chapter.Status, in chapters: [Chapter]) {
 //        do {
 //            try database.write { db in
 //                try chapters
@@ -47,15 +47,19 @@ public class ChapterListVM {
 //        }
     }
 
-    func hasPreviousUnreadChapter(for chapter: MangaChapterDB, chapters: [MangaChapterDB]) -> Bool {
-        return chapters
-            .filter { chapter.position < $0.position }
-            .contains { $0.isUnread }
+    func hasPreviousUnreadChapter(for chapter: Chapter, chapters: [Chapter]) -> Bool {
+//        return chapters
+//            .filter { chapter.position < $0.position }
+//            .contains { $0.isUnread }
+
+        return false
     }
 
-    func nextUnreadChapter(chapters: [MangaChapterDB]) -> MangaChapterDB? {
-        return chapters
-            .sorted { $0.position > $1.position }
-            .first { $0.isUnread }
+    func nextUnreadChapter(chapters: [Chapter]) -> Chapter? {
+//        return chapters
+//            .sorted { $0.position > $1.position }
+//            .first { $0.isUnread }
+        
+        return nil
     }
 }

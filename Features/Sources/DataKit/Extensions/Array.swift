@@ -1,13 +1,6 @@
-//
-//  File.swift
-//  
-//
-//  Created by Stef on 11/05/2022.
-//
-
 import Foundation
 
-extension Array where Element == MangaChapterDB {
+extension Array where Element == Chapter {
     func next(index: Index) -> Element? {
         let newIdx = index.advanced(by: 1)
         print(newIdx)

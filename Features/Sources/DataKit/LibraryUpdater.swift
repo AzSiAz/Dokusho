@@ -10,7 +10,7 @@ import SwiftUI
 import MangaScraper
 import OSLog
 import Common
-import Observation
+import SwiftData
 
 @Observable
 public class LibraryUpdater {
@@ -21,27 +21,27 @@ public class LibraryUpdater {
         public var refreshProgress: Double
         public var refreshCount: Double
         public var refreshTitle: String
-        public var collectionId: MangaCollectionDB.ID
+        public var collectionId: PersistentIdentifier
     }
     
-    public struct RefreshData {
-        public var source: Source
-        public var toRefresh: RefreshManga
-    }
+//    public struct RefreshData {
+//        public var source: Source
+//        public var toRefresh: RefreshManga
+//    }
 
 //    private let database = AppDatabase.shared.database
-    public var refreshStatus: [MangaCollectionDB.ID: Bool] = [:]
+    public var refreshStatus: [PersistentIdentifier: Bool] = [:]
     
     private init() {}
     
-    public func refreshCollection(collection: MangaCollectionDB, onlyAllRead: Bool = true) async throws {
+    public func refreshCollection(collection: Collection, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }
 
         await MainActor.run {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
-        await updateRefreshStatus(collectionID: collection.id, refreshing: true)
+        await updateRefreshStatus(id: collection.id, refreshing: true)
 
         let data = [Manga]()
 //        try await database.read { db in
@@ -81,7 +81,7 @@ public class LibraryUpdater {
         
         Logger.libraryUpdater.debug("---------------------Fetched--------------------------")
         
-        await self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
+        await self.updateRefreshStatus(id: collection.id, refreshing: nil)
 
         await MainActor.run {
             UIApplication.shared.isIdleTimerDisabled = false
@@ -89,7 +89,7 @@ public class LibraryUpdater {
     }
     
     @MainActor
-    public func updateRefreshStatus(collectionID: MangaCollectionDB.ID, refreshing: Bool? = nil) {
-        self.refreshStatus[collectionID] = refreshing
+    public func updateRefreshStatus(id: PersistentIdentifier, refreshing: Bool? = nil) {
+        self.refreshStatus[id] = refreshing
     }
 }

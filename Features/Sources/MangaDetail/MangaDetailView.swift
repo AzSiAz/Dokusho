@@ -66,7 +66,7 @@ public struct MangaDetailScreen: View {
 public struct InnerMangaDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
 
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [MangaCollection]
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [Collection]
 
     @Bindable var manga: Manga
     @Bindable var scraper: Scraper

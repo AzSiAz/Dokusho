@@ -18,42 +18,40 @@ enum GoToChapterDirection {
 }
 
 enum ReaderLink: Equatable, Hashable {
-    case next(chapter: MangaChapterDB)
-    case previous(chapter: MangaChapterDB)
+    case next(chapter: Chapter)
+    case previous(chapter: Chapter)
     case image(url: URL?)
     
-    func hash(into hasher: inout Hasher) {
-        switch self {
-        case .next(let chapter):
-            hasher.combine(chapter.id)
-        case .previous(let chapter):
-            hasher.combine(chapter.id)
-        case .image(let url):
-            hasher.combine(url)
-        }
-    }
+//    func hash(into hasher: inout Hasher) {
+//        switch self {
+//        case .next(let chapter):
+//            hasher.combine(chapter.id)
+//        case .previous(let chapter):
+//            hasher.combine(chapter.id)
+//        case .image(let url):
+//            hasher.combine(url)
+//        }
+//    }
 }
 
 @Observable
 public class ReaderViewModel {
-    let manga: MangaDB
-    let scraper: ScraperDB
-    let chapters: [MangaChapterDB]
+    let manga: Manga
+    let scraper: Scraper
+    let chapters: [Chapter]
     
-    var currentChapter: MangaChapterDB
+    var currentChapter: Chapter
     var images = [ReaderLink]()
     var isLoading = true
     var showToolBar = false
     var tabIndex = ReaderLink.image(url: nil)
-    var direction: ReadingDirection = .vertical
     var showReaderDirectionChoice = false
 
-    public init(manga: MangaDB, chapter: MangaChapterDB, scraper: ScraperDB, chapters: [MangaChapterDB]) {
+    public init(manga: Manga, chapter: Chapter, scraper: Scraper, chapters: [Chapter]) {
         self.currentChapter = chapter
-        self.chapters = chapters.sorted(by: \.position, using: >)
+        self.chapters = chapters
         self.manga = manga
         self.scraper = scraper
-        self.direction = manga.getDefaultReadingDirection()
     }
     
     func cancelTasks() {
@@ -66,7 +64,11 @@ public class ReaderViewModel {
         self.isLoading = true
 
         do {
-            guard let data = try await scraper.asSource()?.fetchChapterImages(mangaId: manga.mangaId, chapterId: currentChapter.chapterId) else { throw "Error fetching image for scraper" }
+            guard
+                let source = ScraperService.shared.getSource(sourceId: scraper.id),
+                let chapterId = currentChapter.chapterId,
+                let data = try? await source.fetchChapterImages(mangaId: manga.mangaId, chapterId: chapterId)
+            else { throw "Error fetching image for scraper" }
 
             let urls = data.map { $0.imageUrl }
             
@@ -85,7 +87,7 @@ public class ReaderViewModel {
     
     func buildReaderLinks(data: [URL]) throws -> [ReaderLink] {
         var images = [ReaderLink]()
-        let (previous, next) = getChapters()
+        let (previous, next) = getAdjacentChapters()
         
         if let previous {
             images.append(.previous(chapter: previous))
@@ -149,7 +151,7 @@ public class ReaderViewModel {
     }
     
     func getImagesOrderForDirection() -> [ReaderLink] {
-        return direction == .rightToLeft ? images.reversed() : images
+        return manga.readerDirection == .rightToLeft ? images.reversed() : images
     }
     
     func toggleToolbar() {
@@ -158,8 +160,8 @@ public class ReaderViewModel {
         }
     }
     
-    func getChapters() -> (previous: MangaChapterDB?, next: MangaChapterDB?) {
-        switch direction {
+    func getAdjacentChapters() -> (previous: Chapter?, next: Chapter?) {
+        switch manga.readerDirection {
         case .rightToLeft:
             let previousChapter = getChapter(.next)
             let nextChapter = getChapter(.previous)
@@ -170,19 +172,26 @@ public class ReaderViewModel {
             let nextChapter = getChapter(.next)
             
             return (previous: previousChapter, next: nextChapter)
+        default: return (nil, nil)
         }
     }
     
-    func getChapters(_ goToDirection: GoToChapterDirection? = nil) -> [MangaChapterDB] {
+    func getChapters(_ goToDirection: GoToChapterDirection? = nil) -> [Chapter] {
         switch goToDirection {
         case .next:
             let foundChapters = chapters
                 .filter {
-                    switch direction {
-                    case .rightToLeft:
-                        return $0.position > currentChapter.position
-                    case .leftToRight, .vertical:
-                        return $0.position < currentChapter.position
+                    guard
+                        let volume = $0.volume,
+                        let chapter = $0.chapter,
+                        let currentVolume = currentChapter.volume,
+                        let currentChapter = currentChapter.chapter
+                    else { return false }
+
+                    switch manga.readerDirection {
+                    case .rightToLeft: return volume > currentVolume && chapter > currentChapter
+                    case .leftToRight, .vertical: return volume < currentVolume && chapter < currentChapter
+                    default: return false
                     }
                 }
             
@@ -190,11 +199,17 @@ public class ReaderViewModel {
         case .previous:
             let foundChapters = chapters
                 .filter {
-                    switch direction {
-                    case .rightToLeft:
-                        return $0.position < currentChapter.position
-                    case .leftToRight, .vertical:
-                        return $0.position > currentChapter.position
+                    guard
+                        let volume = $0.volume,
+                        let chapter = $0.chapter,
+                        let currentVolume = currentChapter.volume,
+                        let currentChapter = currentChapter.chapter
+                    else { return false }
+
+                    switch manga.readerDirection {
+                    case .rightToLeft: return volume < currentVolume && chapter < currentChapter
+                    case .leftToRight, .vertical: return volume > currentVolume && chapter > currentChapter
+                    default: return false
                     }
                 }
             
@@ -203,18 +218,18 @@ public class ReaderViewModel {
         }
     }
     
-    func getChapter(_ goToDirection: GoToChapterDirection) -> MangaChapterDB? {
+    func getChapter(_ goToDirection: GoToChapterDirection) -> Chapter? {
         switch goToDirection {
         case .next:
             let foundChapters = getChapters(goToDirection)
 
-            if let foundChapter = (direction == .rightToLeft ? foundChapters.last : foundChapters.first) {
+            if let foundChapter = (manga.readerDirection == .rightToLeft ? foundChapters.last : foundChapters.first) {
                 return foundChapter
             }
         case .previous:
             let foundChapters = getChapters(goToDirection)
 
-            if let foundChapter = (direction == .rightToLeft ? foundChapters.first : foundChapters.last) {
+            if let foundChapter = (manga.readerDirection == .rightToLeft ? foundChapters.first : foundChapters.last) {
                 return foundChapter
             }
         }
@@ -227,13 +242,13 @@ public class ReaderViewModel {
         changeChapters(chapter: chapter)
     }
     
-    func goToChapter(to chapter: MangaChapterDB) {
+    func goToChapter(to chapter: Chapter) {
         if chapter != currentChapter {
             changeChapters(chapter: chapter)
         }
     }
 
-    func changeChapters(chapter: MangaChapterDB) {
+    func changeChapters(chapter: Chapter) {
         self.isLoading = true
         
         withAnimation {
@@ -249,20 +264,18 @@ public class ReaderViewModel {
     }
     
     func hasPreviousChapter() -> Bool {
-        switch direction {
-        case .rightToLeft:
-            return chapters.last?.id != currentChapter.id
-        case .leftToRight, .vertical:
-            return chapters.first?.id != currentChapter.id
+        switch manga.readerDirection {
+        case .rightToLeft: return chapters.last?.id != currentChapter.id
+        case .leftToRight, .vertical: return chapters.first?.id != currentChapter.id
+        default: return false
         }
     }
     
     func hasNextChapter() -> Bool {
-        switch direction {
-        case .rightToLeft:
-            return chapters.first?.id != currentChapter.id
-        case .leftToRight, .vertical:
-            return chapters.last?.id != currentChapter.id
+        switch manga.readerDirection {
+        case .rightToLeft: return chapters.first?.id != currentChapter.id
+        case .leftToRight, .vertical: return chapters.last?.id != currentChapter.id
+        default: return false
         }
     }
     
@@ -281,9 +294,5 @@ public class ReaderViewModel {
     
     func getOnlyImagesUrl() -> [ReaderLink] {
         return images.filter { if case .image(_) = $0 { return true } else { return false } }
-    }
-    
-    func setReadingDirection(new direction: ReadingDirection) {
-        self.direction = direction
     }
 }

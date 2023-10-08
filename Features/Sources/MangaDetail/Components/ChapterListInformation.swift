@@ -16,10 +16,10 @@ public struct ChapterListInformation: View {
 //    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapterDB]
     @State var vm: ChapterListVM
     
-    var manga: MangaDB
-    var scraper: ScraperDB
+    var manga: Manga
+    var scraper: Scraper
     
-    public init(manga: MangaDB, scraper: ScraperDB) {
+    public init(manga: Manga, scraper: Scraper) {
         self.manga = manga
         self.scraper = scraper
         _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))

@@ -34,4 +34,21 @@ public extension Manga {
             }
         }
     }
+    
+    
+    enum ReaderDirection: String, Codable, CaseIterable {
+        case rightToLeft = "Right to Left (Manga)"
+        case leftToRight = "Left to Right (Manhua)"
+        case vertical = "Vertical (Webtoon, no gaps)"
+        
+        public init(from: SourceMangaType) {
+            switch from {
+                case .manga: self = .rightToLeft
+                case .manhua: self = .leftToRight
+                case .manhwa: self = .vertical
+                case .doujinshi: self = .rightToLeft
+                default: self = .rightToLeft
+            }
+        }
+    }
 }

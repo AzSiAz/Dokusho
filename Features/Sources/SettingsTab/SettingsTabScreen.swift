@@ -78,13 +78,15 @@ extension SettingsTabScreen {
     func importBackup(url: URL) async {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
-            let data = try Data(contentsOf: url)
-            let backup = try JSONDecoder().decode(BackupData.self, from: data)
+//            let data = try Data(contentsOf: url)
+//            let backup = try JSONDecoder().decode(BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
+            throw "TODO: Fix backup"
 
-            await backupManager.importBackup(backup: backup)
+//            await backupManager.importBackup(backup: backup)
         } catch {
             Logger.backup.error("Error importing backup: \(error.localizedDescription)")
+            CFURLStopAccessingSecurityScopedResource(url as CFURL)
         }
     }
     

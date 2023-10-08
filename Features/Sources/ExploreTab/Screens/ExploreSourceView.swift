@@ -21,7 +21,7 @@ public struct ExploreSourceView: View {
     @Environment(ScraperService.self) var scraperService
     
     @Query var inCollection: [Manga]
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [MangaCollection]
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [Collection]
     
     @Bindable private var scraper: Scraper
     
@@ -169,7 +169,7 @@ extension ExploreSourceView {
         }
     }
     
-    func addToCollection(id: SourceSmallManga.ID, collection: MangaCollection) async {
+    func addToCollection(id: SourceSmallManga.ID, collection: Collection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
             let sourceManga = try? await source.fetchMangaDetail(id: id)
