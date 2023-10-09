@@ -9,10 +9,10 @@ import SwiftUI
 import DataKit
 
 public struct MangaLibraryContextMenu: View {
-    var manga: Manga
+    var manga: Serie
     var count: Int
     
-    public init(manga: Manga, count: Int) {
+    public init(manga: Serie, count: Int) {
         self.manga = manga
         self.count = count
     }

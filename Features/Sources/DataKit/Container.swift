@@ -2,44 +2,35 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-struct DokushoModelContainerViewModifier: ViewModifier {
-    let container: ModelContainer
-    
-    init(inMemory: Bool) {
-//        let localConfiguration = ModelConfiguration(
-//            "Local",
-//            schema: Schema([Scraper.self]),
-//            isStoredInMemoryOnly: inMemory,
-//            allowsSave: true,
-//            groupContainer: .automatic,
-//            cloudKitDatabase: .none
-//        )
-//        
-//        let cloudConfiguration = ModelConfiguration(
-//            "Cloud",
-//            schema: Schema([MangaCollection.self]),
-//            isStoredInMemoryOnly: inMemory,
-//            allowsSave: true,
-//            groupContainer: .automatic,
-//            cloudKitDatabase: .automatic
-//        )
-
-        container = try! ModelContainer(
-//            for: Schema([Scraper.self], version: .init(0, 0, 1)),
-            for: Schema([Scraper.self, Collection.self, Manga.self])
-//            migrationPlan: nil,
-//            configurations: [localConfiguration, cloudConfiguration]
+public extension ModelConfiguration {
+    static func localConfiguration(inMemory: Bool = false) -> ModelConfiguration {
+        ModelConfiguration(
+            "Local",
+            schema: Schema([Scraper.self]),
+            isStoredInMemoryOnly: inMemory,
+            allowsSave: true,
+            groupContainer: .automatic,
+            cloudKitDatabase: .none
         )
     }
-    
-    func body(content: Content) -> some View {
-        content
-            .modelContainer(container)
+
+    static func cloudConfiguration(inMemory: Bool = false) -> ModelConfiguration {
+        ModelConfiguration(
+            "Cloud",
+            schema: Schema([SerieCollection.self, Serie.self, Chapter.self]),
+            isStoredInMemoryOnly: inMemory,
+            allowsSave: true,
+            groupContainer: .automatic,
+            cloudKitDatabase: .none
+        )
     }
 }
 
-extension View {
-    public func dokushoModelContainer(inMemory: Bool = false) -> some View {
-        modifier(DokushoModelContainerViewModifier(inMemory: inMemory))
+public extension ModelContainer {
+    static func dokusho(inMemory: Bool = false) -> ModelContainer {
+        return try! ModelContainer(
+            for: Schema([Scraper.self, SerieCollection.self, Serie.self, Chapter.self])
+//            configurations: [.localConfiguration(inMemory: inMemory), .cloudConfiguration(inMemory: inMemory)]
+        )
     }
 }

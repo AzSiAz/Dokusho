@@ -12,14 +12,14 @@ import DataKit
 @Observable
 public class ChapterListVM {
     @ObservationIgnored
-    var manga: Manga
+    var manga: Serie
     @ObservationIgnored
     var scraper: Scraper
     
     var error: Error?
     var selectedChapter: Chapter?
 
-    public init(manga: Manga, scraper: Scraper) {
+    public init(manga: Serie, scraper: Scraper) {
         self.manga = manga
         self.scraper = scraper
     }

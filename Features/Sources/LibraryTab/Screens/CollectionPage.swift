@@ -21,7 +21,7 @@ public class CollectionPageViewModel: ObservableObject {
     @Published var reload = true
     @Published var selectedGenre: String?
     
-    public func refreshLibrary(libraryUpdater: LibraryUpdater, collection: Collection, onlyUpdateAllRead: Bool) async {
+    public func refreshLibrary(libraryUpdater: LibraryUpdater, collection: SerieCollection, onlyUpdateAllRead: Bool) async {
         guard refreshTask == nil else { return }
         
         refreshTask = Task {
@@ -49,7 +49,7 @@ public struct CollectionPage: View {
     
     @StateObject var vm: CollectionPageViewModel = .init()
     
-    public init(collection : Collection) {
+    public init(collection : SerieCollection) {
 //        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
 //        _list = Query(DetailedMangaInListRequest(requestType: .collection(collectionId: collection.id)))
     }

@@ -8,9 +8,9 @@ import SwiftUILayouts
 public struct InnerMangaDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
 
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [Collection]
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [SerieCollection]
 
-    @Bindable var manga: Manga
+    @Bindable var manga: Serie
     @Bindable var scraper: Scraper
 
     @State var orientation = DeviceOrientation()
@@ -18,7 +18,7 @@ public struct InnerMangaDetail: View {
     @State var showMoreDesc = false
     @State var addToCollectionSheet = false
     
-    public init(manga: Manga, scraper: Scraper) {
+    public init(manga: Serie, scraper: Scraper) {
         self.manga = manga
         self.scraper = scraper
     }
@@ -149,7 +149,7 @@ public struct InnerMangaDetail: View {
 
                 collections.forEach { col in
                     actions.append(.default(
-                        Text(col.name),
+                        Text(col.name ?? ""),
                         action: {
                             manga.collection = col
                         }

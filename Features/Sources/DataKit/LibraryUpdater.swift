@@ -34,7 +34,7 @@ public class LibraryUpdater {
     
     private init() {}
     
-    public func refreshCollection(collection: Collection, onlyAllRead: Bool = true) async throws {
+    public func refreshCollection(collection: SerieCollection, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }
 
         await MainActor.run {
@@ -43,7 +43,7 @@ public class LibraryUpdater {
         
         await updateRefreshStatus(id: collection.id, refreshing: true)
 
-        let data = [Manga]()
+        let data = [Serie]()
 //        try await database.read { db in
 //            try MangaDB.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
 //        }

@@ -21,6 +21,7 @@ public class ScraperService {
         return sources.first { $0.id == sourceId }
     }
     
+    @MainActor
     public func upsertAllSource(in context: ModelContext) {
         do {
             let scrapers = try context.fetch(.allScrapers())
@@ -41,6 +42,7 @@ public class ScraperService {
         }
     }
     
+    @MainActor
     public func onMove(offsets: IndexSet, position: Int, in context: ModelContext) {
         do {
             var scrapers = try context.fetch(.activeScrapersByPosition())

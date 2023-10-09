@@ -1,6 +1,6 @@
 import Foundation
 
-public extension Collection {
+public extension SerieCollection {
     enum Filter: String, Codable, CaseIterable {
         case all = "All", onlyUnReadChapter = "Only unread chapter", completed = "Only completed"
     }

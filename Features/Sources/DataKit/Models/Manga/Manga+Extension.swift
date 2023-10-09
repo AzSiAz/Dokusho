@@ -8,7 +8,7 @@
 import Foundation
 import MangaScraper
 
-public extension Manga {
+public extension Serie {
     enum Status: String, Codable {
         case complete = "Complete", ongoing = "Ongoing", unknown = "Unknown"
         

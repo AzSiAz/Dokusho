@@ -36,7 +36,7 @@ enum ReaderLink: Equatable, Hashable {
 
 @Observable
 public class ReaderViewModel {
-    let manga: Manga
+    let manga: Serie
     let scraper: Scraper
     let chapters: [Chapter]
     
@@ -47,7 +47,7 @@ public class ReaderViewModel {
     var tabIndex = ReaderLink.image(url: nil)
     var showReaderDirectionChoice = false
 
-    public init(manga: Manga, chapter: Chapter, scraper: Scraper, chapters: [Chapter]) {
+    public init(manga: Serie, chapter: Chapter, scraper: Scraper, chapters: [Chapter]) {
         self.currentChapter = chapter
         self.chapters = chapters
         self.manga = manga

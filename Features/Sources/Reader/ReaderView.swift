@@ -141,7 +141,7 @@ public struct ReaderView: View {
                         }
                         
                         Menu("Reader direction") {
-                            ForEach(Manga.ReaderDirection.allCases, id: \.self) { direction in
+                            ForEach(Serie.ReaderDirection.allCases, id: \.self) { direction in
                                 Button(action: { vm.manga.readerDirection = direction }) {
                                     SelectedMenuItem(text: direction.rawValue, comparaison: vm.manga.readerDirection == direction)
                                 }

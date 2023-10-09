@@ -6,7 +6,7 @@ public struct MangaDetailScreen: View {
     @Environment(ScraperService.self) var scraperService
     
     @State var scraper: Scraper? = nil
-    @State var manga: Manga? = nil
+    @State var manga: Serie? = nil
 
     var mangaId: String
     var scraperId: UUID
@@ -30,6 +30,7 @@ public struct MangaDetailScreen: View {
 }
 
 private extension MangaDetailScreen {
+    @MainActor
     func upsert() async {
         guard
             let source = scraperService.getSource(sourceId: scraperId),
@@ -45,7 +46,7 @@ private extension MangaDetailScreen {
         else {
             guard let sourceManga = try? await source.fetchMangaDetail(id: mangaId) else { return }
             
-            let manga = Manga(from: sourceManga, scraperId: scraper.id)
+            let manga = Serie(from: sourceManga, scraperId: scraper.id)
             modelContext.insert(manga)
             self.manga = manga
             

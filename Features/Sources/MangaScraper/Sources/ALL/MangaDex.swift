@@ -39,6 +39,7 @@ public struct MangaDexSource: Source {
             let synopsis = (try? json.next("attributes").next("description").next("en").getString()) ?? "No synopsis found"
             let genres = try json.next("attributes").next("tags").getArray().compactMap { try? $0.next("attributes").next("name").next("en").getString() }
             let authors = try json.next("relationships").getArray().filter { (try? $0.next("type").getString()) == "author" }.compactMap { try? $0.next("attributes").next("name").getString() }
+            let artists = try json.next("relationships").getArray().filter { (try? $0.next("type").getString()) == "artist" }.compactMap { try? $0.next("attributes").next("name").getString() }
             let altTitle = try json.next("attributes").next("altTitles").getArray().compactMap { try? $0.next("en").getString() }
             
             var status: SourceMangaCompletion {
@@ -65,8 +66,8 @@ public struct MangaDexSource: Source {
                 title: title,
                 cover: cover,
                 genres: genres,
-                authors: authors,
-                alternateNames: altTitle,
+                authors: Array(Set(authors + artists)),
+                alternateTitles: altTitle,
                 status: status,
                 synopsis: synopsis,
                 chapters: try await fetchChapters(mangaId: id),

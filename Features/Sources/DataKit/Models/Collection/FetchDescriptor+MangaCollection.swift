@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-public extension FetchDescriptor where T: Collection {
+public extension FetchDescriptor where T: SerieCollection {
     static func allMangaCollectionByPosition(_ direction: SortOrder = .forward) -> FetchDescriptor<T> {
         FetchDescriptor(
             sortBy: [

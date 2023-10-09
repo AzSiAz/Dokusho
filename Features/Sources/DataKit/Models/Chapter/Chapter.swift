@@ -22,9 +22,9 @@ public class Chapter {
     public var externalUrl: URL?
     
     @Relationship()
-    public var manga: Manga?
+    public var serie: Serie?
     
-    public init(from data: SourceChapter, manga: Manga? = nil) {
+    public init(from data: SourceChapter, serie: Serie? = nil) {
         self.chapterId = data.id
         self.title = data.name
         self.subTitle = data.subTitle
@@ -34,7 +34,7 @@ public class Chapter {
         self.externalUrl = data.externalUrl
         self.progress = nil
         
-        self.manga = manga
+        self.serie = serie
     }
     
     public func update(from data: SourceChapter) {

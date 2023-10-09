@@ -20,8 +20,8 @@ public struct ExploreSourceView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ScraperService.self) var scraperService
     
-    @Query var inCollection: [Manga]
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [Collection]
+    @Query var inCollection: [Serie]
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [SerieCollection]
     
     @Bindable private var scraper: Scraper
     
@@ -126,7 +126,7 @@ public struct ExploreSourceView: View {
     func ContextMenu(manga: SourceSmallManga) -> some View {
         ForEach(collections) { collection in
             AsyncButton(action: { await addToCollection(id: manga.id, collection: collection) }) {
-                Text("Add to \(collection.name)")
+                Text("Add to \(collection.name ?? "")")
             }
         }
     }
@@ -169,15 +169,16 @@ extension ExploreSourceView {
         }
     }
     
-    func addToCollection(id: SourceSmallManga.ID, collection: Collection) async {
+    @MainActor
+    func addToCollection(id: SourceSmallManga.ID, collection: SerieCollection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
             let sourceManga = try? await source.fetchMangaDetail(id: id)
         else { return }
         
-        let manga = Manga(from: sourceManga, scraperId: scraper.id)
-        modelContext.insert(manga)
+        let serie = Serie(from: sourceManga, scraperId: scraper.id)
+        modelContext.insert(serie)
         
-        collection.mangas.append(manga)
+        collection.series?.append(serie)
     }
 }

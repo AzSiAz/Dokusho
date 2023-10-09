@@ -24,7 +24,7 @@ struct DokushoApp: App {
                 .environment(backupManager)
                 .environment(userPreferences)
                 .environment(scraperService)
-                .dokushoModelContainer()
         }
+        .modelContainer(.dokusho())
     }
 }

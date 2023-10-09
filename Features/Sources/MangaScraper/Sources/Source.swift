@@ -34,19 +34,19 @@ public struct SourceManga: Identifiable, Equatable, Hashable {
     public var cover: URL
     public var genres: [String]
     public var authors: [String]
-    public var alternateNames: [String]
+    public var alternateTitles: [String]
     public var status: SourceMangaCompletion
     public var synopsis: String
     public var chapters: [SourceChapter]
     public var type: SourceMangaType
     
-    public init(id: String, title: String, cover: URL, genres: [String], authors: [String], alternateNames: [String], status: SourceMangaCompletion, synopsis: String, chapters: [SourceChapter], type: SourceMangaType) {
+    public init(id: String, title: String, cover: URL, genres: [String], authors: [String], alternateTitles: [String], status: SourceMangaCompletion, synopsis: String, chapters: [SourceChapter], type: SourceMangaType) {
         self.id = id
         self.title = title
         self.cover = cover
         self.genres = genres
         self.authors = authors
-        self.alternateNames = alternateNames
+        self.alternateTitles = alternateTitles
         self.status = status
         self.synopsis = synopsis
         self.chapters = chapters

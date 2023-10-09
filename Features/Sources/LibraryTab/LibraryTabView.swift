@@ -65,7 +65,7 @@ public struct LibraryTabView: View {
 //            .navigationDestination(for: DetailedMangaInList.self) { data in
 //                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
 //            }
-            .navigationDestination(for: Collection.self) { data in
+            .navigationDestination(for: SerieCollection.self) { data in
                 CollectionPage(collection: data)
             }
         }

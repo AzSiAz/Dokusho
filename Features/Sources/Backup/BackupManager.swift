@@ -40,19 +40,19 @@ public struct BackupData {
 }
 
 public struct BackupCollectionData {
-    var collection: Collection
-    var mangas: [Manga]
+    var collection: SerieCollection
+    var mangas: [Serie]
 }
 
 public struct MangaWithChapters {
-    var manga: Manga
+    var manga: Serie
     var chapters: [Chapter]
 }
 
 
 public struct BackupTask {
     var mangaBackup: MangaWithChapters
-    var collection: Collection
+    var collection: SerieCollection
 }
 
 public typealias BackupResult = Result<BackupTask, Error>

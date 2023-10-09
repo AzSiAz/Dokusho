@@ -16,14 +16,14 @@ import SharedUI
 public struct CollectionSettings: View {
 //    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
     
-    @State var collectionOrder: Collection.Order
-    @State var collectionFilter: Collection.Filter
+    @State var collectionOrder: SerieCollection.Order
+    @State var collectionFilter: SerieCollection.Filter
     @State var useList: Bool
     
-    public init(collection : Collection) {
+    public init(collection : SerieCollection) {
 //        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
-        _collectionOrder = .init(initialValue: collection.order)
-        _collectionFilter = .init(initialValue: collection.filter)
+        _collectionOrder = .init(initialValue: collection.order ?? SerieCollection.Order())
+        _collectionFilter = .init(initialValue: collection.filter ?? SerieCollection.Filter.all)
         _useList = .init(initialValue: collection.useList ?? false)
     }
     
@@ -32,7 +32,7 @@ public struct CollectionSettings: View {
             List {
                 Section("Filter") {
                     Picker("Change collection filter", selection: $collectionFilter) {
-                        ForEach(Collection.Filter.allCases, id: \.self) { filter in
+                        ForEach(SerieCollection.Filter.allCases, id: \.self) { filter in
                             Text(filter.rawValue).tag(filter)
                         }
                     }
@@ -40,12 +40,12 @@ public struct CollectionSettings: View {
 
                 Section("Order") {
                     Picker("Change collection order field", selection: $collectionOrder.field) {
-                        ForEach(Collection.Order.Field.allCases, id: \.self) { filter in
+                        ForEach(SerieCollection.Order.Field.allCases, id: \.self) { filter in
                             Text(filter.rawValue).tag(filter)
                         }
                     }
                     Picker("Change collection order direction", selection: $collectionOrder.direction) {
-                        ForEach(Collection.Order.Direction.allCases, id: \.self) { filter in
+                        ForEach(SerieCollection.Order.Direction.allCases, id: \.self) { filter in
                             Text(filter.rawValue).tag(filter)
                         }
                     }
@@ -83,7 +83,7 @@ extension CollectionSettings {
 //        }
     }
     
-    func updateCollectionFilter(newFilter: Collection.Filter) {
+    func updateCollectionFilter(newFilter: SerieCollection.Filter) {
 //        Task {
 //            guard let collection = collection else { return }
 //
@@ -101,7 +101,7 @@ extension CollectionSettings {
 //        }
     }
     
-    func updateCollectionOrder(direction: Collection.Order.Direction? = nil, field: Collection.Order.Field? = nil) {
+    func updateCollectionOrder(direction: SerieCollection.Order.Direction? = nil, field: SerieCollection.Order.Field? = nil) {
 //        Task {
 //            guard let collection = collection else { return }
 //            

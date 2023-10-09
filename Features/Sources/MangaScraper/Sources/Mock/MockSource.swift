@@ -60,7 +60,7 @@ public struct MockSource: Source {
             cover: URL(string: "http://localhost:3000/manga/\(id).png")!,
             genres: ["Shonen", "Seinen", "Drama"],
             authors: ["Lol number 1", "Lol number 2"],
-            alternateNames: ["_ID \(id)_"],
+            alternateTitles: ["_ID \(id)_"],
             status: .ongoing,
             synopsis: "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum",
             chapters: Array(repeating: (), count: 100).enumerated().map {

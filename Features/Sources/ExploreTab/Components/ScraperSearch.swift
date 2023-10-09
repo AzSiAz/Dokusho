@@ -9,8 +9,8 @@ import Collections
 public struct ScraperSearch: View {
     @Environment(ScraperService.self) var scraperService
     
-    @Query var mangasInCollection: [Manga]
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [Collection]
+    @Query var mangasInCollection: [Serie]
+    @Query(.allMangaCollectionByPosition(.forward)) var collections: [SerieCollection]
 
     @Bindable private var scraper: Scraper
     @Binding var text: String
@@ -63,7 +63,7 @@ public struct ScraperSearch: View {
     func ContextMenu(manga: SourceSmallManga) -> some View {
         ForEach(collections) { collection in
             AsyncButton(action: { await addToCollection(id: manga.id, collection: collection) }) {
-                Text("Add to \(collection.name)")
+                Text("Add to \(collection.name ?? "")")
             }
         }
     }
@@ -103,7 +103,7 @@ extension ScraperSearch {
         }
     }
     
-    func addToCollection(id: SourceSmallManga.ID, collection: Collection) async {
+    func addToCollection(id: SourceSmallManga.ID, collection: SerieCollection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
             let sourceManga = try? await source.fetchMangaDetail(id: id)

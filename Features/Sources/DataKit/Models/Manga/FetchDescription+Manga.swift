@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-public extension FetchDescriptor where T: Manga {
+public extension FetchDescriptor where T: Serie {
     static func mangaInCollection(scraperId: UUID?) -> FetchDescriptor<T> {
         FetchDescriptor(
             predicate: #Predicate<T> {

@@ -140,7 +140,7 @@ public class NepNepSource: MultiSource {
             cover: cover,
             genres: genres,
             authors: authors,
-            alternateNames: alternateNames,
+            alternateTitles: alternateNames,
             status: parseStatus(rawStatus),
             synopsis: synopsis,
             chapters: chapters,
