@@ -10,7 +10,7 @@ public struct ScraperSearch: View {
     @Environment(ScraperService.self) var scraperService
     
     @Query var mangasInCollection: [Serie]
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [SerieCollection]
+    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
 
     @Bindable private var scraper: Scraper
     @Binding var text: String
@@ -24,7 +24,7 @@ public struct ScraperSearch: View {
     public init(scraper: Bindable<Scraper>, textToSearch: Binding<String>) {
         _scraper = scraper
         _text = textToSearch
-        _mangasInCollection = Query(.mangaInCollection(scraperId: scraper.id))
+        _mangasInCollection = Query(.seriesInCollection(scraperId: scraper.id))
     }
     
     public var body: some View {

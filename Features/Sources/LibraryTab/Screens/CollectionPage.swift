@@ -14,25 +14,36 @@ import SharedUI
 import MangaDetail
 import DynamicCollection
 
-public class CollectionPageViewModel: ObservableObject {
+@Observable
+public class CollectionPageViewModel {
     private var refreshTask: Task<Void, Error>?
     
-    @Published var showFilter = false
-    @Published var reload = true
-    @Published var selectedGenre: String?
+    var showFilter = false
+    var reload = true
+    var selectedGenre: String?
     
     public func refreshLibrary(libraryUpdater: LibraryUpdater, collection: SerieCollection, onlyUpdateAllRead: Bool) async {
         guard refreshTask == nil else { return }
+
+        await MainActor.run {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
         
         refreshTask = Task {
             try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
         }
         
         try? await refreshTask?.value
+        
+        await MainActor.run {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
     
+    @MainActor
     public func cancelRefresh() {
         refreshTask?.cancel()
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     public func selectGenre(genre: String) -> Void {
@@ -47,7 +58,7 @@ public struct CollectionPage: View {
 //    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollection?
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
-    @StateObject var vm: CollectionPageViewModel = .init()
+    @State var vm: CollectionPageViewModel = .init()
     
     public init(collection : SerieCollection) {
 //        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))

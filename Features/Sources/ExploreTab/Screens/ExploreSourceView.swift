@@ -21,7 +21,7 @@ public struct ExploreSourceView: View {
     @Environment(ScraperService.self) var scraperService
     
     @Query var inCollection: [Serie]
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [SerieCollection]
+    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
     
     @Bindable private var scraper: Scraper
     
@@ -35,7 +35,7 @@ public struct ExploreSourceView: View {
 
     public init(scraper: Bindable<Scraper>) {
         self._scraper = scraper
-        self._inCollection = Query(.mangaInCollection(scraperId: scraper.id))
+        self._inCollection = Query(.seriesInCollection(scraperId: scraper.id))
     }
     
     public var body: some View {

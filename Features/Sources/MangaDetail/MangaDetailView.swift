@@ -41,7 +41,7 @@ private extension MangaDetailScreen {
         self.scraper = scraper
         
         guard
-            let found = try? modelContext.fetch(.mangaBySourceId(scraperId: scraper.id, id: mangaId)),
+            let found = try? modelContext.fetch(.seriesBySourceId(scraperId: scraper.id, id: mangaId)),
             let manga = found.first
         else {
             guard let sourceManga = try? await source.fetchMangaDetail(id: mangaId) else { return }

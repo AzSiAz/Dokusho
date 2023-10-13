@@ -1,12 +1,5 @@
-//
-//  LibraryVM.swift
-//  Dokusho (iOS)
-//
-//  Created by Stephan Deumier on 22/06/2021.
-//
-
 import Foundation
-import SwiftUI
+import Observation
 import MangaScraper
 import OSLog
 import Common
@@ -24,68 +17,59 @@ public class LibraryUpdater {
         public var collectionId: PersistentIdentifier
     }
     
-//    public struct RefreshData {
-//        public var source: Source
-//        public var toRefresh: RefreshManga
-//    }
+    public struct RefreshData {
+        public var source: Source
+        public var toRefresh: Serie
+    }
 
-//    private let database = AppDatabase.shared.database
     public var refreshStatus: [PersistentIdentifier: Bool] = [:]
     
     private init() {}
     
     public func refreshCollection(collection: SerieCollection, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }
-
-        await MainActor.run {
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
         
         await updateRefreshStatus(id: collection.id, refreshing: true)
 
-        let data = [Serie]()
-//        try await database.read { db in
-//            try MangaDB.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
-//        }
-        
-        Logger.libraryUpdater.debug("---------------------Fetching--------------------------")
+        let context = ModelContext(.dokusho())
+        let data = try context.fetch(.seriesForSerieCollection(collectionId: collection.id))
         
         guard data.count != 0 else { return }
+        
+        Logger.libraryUpdater.debug("---------------------Fetching--------------------------")
 
-//        try await withThrowingTaskGroup(of: RefreshData.self) { group in
-//            for row in data {
-//                guard let source = ScraperService.shared.getSource(sourceId: row.scraperId) else { throw "Source not found from scraper with id: \(row.scraper.id)" }
-//
-//                _ = group.addTaskUnlessCancelled(priority: .background) {
-//                    return RefreshData(source: source, toRefresh: row)
-//                }
-//            }
-//            
-//            for try await data in group {
-//                await Task.yield()
-//
-//                do {
-//                    let mangaSource = try await data.source.fetchMangaDetail(id: data.toRefresh.mangaId)
-//
-//                    let _ = try await database.write { db in
-//                        try MangaDB.updateFromSource(db: db, scraper: data.toRefresh.scraper, data: mangaSource)
-//                    }
-//                    
-//                    await Task.yield()
-//                } catch (let error) {
-//                    Logger.libraryUpdater.error("Error updating \(data.toRefresh.title): \(error)")
-//                    await updateRefreshStatus(collectionID: collection.id, refreshing: false)
-//                }
-//            }
-//        }
+        try await withThrowingTaskGroup(of: RefreshData.self) { group in
+            for row in data {
+                guard
+                    let scraperId = row.scraperId,
+                    let source = ScraperService.shared.getSource(sourceId: scraperId)
+                else { throw "Source not found from scraper with id: \(String(describing: row.scraperId))" }
+
+                _ = group.addTaskUnlessCancelled(priority: .background) {
+                    return RefreshData(source: source, toRefresh: row)
+                }
+            }
+ 
+            for try await data in group {
+                await Task.yield()
+
+                do {
+                    guard
+                        let mangaId = data.toRefresh.mangaId,
+                        let sourceData = try? await data.source.fetchMangaDetail(id: mangaId)
+                    else { throw "Manga not found: \(String(describing: data.toRefresh.mangaId))" }
+                    
+                    data.toRefresh.update(from: sourceData)
+                } catch (let error) {
+                    Logger.libraryUpdater.error("Error updating \(data.toRefresh.title): \(error)")
+                    await updateRefreshStatus(id: collection.id, refreshing: false)
+                }
+            }
+        }
         
         Logger.libraryUpdater.debug("---------------------Fetched--------------------------")
         
         await self.updateRefreshStatus(id: collection.id, refreshing: nil)
-
-        await MainActor.run {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
     }
     
     @MainActor

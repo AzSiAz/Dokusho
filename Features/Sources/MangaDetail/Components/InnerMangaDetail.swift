@@ -8,7 +8,7 @@ import SwiftUILayouts
 public struct InnerMangaDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
 
-    @Query(.allMangaCollectionByPosition(.forward)) var collections: [SerieCollection]
+    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
 
     @Bindable var manga: Serie
     @Bindable var scraper: Scraper
