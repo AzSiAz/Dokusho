@@ -22,7 +22,7 @@ public struct ExploreTabView: View {
                         ScraperRow(scraper: scraper)
                     }
                 }
-                .onMove(perform: { scrapersService.onMove(offsets: $0, position: $1, in: context) })
+                .onMove(perform: { scrapersService.onMove(offsets: $0, position: $1) })
             }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

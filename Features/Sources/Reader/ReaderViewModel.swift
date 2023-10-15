@@ -11,8 +11,8 @@ enum GoToChapterDirection {
 }
 
 enum ReaderLink: Equatable, Hashable {
-    case next(chapter: Chapter)
-    case previous(chapter: Chapter)
+    case next(chapter: SerieChapter)
+    case previous(chapter: SerieChapter)
     case image(url: URL?)
     
 //    func hash(into hasher: inout Hasher) {
@@ -31,16 +31,16 @@ enum ReaderLink: Equatable, Hashable {
 public class ReaderViewModel {
     let serie: Serie
     let scraper: Scraper
-    let chapters: [Chapter]
+    let chapters: [SerieChapter]
     
-    var currentChapter: Chapter
+    var currentChapter: SerieChapter
     var images = [ReaderLink]()
     var isLoading = true
     var showToolBar = false
     var tabIndex = ReaderLink.image(url: nil)
     var showReaderDirectionChoice = false
 
-    public init(serie: Serie, chapter: Chapter, scraper: Scraper, chapters: [Chapter]) {
+    public init(serie: Serie, chapter: SerieChapter, scraper: Scraper, chapters: [SerieChapter]) {
         self.currentChapter = chapter
         self.chapters = chapters
         self.serie = serie
@@ -154,7 +154,7 @@ public class ReaderViewModel {
         }
     }
     
-    func getAdjacentChapters() -> (previous: Chapter?, next: Chapter?) {
+    func getAdjacentChapters() -> (previous: SerieChapter?, next: SerieChapter?) {
         switch serie.readerDirection {
         case .rightToLeft:
             let previousChapter = getChapter(.next)
@@ -170,7 +170,7 @@ public class ReaderViewModel {
         }
     }
     
-    func getChapters(_ goToDirection: GoToChapterDirection? = nil) -> [Chapter] {
+    func getChapters(_ goToDirection: GoToChapterDirection? = nil) -> [SerieChapter] {
         switch goToDirection {
         case .next:
             let foundChapters = chapters
@@ -212,7 +212,7 @@ public class ReaderViewModel {
         }
     }
     
-    func getChapter(_ goToDirection: GoToChapterDirection) -> Chapter? {
+    func getChapter(_ goToDirection: GoToChapterDirection) -> SerieChapter? {
         switch goToDirection {
         case .next:
             let foundChapters = getChapters(goToDirection)
@@ -236,13 +236,13 @@ public class ReaderViewModel {
         changeChapters(chapter: chapter)
     }
     
-    func goToChapter(to chapter: Chapter) {
+    func goToChapter(to chapter: SerieChapter) {
         if chapter != currentChapter {
             changeChapters(chapter: chapter)
         }
     }
 
-    func changeChapters(chapter: Chapter) {
+    func changeChapters(chapter: SerieChapter) {
         self.isLoading = true
         
         withAnimation {

@@ -11,9 +11,9 @@ public class LibraryUpdater {
 
     public struct RefreshStatus {
         public var isRefreshing: Bool
-        public var refreshProgress: Double
-        public var refreshCount: Double
-        public var refreshTitle: String
+        public var progress: Double
+        public var count: Double
+        public var title: String
         public var collectionId: PersistentIdentifier
     }
     

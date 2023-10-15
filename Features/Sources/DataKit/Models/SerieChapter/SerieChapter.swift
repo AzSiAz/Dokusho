@@ -3,7 +3,7 @@ import SwiftData
 import SerieScraper
 
 @Model
-public class Chapter {
+public class SerieChapter {
     public var chapterId: String?
     public var title: String?
     public var subTitle: String?

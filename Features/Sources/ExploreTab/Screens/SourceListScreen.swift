@@ -30,6 +30,6 @@ struct SourceListScreen: View {
             }
         }
         .navigationTitle("Available Sources")
-        .task(id: scrapers) { scraperService.upsertAllSource(in: ctx) }
+        .task(id: scrapers) { scraperService.upsertAllSource() }
     }
 }

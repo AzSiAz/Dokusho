@@ -15,6 +15,8 @@ public struct SettingsTabScreen: View {
     @State private var file: Backup?
     @State private var fileName: String?
     @State private var showImportfile = false
+    @State private var showImageCleanupAlert = false
+    @State private var showDataCleanupAlert = false
     
     public init() {}
     
@@ -22,6 +24,7 @@ public struct SettingsTabScreen: View {
         NavigationStack {
             List {
                 @Bindable var userPreferences = userPreference
+
                 Section("Backup") {
                     Button(action: { createBackup() }) {
                         Text("Create Backup")
@@ -38,17 +41,16 @@ public struct SettingsTabScreen: View {
                 }
                 
                 Section("Cache") {
-                    Button(action: { clearImageCache() }) {
+                    Button(action: { showImageCleanupAlert.toggle() }) {
                         Text("Clear image cache")
                     }
-                    Button(action: { cleanOrphanData() }) {
-                        Text("Clean manga cache (not in library)")
+                    Button(action: { showDataCleanupAlert.toggle() }) {
+                        Text("Clean serie cache (not in library)")
                     }
-                    .disabled(true)
                 }
                 
                 Section("Collections") {
-                    Toggle("Only update when manga has no unread chapter", isOn: $userPreferences.onlyUpdateAllRead)
+                    Toggle("Only update when serie has no unread chapter", isOn: $userPreferences.onlyUpdateAllRead)
                 }
             }
             .fileExporter(isPresented: $showExportfile, document: file, contentType: .json, defaultFilename: fileName) { _ in
@@ -61,6 +63,14 @@ public struct SettingsTabScreen: View {
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
+            .alert("Are you sure you want to clean local image cache ?", isPresented: $showImageCleanupAlert) {
+                Button("Yes", role: .destructive) { clearImageCache() }
+                Button("Cancel", role: .cancel) { showImageCleanupAlert.toggle() }
+            }
+            .alert("Are you sure you want to clean local data cache ?", isPresented: $showDataCleanupAlert) {
+                Button("Yes", role: .destructive) { cleanOrphanData() }
+                Button("Cancel", role: .cancel) { showDataCleanupAlert.toggle() }
+            }
         }
     }
 }
@@ -90,11 +100,15 @@ extension SettingsTabScreen {
         }
     }
     
-    func cleanOrphanData() {}
+    func cleanOrphanData() {
+        showDataCleanupAlert.toggle()
+    }
     
     func clearImageCache() {
         Nuke.DataLoader.sharedUrlCache.removeAllCachedResponses()
         Nuke.ImageCache.shared.removeAll()
         DataCache.DiskCover?.removeAll()
+        
+        showImageCleanupAlert.toggle()
     }
 }

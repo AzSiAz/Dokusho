@@ -1,6 +1,6 @@
 import Foundation
 
-extension Array where Element == Chapter {
+extension Array where Element == SerieChapter {
     func next(index: Index) -> Element? {
         let newIdx = index.advanced(by: 1)
         print(newIdx)

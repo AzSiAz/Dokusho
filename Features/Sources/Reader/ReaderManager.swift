@@ -12,10 +12,10 @@ import SwiftUI
 @Observable
 public class ReaderManager {
     public struct SelectedChapter: Identifiable {
-        public var chapter: Chapter
+        public var chapter: SerieChapter
         public var serie: Serie
         public var scraper: Scraper
-        public var chapters: [Chapter]
+        public var chapters: [SerieChapter]
         
         public var id: String? { self.chapter.chapterId }
     }
@@ -24,7 +24,7 @@ public class ReaderManager {
     
     public var selectedChapter: SelectedChapter?
 
-    public func selectChapter(chapter: Chapter, serie: Serie, scraper: Scraper, chapters: [Chapter]) {
+    public func selectChapter(chapter: SerieChapter, serie: Serie, scraper: Scraper, chapters: [SerieChapter]) {
         self.selectedChapter = .init(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters)
     }
     

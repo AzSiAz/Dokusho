@@ -39,7 +39,7 @@ public struct BackupCollectionData {
 
 public struct MangaWithChapters {
     var serie: Serie
-    var chapters: [Chapter]
+    var chapters: [SerieChapter]
 }
 
 

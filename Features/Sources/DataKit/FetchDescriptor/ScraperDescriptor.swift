@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Stephan Deumier on 02/10/2023.
-//
-
 import Foundation
 import SwiftData
 

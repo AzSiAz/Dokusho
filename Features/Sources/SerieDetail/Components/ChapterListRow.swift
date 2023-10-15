@@ -5,11 +5,11 @@ import Reader
 public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
     
-    @Query() var chapters: [Chapter]
+    @Query() var chapters: [SerieChapter]
     
     @Bindable var serie: Serie
     @Bindable var scraper: Scraper
-    @Bindable var chapter: Chapter
+    @Bindable var chapter: SerieChapter
     
     public var body: some View {
         HStack {
@@ -85,7 +85,7 @@ public struct ChapterListRow: View {
 }
 
 extension ChapterListRow {
-    func changeChapterStatus(for chapter: Chapter) {
+    func changeChapterStatus(for chapter: SerieChapter) {
 //        do {
 //            try database.write { db in
 //                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
@@ -95,7 +95,7 @@ extension ChapterListRow {
 //        }
     }
 
-    func changePreviousChapterStatus(for chapter: Chapter, in chapters: [Chapter]) {
+    func changePreviousChapterStatus(for chapter: SerieChapter, in chapters: [SerieChapter]) {
 //        do {
 //            try database.write { db in
 //                try chapters
@@ -108,7 +108,7 @@ extension ChapterListRow {
 //        }
     }
 
-    func hasPreviousUnreadChapter(for chapter: Chapter, chapters: [Chapter]) -> Bool {
+    func hasPreviousUnreadChapter(for chapter: SerieChapter, chapters: [SerieChapter]) -> Bool {
 //        return chapters
 //            .filter { chapter.position < $0.position }
 //            .contains { $0.isUnread }
@@ -116,7 +116,7 @@ extension ChapterListRow {
         return false
     }
 
-    func nextUnreadChapter(chapters: [Chapter]) -> Chapter? {
+    func nextUnreadChapter(chapters: [SerieChapter]) -> SerieChapter? {
 //        return chapters
 //            .sorted { $0.position > $1.position }
 //            .first { $0.isUnread }

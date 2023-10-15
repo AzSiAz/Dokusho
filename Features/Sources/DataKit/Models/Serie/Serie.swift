@@ -19,10 +19,10 @@ public class Serie {
     @Relationship()
     public var collection: SerieCollection?
 
-    @Relationship(deleteRule: .cascade, inverse: \Chapter.serie)
-    public var chapters: [Chapter]?
+    @Relationship(deleteRule: .cascade, inverse: \SerieChapter.serie)
+    public var chapters: [SerieChapter]?
 
-    public init(from data: SourceSerie, scraperId: UUID, collection: SerieCollection? = nil, chapters: [Chapter] = []) {
+    public init(from data: SourceSerie, scraperId: UUID, collection: SerieCollection? = nil, chapters: [SerieChapter] = []) {
         self.internalId = data.id
         self.title = data.title
         self.cover = data.cover
