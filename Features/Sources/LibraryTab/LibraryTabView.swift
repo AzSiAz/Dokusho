@@ -45,11 +45,11 @@ public struct LibraryTabView: View {
                 }
                 
                 Section("Dynamic Collection") {
-                    NavigationLink(destination: ByGenreListPage()) {
+                    NavigationLink(destination: SeriesByGenreListPage()) {
                         Text("By Genres")
                     }
                     
-                    NavigationLink(destination: BySourceListPage()) {
+                    NavigationLink(destination: SeriesBySourceListPage()) {
                         Text("By Source List")
                     }
                 }
@@ -66,7 +66,7 @@ public struct LibraryTabView: View {
 //                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
 //            }
             .navigationDestination(for: SerieCollection.self) { data in
-                CollectionPage(collection: data)
+                SerieCollectionPage(collection: data)
             }
         }
         .navigationViewStyle(.stack)

@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-public struct MangaList<MangaContent: View, T: Identifiable, Y: RandomAccessCollection<T>>: View {
-    var mangas: Y
-    var mangaContent: (T) -> MangaContent
+public struct MangaList<SerieContent: View, T: Identifiable, Y: RandomAccessCollection<T>>: View {
+    var series: Y
+    var serieContent: (T) -> SerieContent
     var horizontal: Bool
     
     var columns: [GridItem] {
@@ -18,9 +18,9 @@ public struct MangaList<MangaContent: View, T: Identifiable, Y: RandomAccessColl
         return [GridItem(.adaptive(size))]
     }
     
-    public init(mangas: Y, horizontal: Bool = false, @ViewBuilder mangaRender: @escaping (T) -> MangaContent) {
-        self.mangas = mangas
-        self.mangaContent = mangaRender
+    public init(series: Y, horizontal: Bool = false, @ViewBuilder serieRender: @escaping (T) -> SerieContent) {
+        self.series = series
+        self.serieContent = serieRender
         self.horizontal = horizontal
     }
     
@@ -28,20 +28,20 @@ public struct MangaList<MangaContent: View, T: Identifiable, Y: RandomAccessColl
         Group {
             if horizontal {
                 LazyHGrid(rows: columns) {
-                    mangasList
+                    seriesList
                 }
             } else {
                 LazyVGrid(columns: columns) {
-                    mangasList
+                    seriesList
                 }
             }
         }
     }
     
     @ViewBuilder
-    var mangasList: some View {
-        ForEach(mangas) { data in
-            mangaContent(data)
+    var seriesList: some View {
+        ForEach(series) { data in
+            serieContent(data)
         }
     }
 }

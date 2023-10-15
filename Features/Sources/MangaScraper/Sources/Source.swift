@@ -7,20 +7,20 @@ public enum SourceError: Error {
     case notImplemented
 }
 
-public enum SourceLang: String, CaseIterable {
+public enum SourceLanguage: String, CaseIterable {
     case fr = "French"
     case en = "English"
     case jp = "Japanese"
     case all = "All"
 }
 
-public enum SourceMangaCompletion: String, CaseIterable {
+public enum SourceSerieCompletion: String, CaseIterable {
     case ongoing = "Ongoing"
     case complete = "Complete"
     case unknown = "Unknown"
 }
 
-public enum SourceMangaType: String, CaseIterable {
+public enum SourceSerieType: String, CaseIterable {
     case manga = "Manga"
     case manhua = "Manhua"
     case manhwa = "Manhwa"
@@ -28,19 +28,19 @@ public enum SourceMangaType: String, CaseIterable {
     case unknown = "Unknown"
 }
 
-public struct SourceManga: Identifiable, Equatable, Hashable {
+public struct SourceSerie: Identifiable, Equatable, Hashable {
     public var id: String
     public var title: String
     public var cover: URL
     public var genres: [String]
     public var authors: [String]
     public var alternateTitles: [String]
-    public var status: SourceMangaCompletion
+    public var status: SourceSerieCompletion
     public var synopsis: String
     public var chapters: [SourceChapter]
-    public var type: SourceMangaType
+    public var type: SourceSerieType
     
-    public init(id: String, title: String, cover: URL, genres: [String], authors: [String], alternateTitles: [String], status: SourceMangaCompletion, synopsis: String, chapters: [SourceChapter], type: SourceMangaType) {
+    public init(id: String, title: String, cover: URL, genres: [String], authors: [String], alternateTitles: [String], status: SourceSerieCompletion, synopsis: String, chapters: [SourceChapter], type: SourceSerieType) {
         self.id = id
         self.title = title
         self.cover = cover
@@ -85,7 +85,7 @@ public struct SourceChapterImage: Identifiable, Equatable, Hashable {
     }
 }
 
-public struct SourceSmallManga: Identifiable, Equatable, Hashable {
+public struct SourceSmallSerie: Identifiable, Equatable, Hashable {
     public var id: String
     public var title: String
     public var thumbnailUrl: URL
@@ -104,14 +104,14 @@ public enum SourceFetchType: String, CaseIterable, Identifiable {
     public var id: Self { self }
 }
 
-public typealias SourcePaginatedSmallManga = (mangas: [SourceSmallManga], hasNextPage: Bool)
+public typealias SourcePaginatedSmallSerie = (data: [SourceSmallSerie], hasNextPage: Bool)
 
 public protocol Source {
     var name: String { get }
     var id: UUID { get }
     var versionNumber: Float { get }
     var updatedAt: Date { get }
-    var lang: SourceLang { get }
+    var language: SourceLanguage { get }
     var icon: URL { get }
     var baseUrl: URL { get }
     var supportsLatest: Bool  { get }
@@ -119,13 +119,13 @@ public protocol Source {
     var nsfw: Bool { get }
     var deprecated: Bool { get }
     
-    func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga
-    func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallManga
-    func fetchSearchManga(query: String, page: Int) async throws -> SourcePaginatedSmallManga
-    func fetchMangaDetail(id: String) async throws -> SourceManga
-    func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage]
-    func mangaUrl(mangaId: String) -> URL
-    func checkUpdates(mangaIds: [String]) async throws -> Void
+    func fetchPopularSerie(page: Int) async throws -> SourcePaginatedSmallSerie
+    func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallSerie
+    func fetchSearchSerie(query: String, page: Int) async throws -> SourcePaginatedSmallSerie
+    func fetchSerieDetail(serieId: String) async throws -> SourceSerie
+    func fetchChapterImages(serieId: String, chapterId: String) async throws -> [SourceChapterImage]
+    func serieUrl(serieId: String) -> URL
+    func checkUpdates(serieIds: [String]) async throws -> Void
 }
 
 public protocol MultiSource: Source {

@@ -58,7 +58,7 @@ public struct ExploreTabView: View {
                 }
             }
             .navigationDestination(for: Scraper.self) { scraper in
-                ExploreSourceView(scraper: Bindable(scraper))
+                ExploreSourceView(scraper: scraper)
             }
         }
     }

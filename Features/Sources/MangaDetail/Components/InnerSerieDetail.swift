@@ -5,21 +5,21 @@ import Common
 import SharedUI
 import SwiftUILayouts
 
-public struct InnerMangaDetail: View {
+public struct InnerSerieDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
 
     @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
 
-    @Bindable var manga: Serie
+    @Bindable var serie: Serie
     @Bindable var scraper: Scraper
 
     @State var orientation = DeviceOrientation()
     @State var readerManager = ReaderManager()
     @State var showMoreDesc = false
     @State var addToCollectionSheet = false
-    
-    public init(manga: Serie, scraper: Scraper) {
-        self.manga = manga
+
+    public init(serie: Serie, scraper: Scraper) {
+        self.serie = serie
         self.scraper = scraper
     }
     
@@ -41,7 +41,7 @@ public struct InnerMangaDetail: View {
             }
         }
         .fullScreenCover(item: $readerManager.selectedChapter) { data in
-            ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters))
+            ReaderView(vm: .init(serie: data.serie, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters))
                 .environment(readerManager)
         }
         .environment(readerManager)
@@ -94,13 +94,13 @@ public struct InnerMangaDetail: View {
     @ViewBuilder
     var HeaderRow: some View {
         HStack(alignment: .top) {
-            MangaCard(imageUrl: manga.cover)
+            SerieCard(imageUrl: serie.cover)
                 .mangaCardFrame()
                 .padding(.leading, 10)
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading) {
-                    Text(manga.title ?? "")
+                    Text(serie.title ?? "")
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.subheadline.bold())
@@ -109,14 +109,14 @@ public struct InnerMangaDetail: View {
                 
                 VStack(alignment: .center) {
                     VStack {
-                        ForEach(manga.authors ?? []) { author in
+                        ForEach(serie.authors ?? []) { author in
                             Text(author)
                                 .font(.caption.italic())
                         }
                     }
                     .padding(.bottom, 5)
                     
-                    Text(manga.status?.rawValue ?? "")
+                    Text(serie.status?.rawValue ?? "")
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     
@@ -138,8 +138,8 @@ public struct InnerMangaDetail: View {
             }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
-                        .symbolVariant(manga.collection != nil ? .fill : .none)
-                    Text(manga.collection?.name ?? "Favoris")
+                        .symbolVariant(serie.collection != nil ? .fill : .none)
+                    Text(serie.collection?.name ?? "Favoris")
                 }
             }
             .disabled(collections.count == 0)
@@ -151,16 +151,16 @@ public struct InnerMangaDetail: View {
                     actions.append(.default(
                         Text(col.name ?? ""),
                         action: {
-                            manga.collection = col
+                            serie.collection = col
                         }
                     ))
                 }
 
-                if let collectionName = manga.collection?.name {
+                if let collectionName = serie.collection?.name {
                     actions.append(.destructive(
                         Text("Remove from \(collectionName)"),
                         action: {
-                            manga.collection = nil
+                            serie.collection = nil
                         }
                     ))
                 }
@@ -193,7 +193,7 @@ public struct InnerMangaDetail: View {
     @ViewBuilder
     var SynopsisRow: some View {
         VStack(spacing: 5) {
-            Text(manga.synopsis ?? "")
+            Text(serie.synopsis ?? "")
                 .lineLimit(showMoreDesc ? nil : 4)
                 .fixedSize(horizontal: false, vertical: true)
             
@@ -214,7 +214,7 @@ public struct InnerMangaDetail: View {
     @ViewBuilder
     var GenreRow: some View {
         FlowLayout(alignment: .center) {
-            ForEach(manga.genres ?? []) { genre in
+            ForEach(serie.genres ?? []) { genre in
                 Button(genre, action: {  })
                     .buttonStyle(.bordered)
             }
@@ -222,14 +222,14 @@ public struct InnerMangaDetail: View {
     }
 }
 
-extension InnerMangaDetail {
+extension InnerSerieDetail {
     func getMangaURL() -> URL? {
         guard
             let source = ScraperService.shared.getSource(sourceId: scraper.id),
-            let mangaId = manga.mangaId
+            let mangaId = serie.internalId
         else { return nil }
 
-        return source.mangaUrl(mangaId: mangaId)
+        return source.serieUrl(serieId: mangaId)
     }
     
     // TODO: Rework reset cache to avoid deleting chapter read/unread info
@@ -238,8 +238,8 @@ extension InnerMangaDetail {
     func update() async {
         guard
             let source = ScraperService.shared.getSource(sourceId: scraper.id),
-            let mangaId = manga.mangaId,
-            let sourceManga = try? await source.fetchMangaDetail(id: mangaId)
+            let mangaId = serie.internalId,
+            let sourceManga = try? await source.fetchSerieDetail(serieId: mangaId)
         else { return }
         
         print(sourceManga)

@@ -12,7 +12,7 @@ public extension Serie {
     enum Status: String, Codable {
         case complete = "Complete", ongoing = "Ongoing", unknown = "Unknown"
         
-        public init(rawValue: SourceMangaCompletion) {
+        public init(rawValue: SourceSerieCompletion) {
             switch(rawValue) {
             case .complete: self = .complete
             case .ongoing: self = .ongoing
@@ -24,7 +24,7 @@ public extension Serie {
     enum Kind: String, Codable {
         case manga = "Manga", manhua = "Manhua", manhwa = "Manhwa", doujinshi = "Doujinshi", unknown = "Unknown"
         
-        public init(rawValue: SourceMangaType) {
+        public init(rawValue: SourceSerieType) {
             switch(rawValue) {
             case .doujinshi: self = .doujinshi
             case .manga: self = .manga
@@ -41,7 +41,7 @@ public extension Serie {
         case leftToRight = "Left to Right (Manhua)"
         case vertical = "Vertical (Webtoon, no gaps)"
         
-        public init(from: SourceMangaType) {
+        public init(from: SourceSerieType) {
             switch from {
                 case .manga: self = .rightToLeft
                 case .manhua: self = .leftToRight

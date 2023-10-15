@@ -12,11 +12,12 @@ import DataKit
 import SharedUI
 import MangaDetail
 
-public struct MangaForSourcePage: View {
+public struct SerieForSourcePage: View {
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
-    var scraper: Scraper
-    var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
+    @Bindable var scraper: Scraper
+
+    private var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
     public init(scraper: Scraper) {
         self.scraper = scraper

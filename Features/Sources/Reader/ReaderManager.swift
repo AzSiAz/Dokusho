@@ -13,7 +13,7 @@ import SwiftUI
 public class ReaderManager {
     public struct SelectedChapter: Identifiable {
         public var chapter: Chapter
-        public var manga: Serie
+        public var serie: Serie
         public var scraper: Scraper
         public var chapters: [Chapter]
         
@@ -24,8 +24,8 @@ public class ReaderManager {
     
     public var selectedChapter: SelectedChapter?
 
-    public func selectChapter(chapter: Chapter, manga: Serie, scraper: Scraper, chapters: [Chapter]) {
-        self.selectedChapter = .init(chapter: chapter, manga: manga, scraper: scraper, chapters: chapters)
+    public func selectChapter(chapter: Chapter, serie: Serie, scraper: Scraper, chapters: [Chapter]) {
+        self.selectedChapter = .init(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters)
     }
     
     public func dismiss() {

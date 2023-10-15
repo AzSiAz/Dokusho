@@ -13,7 +13,7 @@ import DataKit
 import Common
 import SharedUI
 
-public struct CollectionSettings: View {
+public struct SerieCollectionSettings: View {
 //    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
     
     @State var collectionOrder: SerieCollection.Order
@@ -64,7 +64,7 @@ public struct CollectionSettings: View {
     }
 }
 
-extension CollectionSettings {
+extension SerieCollectionSettings {
     func updateCollectionUseList(d: Bool) {
 //        Task {
 //            guard let collection = collection else { return }

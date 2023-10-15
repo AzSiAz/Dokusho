@@ -1,52 +1,40 @@
-//
-//  ChapterListRow.swift
-//  Dokusho (iOS)
-//
-//  Created by Stephan Deumier on 26/06/2021.
-//
-
 import SwiftUI
 import DataKit
 import Reader
 
 public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
-
-    @Bindable var vm: ChapterListVM
-
-    var chapter: Chapter
-    var chapters: [Chapter]
     
-    public init(vm: ChapterListVM, chapter: Chapter, chapters: [Chapter]) {
-        self.chapter = chapter
-        self.chapters = chapters
-        self._vm = .init(wrappedValue: vm)
-    }
+    @Query() var chapters: [Chapter]
+    
+    @Bindable var serie: Serie
+    @Bindable var scraper: Scraper
+    @Bindable var chapter: Chapter
     
     public var body: some View {
         HStack {
             if let url = chapter.externalUrl {
                 Link(destination: url) {
-                    Content()
+                    content
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
                 Button(action: {
-                    readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters)
+                    readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters)
                 }) {
-                    Content()
+                    content
                 }
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             }
         }
         .foregroundColor(chapter.readAt != nil ? Color.gray : Color.blue)
-        .contextMenu { ChapterRowContextMenu() }
+        .contextMenu { chapterRowContextMenu }
     }
     
     @ViewBuilder
-    func Content() -> some View {
+    var content: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text(chapter.title ?? "")
@@ -71,27 +59,68 @@ public struct ChapterListRow: View {
     }
     
     @ViewBuilder
-    func ChapterRowContextMenu() -> some View {
+    var chapterRowContextMenu: some View {
         if (chapter.readAt != nil) {
-            Button(action: { vm.changeChapterStatus(for: chapter) }) {
+            Button(action: { changeChapterStatus(for: chapter) }) {
                 Text("Mark as read")
             }
         }
         else {
-            Button(action: { vm.changeChapterStatus(for: chapter) }) {
+            Button(action: { changeChapterStatus(for: chapter) }) {
                 Text("Mark as unread")
             }
         }
 
-        if vm.hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
-            Button(action: { vm.changePreviousChapterStatus(for: chapter, in: chapters) }) {
+        if hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
+            Button(action: { changePreviousChapterStatus(for: chapter, in: chapters) }) {
                 Text("Mark previous as read")
             }
         }
         else {
-            Button(action: { vm.changePreviousChapterStatus(for: chapter, in: chapters) }) {
+            Button(action: { changePreviousChapterStatus(for: chapter, in: chapters) }) {
                 Text("Mark previous as unread")
             }
         }
+    }
+}
+
+extension ChapterListRow {
+    func changeChapterStatus(for chapter: Chapter) {
+//        do {
+//            try database.write { db in
+//                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
+//            }
+//        } catch(let err) {
+//            print(err)
+//        }
+    }
+
+    func changePreviousChapterStatus(for chapter: Chapter, in chapters: [Chapter]) {
+//        do {
+//            try database.write { db in
+//                try chapters
+//                    .filter { status == .unread ? !$0.isUnread : $0.isUnread }
+//                    .filter { chapter.position < $0.position }
+//                    .forEach { try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
+//            }
+//        } catch(let err) {
+//            print(err)
+//        }
+    }
+
+    func hasPreviousUnreadChapter(for chapter: Chapter, chapters: [Chapter]) -> Bool {
+//        return chapters
+//            .filter { chapter.position < $0.position }
+//            .contains { $0.isUnread }
+
+        return false
+    }
+
+    func nextUnreadChapter(chapters: [Chapter]) -> Chapter? {
+//        return chapters
+//            .sorted { $0.position > $1.position }
+//            .first { $0.isUnread }
+        
+        return nil
     }
 }

@@ -15,7 +15,7 @@ import MangaDetail
 import DynamicCollection
 
 @Observable
-public class CollectionPageViewModel {
+public class SerieCollectionPageViewModel {
     private var refreshTask: Task<Void, Error>?
     
     var showFilter = false
@@ -51,14 +51,14 @@ public class CollectionPageViewModel {
     }
 }
 
-public struct CollectionPage: View {
+public struct SerieCollectionPage: View {
     @Environment(LibraryUpdater.self) var libraryUpdater
     @Environment(UserPreferences.self) var userPreference
 
 //    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollection?
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
-    @State var vm: CollectionPageViewModel = .init()
+    @State var vm: SerieCollectionPageViewModel = .init()
     
     public init(collection : SerieCollection) {
 //        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))

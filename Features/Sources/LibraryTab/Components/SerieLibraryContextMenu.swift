@@ -8,12 +8,12 @@
 import SwiftUI
 import DataKit
 
-public struct MangaLibraryContextMenu: View {
-    var manga: Serie
+public struct SerieLibraryContextMenu: View {
+    var serie: Serie
     var count: Int
     
-    public init(manga: Serie, count: Int) {
-        self.manga = manga
+    public init(serie: Serie, count: Int) {
+        self.serie = serie
         self.count = count
     }
 

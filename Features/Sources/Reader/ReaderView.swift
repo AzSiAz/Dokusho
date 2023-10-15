@@ -26,7 +26,7 @@ public struct ReaderView: View {
                 ProgressView()
                     .scaleEffect(3)
             } else {
-                if vm.manga.readerDirection == .vertical { VerticalReaderView(vm: vm) }
+                if vm.serie.readerDirection == .vertical { VerticalReaderView(vm: vm) }
                 else { HorizontalReaderView(vm: vm) }
             }
         }
@@ -70,7 +70,7 @@ public struct ReaderView: View {
                         VStack {
                             // TODO: Add a custom slider to be able to update tabIndex value
                             ProgressView(value: vm.progressBarCurrent(), total: vm.progressBarCount())
-                                .rotationEffect(.degrees(vm.manga.readerDirection == .rightToLeft ? 180 : 0))
+                                .rotationEffect(.degrees(vm.serie.readerDirection == .rightToLeft ? 180 : 0))
                         }
                         .frame(height: 25)
                     }
@@ -116,7 +116,7 @@ public struct ReaderView: View {
                     Spacer()
                     
                     VStack(alignment: .center, spacing: 0) {
-                        Text(vm.manga.title ?? "")
+                        Text(vm.serie.title ?? "")
                             .font(.subheadline)
                             .allowsTightening(true)
                             .lineLimit(1)
@@ -142,8 +142,8 @@ public struct ReaderView: View {
                         
                         Menu("Reader direction") {
                             ForEach(Serie.ReaderDirection.allCases, id: \.self) { direction in
-                                Button(action: { vm.manga.readerDirection = direction }) {
-                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.manga.readerDirection == direction)
+                                Button(action: { vm.serie.readerDirection = direction }) {
+                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.serie.readerDirection == direction)
                                 }
                             }
                         }

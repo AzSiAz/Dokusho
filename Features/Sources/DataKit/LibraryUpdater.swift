@@ -55,9 +55,9 @@ public class LibraryUpdater {
 
                 do {
                     guard
-                        let mangaId = data.toRefresh.mangaId,
-                        let sourceData = try? await data.source.fetchMangaDetail(id: mangaId)
-                    else { throw "Manga not found: \(String(describing: data.toRefresh.mangaId))" }
+                        let internalId = data.toRefresh.internalId,
+                        let sourceData = try? await data.source.fetchSerieDetail(serieId: internalId)
+                    else { throw "Manga not found: \(String(describing: data.toRefresh.internalId))" }
                     
                     data.toRefresh.update(from: sourceData)
                 } catch (let error) {

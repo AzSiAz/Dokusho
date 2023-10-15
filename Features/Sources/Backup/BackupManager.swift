@@ -1,10 +1,3 @@
-//
-//  Backup.swift
-//  Dokusho
-//
-//  Created by Stef on 21/12/2021.
-//
-
 import Foundation
 import OSLog
 import SwiftUI
@@ -41,17 +34,17 @@ public struct BackupData {
 
 public struct BackupCollectionData {
     var collection: SerieCollection
-    var mangas: [Serie]
+    var series: [Serie]
 }
 
 public struct MangaWithChapters {
-    var manga: Serie
+    var serie: Serie
     var chapters: [Chapter]
 }
 
 
 public struct BackupTask {
-    var mangaBackup: MangaWithChapters
+    var serieBackup: MangaWithChapters
     var collection: SerieCollection
 }
 

@@ -14,15 +14,13 @@ public struct ChapterListInformation: View {
     @Environment(ReaderManager.self) var readerManager
     
 //    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapterDB]
-    @State var vm: ChapterListVM
     
-    var manga: Serie
+    var serie: Serie
     var scraper: Scraper
     
-    public init(manga: Serie, scraper: Scraper) {
-        self.manga = manga
+    public init(serie: Serie, scraper: Scraper) {
+        self.serie = serie
         self.scraper = scraper
-        _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
 //        _chapters = Query(MangaChaptersRequest(manga: manga))
     }
 

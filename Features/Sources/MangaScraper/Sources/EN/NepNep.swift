@@ -70,7 +70,7 @@ public class NepNepSource: MultiSource {
     private(set) public var id: UUID
     private(set) public var name: String
     private(set) public var baseUrl: URL
-    private(set) public var lang = SourceLang.en
+    private(set) public var language = SourceLanguage.en
     private(set) public var supportsLatest = true
     private(set) public var headers = ["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"]
     private(set) public var versionNumber: Float = 1.0
@@ -87,23 +87,23 @@ public class NepNepSource: MultiSource {
         self.name = name
     }
 
-    public func fetchPopularManga(page: Int) async throws -> SourcePaginatedSmallManga {
+    public func fetchPopularSerie(page: Int) async throws -> SourcePaginatedSmallSerie {
         try await updateDirectory(page)
         return extractInfoFromDirectory(page: page, order: .view)
     }
 
-    public func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallManga {
+    public func fetchLatestUpdates(page: Int) async throws -> SourcePaginatedSmallSerie {
         try await updateDirectory(page)
         return extractInfoFromDirectory(page: page, order: .lastUpdate)
     }
 
-    public func fetchSearchManga(query: String, page: Int) async throws -> SourcePaginatedSmallManga {
+    public func fetchSearchSerie(query: String, page: Int) async throws -> SourcePaginatedSmallSerie {
         try await updateDirectory(page)
         return searchMangaParse(query: query, page: page)
     }
 
-    public func fetchMangaDetail(id: String) async throws -> SourceManga {
-        let html = try await fetchHtml(url: "\(baseUrl)/manga/\(id)")
+    public func fetchSerieDetail(serieId: String) async throws -> SourceSerie {
+        let html = try await fetchHtml(url: "\(baseUrl)/manga/\(serieId)")
 
         let doc: Document = try SwiftSoup.parse(html)
 
@@ -128,14 +128,14 @@ public class NepNepSource: MultiSource {
 
         let genres: [String] = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Genre)) a").array().map { try! $0.text().trimmingCharacters(in: .whitespacesAndNewlines) }
         let authors: [String] = try doc.select("\(interestingPart) li.list-group-item:has(span:contains(Author)) a").array().map { try! $0.text().trimmingCharacters(in: .whitespacesAndNewlines) }
-        let chapters = try mangaChapterListParse(html, id)
+        let chapters = try mangaChapterListParse(html, serieId)
 
         try await updateDirectory(1)
-        let directoryManga = directory.first { $0.id == id }
+        let directoryManga = directory.first { $0.id == serieId }
         let alternateNames = directoryManga?.alternateNames ?? []
 
-        return SourceManga(
-            id: id,
+        return SourceSerie(
+            id: serieId,
             title: title,
             cover: cover,
             genres: genres,
@@ -148,7 +148,7 @@ public class NepNepSource: MultiSource {
         )
     }
 
-    public func fetchChapterImages(mangaId: String, chapterId: String) async throws -> [SourceChapterImage] {
+    public func fetchChapterImages(serieId: String, chapterId: String) async throws -> [SourceChapterImage] {
         var html = try await fetchHtml(url: "\(baseUrl)/read-online/\(chapterId).html")
         
         if html.range(of: "MainFunction")?.upperBound == nil {
@@ -191,7 +191,7 @@ public class NepNepSource: MultiSource {
             let vmCurrChapterJSON = try JSON(data: vmCurrChapterRaw)
             let seasonURIRaw = (try? vmCurrChapterJSON.next("Directory").getString()) ?? ""
             let seasonURI = seasonURIRaw.isEmpty ? "" : "\(seasonURIRaw)/"
-            let path = "\(vmCurrPathName)/manga/\(mangaId)/\(seasonURI)"
+            let path = "\(vmCurrPathName)/manga/\(serieId)/\(seasonURI)"
             let chNum = chapterImage(try vmCurrChapterJSON.next("Chapter").getString())
 
             // ideal: https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-001.png / https://fan-official.lastation.us/manga/Magika-No-Kenshi-To-Shoukan-Maou/0076-010.png
@@ -211,13 +211,13 @@ public class NepNepSource: MultiSource {
         }
     }
 
-    public func mangaUrl(mangaId: String) -> URL {
-        return URL(string: "\(baseUrl)/manga/\(mangaId)")!
+    public func serieUrl(serieId: String) -> URL {
+        return URL(string: "\(baseUrl)/manga/\(serieId)")!
     }
 
-    public func checkUpdates(mangaIds _: [String]) async throws {}
+    public func checkUpdates(serieIds _: [String]) async throws {}
 
-    private func searchMangaParse(query: String, page: Int) -> SourcePaginatedSmallManga {
+    private func searchMangaParse(query: String, page: Int) -> SourcePaginatedSmallSerie {
         let chunks = directory.filter { mangaInDirectory -> Bool in
             mangaInDirectory.title.lowercased().contains(query.lowercased()) || mangaInDirectory.alternateNames.contains(where: { alternateName -> Bool in
                 alternateName.lowercased().contains(query.lowercased())
@@ -225,10 +225,10 @@ public class NepNepSource: MultiSource {
         }.chunked(into: 24)
         
         let mangas = chunks.count >= 1 ? chunks[page - 1].map {
-            SourceSmallManga(id: $0.id, title: $0.title, thumbnailUrl: URL(string: "https://temp.compsci88.com/cover/\($0.id).jpg")!)
+            SourceSmallSerie(id: $0.id, title: $0.title, thumbnailUrl: URL(string: "https://temp.compsci88.com/cover/\($0.id).jpg")!)
         } : []
         
-        return SourcePaginatedSmallManga(mangas: mangas, hasNextPage: page < chunks.count)
+        return SourcePaginatedSmallSerie(data: mangas, hasNextPage: page < chunks.count)
     }
 
     private func mangaChapterListParse(_ html: String, _ id: String) throws -> [SourceChapter] {
@@ -314,7 +314,7 @@ public class NepNepSource: MultiSource {
         return "-chapter-\(n)\(suffix)\(index)"
     }
 
-    private func parseStatus(_ text: String) -> SourceMangaCompletion {
+    private func parseStatus(_ text: String) -> SourceSerieCompletion {
         switch text {
         case let t where t.lowercased().contains("ongoing"): return .ongoing
         case let t where t.lowercased().contains("complete"): return .complete
@@ -322,7 +322,7 @@ public class NepNepSource: MultiSource {
         }
     }
 
-    private func parseType(_ text: String) -> SourceMangaType {
+    private func parseType(_ text: String) -> SourceSerieType {
         switch text {
         case let t where t.lowercased().contains("manga"): return .manga
         case let t where t.lowercased().contains("manhwa"): return .manhwa
@@ -358,7 +358,7 @@ public class NepNepSource: MultiSource {
         return MangaSeeDirectoryManga.parseFromRawDirectory(raw: rawData)
     }
 
-    private func extractInfoFromDirectory(page: Int, order: orderDirectory) -> SourcePaginatedSmallManga {
+    private func extractInfoFromDirectory(page: Int, order: orderDirectory) -> SourcePaginatedSmallSerie {
         let chunks = directory.sorted { current, next -> Bool in
             if order == .lastUpdate {
                 return current.lastUpdate > next.lastUpdate
@@ -367,8 +367,8 @@ public class NepNepSource: MultiSource {
             }
         }.chunked(into: 24)
 
-        return SourcePaginatedSmallManga(mangas: chunks[page - 1].map {
-            SourceSmallManga(
+        return SourcePaginatedSmallSerie(data: chunks[page - 1].map {
+            SourceSmallSerie(
                 id: $0.id,
                 title: $0.title,
                 thumbnailUrl: URL(string: "https://temp.compsci88.com/cover/\($0.id).jpg")!

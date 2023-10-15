@@ -5,7 +5,7 @@ public extension Scraper {
     enum Language: String, Codable, CaseIterable {
         case all = "All", english = "English", french = "French", japanese = "Japanese", unknown = "Unknown"
         
-        init(from: SourceLang) {
+        init(from: SourceLanguage) {
             switch from {
             case .fr: self = .french
             case .en: self = .english

@@ -46,5 +46,3 @@ public class Chapter {
         if (self.externalUrl == data.externalUrl) { self.externalUrl = data.externalUrl }
     }
 }
-
-public extension Chapter {}

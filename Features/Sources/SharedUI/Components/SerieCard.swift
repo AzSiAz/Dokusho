@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct MangaCard: View {
+public struct SerieCard: View {
     var imageUrl: URL
 
     var title: String?
@@ -41,14 +41,14 @@ public struct MangaCard: View {
     public var body: some View {
         RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
             .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
-            .overlay(alignment: .topTrailing) { ChapterCounter() }
-            .overlay(alignment: .topLeading) { CollectionName() }
-            .overlay(alignment: .bottomLeading) { Title() }
+            .overlay(alignment: .topTrailing) { ChapterCounter }
+            .overlay(alignment: .topLeading) { CollectionName }
+            .overlay(alignment: .bottomLeading) { Title }
             .mangaCardFrame()
     }
     
     @ViewBuilder
-    func Title() -> some View {
+    var Title: some View {
         if let title = title, !title.isEmpty {
             VStack {
                 Text(title)
@@ -66,7 +66,7 @@ public struct MangaCard: View {
     }
     
     @ViewBuilder
-    func ChapterCounter() -> some View {
+    var ChapterCounter: some View {
         if let count = chapterCount, count != 0  {
             VStack {
                 Text(String(count))
@@ -79,7 +79,7 @@ public struct MangaCard: View {
     }
     
     @ViewBuilder
-    func CollectionName() -> some View {
+    var CollectionName: some View {
         if let collectionName = collectionName, !collectionName.isEmpty {
             VStack {
                 Text(collectionName)
@@ -123,10 +123,10 @@ public extension View {
 
 #Preview {
     Group {
-        MangaCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, collectionName: "Reading")
+        SerieCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, collectionName: "Reading")
             .mangaCardFrame()
         
-        MangaCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, chapterCount: 5)
+        SerieCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, chapterCount: 5)
             .mangaCardFrame()
     }
 }

@@ -13,7 +13,7 @@ public extension FetchDescriptor where T: Serie {
     static func seriesBySourceId(scraperId: UUID, id: String) -> FetchDescriptor<T> {
         FetchDescriptor(
             predicate: #Predicate<T> {
-                $0.scraperId == scraperId && $0.mangaId == id
+                $0.scraperId == scraperId && $0.internalId == id
             }
         )
     }

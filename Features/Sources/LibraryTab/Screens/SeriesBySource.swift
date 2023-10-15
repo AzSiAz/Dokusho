@@ -11,7 +11,7 @@ import GRDBQuery
 import DataKit
 import DynamicCollection
 
-public struct BySourceListPage: View {
+public struct SeriesBySourceListPage: View {
 //    @GRDBQuery.Query(ScraperWithMangaInCollection()) var scrapers
     
     public init() {}

@@ -1,42 +1,22 @@
-//
-//  MangaInCollectionForGenre.swift
-//  Dokusho
-//
-//  Created by Stef on 04/10/2021.
-//
-
 import SwiftUI
 import GRDBQuery
 import DataKit
 import SharedUI
 import MangaDetail
 
-public struct MangaInCollectionForGenre: View {
+public struct SerieInCollectionForGenre: View {
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
 
 //    @State var selectedManga: DetailedMangaInList?
-    
-    var inModal: Bool
+
     var genre: String
     
-    public init(genre: String, inModal: Bool = true) {
-        self.inModal = inModal
+    public init(genre: String) {
         self.genre = genre
 //        _list = Query(DetailedMangaInListRequest(requestType: .genre(genre: genre)))
     }
     
     public var body: some View {
-        if inModal {
-            NavigationView {
-                content
-            }
-        } else {
-            content
-        }
-    }
-
-    @ViewBuilder
-    var content: some View {
         ScrollView {
 //            MangaList(mangas: list) { data in
 //                NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {

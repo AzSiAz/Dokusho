@@ -11,7 +11,7 @@ import MangaScraper
 
 @Model
 public class Serie {
-    public var mangaId: String?
+    public var internalId: String?
     public var title: String?
     public var cover: URL?
     public var synopsis: String?
@@ -29,8 +29,8 @@ public class Serie {
     @Relationship(deleteRule: .cascade, inverse: \Chapter.serie)
     public var chapters: [Chapter]?
 
-    public init(from data: SourceManga, scraperId: UUID, collection: SerieCollection? = nil, chapters: [Chapter] = []) {
-        self.mangaId = data.id
+    public init(from data: SourceSerie, scraperId: UUID, collection: SerieCollection? = nil, chapters: [Chapter] = []) {
+        self.internalId = data.id
         self.title = data.title
         self.cover = data.cover
         self.synopsis = data.synopsis
@@ -47,7 +47,7 @@ public class Serie {
         self.collection = collection
     }
     
-    public func update(from data: SourceManga) {
+    public func update(from data: SourceSerie) {
         if (self.title != data.title) { self.title = data.title }
         if (self.cover != data.cover) { self.cover = data.cover }
         if (self.synopsis != data.synopsis) { self.synopsis = data.synopsis }

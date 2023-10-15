@@ -24,62 +24,60 @@ public struct ExploreSourceView: View {
     @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
     
     @Bindable private var scraper: Scraper
-    
+
     @State private var nextPage = 1
     @State private var isLoading = false
-
     @State private var type: SourceFetchType = .latest
     @State private var error = false
-    @State private var mangas = OrderedSet<SourceSmallManga>()
+    @State private var series = OrderedSet<SourceSmallSerie>()
 
-
-    public init(scraper: Bindable<Scraper>) {
-        self._scraper = scraper
+    public init(scraper: Scraper) {
+        self.scraper = scraper
         self._inCollection = Query(.seriesInCollection(scraperId: scraper.id))
     }
-    
+
     public var body: some View {
         ScrollView {
-            switch(error, mangas.count) {
-            case (true, 0): ErrorBlock()
-            case (false, 0): LoadingBlock()
-            case (true, _): ErrorWithMangaInListBlock()
-            case (false, _): MangaListBlock()
-            case (_, 0): LoadingBlock()
+            switch(error, series.count) {
+            case (true, 0): ErrorBlock
+            case (false, 0): LoadingBlock
+            case (true, _): ErrorWithSerieInListBlock
+            case (false, _): SerieListBlock
+            case (_, 0): LoadingBlock
             }
         }
         .refreshable { await fetchList(clean: true) }
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Header()
+                Header
             }
         }
         .navigationTitle(scraper.name)
         .task { await fetchList(clean: true) }
         .onChange(of: type) { _, _ in Task { await fetchList(clean: true, typeChange: true) } }
-        .navigationDestination(for: SourceSmallManga.self) { manga in
-            MangaDetailScreen(mangaId: manga.id, scraperId: scraper.id)
+        .navigationDestination(for: SourceSmallSerie.self) { manga in
+            SerieDetailScreen(serieId: manga.id, scraperId: scraper.id)
         }
     }
     
     @ViewBuilder
-    func ErrorWithMangaInListBlock() -> some View {
+    var ErrorWithSerieInListBlock: some View {
         Group {
-            MangaListBlock()
-            ErrorBlock()
+            SerieListBlock
+            ErrorBlock
         }
     }
     
     @ViewBuilder
-    func MangaListBlock() -> some View {
-        MangaList(mangas: mangas) { manga in
+    var SerieListBlock: some View {
+        MangaList(series: series) { manga in
             NavigationLink(value: manga) {
-                let found = inCollection.first { $0.mangaId == manga.id }
-                MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collection?.name)
+                let found = inCollection.first { $0.internalId == manga.id }
+                SerieCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collection?.name)
                     .mangaCardFrame()
                     .contextMenu { ContextMenu(manga: manga) }
                     .task {
-                        if mangas.last == manga {
+                        if series.last == manga {
                             await fetchList()
                         }
                     }
@@ -89,12 +87,12 @@ public struct ExploreSourceView: View {
         .padding(.bottom, 10)
         
         if isLoading {
-            LoadingBlock()
+            LoadingBlock
         }
     }
     
     @ViewBuilder
-    func LoadingBlock() -> some View {
+    var LoadingBlock: some View {
         ProgressView()
             .progressViewStyle(.circular)
             .frame(maxWidth: .infinity)
@@ -103,7 +101,7 @@ public struct ExploreSourceView: View {
     }
     
     @ViewBuilder
-    func ErrorBlock() -> some View {
+    var ErrorBlock: some View {
         ContentUnavailableView(
             "Refresh",
             systemImage: "bolt.horizontal.circle",
@@ -112,7 +110,7 @@ public struct ExploreSourceView: View {
     }
     
     @ViewBuilder
-    func Header() -> some View {
+    var Header: some View {
         Picker("Order", selection: $type) {
             ForEach(SourceFetchType.allCases) { type in
                 Text(type.rawValue).tag(type)
@@ -123,7 +121,7 @@ public struct ExploreSourceView: View {
     }
     
     @ViewBuilder
-    func ContextMenu(manga: SourceSmallManga) -> some View {
+    func ContextMenu(manga: SourceSmallSerie) -> some View {
         ForEach(collections) { collection in
             AsyncButton(action: { await addToCollection(id: manga.id, collection: collection) }) {
                 Text("Add to \(collection.name ?? "")")
@@ -143,7 +141,7 @@ extension ExploreSourceView {
         if clean {
             nextPage = 1
             if typeChange {
-                self.mangas = OrderedSet()
+                self.series = OrderedSet()
                 self.error = false
             }
         } else {
@@ -154,11 +152,11 @@ extension ExploreSourceView {
         do {
             guard let source = scraperService.getSource(sourceId: scraper.id) else { return }
 
-            let newManga = try await type == .latest ? source.fetchLatestUpdates(page: nextPage) : source.fetchPopularManga(page: nextPage)
+            let newManga = try await type == .latest ? source.fetchLatestUpdates(page: nextPage) : source.fetchPopularSerie(page: nextPage)
             
             withAnimation {
-                if clean { self.mangas = OrderedSet(newManga.mangas) }
-                else { self.mangas.append(contentsOf: newManga.mangas) }
+                if clean { self.series = OrderedSet(newManga.data) }
+                else { self.series.append(contentsOf: newManga.data) }
 
                 self.nextPage += 1
             }
@@ -170,10 +168,10 @@ extension ExploreSourceView {
     }
     
     @MainActor
-    func addToCollection(id: SourceSmallManga.ID, collection: SerieCollection) async {
+    func addToCollection(id: SourceSmallSerie.ID, collection: SerieCollection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
-            let sourceManga = try? await source.fetchMangaDetail(id: id)
+            let sourceManga = try? await source.fetchSerieDetail(serieId: id)
         else { return }
         
         let serie = Serie(from: sourceManga, scraperId: scraper.id)
