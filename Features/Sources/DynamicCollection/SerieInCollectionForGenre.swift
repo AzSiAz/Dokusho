@@ -1,8 +1,7 @@
 import SwiftUI
-import GRDBQuery
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 public struct SerieInCollectionForGenre: View {
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]

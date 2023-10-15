@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import MangaScraper
 import SettingsTab
 import HistoryTab
 import Backup
@@ -15,7 +14,6 @@ import LibraryTab
 import ExploreTab
 import Common
 import DataKit
-import SwiftData
 
 struct RootView: View {
     @Environment(BackupManager.self) var backupManager

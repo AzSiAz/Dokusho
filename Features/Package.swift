@@ -12,8 +12,8 @@ let package = Package(
         .library(name: "SharedUI", targets: ["SharedUI"]),
         .library(name: "DataKit", targets: ["DataKit"]),
         .library(name: "Reader", targets: ["Reader"]),
-        .library(name: "MangaDetail", targets: ["MangaDetail"]),
-        .library(name: "MangaScraper", targets: ["MangaScraper"]),
+        .library(name: "SerieDetail", targets: ["SerieDetail"]),
+        .library(name: "SerieScraper", targets: ["SerieScraper"]),
         .library(name: "SettingsTab", targets: ["SettingsTab"]),
         .library(name: "HistoryTab", targets: ["HistoryTab"]),
         .library(name: "Backup", targets: ["Backup"]),
@@ -22,8 +22,6 @@ let package = Package(
         .library(name: "ExploreTab", targets: ["ExploreTab"]),
     ],
     dependencies: [
-         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.18.0"),
-         .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.7.0"),
          .package(url: "https://github.com/kean/Nuke", exact: "12.1.6"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
@@ -33,14 +31,14 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "MangaScraper",
+            name: "SerieScraper",
             dependencies: [
                 .byName(name: "SwiftSoup"),
                 .byName(name: "JAYSON"),
                 .product(name: "Collections", package: "swift-collections")
             ]
         ),
-        .testTarget(name: "MangaScraperTests", dependencies: ["MangaScraper"]),
+        .testTarget(name: "SerieScraperTests", dependencies: ["SerieScraper"]),
 
         .target(
             name: "Common",
@@ -64,7 +62,7 @@ let package = Package(
             dependencies: [
                 .byName(name: "Common"),
                 .byName(name: "DataKit"),
-                .byName(name: "MangaScraper"),
+                .byName(name: "SerieScraper"),
                 .product(name: "Nuke", package: "Nuke"),
                 .product(name: "NukeUI", package: "Nuke")
             ]
@@ -74,22 +72,19 @@ let package = Package(
             name: "DataKit",
             dependencies: [
                 .byName(name: "Common"),
-                .byName(name: "MangaScraper"),
-                .product(name: "GRDB", package: "GRDB.swift"),
-                .byName(name: "GRDBQuery")
+                .byName(name: "SerieScraper")
             ]
         ),
         
         .target(
-            name: "MangaDetail",
+            name: "SerieDetail",
             dependencies: [
-                .byName(name: "MangaScraper"),
+                .byName(name: "SerieScraper"),
                 .byName(name: "DataKit"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
                 .byName(name: "Reader"),
-                .byName(name: "SwiftUILayouts"),
+                .byName(name: "SwiftUILayouts")
             ]
         ),
         
@@ -100,7 +95,7 @@ let package = Package(
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
                 .byName(name: "Backup"),
-                .product(name: "Nuke", package: "Nuke"),
+                .product(name: "Nuke", package: "Nuke")
             ]
         ),
         
@@ -108,9 +103,8 @@ let package = Package(
             name: "HistoryTab",
             dependencies: [
                 .byName(name: "DataKit"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail")
+                .byName(name: "SerieDetail")
             ]
         ),
         
@@ -118,7 +112,7 @@ let package = Package(
             name: "Backup",
             dependencies: [
                 .byName(name: "DataKit"),
-                .byName(name: "Common"),
+                .byName(name: "Common")
             ]
         ),
         
@@ -127,10 +121,9 @@ let package = Package(
             dependencies: [
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail"),
-                .byName(name: "MangaScraper")
+                .byName(name: "SerieDetail"),
+                .byName(name: "SerieScraper")
             ]
         ),
         
@@ -139,12 +132,10 @@ let package = Package(
             dependencies: [
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
-                .product(name: "GRDB", package: "GRDB.swift"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail"),
-                .byName(name: "MangaScraper"),
-                .byName(name: "DynamicCollection"),
+                .byName(name: "SerieDetail"),
+                .byName(name: "SerieScraper"),
+                .byName(name: "DynamicCollection")
             ]
         ),
         
@@ -153,12 +144,10 @@ let package = Package(
             dependencies: [
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
-                .product(name: "GRDB", package: "GRDB.swift"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail"),
-                .byName(name: "MangaScraper"),
-                .product(name: "Collections", package: "swift-collections"),
+                .byName(name: "SerieDetail"),
+                .byName(name: "SerieScraper"),
+                .product(name: "Collections", package: "swift-collections")
             ]
         ),
     ]

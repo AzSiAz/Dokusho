@@ -1,13 +1,6 @@
-//
-//  ExploreDetailViewModels.swift
-//  Dokusho (iOS)
-//
-//  Created by Stephan Deumier on 06/06/2021.
-//
-
 import Foundation
 import SwiftUI
-import MangaScraper
+import SerieScraper
 import DataKit
 import Collections
 import Common

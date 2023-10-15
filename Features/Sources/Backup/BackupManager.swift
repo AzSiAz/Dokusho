@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
-import MangaScraper
+import SerieScraper
 import DataKit
 import Common
 

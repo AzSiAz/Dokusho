@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 struct SelectedSearchResult: Hashable {
     var scraperId: UUID

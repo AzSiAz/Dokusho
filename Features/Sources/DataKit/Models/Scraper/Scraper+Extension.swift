@@ -1,5 +1,5 @@
 import Foundation
-import MangaScraper
+import SerieScraper
 
 public extension Scraper {
     enum Language: String, Codable, CaseIterable {

@@ -1,12 +1,5 @@
-//
-//  File.swift
-//  
-//
-//  Created by Stephan Deumier on 07/10/2023.
-//
-
 import Foundation
-import MangaScraper
+import SerieScraper
 
 public extension Serie {
     enum Status: String, Codable {

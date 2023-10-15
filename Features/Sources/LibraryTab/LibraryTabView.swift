@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-import MangaScraper
-import GRDBQuery
+import SerieScraper
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 public struct LibraryTabView: View {
     @Environment(LibraryUpdater.self) private var libraryRefresh
@@ -61,7 +60,7 @@ public struct LibraryTabView: View {
             }
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
-            .queryObservation(.always)
+//            .queryObservation(.always)
 //            .navigationDestination(for: DetailedMangaInList.self) { data in
 //                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
 //            }

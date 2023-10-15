@@ -1,14 +1,7 @@
-//
-//  ReaderVM.swift
-//  Dokusho (iOS)
-//
-//  Created by Stephan Deumier on 15/06/2021.
-//
-
 import Foundation
 import SwiftUI
 import OSLog
-import MangaScraper
+import SerieScraper
 import Nuke
 import DataKit
 import Common

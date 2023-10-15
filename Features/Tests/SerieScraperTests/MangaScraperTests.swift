@@ -1,5 +1,5 @@
 import XCTest
-@testable import MangaScraper
+@testable import SerieScraper
 
 final class MangaScraperTests: XCTestCase {
     func testExample() async throws {

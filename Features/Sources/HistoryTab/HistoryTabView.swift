@@ -1,16 +1,8 @@
-//
-//  HistoryTabView.swift
-//  HistoryTabView
-//
-//  Created by Stephan Deumier on 12/09/2021.
-//
-
 import SwiftUI
-import GRDBQuery
 import Combine
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 public struct HistoryTabView: View {
 //    @GRDBQuery.Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]

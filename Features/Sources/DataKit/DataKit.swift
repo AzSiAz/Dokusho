@@ -6,4 +6,4 @@
 //
 
 @_exported import SwiftData
-@_exported import MangaScraper
+@_exported import SerieScraper

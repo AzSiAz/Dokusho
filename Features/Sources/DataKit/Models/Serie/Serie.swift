@@ -1,13 +1,6 @@
-//
-//  File.swift
-//  
-//
-//  Created by Stephan Deumier on 07/10/2023.
-//
-
 import Foundation
 import SwiftData
-import MangaScraper
+import SerieScraper
 
 @Model
 public class Serie {

@@ -1,13 +1,4 @@
-//
-//  BySourceListPage.swift
-//  Dokusho
-//
-//  Created by Stef on 04/10/2021.
-//
-
 import SwiftUI
-import MangaScraper
-import GRDBQuery
 import DataKit
 import DynamicCollection
 

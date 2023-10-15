@@ -6,12 +6,10 @@
 //
 
 import SwiftUI
-import GRDBQuery
-import Combine
 import DataKit
 import Common
 import SharedUI
-import MangaDetail
+import SerieDetail
 import DynamicCollection
 
 @Observable

@@ -14,7 +14,6 @@
 		E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */ = {isa = PBXBuildFile; productRef = E2474C9F284E5C5F0090E032 /* DynamicCollection */; };
 		E2474CA2284E62820090E032 /* LibraryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA1284E62820090E032 /* LibraryTab */; };
 		E2474CA4284E64080090E032 /* ExploreTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA3284E64080090E032 /* ExploreTab */; };
-		E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E24804C32846D2E80017F4E2 /* MangaScraper */; };
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46C8284B68FE004C594C /* SettingsTab */; };
 		E25E46CB284B697C004C594C /* HistoryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46CA284B697C004C594C /* HistoryTab */; };
@@ -23,7 +22,8 @@
 		E270C0D8282BDEFE00E3093E /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D7282BDEFE00E3093E /* Common */; };
 		E270C0DA282BDF1300E3093E /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D9282BDF1300E3093E /* Reader */; };
 		E270C0E1282C471400E3093E /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0E0282C471400E3093E /* SharedUI */; };
-		E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E29D727B283FBE2D0052EBED /* MangaDetail */; };
+		E2EA8EC12ADC4D740084EF54 /* SerieDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E2EA8EC02ADC4D740084EF54 /* SerieDetail */; };
+		E2EA8EC32ADC4D740084EF54 /* SerieScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E2EA8EC22ADC4D740084EF54 /* SerieScraper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,11 +62,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2474CA4284E64080090E032 /* ExploreTab in Frameworks */,
-				E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */,
-				E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */,
+				E2EA8EC12ADC4D740084EF54 /* SerieDetail in Frameworks */,
 				E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */,
 				E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */,
 				E270C0E1282C471400E3093E /* SharedUI in Frameworks */,
+				E2EA8EC32ADC4D740084EF54 /* SerieScraper in Frameworks */,
 				E25B0C83282BC4360080A71A /* DataKit in Frameworks */,
 				E270C0D8282BDEFE00E3093E /* Common in Frameworks */,
 				E270C0DA282BDF1300E3093E /* Reader in Frameworks */,
@@ -152,13 +152,13 @@
 				E270C0D7282BDEFE00E3093E /* Common */,
 				E270C0D9282BDF1300E3093E /* Reader */,
 				E270C0E0282C471400E3093E /* SharedUI */,
-				E29D727B283FBE2D0052EBED /* MangaDetail */,
-				E24804C32846D2E80017F4E2 /* MangaScraper */,
 				E25E46C8284B68FE004C594C /* SettingsTab */,
 				E25E46CA284B697C004C594C /* HistoryTab */,
 				E2474C9F284E5C5F0090E032 /* DynamicCollection */,
 				E2474CA1284E62820090E032 /* LibraryTab */,
 				E2474CA3284E64080090E032 /* ExploreTab */,
+				E2EA8EC02ADC4D740084EF54 /* SerieDetail */,
+				E2EA8EC22ADC4D740084EF54 /* SerieScraper */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -172,7 +172,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					E26662B526CC36830054868A = {
 						CreatedOnToolsVersion = 13.0;
@@ -230,6 +230,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -263,6 +264,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -293,6 +295,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -326,6 +329,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -465,10 +469,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ExploreTab;
 		};
-		E24804C32846D2E80017F4E2 /* MangaScraper */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MangaScraper;
-		};
 		E25B0C82282BC4360080A71A /* DataKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DataKit;
@@ -493,9 +493,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedUI;
 		};
-		E29D727B283FBE2D0052EBED /* MangaDetail */ = {
+		E2EA8EC02ADC4D740084EF54 /* SerieDetail */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MangaDetail;
+			productName = SerieDetail;
+		};
+		E2EA8EC22ADC4D740084EF54 /* SerieScraper */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SerieScraper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

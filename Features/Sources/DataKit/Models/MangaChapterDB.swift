@@ -1,6 +1,6 @@
 //import Foundation
 //import GRDB
-//import MangaScraper
+//import SerieScraper
 //
 //public enum ChapterStatusHistory: String {
 //    case all = "Update", read = "Read"

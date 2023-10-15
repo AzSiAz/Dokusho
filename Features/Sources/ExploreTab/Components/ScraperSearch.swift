@@ -1,9 +1,8 @@
 import Foundation
 import SwiftUI
-import MangaScraper
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 import Collections
 
 public struct ScraperSearch: View {

@@ -1,6 +1,6 @@
 import Foundation
 import Observation
-import MangaScraper
+import SerieScraper
 import OSLog
 import Common
 import SwiftData

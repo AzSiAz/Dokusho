@@ -1,15 +1,7 @@
-//
-//  ExploreSourceView.swift
-//  ExploreSourceView
-//
-//  Created by Stephan Deumier on 14/08/2021.
-//
-
 import SwiftUI
-import MangaScraper
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 import Collections
 
 enum LoadingState {

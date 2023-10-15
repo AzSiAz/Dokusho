@@ -1,13 +1,5 @@
-//
-//  ContentView.swift
-//  Dokusho
-//
-//  Created by Stephan Deumier on 13/08/2021.
-//
-
 import SwiftUI
-import MangaScraper
-import Combine
+import SerieScraper
 import DataKit
 import SharedUI
 

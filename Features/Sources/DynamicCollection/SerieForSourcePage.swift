@@ -1,16 +1,8 @@
-//
-//  MangaForSourcePage.swift
-//  Dokusho
-//
-//  Created by Stef on 04/10/2021.
-//
-
 import SwiftUI
-import MangaScraper
-import GRDBQuery
+import SerieScraper
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 public struct SerieForSourcePage: View {
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
