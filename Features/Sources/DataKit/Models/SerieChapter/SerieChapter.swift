@@ -4,7 +4,7 @@ import SerieScraper
 
 @Model
 public class SerieChapter {
-    public var chapterId: String?
+    public var internalId: String?
     public var title: String?
     public var subTitle: String?
     public var uploadedAt: Date?
@@ -18,7 +18,7 @@ public class SerieChapter {
     public var serie: Serie?
     
     public init(from data: SourceChapter, serie: Serie? = nil) {
-        self.chapterId = data.id
+        self.internalId = data.id
         self.title = data.name
         self.subTitle = data.subTitle
         self.uploadedAt = data.dateUpload
@@ -31,11 +31,11 @@ public class SerieChapter {
     }
     
     public func update(from data: SourceChapter) {
-        if (self.title == data.name) { self.title = data.name }
-        if (self.subTitle == data.subTitle) { self.title = data.subTitle }
-        if (self.uploadedAt == data.dateUpload) { self.uploadedAt = data.dateUpload }
-        if (self.chapter == data.chapter) { self.chapter = data.chapter }
-        if (self.volume == data.volume) { self.volume = data.volume }
-        if (self.externalUrl == data.externalUrl) { self.externalUrl = data.externalUrl }
+        if (self.title != data.name) { self.title = data.name }
+        if (self.subTitle != data.subTitle) { self.title = data.subTitle }
+        if (self.uploadedAt != data.dateUpload) { self.uploadedAt = data.dateUpload }
+        if (self.chapter != data.chapter) { self.chapter = data.chapter }
+        if (self.volume != data.volume) { self.volume = data.volume }
+        if (self.externalUrl != data.externalUrl) { self.externalUrl = data.externalUrl }
     }
 }

@@ -59,7 +59,7 @@ public class ReaderViewModel {
         do {
             guard
                 let source = ScraperService.shared.getSource(sourceId: scraper.id),
-                let chapterId = currentChapter.chapterId,
+                let chapterId = currentChapter.internalId,
                 let mangaId = serie.internalId,
                 let data = try? await source.fetchChapterImages(serieId: mangaId, chapterId: chapterId)
             else { throw "Error fetching image for scraper" }
@@ -71,7 +71,7 @@ public class ReaderViewModel {
             guard let firstImage = getOnlyImagesUrl().first else { throw "First Image not found" }
             self.tabIndex = firstImage
         } catch {
-            Logger.reader.info("Error loading chapter \(self.currentChapter.chapterId): \(error)")
+            Logger.reader.info("Error loading chapter \(self.currentChapter.internalId): \(error)")
         }
 
         if isLoading {

@@ -64,7 +64,7 @@ public struct MockSource: Source {
             status: .ongoing,
             synopsis: "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum",
             chapters: Array(repeating: (), count: 100).enumerated().map {
-                SourceChapter(id: "\($0.offset)", name: "lol \($0.offset)", dateUpload: .distantPast, chapter: 100)
+                SourceChapter(id: "\($0.offset)", name: "lol \($0.offset)", dateUpload: .distantPast, chapter: Float($0.offset), volume: Float($0.offset))
             },
             type: .manga
         )

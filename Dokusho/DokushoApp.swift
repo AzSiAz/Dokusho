@@ -16,6 +16,7 @@ struct DokushoApp: App {
     @State private var backupManager = BackupManager.shared
     @State private var libraryUpdater = LibraryUpdater.shared
     @State private var scraperService = ScraperService.shared
+    @State private var serieService = SerieService.shared
 
     var body: some Scene {
         WindowGroup {
@@ -24,6 +25,7 @@ struct DokushoApp: App {
                 .environment(backupManager)
                 .environment(userPreferences)
                 .environment(scraperService)
+                .environment(serieService)
         }
         .modelContainer(.dokusho())
     }

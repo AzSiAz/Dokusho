@@ -186,6 +186,9 @@ public struct MangaDexSource: Source {
         var shouldRepeat = true
         var offset = 0
         
+        let numberFormatter = NumberFormatter()
+        numberFormatter.decimalSeparator = "."
+        
         repeat {
             let oldOffset = offset
             let html = try await fetchHtml(url: getChapterRequestUrl(id: id, offset: oldOffset))
@@ -223,8 +226,8 @@ public struct MangaDexSource: Source {
                     name: title,
                     dateUpload: date,
                     externalUrl: URL(string: externalUrl ?? ""),
-                    chapter: chapter.floatValue ?? 0,
-                    volume: volume.floatValue ?? 0
+                    chapter: numberFormatter.number(from: chapter)?.floatValue ?? 0,
+                    volume: numberFormatter.number(from: volume)?.floatValue ?? 0
                 )
             }
 

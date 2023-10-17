@@ -30,12 +30,11 @@ public class Serie {
         self.alternateTitles = data.alternateTitles
         self.genres = data.genres
         self.authors = data.authors
-        self.status = Status(rawValue: data.status)
-        self.kind = Kind(rawValue: data.type)
+        self.status = Status(from: data.status)
+        self.kind = Kind(from: data.type)
         self.readerDirection = ReaderDirection(from: data.type)
 
         self.scraperId = scraperId
-        
         self.chapters = chapters
         self.collection = collection
     }
@@ -45,7 +44,7 @@ public class Serie {
         if (self.cover != data.cover) { self.cover = data.cover }
         if (self.synopsis != data.synopsis) { self.synopsis = data.synopsis }
         if (self.alternateTitles != data.alternateTitles) { self.alternateTitles = data.alternateTitles }
-        if (self.status != Status(rawValue: data.status)) { self.status = Status(rawValue: data.status) }
-        if (self.kind != Kind(rawValue: data.type)) { self.kind = Kind(rawValue: data.type) }
+        if (self.status != Status(from: data.status)) { self.status = Status(from: data.status) }
+        if (self.kind != Kind(from: data.type)) { self.kind = Kind(from: data.type) }
     }
 }

@@ -25,5 +25,7 @@ public class SerieCollection {
         self.useList = useList
         self.filter = filter
         self.order = order
+        
+        self.series = series
     }
 }

@@ -4,12 +4,20 @@ import Reader
 
 public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
+    @Environment(\.modelContext) var modelContext
     
-    @Query() var chapters: [SerieChapter]
+    @Query var chapters: [SerieChapter]
     
-    @Bindable var serie: Serie
     @Bindable var scraper: Scraper
     @Bindable var chapter: SerieChapter
+    @Bindable var serie: Serie
+    
+    public init(serie: Serie, scraper: Scraper, chapter: SerieChapter) {
+        self.serie = serie
+        self.scraper = scraper
+        self.chapter = chapter
+        self._chapters = .init(.chaptersForSerie(serieId: serie.internalId!, scraperId: scraper.id))
+    }
     
     public var body: some View {
         HStack {
@@ -20,9 +28,7 @@ public struct ChapterListRow: View {
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
-                Button(action: {
-                    readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters)
-                }) {
+                Button(action: { readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters) }) {
                     content
                 }
                 .buttonStyle(.plain)
@@ -60,67 +66,66 @@ public struct ChapterListRow: View {
     
     @ViewBuilder
     var chapterRowContextMenu: some View {
-        if (chapter.readAt != nil) {
-            Button(action: { changeChapterStatus(for: chapter) }) {
+        Button(action: { changeChapterStatus(for: chapter) }) {
+            if (chapter.readAt != nil) {
+                Text("Mark as unread")
+            } else {
                 Text("Mark as read")
             }
         }
-        else {
-            Button(action: { changeChapterStatus(for: chapter) }) {
-                Text("Mark as unread")
-            }
-        }
-
-        if hasPreviousUnreadChapter(for: chapter, chapters: chapters) {
-            Button(action: { changePreviousChapterStatus(for: chapter, in: chapters) }) {
+        
+        let hasUnread = hasPreviousUnreadChapter(for: chapter, chapters: chapters)
+        Button(action: { changePreviousChapterStatus(for: chapter, in: chapters, toRead: hasUnread) }) {
+            if hasUnread {
                 Text("Mark previous as read")
-            }
-        }
-        else {
-            Button(action: { changePreviousChapterStatus(for: chapter, in: chapters) }) {
+            } else {
                 Text("Mark previous as unread")
             }
         }
     }
 }
 
-extension ChapterListRow {
+private extension ChapterListRow {
     func changeChapterStatus(for chapter: SerieChapter) {
-//        do {
-//            try database.write { db in
-//                try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: chapter.id)
-//            }
-//        } catch(let err) {
-//            print(err)
-//        }
+        withAnimation {
+            if chapter.readAt == nil {
+                chapter.readAt = .now
+            } else {
+                chapter.readAt = nil
+            }
+        }
     }
 
-    func changePreviousChapterStatus(for chapter: SerieChapter, in chapters: [SerieChapter]) {
-//        do {
-//            try database.write { db in
-//                try chapters
-//                    .filter { status == .unread ? !$0.isUnread : $0.isUnread }
-//                    .filter { chapter.position < $0.position }
-//                    .forEach { try MangaChapterDB.markChapterAs(newStatus: status, db: db, chapterId: $0.id) }
-//            }
-//        } catch(let err) {
-//            print(err)
-//        }
+    func changePreviousChapterStatus(for chapter: SerieChapter, in chapters: [SerieChapter], toRead: Bool) {
+        do {
+            let toUpdate = chapters
+                .lazy
+                .filter { toRead ? $0.readAt == nil : $0.readAt != nil }
+                .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
+                .filter { chapter.chapter ?? 0 > $0.chapter ?? 0 }
+                .map { $0.persistentModelID }
+            
+            let context = ModelContext(modelContext.container)
+            context.autosaveEnabled = false
+            
+            for chapterId in toUpdate {
+                if let found = context.model(for: chapterId) as? SerieChapter {
+                    if toRead { found.readAt = .now }
+                    else { found.readAt = nil }
+                }
+            }
+            
+            try context.save()
+        } catch {
+            print(error)
+        }
     }
 
     func hasPreviousUnreadChapter(for chapter: SerieChapter, chapters: [SerieChapter]) -> Bool {
-//        return chapters
-//            .filter { chapter.position < $0.position }
-//            .contains { $0.isUnread }
-
-        return false
-    }
-
-    func nextUnreadChapter(chapters: [SerieChapter]) -> SerieChapter? {
-//        return chapters
-//            .sorted { $0.position > $1.position }
-//            .first { $0.isUnread }
-        
-        return nil
+        return chapters
+            .lazy
+            .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
+            .filter { chapter.chapter ?? 0 > $0.chapter ?? 0 }
+            .contains { $0.readAt == nil }
     }
 }

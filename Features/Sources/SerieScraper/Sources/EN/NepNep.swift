@@ -247,6 +247,8 @@ public class NepNepSource: MultiSource {
 
         do {
             let vmChapter = try JSON(data: jsonData.data(using: .utf8)!)
+            let numberFormatter = NumberFormatter()
+            numberFormatter.decimalSeparator = "."
 
             return try vmChapter.getArray().reversed().enumerated().map { rawChapter -> SourceChapter in
                 let chapterLong = try rawChapter.element.next("Chapter").getString()
@@ -263,7 +265,7 @@ public class NepNepSource: MultiSource {
                     name: chapterName,
                     dateUpload: convertToDate(date),
                     externalUrl: nil,
-                    chapter: chapter.floatValue ?? 0
+                    chapter: numberFormatter.number(from: chapter)?.floatValue ?? 0
                 )
             }
         } catch(let error) {

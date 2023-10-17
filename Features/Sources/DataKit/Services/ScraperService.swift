@@ -16,6 +16,8 @@ public class ScraperService {
     #endif
 
     private let logger = Logger.scraperService
+    
+    private init() {}
 
     public func getSource(sourceId: UUID) -> Source? {
         return sources.first { $0.id == sourceId }

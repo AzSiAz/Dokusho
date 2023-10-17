@@ -47,8 +47,8 @@ public struct ExploreSourceView: View {
         .navigationTitle(scraper.name)
         .task { await fetchList(clean: true) }
         .onChange(of: type) { _, _ in Task { await fetchList(clean: true, typeChange: true) } }
-        .navigationDestination(for: SourceSmallSerie.self) { manga in
-            SerieDetailScreen(serieId: manga.id, scraperId: scraper.id)
+        .navigationDestination(for: SourceSmallSerie.self) { serie in
+            SerieDetailScreen(serieId: serie.id, scraperId: scraper.id)
         }
     }
     

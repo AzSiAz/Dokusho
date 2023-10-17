@@ -7,6 +7,8 @@ import SwiftUILayouts
 
 public struct InnerSerieDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
+    @Environment(\.modelContext) var modelContext
+    @Environment(SerieService.self) var serieService
 
     @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
 
@@ -66,9 +68,9 @@ public struct InnerSerieDetail: View {
                 .gridCellColumns(1)
 
                 ScrollView {
-//                    ChapterListInformation(manga: data.manga, scraper: vm.scraper)
-//                        .disabled(vm.refreshing)
-//                        .padding(.bottom)
+                    ChapterListInformation(serie: serie, scraper: scraper)
+//                        .disabled(refreshing)
+                        .padding(.bottom)
                 }
                 .id("Chapter")
                 .refreshable { await update() }
@@ -84,9 +86,9 @@ public struct InnerSerieDetail: View {
             ActionRow
             SynopsisRow
             GenreRow
-//            ChapterListInformation(manga: data.manga, scraper: data.scraper!)
-//                .disabled(vm.refreshing)
-//                .padding(.bottom)
+            ChapterListInformation(serie: serie, scraper: scraper)
+//                .disabled(refreshing)
+                .padding(.bottom)
         }
         .refreshable { await update() }
     }
@@ -169,19 +171,6 @@ public struct InnerSerieDetail: View {
 
                 return ActionSheet(title: Text("Choose collection"), buttons: actions)
             }
-            
-            Divider()
-                .padding(.horizontal)
-            
-            AsyncButton(action: {
-                await resetCache()
-            }) {
-                VStack(alignment: .center, spacing: 1) {
-                    Image(systemName: "xmark.bin.circle")
-                    Text("Reset cache")
-                }
-            }
-            .disabled(true)
         }
         .controlGroupStyle(.navigation)
         .frame(height: 50)
@@ -231,17 +220,12 @@ extension InnerSerieDetail {
 
         return source.serieUrl(serieId: mangaId)
     }
-    
-    // TODO: Rework reset cache to avoid deleting chapter read/unread info
-    func resetCache() async {}
-    
+
     func update() async {
         guard
             let source = ScraperService.shared.getSource(sourceId: scraper.id),
-            let mangaId = serie.internalId,
-            let sourceManga = try? await source.fetchSerieDetail(serieId: mangaId)
+            let serieId = serie.internalId,
+            let _ = try? await serieService.update(source: source, serieId: serieId, in: modelContext.container)
         else { return }
-        
-        print(sourceManga)
     }
 }

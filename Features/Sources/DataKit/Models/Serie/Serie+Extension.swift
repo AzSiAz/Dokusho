@@ -5,8 +5,8 @@ public extension Serie {
     enum Status: String, Codable {
         case complete = "Complete", ongoing = "Ongoing", unknown = "Unknown"
         
-        public init(rawValue: SourceSerieCompletion) {
-            switch(rawValue) {
+        public init(from: SourceSerieCompletion) {
+            switch(from) {
             case .complete: self = .complete
             case .ongoing: self = .ongoing
             case .unknown: self = .unknown
@@ -17,8 +17,8 @@ public extension Serie {
     enum Kind: String, Codable {
         case manga = "Manga", manhua = "Manhua", manhwa = "Manhwa", doujinshi = "Doujinshi", unknown = "Unknown"
         
-        public init(rawValue: SourceSerieType) {
-            switch(rawValue) {
+        public init(from: SourceSerieType) {
+            switch(from) {
             case .doujinshi: self = .doujinshi
             case .manga: self = .manga
             case .manhua: self = .manhua

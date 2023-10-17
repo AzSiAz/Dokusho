@@ -4,6 +4,7 @@ import DataKit
 public struct SerieDetailScreen: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ScraperService.self) var scraperService
+    @Environment(SerieService.self) var serieService
 
     @State var scraper: Scraper? = nil
     @State var serie: Serie? = nil
@@ -30,29 +31,26 @@ public struct SerieDetailScreen: View {
 }
 
 private extension SerieDetailScreen {
+
     @MainActor
     func upsert() async {
-        guard
-            let source = scraperService.getSource(sourceId: scraperId),
-            let found = try? modelContext.fetch(.getScrapersBySourceId(id: scraperId)),
-            let scraper = found.first
-        else { return }
+        do {
+            let context = ModelContext(modelContext.container)
 
-        self.scraper = scraper
-
-        guard
-            let found = try? modelContext.fetch(.seriesBySourceId(scraperId: scraper.id, id: serieId)),
-            let manga = found.first
-        else {
-            guard let sourceManga = try? await source.fetchSerieDetail(serieId: serieId) else { return }
+            guard
+                let source = scraperService.getSource(sourceId: scraperId),
+                let scraper = try context.fetch(.getScrapersBySourceId(id: scraperId)).first,
+                let id = try? await serieService.upsert(source: source, serieId: serieId, in: modelContext.container),
+                let serie = modelContext.model(for: id) as? Serie,
+                let scraper = modelContext.model(for: scraper.persistentModelID) as? Scraper
+            else { return }
             
-            let manga = Serie(from: sourceManga, scraperId: scraper.id)
-            modelContext.insert(manga)
-            self.serie = manga
-
-            return
+            withAnimation {
+                self.serie = serie
+                self.scraper = scraper
+            }
+        } catch {
+            print(error)
         }
-
-        self.serie = manga
     }
 }

@@ -12,15 +12,15 @@ import Reader
 public struct ChapterListInformation: View {
     @Environment(ReaderManager.self) var readerManager
     
-//    @GRDBQuery.Query<MangaChaptersRequest> var chapters: [MangaChapterDB]
+    @Query var chapters: [SerieChapter]
     
-    var serie: Serie
-    var scraper: Scraper
+    @Bindable var serie: Serie
+    @Bindable var scraper: Scraper
     
     public init(serie: Serie, scraper: Scraper) {
         self.serie = serie
         self.scraper = scraper
-//        _chapters = Query(MangaChaptersRequest(manga: manga))
+        self._chapters = .init(.chaptersForSerie(serieId: serie.internalId!, scraperId: scraper.id))
     }
 
     public var body: some View {
@@ -39,34 +39,34 @@ public struct ChapterListInformation: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
             
-            ChapterCollections()
+            chapterCollections
                 .padding(.horizontal, 10)
         }
     }
     
     @ViewBuilder
-    func ChapterCollections() -> some View {
+    var chapterCollections: some View {
         Group {
-//            if let chapter = vm.nextUnreadChapter(chapters: chapters) {
-//                Group {
-//                    if let url = chapter.externalUrl {
-//                        Link(destination: url) {
-//                            NextUnreadChapter()
-//                        }
-//                    } else {
-//                        Button(action: { readerManager.selectChapter(chapter: chapter, manga: vm.manga, scraper: vm.scraper, chapters: chapters) }) {
-//                            NextUnreadChapter()
-//                        }
-//                    }
-//                }
-//                .buttonStyle(.bordered)
-//                .controlSize(.large)
-//                .padding(.horizontal)
-//            }
+            if let chapter = nextUnreadChapter(chapters: chapters) {
+                Group {
+                    if let url = chapter.externalUrl {
+                        Link(destination: url) {
+                            NextUnreadChapter()
+                        }
+                    } else {
+                        Button(action: { readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters) }) {
+                            NextUnreadChapter()
+                        }
+                    }
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .padding(.horizontal)
+            }
 
-//            ForEach(chapters) { chapter in
-//                ChapterListRow(vm: vm, chapter: chapter, chapters: chapters)
-//            }
+            ForEach(chapters) { chapter in
+                ChapterListRow(serie: serie, scraper: scraper, chapter: chapter)
+            }
         }
     }
     
@@ -91,5 +91,15 @@ public struct ChapterListInformation: View {
                 .resizable()
                 .scaledToFit()
         }
+    }
+}
+
+private extension ChapterListInformation {
+    func nextUnreadChapter(chapters: [SerieChapter]) -> SerieChapter? {
+        return chapters
+            .lazy
+            .sorted { $0.volume ?? 0 < $1.volume ?? 0 }
+            .sorted { $0.chapter ?? 0 < $1.chapter ?? 0 }
+            .first { $0.readAt == nil }
     }
 }
