@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct SerieCard: View {
     var imageUrl: URL
+    var contentMode: ContentMode
 
     var title: String?
     var chapterCount: Int?
@@ -17,34 +18,37 @@ public struct SerieCard: View {
     var radius: Double = 5
     var opacity: Double = 0.83
     
-    public init(title: String, imageUrl: URL?, chapterCount: Int) {
+    public init(title: String, imageUrl: URL?, chapterCount: Int, contentMode: ContentMode = .fill) {
         self.title = title
         self.chapterCount = chapterCount
         self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.contentMode = contentMode
     }
     
-    public init(title: String, imageUrl: URL?, collectionName: String? = nil) {
+    public init(title: String, imageUrl: URL?, collectionName: String? = nil, contentMode: ContentMode = .fill) {
         self.title = title
         self.collectionName = collectionName
         self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.contentMode = contentMode
     }
     
-    public init(imageUrl: URL?, chapterCount: Int) {
+    public init(imageUrl: URL?, chapterCount: Int, contentMode: ContentMode = .fill) {
         self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
         self.chapterCount = chapterCount
+        self.contentMode = contentMode
     }
     
-    public init(imageUrl: URL?) {
+    public init(imageUrl: URL?, contentMode: ContentMode = .fill) {
         self.imageUrl = imageUrl ?? URL(string: "https://picsum.photos/seed/picsum/200/300")!
+        self.contentMode = contentMode
     }
     
     public var body: some View {
-        RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
+        RemoteImageCacheView(url: self.imageUrl, contentMode: contentMode)
             .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
             .overlay(alignment: .topTrailing) { ChapterCounter }
             .overlay(alignment: .topLeading) { CollectionName }
             .overlay(alignment: .bottomLeading) { Title }
-            .mangaCardFrame()
     }
     
     @ViewBuilder
@@ -94,7 +98,7 @@ public struct SerieCard: View {
 }
 
 public extension View {
-    func mangaCardFrame(width: Double = 130, height: Double = 180) -> some View {
+    func serieCardFrame(width: Double = 130, height: Double = 180) -> some View {
         if width != 130 || height != 180 {
             return self
                 .frame(width: width, height: height)
@@ -107,7 +111,7 @@ public extension View {
         }
     }
     
-    func mangaCardHeight(height: Double = 180) -> some View {
+    func serieCardHeight(height: Double = 180) -> some View {
         if height != 180 {
             return self
                 .frame(height: height)
@@ -124,9 +128,9 @@ public extension View {
 #Preview {
     Group {
         SerieCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, collectionName: "Reading")
-            .mangaCardFrame()
+            .serieCardFrame()
         
         SerieCard(title: "Ookii Kouhai wa Suki Desu ka", imageUrl: URL(string: "https://cover.nep.li/cover/Ookii-Kouhai-wa-Suki-Desu-ka.jpg")!, chapterCount: 5)
-            .mangaCardFrame()
+            .serieCardFrame()
     }
 }

@@ -23,9 +23,9 @@ public class ScraperService {
         return sources.first { $0.id == sourceId }
     }
 
-    public func upsertAllSource() {
+    public func upsertAllSource(in container: ModelContainer? = nil) {
         do {
-            let context = ModelContext(.dokusho())
+            let context = ModelContext(container ?? .dokusho())
             let scrapers = try context.fetch(.allScrapers())
 
             for source in sources {
@@ -45,9 +45,9 @@ public class ScraperService {
     }
 
     @MainActor
-    public func onMove(offsets: IndexSet, position: Int) {
+    public func onMove(offsets: IndexSet, position: Int, in container: ModelContainer? = nil) {
         do {
-            let context = ModelContext(.dokusho())
+            let context = ModelContext(container ?? .dokusho())
             var scrapers = try context.fetch(.activeScrapersByPosition())
             scrapers.move(fromOffsets: offsets, toOffset: position)
             

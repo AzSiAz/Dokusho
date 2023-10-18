@@ -13,6 +13,7 @@ public class SerieService {
     @MainActor
     public func upsert(source: Source, serieId: String, in container: ModelContainer? = nil) async throws -> PersistentIdentifier {
         let context = ModelContext(container ?? .dokusho())
+        context.autosaveEnabled = false
         
         guard 
             let result = try? context.fetch(.serieBySourceIdAndInternalId(scraperId: source.id, id: serieId)),
@@ -35,6 +36,7 @@ public class SerieService {
     @MainActor
     public func update(source: Source, serieId: String, in container: ModelContainer? = nil) async throws {
         let context = ModelContext(container ?? .dokusho())
+        context.autosaveEnabled = false
         
         guard
             let result = try? context.fetch(.serieBySourceIdAndInternalId(scraperId: source.id, id: serieId)),

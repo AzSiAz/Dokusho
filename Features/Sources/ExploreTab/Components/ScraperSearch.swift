@@ -47,7 +47,7 @@ public struct ScraperSearch: View {
     @ViewBuilder
     func SearchResult() -> some View {
         ScrollView(.horizontal, showsIndicators: true) {
-            MangaList(series: mangas, horizontal: true) { serie in
+            SerieList(series: mangas, horizontal: true) { serie in
                 NavigationLink(value: SelectedSearchResult(scraperId: scraper.id, serieId: serie.id)) {
                     let found = seriesInCollection.first { $0.internalId == serie.id }
                     SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection?.name)

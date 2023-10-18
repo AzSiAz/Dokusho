@@ -11,6 +11,7 @@ enum LoadingState {
 public struct ExploreSourceView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ScraperService.self) var scraperService
+    @Environment(SerieService.self) var serieService
     
     @Query var inCollection: [Serie]
     @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
@@ -62,14 +63,14 @@ public struct ExploreSourceView: View {
     
     @ViewBuilder
     var SerieListBlock: some View {
-        MangaList(series: series) { manga in
-            NavigationLink(value: manga) {
-                let found = inCollection.first { $0.internalId == manga.id }
-                SerieCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collection?.name)
-                    .mangaCardFrame()
-                    .contextMenu { ContextMenu(manga: manga) }
+        SerieList(series: series) { serie in
+            NavigationLink(value: serie) {
+                let found = inCollection.first { $0.internalId == serie.id }
+                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection?.name)
+                    .serieCardFrame()
+                    .contextMenu { ContextMenu(serie: serie) }
                     .task {
-                        if series.last == manga {
+                        if series.last == serie {
                             await fetchList()
                         }
                     }
@@ -113,9 +114,9 @@ public struct ExploreSourceView: View {
     }
     
     @ViewBuilder
-    func ContextMenu(manga: SourceSmallSerie) -> some View {
+    func ContextMenu(serie: SourceSmallSerie) -> some View {
         ForEach(collections) { collection in
-            AsyncButton(action: { await addToCollection(id: manga.id, collection: collection) }) {
+            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
                 Text("Add to \(collection.name ?? "")")
             }
         }
@@ -124,7 +125,10 @@ public struct ExploreSourceView: View {
 
 extension ExploreSourceView {
     func fetchList(clean: Bool = false, typeChange: Bool = false) async {
-        guard isLoading == false else { return }
+        guard
+            isLoading == false,
+            (clean && !typeChange && self.series.isEmpty) || typeChange
+        else { return }
         
         defer {
             isLoading = false
@@ -163,11 +167,9 @@ extension ExploreSourceView {
     func addToCollection(id: SourceSmallSerie.ID, collection: SerieCollection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
-            let sourceManga = try? await source.fetchSerieDetail(serieId: id)
+            let serieID = try? await serieService.upsert(source: source, serieId: id, in: modelContext.container),
+            let serie = modelContext.model(for: serieID) as? Serie
         else { return }
-        
-        let serie = Serie(from: sourceManga, scraperId: scraper.id)
-        modelContext.insert(serie)
         
         collection.series?.append(serie)
     }

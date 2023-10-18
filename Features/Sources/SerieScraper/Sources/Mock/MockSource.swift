@@ -35,7 +35,7 @@ public struct MockSource: Source {
         return SourcePaginatedSmallSerie(
             data: Array(repeating: (), count: 100).enumerated().map {
                 SourceSmallSerie(id: "ID\($0.offset)", title: "ID \($0.offset)", thumbnailUrl: URL(string: "http://localhost:3000/manga/id-\($0.offset).png")!)
-            },
+            }.shuffled(),
             hasNextPage: page == 1 ? true : false
         )
     }

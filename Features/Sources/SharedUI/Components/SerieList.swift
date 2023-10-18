@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public struct MangaList<SerieContent: View, T: Identifiable, Y: RandomAccessCollection<T>>: View {
+public struct SerieList<SerieContent: View, T: Identifiable, Y: RandomAccessCollection<T>>: View {
     var series: Y
     var serieContent: (T) -> SerieContent
     var horizontal: Bool

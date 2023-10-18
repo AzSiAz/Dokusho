@@ -97,7 +97,7 @@ public struct InnerSerieDetail: View {
     var HeaderRow: some View {
         HStack(alignment: .top) {
             SerieCard(imageUrl: serie.cover)
-                .mangaCardFrame()
+                .serieCardFrame()
                 .padding(.leading, 10)
             
             VStack(spacing: 0) {

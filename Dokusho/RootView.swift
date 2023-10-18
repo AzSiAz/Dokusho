@@ -30,7 +30,7 @@ struct RootView: View {
     var iPhoneView: some View {
         TabView(selection: $tab) {
 //            libraryTab
-//            historyTab
+            historyTab
             exploreTab
             settingTab
         }

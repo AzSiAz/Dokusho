@@ -1,29 +1,47 @@
 import SwiftUI
-import Combine
 import DataKit
 import SharedUI
 import SerieDetail
 
 public struct HistoryTabView: View {
-//    @GRDBQuery.Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
-    
+    @AppStorage("HISTORY_SEGMENT_BAR") private var historyType = SerieChapterHistoryType.all
+    @State var searchTerm: String = ""
+
     public init() {}
+
+    public var body: some View {
+        InnerHistoryTabView(historyType: $historyType, searchTerm: $searchTerm)
+            .searchable(text: $searchTerm)
+    }
+}
+
+public struct InnerHistoryTabView: View {
+    @Query var chapters: [SerieChapter]
+
+    @Binding var historyType: SerieChapterHistoryType
+    @Binding var searchTerm: String
+
+    public init(historyType: Binding<SerieChapterHistoryType>, searchTerm: Binding<String>) {
+        self._historyType = historyType
+        self._searchTerm = searchTerm
+        self._chapters = Query(.chapters(historyType: historyType.wrappedValue, searchTerm: searchTerm.wrappedValue))
+    }
 
     public var body: some View {
         NavigationView {
             List {
-//                ForEach(list) { data in
-//                    ChapterRow(data)
-//                }
+                ForEach(chapters) { chapter in
+                    ChapterRow(chapter)
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-//                    Picker("Chapter Status", selection: $list.filter) {
-//                        Text(ChapterStatusHistory.read.rawValue).tag(ChapterStatusHistory.read)
-//                        Text(ChapterStatusHistory.all.rawValue).tag(ChapterStatusHistory.all)
-//                    }
-//                    .frame(maxWidth: 150)
-//                    .pickerStyle(.segmented)
+                    Picker("Chapter Status", selection: $historyType) {
+                        Text(SerieChapterHistoryType.read.rawValue).tag(SerieChapterHistoryType.read)
+                        Text(SerieChapterHistoryType.all.rawValue).tag(SerieChapterHistoryType.all)
+                    }
+                    .frame(maxWidth: 150)
+                    .pickerStyle(.segmented)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -31,38 +49,38 @@ public struct HistoryTabView: View {
                 }
             }
             .listStyle(PlainListStyle())
-//            .id($list.filter.wrappedValue)
-//            .searchable(text: $list.searchTerm)
-//            .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
+            .navigationBarTitle(historyType == .read ? "Reading history" : "Update history", displayMode: .large)
         }
         .navigationViewStyle(.columns)
     }
+
+    @ViewBuilder
+    func ChapterRow(_ chapter: SerieChapter) -> some View {
+        if let serieID = chapter.serie?.internalId, let scraperID = chapter.serie?.scraperId {
+            NavigationLink(destination: SerieDetailScreen(serieId: serieID, scraperId: scraperID)) {
+                HStack {
+                    SerieCard(imageUrl: chapter.serie?.cover, contentMode: .fit)
+                        .serieCardFrame(width: 90, height: 120)
+                        .id(chapter.persistentModelID)
     
-//    @ViewBuilder
-//    func ChapterRow(_ data: ChaptersHistory) -> some View {
-////        NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
-//            HStack {
-//                MangaCard(imageUrl: data.manga.cover)
-//                    .mangaCardFrame(width: 90, height: 120)
-//                    .id(data.id)
-//
-//                VStack(alignment: .leading) {
-//                    Text(data.manga.title)
-//                        .lineLimit(2)
-//                        .font(.body)
-//                        .allowsTightening(true)
-//                    Text(data.chapter.title)
-//                        .lineLimit(1)
-//                        .font(.callout.italic())
-//                    
-//                    Group {
-//                        if $list.filter.wrappedValue == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
-//                        if $list.filter.wrappedValue == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
-//                    }
-//                    .font(.footnote)
-//                }
-//            }
-//            .frame(height: 120)
-////        }
-//    }
+                    VStack(alignment: .leading) {
+                        Text(chapter.serie?.title ?? "")
+                            .lineLimit(2)
+                            .font(.body)
+                            .allowsTightening(true)
+                        Text(chapter.title ?? "")
+                            .lineLimit(1)
+                            .font(.callout.italic())
+    
+                        Group {
+                            if historyType == .read { Text("Read at: \(chapter.readAt?.formatted() ?? "No date...")") }
+                            if historyType == .all { Text("Uploaded at: \(chapter.uploadedAt?.formatted() ?? "No date...")") }
+                        }
+                        .font(.footnote)
+                    }
+                }
+                .frame(height: 120)
+            }
+        }
+    }
 }

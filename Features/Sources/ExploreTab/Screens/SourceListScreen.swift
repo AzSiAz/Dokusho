@@ -10,10 +10,10 @@ import DataKit
 import SwiftUI
 
 struct SourceListScreen: View {
-    @Environment(\.modelContext) var ctx
+    @Environment(\.modelContext) var modelContext
     @Environment(ScraperService.self) var scraperService
     
-    @Query var scrapers: [Scraper]
+    @Query(sort: [SortDescriptor(\Scraper.position), SortDescriptor(\Scraper.name)]) var scrapers: [Scraper]
 
     var body: some View {
         List {
@@ -30,6 +30,6 @@ struct SourceListScreen: View {
             }
         }
         .navigationTitle("Available Sources")
-        .task(id: scrapers) { scraperService.upsertAllSource() }
+        .task(id: scrapers) { scraperService.upsertAllSource(in: modelContext.container) }
     }
 }

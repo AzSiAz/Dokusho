@@ -1,6 +1,10 @@
 import Foundation
 import SwiftData
 
+public enum SerieChapterHistoryType: String, CaseIterable {
+    case all = "Update", read = "Read"
+}
+
 public extension FetchDescriptor where T: SerieChapter {
     static func chaptersForSerie(serieId: String, scraperId: UUID) -> FetchDescriptor<T> {
         FetchDescriptor(
@@ -12,5 +16,23 @@ public extension FetchDescriptor where T: SerieChapter {
                 SortDescriptor(\.chapter, order: .reverse),
             ]
         )
+    }
+    
+    static func chapters(historyType: SerieChapterHistoryType, searchTerm: String) -> FetchDescriptor<T> {
+        var descriptor = FetchDescriptor()
+        
+        descriptor.sortBy = historyType == .all ? [.init(\.uploadedAt, order: .reverse)] : [.init(\.readAt, order: .reverse)]
+        descriptor.fetchLimit = 200
+        descriptor.predicate = historyType == .all ?
+            #Predicate<T> {
+                if !searchTerm.isEmpty { $0.serie!.title!.contains(searchTerm) }
+                else { true }
+            } :
+            #Predicate<T> {
+                if !searchTerm.isEmpty { $0.readAt != nil && $0.serie!.title!.contains(searchTerm) }
+                else { $0.readAt != nil }
+            }
+        
+        return descriptor
     }
 }

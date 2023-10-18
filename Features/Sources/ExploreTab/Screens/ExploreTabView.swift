@@ -4,7 +4,7 @@ import DataKit
 import SharedUI
 
 public struct ExploreTabView: View {
-    @Environment(\.modelContext) var context
+    @Environment(\.modelContext) var modelContext
     @Environment(ScraperService.self) var scrapersService
 
     @Query(.activeScrapersByPosition()) var scrapers: [Scraper]
@@ -22,8 +22,13 @@ public struct ExploreTabView: View {
                         ScraperRow(scraper: scraper)
                     }
                 }
-                .onMove(perform: { scrapersService.onMove(offsets: $0, position: $1) })
+                .onMove(perform: { scrapersService.onMove(offsets: $0, position: $1, in: modelContext.container) })
             }
+            .overlay(content: {
+                if scrapers.isEmpty {
+                    ContentUnavailableView("No Scraper", systemImage: "safari", description: Text("Please enable a scraper to explore"))
+                }
+            })
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: { showSourceEdit.toggle() }) {
