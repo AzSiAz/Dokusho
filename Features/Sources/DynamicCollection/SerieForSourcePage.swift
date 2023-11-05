@@ -7,12 +7,12 @@ import SerieDetail
 public struct SerieForSourcePage: View {
 //    @GRDBQuery.Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
-    @Bindable var scraper: Scraper
+//    @Bindable var scraper: Scraper
 
     private var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
     
     public init(scraper: Scraper) {
-        self.scraper = scraper
+//        self.scraper = scraper
 //        _list = Query(DetailedMangaInListRequest(requestType: .scraper(scraper: scraper)))
     }
     

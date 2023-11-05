@@ -9,26 +9,26 @@ enum LoadingState {
 }
 
 public struct ExploreSourceView: View {
-    @Environment(\.modelContext) var modelContext
+    @Harmony var harmony
     @Environment(ScraperService.self) var scraperService
     @Environment(SerieService.self) var serieService
-    
-    @Query var inCollection: [Serie]
-    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
-    
-    @Bindable private var scraper: Scraper
 
+//    @Query var inCollection: [Serie]
+//    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
+
+    private var scraper: Scraper
+    
     @State private var nextPage = 1
     @State private var isLoading = false
     @State private var type: SourceFetchType = .latest
     @State private var error = false
     @State private var series = OrderedSet<SourceSmallSerie>()
-
+    
     public init(scraper: Scraper) {
         self.scraper = scraper
-        self._inCollection = Query(.seriesInCollection(scraperId: scraper.id))
+//        self._inCollection = Query(.seriesInCollection(scraperId: scraper.id))
     }
-
+    
     public var body: some View {
         ScrollView {
             switch(error, series.count) {
@@ -49,7 +49,7 @@ public struct ExploreSourceView: View {
         .task { await fetchList(clean: true) }
         .onChange(of: type) { _, _ in Task { await fetchList(clean: true, typeChange: true) } }
         .navigationDestination(for: SourceSmallSerie.self) { serie in
-            SerieDetailScreen(serieId: serie.id, scraperId: scraper.id)
+            SerieDetailScreen(serieID: serie.id, scraperID: scraper.id)
         }
     }
     
@@ -65,10 +65,11 @@ public struct ExploreSourceView: View {
     var SerieListBlock: some View {
         SerieList(series: series) { serie in
             NavigationLink(value: serie) {
-                let found = inCollection.first { $0.internalId == serie.id }
-                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection?.name)
+//                let found = inCollection.first { $0.internalId == serie.id }
+                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl)
+//                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection?.name)
                     .serieCardFrame()
-                    .contextMenu { ContextMenu(serie: serie) }
+//                    .contextMenu { ContextMenu(serie: serie) }
                     .task {
                         if series.last == serie {
                             await fetchList()
@@ -113,21 +114,22 @@ public struct ExploreSourceView: View {
         .frame(maxWidth: 160)
     }
     
-    @ViewBuilder
-    func ContextMenu(serie: SourceSmallSerie) -> some View {
-        ForEach(collections) { collection in
-            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
-                Text("Add to \(collection.name ?? "")")
-            }
-        }
-    }
+//    @ViewBuilder
+//    func ContextMenu(serie: SourceSmallSerie) -> some View {
+//        ForEach(collections) { collection in
+//            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
+//                Text("Add to \(collection.name ?? "")")
+//            }
+//        }
+//    }
 }
 
 extension ExploreSourceView {
     func fetchList(clean: Bool = false, typeChange: Bool = false) async {
         guard
             isLoading == false,
-            (clean && !typeChange && self.series.isEmpty) || typeChange
+            let source = scraperService.getSource(sourceId: scraper.id)
+//            (!clean && !typeChange && self.series.isEmpty) || typeChange
         else { return }
         
         defer {
@@ -146,14 +148,12 @@ extension ExploreSourceView {
         }
         
         do {
-            guard let source = scraperService.getSource(sourceId: scraper.id) else { return }
-
             let newManga = try await type == .latest ? source.fetchLatestUpdates(page: nextPage) : source.fetchPopularSerie(page: nextPage)
             
             withAnimation {
                 if clean { self.series = OrderedSet(newManga.data) }
                 else { self.series.append(contentsOf: newManga.data) }
-
+                
                 self.nextPage += 1
             }
         } catch {
@@ -167,10 +167,10 @@ extension ExploreSourceView {
     func addToCollection(id: SourceSmallSerie.ID, collection: SerieCollection) async {
         guard
             let source = scraperService.getSource(sourceId: scraper.id),
-            let serieID = try? await serieService.upsert(source: source, serieId: id, in: modelContext.container),
-            let serie = modelContext.model(for: serieID) as? Serie
+            let serie = try? await source.fetchSerieDetail(serieId: id)
         else { return }
         
-        collection.series?.append(serie)
+        print(serie)
+//        collection.series?.append(serie)
     }
 }

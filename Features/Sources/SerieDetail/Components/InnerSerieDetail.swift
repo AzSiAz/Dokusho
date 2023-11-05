@@ -7,22 +7,26 @@ import SwiftUILayouts
 
 public struct InnerSerieDetail: View {
     @Environment(\.horizontalSizeClass) var horizontalSize
-    @Environment(\.modelContext) var modelContext
     @Environment(SerieService.self) var serieService
+    
+    @Harmony var harmony
 
-    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
-
-    @Bindable var serie: Serie
-    @Bindable var scraper: Scraper
+    @Query(AllSerieCollectionRequest()) var collections
 
     @State var orientation = DeviceOrientation()
     @State var readerManager = ReaderManager()
     @State var showMoreDesc = false
     @State var addToCollectionSheet = false
+    @State var isRefreshing = false
+    
+    var serie: Serie
+    var scraper: Scraper
+    var collection: SerieCollection?
 
-    public init(serie: Serie, scraper: Scraper) {
-        self.serie = serie
-        self.scraper = scraper
+    public init(data: SerieWithDetail) {
+        self.serie = data.serie
+        self.scraper = data.scraper
+        self.collection = data.serieCollection
     }
     
     public var body: some View {
@@ -69,7 +73,7 @@ public struct InnerSerieDetail: View {
 
                 ScrollView {
                     ChapterListInformation(serie: serie, scraper: scraper)
-//                        .disabled(refreshing)
+                        .disabled(isRefreshing)
                         .padding(.bottom)
                 }
                 .id("Chapter")
@@ -87,7 +91,7 @@ public struct InnerSerieDetail: View {
             SynopsisRow
             GenreRow
             ChapterListInformation(serie: serie, scraper: scraper)
-//                .disabled(refreshing)
+                .disabled(isRefreshing)
                 .padding(.bottom)
         }
         .refreshable { await update() }
@@ -102,7 +106,7 @@ public struct InnerSerieDetail: View {
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading) {
-                    Text(serie.title ?? "")
+                    Text(serie.title)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.subheadline.bold())
@@ -111,14 +115,14 @@ public struct InnerSerieDetail: View {
                 
                 VStack(alignment: .center) {
                     VStack {
-                        ForEach(serie.authors ?? []) { author in
+                        ForEach(serie.authors) { author in
                             Text(author)
                                 .font(.caption.italic())
                         }
                     }
                     .padding(.bottom, 5)
                     
-                    Text(serie.status?.rawValue ?? "")
+                    Text(serie.status.rawValue)
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     
@@ -133,15 +137,11 @@ public struct InnerSerieDetail: View {
     @ViewBuilder
     var ActionRow: some View {
         ControlGroup {
-            Button(action: {
-                withAnimation {
-                    addToCollectionSheet.toggle()
-                }
-            }) {
+            Button(action: { toggleAddToSerieCollection() }) {
                 VStack(alignment: .center, spacing: 1) {
                     Image(systemName: "heart")
-                        .symbolVariant(serie.collection != nil ? .fill : .none)
-                    Text(serie.collection?.name ?? "Favoris")
+                        .symbolVariant(serie.collectionID != nil ? .fill : .none)
+                    Text(collection?.name ?? "Favoris")
                 }
             }
             .disabled(collections.count == 0)
@@ -151,19 +151,15 @@ public struct InnerSerieDetail: View {
 
                 collections.forEach { col in
                     actions.append(.default(
-                        Text(col.name ?? ""),
-                        action: {
-                            serie.collection = col
-                        }
+                        Text(col.name),
+                        action: { changeCollection(serieCollectionID: col.id) }
                     ))
                 }
 
-                if let collectionName = serie.collection?.name {
+                if let collectionName = collection?.name {
                     actions.append(.destructive(
                         Text("Remove from \(collectionName)"),
-                        action: {
-                            serie.collection = nil
-                        }
+                        action: { changeCollection(serieCollectionID: nil) }
                     ))
                 }
 
@@ -182,17 +178,13 @@ public struct InnerSerieDetail: View {
     @ViewBuilder
     var SynopsisRow: some View {
         VStack(spacing: 5) {
-            Text(serie.synopsis ?? "")
+            Text(serie.synopsis)
                 .lineLimit(showMoreDesc ? nil : 4)
                 .fixedSize(horizontal: false, vertical: true)
             
             HStack {
                 Spacer()
-                Button(action: {
-                    withAnimation {
-                        showMoreDesc.toggle()
-                    }
-                }) {
+                Button(action: { toggleShowMore() }) {
                     Text("Show \(!showMoreDesc ? "more" : "less")")
                 }
             }
@@ -203,7 +195,7 @@ public struct InnerSerieDetail: View {
     @ViewBuilder
     var GenreRow: some View {
         FlowLayout(alignment: .center) {
-            ForEach(serie.genres ?? []) { genre in
+            ForEach(serie.genres) { genre in
                 Button(genre, action: {  })
                     .buttonStyle(.bordered)
             }
@@ -214,18 +206,37 @@ public struct InnerSerieDetail: View {
 extension InnerSerieDetail {
     func getMangaURL() -> URL? {
         guard
-            let source = ScraperService.shared.getSource(sourceId: scraper.id),
-            let mangaId = serie.internalId
+            let source = ScraperService.shared.getSource(sourceId: scraper.id)
         else { return nil }
 
-        return source.serieUrl(serieId: mangaId)
+        return source.serieUrl(serieId: serie.internalID)
     }
 
     func update() async {
         guard
             let source = ScraperService.shared.getSource(sourceId: scraper.id),
-            let serieId = serie.internalId,
-            let _ = try? await serieService.update(source: source, serieId: serieId, in: modelContext.container)
+            let _ = try? await serieService.update(source: source, serieID: serie.internalID, harmonic: harmony)
         else { return }
+    }
+    
+    func changeCollection(serieCollectionID newSerieCollectionID: SerieCollection.ID?) {
+        Task {
+            var serie = serie
+            serie.changeCollection(serieCollectionID: newSerieCollectionID)
+            
+            try await harmony.save(record: serie)
+        }
+    }
+    
+    func toggleAddToSerieCollection() {
+        withAnimation {
+            addToCollectionSheet.toggle()
+        }
+    }
+    
+    func toggleShowMore() {
+        withAnimation {
+            showMoreDesc.toggle()
+        }
     }
 }

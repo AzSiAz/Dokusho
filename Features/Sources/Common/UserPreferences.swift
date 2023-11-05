@@ -16,6 +16,9 @@ public class UserPreferences {
         @AppStorage("USE_NEW_VERTICAL_READER") var useNewVerticalReader = false
         @AppStorage("NUMBER_OF_PRELOADED_IMAGES") var numberOfPreloadedImages = 3
         
+        // Serie Detail Preference
+        @AppStorage("SHOW_EXTERNAL_CHAPTERS") var showExternalChapters = true
+        
         // Library preference
         @AppStorage("ONLY_UPDATE_ALL_READ") var onlyUpdateAllRead = true
         
@@ -49,10 +52,17 @@ public class UserPreferences {
         }
     }
     
+    public var showExternalChapters: Bool {
+        didSet {
+            storage.showExternalChapters = showExternalChapters
+        }
+    }
+    
     private init() {
         useNewHorizontalReader = storage.useNewHorizontalReader
         useNewVerticalReader = storage.useNewVerticalReader
         numberOfPreloadedImages = storage.numberOfPreloadedImages
         onlyUpdateAllRead = storage.onlyUpdateAllRead
+        showExternalChapters = storage.showExternalChapters
     }
 }

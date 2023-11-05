@@ -25,9 +25,12 @@ let package = Package(
          .package(url: "https://github.com/kean/Nuke", exact: "12.1.6"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
-         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.0.4"),
+         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.0.5"),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.5.0"),
          .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main"),
+         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.21.0"),
+         .package(url: "https://github.com/groue/GRDBQuery", exact: "0.7.0"),
+         .package(url: "https://github.com/aaronpearce/Harmony", branch: "main"),
     ],
     targets: [
         .target(
@@ -72,7 +75,10 @@ let package = Package(
             name: "DataKit",
             dependencies: [
                 .byName(name: "Common"),
-                .byName(name: "SerieScraper")
+                .byName(name: "SerieScraper"),
+                .product(name: "GRDB", package: "GRDB.swift"),
+                .byName(name: "GRDBQuery"),
+                .product(name: "Harmony", package: "Harmony")
             ]
         ),
         

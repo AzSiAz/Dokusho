@@ -1,24 +1,24 @@
 import Foundation
-import SwiftData
+import GRDB
 import SerieScraper
 
-@Model
-public class SerieChapter {
-    public var internalId: String?
-    public var title: String?
+public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
+    public var id: UUID
+    public var internalID: String
+    public var title: String
     public var subTitle: String?
-    public var uploadedAt: Date?
+    public var uploadedAt: Date
     public var volume: Float?
-    public var chapter: Float?
+    public var chapter: Float
     public var readAt: Date?
     public var progress: Int?
     public var externalUrl: URL?
-    
-    @Relationship()
-    public var serie: Serie?
-    
-    public init(from data: SourceChapter, serie: Serie? = nil) {
-        self.internalId = data.id
+
+    public var serieID: UUID
+
+    public init(from data: SourceChapter, serieID: UUID) {
+        self.id = UUID()
+        self.internalID = data.id
         self.title = data.name
         self.subTitle = data.subTitle
         self.uploadedAt = data.dateUpload
@@ -26,13 +26,13 @@ public class SerieChapter {
         self.volume = data.volume
         self.externalUrl = data.externalUrl
         self.progress = nil
-        
-        self.serie = serie
+
+        self.serieID = serieID
     }
-    
-    public func update(from data: SourceChapter) {
+
+    public mutating func update(from data: SourceChapter) {
         if (self.title != data.name) { self.title = data.name }
-        if (self.subTitle != data.subTitle) { self.title = data.subTitle }
+        if (self.subTitle != data.subTitle) { self.subTitle = data.subTitle }
         if (self.uploadedAt != data.dateUpload) { self.uploadedAt = data.dateUpload }
         if (self.chapter != data.chapter) { self.chapter = data.chapter }
         if (self.volume != data.volume) { self.volume = data.volume }

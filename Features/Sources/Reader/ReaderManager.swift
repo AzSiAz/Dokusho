@@ -17,7 +17,7 @@ public class ReaderManager {
         public var scraper: Scraper
         public var chapters: [SerieChapter]
         
-        public var id: String? { self.chapter.internalId }
+        public var id: String? { self.chapter.internalID }
     }
     
     public init() {}

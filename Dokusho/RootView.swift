@@ -8,13 +8,14 @@
 import Foundation
 import SwiftUI
 import SettingsTab
-import HistoryTab
+//import HistoryTab
 import Backup
-import LibraryTab
+//import LibraryTab
 import ExploreTab
 import Common
 import DataKit
 
+@MainActor
 struct RootView: View {
     @Environment(BackupManager.self) var backupManager
 
@@ -25,12 +26,12 @@ struct RootView: View {
         else if UIScreen.isLargeScreen { iPadView }
         else { iPhoneView }
     }
-
+    
     @ViewBuilder
     var iPhoneView: some View {
         TabView(selection: $tab) {
 //            libraryTab
-            historyTab
+//            historyTab
             exploreTab
             settingTab
         }
@@ -42,27 +43,27 @@ struct RootView: View {
         iPhoneView
     }
     
-    @ViewBuilder
-    var libraryTab: some View {
-        LibraryTabView()
-            .tabItem { Label("Library", systemImage: "books.vertical") }
-            .tag(ActiveTab.library)
-    }
-    
-    @ViewBuilder
-    var historyTab: some View {
-        HistoryTabView()
-            .tabItem { Label("History", systemImage: "clock") }
-            .tag(ActiveTab.history)
-    }
-    
+//    @ViewBuilder
+//    var libraryTab: some View {
+//        LibraryTabView()
+//            .tabItem { Label("Library", systemImage: "books.vertical") }
+//            .tag(ActiveTab.library)
+//    }
+//    
+//    @ViewBuilder
+//    var historyTab: some View {
+//        HistoryTabView()
+//            .tabItem { Label("History", systemImage: "clock") }
+//            .tag(ActiveTab.history)
+//    }
+//
     @ViewBuilder
     var exploreTab: some View {
         ExploreTabView()
             .tabItem { Label("Explore", systemImage: "safari") }
             .tag(ActiveTab.explore)
     }
-
+//
     @ViewBuilder
     var settingTab: some View {
         SettingsTabScreen()

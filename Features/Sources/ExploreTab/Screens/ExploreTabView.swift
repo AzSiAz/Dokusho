@@ -4,14 +4,15 @@ import DataKit
 import SharedUI
 
 public struct ExploreTabView: View {
-    @Environment(\.modelContext) var modelContext
+    @Harmony var harmony
+    
     @Environment(ScraperService.self) var scrapersService
 
-    @Query(.activeScrapersByPosition()) var scrapers: [Scraper]
+    @Query(ScrapersRequest(filter: .active)) var scrapers: [Scraper]
 
     @State var showSourceEdit: Bool = false
     @State var showSourceSearch: Bool = false
-    
+
     public init() {}
     
     public var body: some View {
@@ -22,13 +23,17 @@ public struct ExploreTabView: View {
                         ScraperRow(scraper: scraper)
                     }
                 }
-                .onMove(perform: { scrapersService.onMove(offsets: $0, position: $1, in: modelContext.container) })
-            }
-            .overlay(content: {
-                if scrapers.isEmpty {
-                    ContentUnavailableView("No Scraper", systemImage: "safari", description: Text("Please enable a scraper to explore"))
+                .onMove { offsets, position in
+                    Task { [offsets, position] in
+                        await scrapersService.onMove(scrapers: scrapers, offsets: offsets, position: position, in: harmony)
+                    }
                 }
-            })
+            }
+            .overlay {
+                if scrapers.isEmpty {
+                    ContentUnavailableView("No Source", systemImage: "safari", description: Text("Please enable a source to explore"))
+                }
+            }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: { showSourceEdit.toggle() }) {

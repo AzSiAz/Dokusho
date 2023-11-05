@@ -18,6 +18,12 @@ struct DokushoApp: App {
     @State private var scraperService = ScraperService.shared
     @State private var serieService = SerieService.shared
 
+    @Harmony(
+        records: [Scraper.self, SerieCollection.self, Serie.self, SerieChapter.self],
+        configuration: Configuration(sharedAppGroupContainerIdentifier: "group.tech.azsias.Dokusho"),
+        migrator: .dokushoMigration
+    ) var harmony
+
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -26,7 +32,7 @@ struct DokushoApp: App {
                 .environment(userPreferences)
                 .environment(scraperService)
                 .environment(serieService)
+                .environment(\.dbQueue, harmony.reader)
         }
-        .modelContainer(.dokusho())
     }
 }

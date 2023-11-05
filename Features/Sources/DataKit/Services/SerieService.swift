@@ -1,70 +1,57 @@
 import Foundation
-import SwiftData
+import Harmony
 import OSLog
 
 @Observable
 public class SerieService {
     public static let shared = SerieService()
     
-    private let logger = Logger.scraperService
+    private let logger = Logger.serieService
     
     private init() {}
 
-    @MainActor
-    public func upsert(source: Source, serieId: String, in container: ModelContainer? = nil) async throws -> PersistentIdentifier {
-        let context = ModelContext(container ?? .dokusho())
-        context.autosaveEnabled = false
-        
-        guard 
-            let result = try? context.fetch(.serieBySourceIdAndInternalId(scraperId: source.id, id: serieId)),
-            let serie = result.first
+    public func upsert(source: Source, serieID: String, harmonic: Harmonic) async throws {
+        guard var _ = try await harmonic.reader.read({ try Serie.all().whereSerie(serieID: serieID, scraperID: source.id).fetchOne($0) })
         else {
-            let data = try await source.fetchSerieDetail(serieId: serieId)
-            let chapters = data.chapters.map { SerieChapter(from: $0) }
-            let serie = Serie(from: data, scraperId: source.id, chapters: chapters)
-            
-            context.insert(serie)
-            
-            try context.save()
-            
-            return serie.persistentModelID
+            let sourceData = try await source.fetchSerieDetail(serieId: serieID)
+            let serie = Serie(from: sourceData, scraperID: source.id)
+            let chapters = sourceData.chapters.map { SerieChapter(from: $0, serieID: serie.id) }
+
+            try await harmonic.save(record: serie)
+            try await harmonic.save(records: chapters)
+
+            return
         }
         
-        return serie.persistentModelID
+        return
     }
 
-    @MainActor
-    public func update(source: Source, serieId: String, in container: ModelContainer? = nil) async throws {
-        let context = ModelContext(container ?? .dokusho())
-        context.autosaveEnabled = false
-        
+    public func update(source: Source, serieID: String, harmonic: Harmonic) async throws {
         guard
-            let result = try? context.fetch(.serieBySourceIdAndInternalId(scraperId: source.id, id: serieId)),
-            let serie = result.first,
-            let data = try? await source.fetchSerieDetail(serieId: serieId)
+            var serie = try await harmonic.reader.read({ try Serie.all().whereSerie(serieID: serieID, scraperID: source.id).fetchOne($0) }),
+            let sourceData = try? await source.fetchSerieDetail(serieId: serieID)
         else { return }
 
-        serie.update(from: data)
-        
+        serie.update(from: sourceData)
+
         guard
-            !data.chapters.isEmpty,
-            let chapters = try? context.fetch(.chaptersForSerie(serieId: serieId, scraperId: source.id))
+            !sourceData.chapters.isEmpty,
+            let chapters = try? await harmonic.reader.read({ [serie] in try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll($0) })
         else { return }
 
-        for sourceChapter in data.chapters {
-            if let dbChapter = chapters.first(where: { $0.internalId == sourceChapter.id }) {
+        for sourceChapter in sourceData.chapters {
+            if var dbChapter = chapters.first(where: { $0.internalID == sourceChapter.id }) {
                 dbChapter.update(from: sourceChapter)
+                try await harmonic.save(record: dbChapter)
             } else {
-                let dbChapter = SerieChapter(from: sourceChapter)
-                serie.chapters?.append(dbChapter)
+                let dbChapter = SerieChapter(from: sourceChapter, serieID: serie.id)
+                try await harmonic.save(record: dbChapter)
             }
         }
-        
+
         for dbChapter in chapters {
-            if (data.chapters.first(where: { $0.id == dbChapter.internalId }) != nil) { continue }
-            context.delete(dbChapter)
+            if (sourceData.chapters.first(where: { $0.id == dbChapter.internalID }) != nil) { continue }
+            try await harmonic.delete(record: dbChapter)
         }
-        
-        try context.save()
     }
 }

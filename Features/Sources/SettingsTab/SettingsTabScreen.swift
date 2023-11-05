@@ -40,6 +40,10 @@ public struct SettingsTabScreen: View {
                     Stepper("Preloaded images: \(userPreference.numberOfPreloadedImages)", value: $userPreferences.numberOfPreloadedImages, in: 3...6, step: 1)
                 }
                 
+                Section("Serie Detail") {
+                    Toggle("Show external chapter", isOn: $userPreferences.showExternalChapters)
+                }
+                
                 Section("Cache") {
                     Button(action: { showImageCleanupAlert.toggle() }) {
                         Text("Clear image cache")

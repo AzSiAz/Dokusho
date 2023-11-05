@@ -28,7 +28,7 @@ public class SerieCollectionPageViewModel {
         }
         
         refreshTask = Task {
-            try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
+//            try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
         }
         
         try? await refreshTask?.value

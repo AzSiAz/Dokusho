@@ -2,27 +2,37 @@ import SwiftUI
 import DataKit
 
 public struct SerieDetailScreen: View {
-    @Environment(\.modelContext) var modelContext
     @Environment(ScraperService.self) var scraperService
     @Environment(SerieService.self) var serieService
+    
+    @Harmony var harmony
+    
+    @Query<OneSerieWithDetailRequest> var serie: SerieWithDetail?
 
-    @State var scraper: Scraper? = nil
-    @State var serie: Serie? = nil
+    @State var isError: Bool = false
+    
+    var serieID: String
+    var scraperID: Scraper.ID
 
-    var serieId: String
-    var scraperId: UUID
-
-    public init(serieId: String, scraperId: UUID) {
-        self.serieId = serieId
-        self.scraperId = scraperId
+    public init(serieID: String, scraperID: UUID) {
+        self.serieID = serieID
+        self.scraperID = scraperID
+        self._serie = Query(OneSerieWithDetailRequest(serieID: serieID, scraperID: scraperID))
     }
 
     public var body: some View {
         Group {
-            if let serie, let scraper {
-                InnerSerieDetail(serie: serie, scraper: scraper)
+            if let serie {
+                InnerSerieDetail(data: serie)
             } else {
                 ProgressView()
+            }
+            
+            if isError {
+                ScrollView {
+                    ContentUnavailableView("Something happened, try to refresh maybe ?", systemImage: "arrow.clockwise")
+                }
+                .refreshable { await upsert() }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -31,26 +41,19 @@ public struct SerieDetailScreen: View {
 }
 
 private extension SerieDetailScreen {
-
-    @MainActor
     func upsert() async {
-        do {
-            let context = ModelContext(modelContext.container)
+        withAnimation {
+            isError = false
+        }
 
-            guard
-                let source = scraperService.getSource(sourceId: scraperId),
-                let scraper = try context.fetch(.getScrapersBySourceId(id: scraperId)).first,
-                let id = try? await serieService.upsert(source: source, serieId: serieId, in: modelContext.container),
-                let serie = modelContext.model(for: id) as? Serie,
-                let scraper = modelContext.model(for: scraper.persistentModelID) as? Scraper
-            else { return }
+        do {
+            guard let source = scraperService.getSource(sourceId: scraperID) else { return }
             
-            withAnimation {
-                self.serie = serie
-                self.scraper = scraper
-            }
+            try await serieService.upsert(source: source, serieID: serieID, harmonic: harmony)
         } catch {
-            print(error)
+            withAnimation {
+                isError = true
+            }
         }
     }
 }

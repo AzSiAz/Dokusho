@@ -8,19 +8,21 @@
 import SwiftUI
 import DataKit
 import Reader
+import Common
 
 public struct ChapterListInformation: View {
     @Environment(ReaderManager.self) var readerManager
+    @Environment(UserPreferences.self) var userPreferences
     
-    @Query var chapters: [SerieChapter]
+    @Query<SerieChaptersForSerie> var chapters: [SerieChapter]
     
-    @Bindable var serie: Serie
-    @Bindable var scraper: Scraper
+    var serie: Serie
+    var scraper: Scraper
     
     public init(serie: Serie, scraper: Scraper) {
         self.serie = serie
         self.scraper = scraper
-        self._chapters = .init(.chaptersForSerie(serieId: serie.internalId!, scraperId: scraper.id))
+        self._chapters = Query(SerieChaptersForSerie(serieID: serie.id))
     }
 
     public var body: some View {
@@ -28,17 +30,15 @@ public struct ChapterListInformation: View {
             HStack {
                 Text("Chapter List")
                     .font(.title3)
-                
                 Spacer()
-                
                 HStack {
-//                    ChaptersButton(filter: $chapters.filterAll, order: $chapters.ascendingOrder)
+                    ChaptersButton(filter: $chapters.filter, order: $chapters.order)
                 }
             }
             .frame(height: 24)
             .padding(.vertical, 10)
             .padding(.horizontal, 15)
-            
+
             chapterCollections
                 .padding(.horizontal, 10)
         }
@@ -54,7 +54,7 @@ public struct ChapterListInformation: View {
                             NextUnreadChapter()
                         }
                     } else {
-                        Button(action: { readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters) }) {
+                        Button(action: { selectChapter(chapter: chapter) }) {
                             NextUnreadChapter()
                         }
                     }
@@ -64,25 +64,26 @@ public struct ChapterListInformation: View {
                 .padding(.horizontal)
             }
 
-            ForEach(chapters) { chapter in
-                ChapterListRow(serie: serie, scraper: scraper, chapter: chapter)
+            let chs = userPreferences.showExternalChapters ? chapters : chapters.filter { $0.externalUrl == nil }
+            ForEach(chs) { chapter in
+                ChapterListRow(serie: serie, scraper: scraper, chapter: chapter, chapters: chapters)
             }
         }
     }
-    
+
     @ViewBuilder
     func NextUnreadChapter() -> some View {
         Text("Read next unread chapter")
             .frame(minWidth: 0, maxWidth: .infinity)
     }
-    
+
     @ViewBuilder
-    func ChaptersButton(filter: Binding<Bool>, order: Binding<Bool>) -> some View {
+    func ChaptersButton(filter: Binding<SerieChaptersForSerie.Filter>, order: Binding<SerieChaptersForSerie.Order>) -> some View {
         Button(action: { filter.wrappedValue.toggle() }) {
             Image(systemName: "line.3.horizontal.decrease.circle")
                 .resizable()
                 .scaledToFit()
-                .symbolVariant(filter.wrappedValue == true ? .none : .fill)
+                .symbolVariant(filter.wrappedValue != .all ? .fill : .none)
         }
         .padding(.trailing, 5)
         
@@ -99,7 +100,11 @@ private extension ChapterListInformation {
         return chapters
             .lazy
             .sorted { $0.volume ?? 0 < $1.volume ?? 0 }
-            .sorted { $0.chapter ?? 0 < $1.chapter ?? 0 }
+            .sorted { $0.chapter < $1.chapter }
             .first { $0.readAt == nil }
+    }
+    
+    func selectChapter(chapter: SerieChapter) {
+        readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters)
     }
 }

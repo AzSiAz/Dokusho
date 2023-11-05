@@ -1,29 +1,25 @@
 import Foundation
-import SwiftData
 import SerieScraper
 
-@Model
-public class Serie {
-    public var internalId: String?
-    public var title: String?
-    public var cover: URL?
-    public var synopsis: String?
-    public var alternateTitles: [String]?
-    public var genres: [String]?
-    public var authors: [String]?
-    public var status: Status?
-    public var kind: Kind?
-    public var scraperId: UUID?
-    public var readerDirection: ReaderDirection?
+public struct Serie: Identifiable, Equatable, Codable, Hashable {
+    public var id: UUID
+    public var internalID: String
+    public var title: String
+    public var cover: URL
+    public var synopsis: String
+    public var alternateTitles: [String]
+    public var genres: [String]
+    public var authors: [String]
+    public var status: Status
+    public var kind: Kind
+    public var readerDirection: ReaderDirection
+    
+    public var scraperID: UUID
+    public var collectionID: UUID?
 
-    @Relationship()
-    public var collection: SerieCollection?
-
-    @Relationship(deleteRule: .cascade, inverse: \SerieChapter.serie)
-    public var chapters: [SerieChapter]?
-
-    public init(from data: SourceSerie, scraperId: UUID, collection: SerieCollection? = nil, chapters: [SerieChapter] = []) {
-        self.internalId = data.id
+    public init(from data: SourceSerie, scraperID: UUID, collectionID: UUID? = nil) {
+        self.id = UUID()
+        self.internalID = data.id
         self.title = data.title
         self.cover = data.cover
         self.synopsis = data.synopsis
@@ -34,17 +30,20 @@ public class Serie {
         self.kind = Kind(from: data.type)
         self.readerDirection = ReaderDirection(from: data.type)
 
-        self.scraperId = scraperId
-        self.chapters = chapters
-        self.collection = collection
+        self.scraperID = scraperID
+        self.collectionID = collectionID
     }
     
-    public func update(from data: SourceSerie) {
+    public mutating func update(from data: SourceSerie) {
         if (self.title != data.title) { self.title = data.title }
         if (self.cover != data.cover) { self.cover = data.cover }
         if (self.synopsis != data.synopsis) { self.synopsis = data.synopsis }
         if (self.alternateTitles != data.alternateTitles) { self.alternateTitles = data.alternateTitles }
         if (self.status != Status(from: data.status)) { self.status = Status(from: data.status) }
         if (self.kind != Kind(from: data.type)) { self.kind = Kind(from: data.type) }
+    }
+    
+    public mutating func changeCollection(serieCollectionID: SerieCollection.ID?) {
+        self.collectionID = serieCollectionID
     }
 }

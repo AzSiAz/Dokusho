@@ -4,19 +4,17 @@ import Reader
 
 public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
-    @Environment(\.modelContext) var modelContext
     
-    @Query var chapters: [SerieChapter]
+    var chapters: [SerieChapter]
+    var scraper: Scraper
+    var chapter: SerieChapter
+    var serie: Serie
     
-    @Bindable var scraper: Scraper
-    @Bindable var chapter: SerieChapter
-    @Bindable var serie: Serie
-    
-    public init(serie: Serie, scraper: Scraper, chapter: SerieChapter) {
+    public init(serie: Serie, scraper: Scraper, chapter: SerieChapter, chapters: [SerieChapter]) {
         self.serie = serie
         self.scraper = scraper
         self.chapter = chapter
-        self._chapters = .init(.chaptersForSerie(serieId: serie.internalId!, scraperId: scraper.id))
+        self.chapters = chapters
     }
     
     public var body: some View {
@@ -28,7 +26,7 @@ public struct ChapterListRow: View {
                 .buttonStyle(.plain)
                 .padding(.vertical, 5)
             } else {
-                Button(action: { readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters) }) {
+                Button(action: { selectChapter() }) {
                     content
                 }
                 .buttonStyle(.plain)
@@ -43,8 +41,8 @@ public struct ChapterListRow: View {
     var content: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(chapter.title ?? "")
-                Text(chapter.uploadedAt?.formatted() ?? "")
+                Text(chapter.title)
+                Text(chapter.uploadedAt.formatted())
                     .font(.system(size: 12))
                 if let readAt = chapter.readAt {
                     Text("Read At: \(readAt.formatted())")
@@ -63,7 +61,7 @@ public struct ChapterListRow: View {
             }
         }
     }
-    
+
     @ViewBuilder
     var chapterRowContextMenu: some View {
         Button(action: { changeChapterStatus(for: chapter) }) {
@@ -87,45 +85,49 @@ public struct ChapterListRow: View {
 
 private extension ChapterListRow {
     func changeChapterStatus(for chapter: SerieChapter) {
-        withAnimation {
-            if chapter.readAt == nil {
-                chapter.readAt = .now
-            } else {
-                chapter.readAt = nil
-            }
-        }
+//        withAnimation {
+//            if chapter.readAt == nil {
+//                chapter.readAt = .now
+//            } else {
+//                chapter.readAt = nil
+//            }
+//        }
     }
 
     func changePreviousChapterStatus(for chapter: SerieChapter, in chapters: [SerieChapter], toRead: Bool) {
-        do {
-            let toUpdate = chapters
-                .lazy
-                .filter { toRead ? $0.readAt == nil : $0.readAt != nil }
-                .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
-                .filter { chapter.chapter ?? 0 > $0.chapter ?? 0 }
-                .map { $0.persistentModelID }
-            
-            let context = ModelContext(modelContext.container)
-            context.autosaveEnabled = false
-            
-            for chapterId in toUpdate {
-                if let found = context.model(for: chapterId) as? SerieChapter {
-                    if toRead { found.readAt = .now }
-                    else { found.readAt = nil }
-                }
-            }
-            
-            try context.save()
-        } catch {
-            print(error)
-        }
+//        do {
+//            let toUpdate = chapters
+//                .lazy
+//                .filter { toRead ? $0.readAt == nil : $0.readAt != nil }
+//                .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
+//                .filter { chapter.chapter ?? 0 > $0.chapter ?? 0 }
+//                .map { $0.persistentModelID }
+//            
+//            let context = ModelContext(modelContext.container)
+//            context.autosaveEnabled = false
+//            
+//            for chapterId in toUpdate {
+//                if let found = context.model(for: chapterId) as? SerieChapter {
+//                    if toRead { found.readAt = .now }
+//                    else { found.readAt = nil }
+//                }
+//            }
+//            
+//            try context.save()
+//        } catch {
+//            print(error)
+//        }
     }
 
     func hasPreviousUnreadChapter(for chapter: SerieChapter, chapters: [SerieChapter]) -> Bool {
         return chapters
             .lazy
             .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
-            .filter { chapter.chapter ?? 0 > $0.chapter ?? 0 }
+            .filter { chapter.chapter > $0.chapter }
             .contains { $0.readAt == nil }
+    }
+    
+    func selectChapter() {
+        readerManager.selectChapter(chapter: chapter, serie: serie, scraper: scraper, chapters: chapters)
     }
 }

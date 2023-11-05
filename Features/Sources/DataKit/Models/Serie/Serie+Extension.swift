@@ -1,8 +1,9 @@
 import Foundation
 import SerieScraper
+import GRDB
 
 public extension Serie {
-    enum Status: String, Codable {
+    enum Status: String, Codable, CaseIterable, DatabaseValueConvertible {
         case complete = "Complete", ongoing = "Ongoing", unknown = "Unknown"
         
         public init(from: SourceSerieCompletion) {
@@ -14,7 +15,7 @@ public extension Serie {
         }
     }
     
-    enum Kind: String, Codable {
+    enum Kind: String, Codable, CaseIterable, DatabaseValueConvertible {
         case manga = "Manga", manhua = "Manhua", manhwa = "Manhwa", doujinshi = "Doujinshi", unknown = "Unknown"
         
         public init(from: SourceSerieType) {
@@ -29,7 +30,7 @@ public extension Serie {
     }
     
     
-    enum ReaderDirection: String, Codable, CaseIterable {
+    enum ReaderDirection: String, Codable, CaseIterable, DatabaseValueConvertible {
         case rightToLeft = "Right to Left (Manga)"
         case leftToRight = "Left to Right (Manhua)"
         case vertical = "Vertical (Webtoon, no gaps)"
@@ -43,5 +44,61 @@ public extension Serie {
                 default: self = .rightToLeft
             }
         }
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, internalID, title, cover, synopsis, alternateTitles, genres, authors, status, kind, readerDirection, scraperID, collectionID
+    }
+}
+
+extension Serie: FetchableRecord, PersistableRecord {}
+
+extension Serie: TableRecord {
+    public static var databaseTableName: String = "serie"
+    
+    public static let scraper = belongsTo(Scraper.self)
+    public static let serieCollection = belongsTo(SerieCollection.self, key: "collectionID")
+    public static let chapters = hasMany(SerieChapter.self)
+    
+    public enum Columns {
+        public static let id = Column(CodingKeys.id)
+        public static let internalID = Column(CodingKeys.internalID)
+        public static let title = Column(CodingKeys.title)
+        public static let cover = Column(CodingKeys.cover)
+        public static let synopsis = Column(CodingKeys.synopsis)
+        public static let alternateTitles = Column(CodingKeys.alternateTitles)
+        public static let genres = Column(CodingKeys.genres)
+        public static let authors = Column(CodingKeys.authors)
+        public static let status = Column(CodingKeys.status)
+        public static let kind = Column(CodingKeys.kind)
+        public static let readerDirection = Column(CodingKeys.readerDirection)
+        public static let scraperID = Column(CodingKeys.scraperID)
+        public static let collectionID = Column(CodingKeys.collectionID)
+    }
+
+    public static let databaseSelection: [SQLSelectable] = [
+        Columns.id,
+        Columns.internalID,
+        Columns.title,
+        Columns.cover,
+        Columns.synopsis,
+        Columns.alternateTitles,
+        Columns.genres,
+        Columns.authors,
+        Columns.status,
+        Columns.kind,
+        Columns.readerDirection,
+        Columns.scraperID,
+        Columns.collectionID
+    ]
+}
+
+public extension DerivableRequest<Serie> {
+    func whereScraper(scraperID: UUID) -> Self {
+        filter(RowDecoder.Columns.scraperID == scraperID)
+    }
+
+    func whereSerie(serieID: String, scraperID: UUID) -> Self {
+        whereScraper(scraperID: scraperID).filter(RowDecoder.Columns.internalID == serieID)
     }
 }

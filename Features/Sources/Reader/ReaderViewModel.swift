@@ -59,9 +59,7 @@ public class ReaderViewModel {
         do {
             guard
                 let source = ScraperService.shared.getSource(sourceId: scraper.id),
-                let chapterId = currentChapter.internalId,
-                let mangaId = serie.internalId,
-                let data = try? await source.fetchChapterImages(serieId: mangaId, chapterId: chapterId)
+                let data = try? await source.fetchChapterImages(serieId: serie.internalID, chapterId: currentChapter.internalID)
             else { throw "Error fetching image for scraper" }
 
             let urls = data.map { $0.imageUrl }
@@ -71,7 +69,7 @@ public class ReaderViewModel {
             guard let firstImage = getOnlyImagesUrl().first else { throw "First Image not found" }
             self.tabIndex = firstImage
         } catch {
-            Logger.reader.info("Error loading chapter \(self.currentChapter.internalId): \(error)")
+            Logger.reader.info("Error loading chapter \(self.currentChapter.internalID): \(error)")
         }
 
         if isLoading {
@@ -166,7 +164,6 @@ public class ReaderViewModel {
             let nextChapter = getChapter(.next)
             
             return (previous: previousChapter, next: nextChapter)
-        default: return (nil, nil)
         }
     }
     
@@ -175,17 +172,14 @@ public class ReaderViewModel {
         case .next:
             let foundChapters = chapters
                 .filter {
-                    guard
-                        let volume = $0.volume,
-                        let chapter = $0.chapter,
-                        let currentVolume = currentChapter.volume,
-                        let currentChapter = currentChapter.chapter
-                    else { return false }
+                    let volume = $0.volume ?? 0
+                    let chapter = $0.chapter
+                    let currentVolume = currentChapter.volume ?? 0
+                    let currentChapter = currentChapter.chapter
 
                     switch serie.readerDirection {
                     case .rightToLeft: return volume > currentVolume && chapter > currentChapter
                     case .leftToRight, .vertical: return volume < currentVolume && chapter < currentChapter
-                    default: return false
                     }
                 }
             
@@ -193,17 +187,14 @@ public class ReaderViewModel {
         case .previous:
             let foundChapters = chapters
                 .filter {
-                    guard
-                        let volume = $0.volume,
-                        let chapter = $0.chapter,
-                        let currentVolume = currentChapter.volume,
-                        let currentChapter = currentChapter.chapter
-                    else { return false }
+                    let volume = $0.volume ?? 0
+                    let chapter = $0.chapter
+                    let currentVolume = currentChapter.volume ?? 0
+                    let currentChapter = currentChapter.chapter
 
                     switch serie.readerDirection {
                     case .rightToLeft: return volume < currentVolume && chapter < currentChapter
                     case .leftToRight, .vertical: return volume > currentVolume && chapter > currentChapter
-                    default: return false
                     }
                 }
             
@@ -261,7 +252,6 @@ public class ReaderViewModel {
         switch serie.readerDirection {
         case .rightToLeft: return chapters.last?.id != currentChapter.id
         case .leftToRight, .vertical: return chapters.first?.id != currentChapter.id
-        default: return false
         }
     }
     
@@ -269,7 +259,6 @@ public class ReaderViewModel {
         switch serie.readerDirection {
         case .rightToLeft: return chapters.first?.id != currentChapter.id
         case .leftToRight, .vertical: return chapters.last?.id != currentChapter.id
-        default: return false
         }
     }
     

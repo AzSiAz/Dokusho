@@ -4,7 +4,7 @@ import DataKit
 import SharedUI
 
 struct ScraperRow: View {
-    @Bindable var scraper: Scraper
+    var scraper: Scraper
     
     var body: some View {
         Group {

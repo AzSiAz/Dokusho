@@ -20,9 +20,9 @@ public struct SerieCollectionSettings: View {
     
     public init(collection : SerieCollection) {
 //        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
-        _collectionOrder = .init(initialValue: collection.order ?? SerieCollection.Order())
-        _collectionFilter = .init(initialValue: collection.filter ?? SerieCollection.Filter.all)
-        _useList = .init(initialValue: collection.useList ?? false)
+        _collectionOrder = .init(initialValue: collection.order)
+        _collectionFilter = .init(initialValue: collection.filter)
+        _useList = .init(initialValue: collection.useList)
     }
     
     public var body: some View {

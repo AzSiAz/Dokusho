@@ -3,15 +3,10 @@ import SwiftData
 import DataKit
 import SharedUI
 
-// TODO: Refactor to only fetch source in parent view and use a bindable
 struct SourceRow: View {
-    @Environment(ScraperService.self) var svc
-
-    @Bindable var scraper: Scraper
+    @Harmony var harmony
     
-    init(scraper: Scraper) {
-        self.scraper = scraper
-    }
+    var scraper: Scraper
     
     var body: some View {
         Group {
@@ -31,19 +26,21 @@ struct SourceRow: View {
             .padding(.vertical)
             .contentShape(RoundedRectangle(cornerRadius: 5))
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: { scraper.isActive.toggle() }) {
-                    Label(scraper.isActive ? "DEACTIVE" : "ACTIVE", systemImage: scraper.isActive ? "eye.slash" : "eye")
+                Button(action: { toggleIsActive() }) {
+                    Label(scraper.isActive ? "Deactivate" : "Activate", systemImage: scraper.isActive ? "eye.slash" : "eye")
                 }
                 .tint(scraper.isActive ? .red : .blue)
             }
         }
         .buttonStyle(.plain)
-//        .task { updateIfSourceExist() }
     }
     
-    func updateIfSourceExist() {
-//        if let scraper = sourceData.scraper {
-//            scraper.update(source: sourceData.source)
-//        }
+    func toggleIsActive() {
+        var sc = scraper
+        sc.toggleIsActive()
+        
+        Task { [sc] in
+            try? await harmony.save(record: sc)
+        }
     }
 }

@@ -1,5 +1,5 @@
 import Foundation
-import SwiftData
+import Harmony
 import SerieScraper
 import OSLog
 
@@ -23,37 +23,45 @@ public class ScraperService {
         return sources.first { $0.id == sourceId }
     }
 
-    public func upsertAllSource(in container: ModelContainer? = nil) {
+    public func upsertAllSource(in harmonic: Harmonic) async {
         do {
-            let context = ModelContext(container ?? .dokusho())
-            let scrapers = try context.fetch(.allScrapers())
+            let scrapers = try await harmonic.reader.read { db in
+                return try Scraper.all().fetchAll(db)
+            }
 
             for source in sources {
                 if let scraper = scrapers.first(where: { $0.id == source.id }) {
-                    logger.debug("Updating source: \(scraper.name)")
-                    scraper.update(source: source)
+                    var sc = scraper
+                    sc.update(source: source)
+                    if sc != scraper {
+                        logger.debug("Updating source: \(scraper.name)")
+                        try await harmonic.save(record: sc)
+                    }
                 } else {
                     logger.debug("Inserting source: \(source.name)")
-                    context.insert(Scraper(source: source, isActive: false))
+                    try await harmonic.create(record: Scraper(source: source))
                 }
             }
-
-            try context.save()
         } catch {
             logger.error("Error upserting scrapers: \(error.localizedDescription)")
         }
     }
 
-    @MainActor
-    public func onMove(offsets: IndexSet, position: Int, in container: ModelContainer? = nil) {
+    public func onMove(scrapers: [Scraper], offsets: IndexSet, position: Int, in harmonic: Harmonic) async {
         do {
-            let context = ModelContext(container ?? .dokusho())
-            var scrapers = try context.fetch(.activeScrapersByPosition())
-            scrapers.move(fromOffsets: offsets, toOffset: position)
+            var sc = scrapers
+            // change the order of the items in the array
+            sc.move(fromOffsets: offsets, toOffset: position)
+
+            let updatedScrapers = sc
+                .enumerated()
+                .map { d in
+                    var scraper = d.element
+                    scraper.position = d.offset;
+                    return scraper
+                }
             
-            for (position, scraper) in scrapers.enumerated() {
-                scraper.position = position
-            }
+            try await harmonic.save(records: updatedScrapers)
         } catch {
             logger.error("Error changing scraper order: \(error.localizedDescription)")
         }

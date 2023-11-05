@@ -116,12 +116,12 @@ public struct ReaderView: View {
                     Spacer()
                     
                     VStack(alignment: .center, spacing: 0) {
-                        Text(vm.serie.title ?? "")
+                        Text(vm.serie.title)
                             .font(.subheadline)
                             .allowsTightening(true)
                             .lineLimit(1)
                             .foregroundColor(.primary)
-                        Text(vm.currentChapter.title ?? "")
+                        Text(vm.currentChapter.title)
                             .font(.subheadline)
                             .italic()
                             .allowsTightening(true)
@@ -135,16 +135,16 @@ public struct ReaderView: View {
                         Menu("Chapters") {
                             ForEach(vm.getChapters()) { chapter in
                                 Button(action: { vm.goToChapter(to: chapter) }) {
-                                    SelectedMenuItem(text: chapter.title ?? "", comparaison: vm.currentChapter == chapter)
+                                    SelectedMenuItem(text: chapter.title, comparaison: vm.currentChapter == chapter)
                                 }
                             }
                         }
                         
                         Menu("Reader direction") {
                             ForEach(Serie.ReaderDirection.allCases, id: \.self) { direction in
-                                Button(action: { vm.serie.readerDirection = direction }) {
-                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.serie.readerDirection == direction)
-                                }
+//                                Button(action: { vm.serie.readerDirection = direction }) {
+//                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.serie.readerDirection == direction)
+//                                }
                             }
                         }
                     } label: {

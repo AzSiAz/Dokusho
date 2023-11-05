@@ -10,8 +10,8 @@ struct SelectedSearchResult: Hashable {
 }
 
 public struct SearchSourceListScreen: View {
-    @Query(.activeScrapersByPosition()) var scrapers: [Scraper]
-    
+    @Query(ScrapersRequest(filter: .active)) var scrapers: [Scraper]
+
     @State var searchText: String = ""
     
     public init() {}
@@ -21,7 +21,7 @@ public struct SearchSourceListScreen: View {
             if !searchText.isEmpty {
                 ForEach(scrapers) { scraper in
                     Section(scraper.name) {
-                        ScraperSearch(scraper: Bindable(scraper), textToSearch: $searchText)
+//                        ScraperSearch(scraper: Bindable(scraper), textToSearch: $searchText)
                     }
                     .listSectionSeparator(.hidden)
                 }
@@ -30,7 +30,7 @@ public struct SearchSourceListScreen: View {
         .listStyle(.plain)
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .navigationDestination(for: SelectedSearchResult.self) { result in
-            SerieDetailScreen(serieId: result.serieId, scraperId: result.scraperId)
+            SerieDetailScreen(serieID: result.serieId, scraperID: result.scraperId)
         }
         .navigationTitle(Text("Search"))
         .navigationBarTitleDisplayMode(.inline)

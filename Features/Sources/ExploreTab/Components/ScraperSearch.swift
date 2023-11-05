@@ -7,23 +7,23 @@ import Collections
 
 public struct ScraperSearch: View {
     @Environment(ScraperService.self) var scraperService
-    
-    @Query var seriesInCollection: [Serie]
-    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
 
-    @Bindable private var scraper: Scraper
-    @Binding var text: String
-    
+//    @Query var seriesInCollection: [Serie]
+//    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
+
+    private var scraper: Scraper
+    private var text: String
+ 
     @State private var nextPage = 1
     @State private var oldSearch: String?
     @State private var isLoading = true
     @State private var hasNextPage = false
     @State private var mangas = OrderedSet<SourceSmallSerie>()
-    
-    public init(scraper: Bindable<Scraper>, textToSearch: Binding<String>) {
-        _scraper = scraper
-        _text = textToSearch
-        _seriesInCollection = Query(.seriesInCollection(scraperId: scraper.id))
+
+    public init(scraper: Scraper, textToSearch: String) {
+        self.scraper = scraper
+        self.text = textToSearch
+//        _seriesInCollection = Query(.seriesInCollection(scraperId: scraper.id))
     }
     
     public var body: some View {
@@ -49,8 +49,8 @@ public struct ScraperSearch: View {
         ScrollView(.horizontal, showsIndicators: true) {
             SerieList(series: mangas, horizontal: true) { serie in
                 NavigationLink(value: SelectedSearchResult(scraperId: scraper.id, serieId: serie.id)) {
-                    let found = seriesInCollection.first { $0.internalId == serie.id }
-                    SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection?.name)
+//                    let found = seriesInCollection.first { $0.internalId == serie.id }
+                    SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl/*, collectionName: found?.collection?.name*/)
                         .contextMenu { ContextMenu(serie: serie) }
                         .task { await fetchMoreIfPossible(for: serie) }
                 }
@@ -60,11 +60,12 @@ public struct ScraperSearch: View {
     
     @ViewBuilder
     func ContextMenu(serie: SourceSmallSerie) -> some View {
-        ForEach(collections) { collection in
-            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
-                Text("Add to \(collection.name ?? "")")
-            }
-        }
+        EmptyView()
+//        ForEach(collections, id: ) { collection in
+//            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
+//                Text("Add to \(collection.name ?? "")")
+//            }
+//        }
     }
 }
 
@@ -103,13 +104,13 @@ extension ScraperSearch {
     }
     
     func addToCollection(id: SourceSmallSerie.ID, collection: SerieCollection) async {
-        guard
-            let source = scraperService.getSource(sourceId: scraper.id),
-            let sourceManga = try? await source.fetchSerieDetail(serieId: id)
-        else {  return }
-        
-        print(sourceManga)
-
+//        guard
+//            let source = scraperService.getSource(sourceId: scraper.id),
+//            let sourceManga = try? await source.fetchSerieDetail(serieId: id)
+//        else {  return }
+//        
+//        print(sourceManga)
+//
 //        do {
 //            try await database.write { [scraper] db -> Void in
 //                guard var manga = try MangaDB.all().forMangaId(smallManga.id, scraper.id).fetchOne(db) else {
