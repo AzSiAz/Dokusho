@@ -1,10 +1,3 @@
-//
-//  CollectionSettings.swift
-//  Dokusho
-//
-//  Created by Stephan Deumier on 04/06/2022.
-//
-
 import Foundation
 import SwiftUI
 import DataKit
@@ -12,14 +5,16 @@ import Common
 import SharedUI
 
 public struct SerieCollectionSettings: View {
-//    @GRDBQuery.Query<OneMangaCollectionRequest> var collection: MangaCollectionDB?
+    @Query<OneSerieCollectionRequest> var collection: SerieCollection?
+    
+    @Harmony var harmony
     
     @State var collectionOrder: SerieCollection.Order
     @State var collectionFilter: SerieCollection.Filter
     @State var useList: Bool
     
     public init(collection : SerieCollection) {
-//        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
+        _collection = Query(OneSerieCollectionRequest(serieCollectionID: collection.id))
         _collectionOrder = .init(initialValue: collection.order)
         _collectionFilter = .init(initialValue: collection.filter)
         _useList = .init(initialValue: collection.useList)

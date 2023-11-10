@@ -13,8 +13,10 @@ import SerieDetail
 
 public struct LibraryTabView: View {
     @Environment(LibraryUpdater.self) private var libraryRefresh
+    
+    @Harmony var harmony
 
-//    @GRDBQuery.Query(DetailedMangaCollectionRequest()) var collections
+    @Query(AllSerieCollectionWithCountRequest()) var collections
 
     @State var editMode: EditMode = .inactive
     @State var newCollectionName = ""
@@ -25,15 +27,15 @@ public struct LibraryTabView: View {
         NavigationStack {
             List {
                 Section("User Collection") {
-//                    ForEach(collections) { info in
-//                        NavigationLink(value: info.mangaCollection) {
-//                            Label(info.mangaCollection.name, systemImage: "square.grid.2x2")
-//                                .badge("\(info.mangaCount)")
-//                                .padding(.vertical)
-//                        }
-//                    }
-//                    .onDelete(perform: onDelete)
-//                    .onMove(perform: onMove)
+                    ForEach(collections) { info in
+                        NavigationLink(value: info.serieCollection) {
+                            Label(info.serieCollection.name, systemImage: "square.grid.2x2")
+                                .badge("\(info.serieCount)")
+                                .padding(.vertical)
+                        }
+                    }
+                    .onDelete(perform: onDelete)
+                    .onMove(perform: onMove)
                     
                     if editMode.isEditing {
                         TextField("New collection name", text: $newCollectionName)
@@ -48,7 +50,7 @@ public struct LibraryTabView: View {
                         Text("By Genres")
                     }
                     
-                    NavigationLink(destination: SeriesBySourceListPage()) {
+                    NavigationLink(destination: SeriesByScraperListPage()) {
                         Text("By Source List")
                     }
                 }
@@ -60,7 +62,6 @@ public struct LibraryTabView: View {
             }
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
-//            .queryObservation(.always)
 //            .navigationDestination(for: DetailedMangaInList.self) { data in
 //                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
 //            }
@@ -72,33 +73,22 @@ public struct LibraryTabView: View {
     }
     
     func saveNewCollection() {
-//        guard !newCollectionName.isEmpty else { return }
-//        let lastPosition = (collections.last?.mangaCollection.position ?? 0) + 1
-//        
-//        do {
-//            try appDB.database.write { db in
-//                let collection = MangaCollectionDB(id: UUID(), name: newCollectionName, position: lastPosition)
-//                try collection.save(db)
-//            }
-//        } catch(let err) {
-//            print(err)
-//        }
-//        
-//        newCollectionName = ""
+        guard !newCollectionName.isEmpty else { return }
+        let lastPosition = (collections.last?.serieCollection.position ?? 0) + 1
+        let collection = SerieCollection(name: newCollectionName, position: lastPosition)
+        newCollectionName = ""
+
+        Task { [collection] in
+            try await harmony.save(record: collection)
+        }
     }
     
     func onDelete(_ offsets: IndexSet) {
-//        offsets
-//            .map { collections[$0] }
-//            .forEach { collection in
-//                do {
-//                    let _ = try appDB.database.write { db in
-//                        try collection.mangaCollection.delete(db)
-//                    }
-//                } catch(let err) {
-//                    print(err)
-//                }
-//            }
+        let toDelete = offsets.map { collections[$0].serieCollection }
+        
+        Task { [toDelete] in
+            try await harmony.delete(records: toDelete)
+        }
     }
     
     func onMove(_ offsets: IndexSet, _ position: Int) {

@@ -4,7 +4,7 @@ import SerieScraper
 
 public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
     public var id: UUID
-    public var internalID: String
+    public var internalID: InternalID
     public var title: String
     public var subTitle: String?
     public var uploadedAt: Date
@@ -37,5 +37,13 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
         if (self.chapter != data.chapter) { self.chapter = data.chapter }
         if (self.volume != data.volume) { self.volume = data.volume }
         if (self.externalUrl != data.externalUrl) { self.externalUrl = data.externalUrl }
+    }
+    
+    public mutating func toggleReadAt() {
+        if self.readAt == nil {
+            self.readAt = .now
+        } else {
+            self.readAt = nil
+        }
     }
 }

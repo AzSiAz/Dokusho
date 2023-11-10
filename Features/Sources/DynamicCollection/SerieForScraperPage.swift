@@ -1,18 +1,19 @@
 import SwiftUI
+import SerieScraper
 import DataKit
 import SharedUI
 import SerieDetail
 
-public struct SerieInCollectionForGenre: View {
+public struct SerieForScraperPage: View {
     @Query<DetailedSerieInListRequest> var list: [DetailedSerieInList]
-
-    @State var selectedManga: DetailedSerieInList?
-
-    var genre: String
     
-    public init(genre: String) {
-        self.genre = genre
-        _list = Query(DetailedSerieInListRequest(requestType: .genre(genre: genre)))
+    var scraper: Scraper
+
+    private var columns: [GridItem] = [GridItem(.adaptive(minimum: 130, maximum: 130))]
+    
+    public init(scraper: Scraper) {
+        self.scraper = scraper
+        _list = Query(DetailedSerieInListRequest(requestType: .scraper(scraper: scraper)))
     }
     
     public var body: some View {
@@ -24,8 +25,8 @@ public struct SerieInCollectionForGenre: View {
                 }
                 .buttonStyle(.plain)
             }
+            .navigationTitle("\(scraper.name) (\(list.count))")
+            .navigationBarTitleDisplayMode(.automatic)
         }
-        .navigationTitle("\(genre) (\(list.count))")
-        .navigationBarTitleDisplayMode(.automatic)
     }
 }

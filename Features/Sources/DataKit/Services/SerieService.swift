@@ -10,8 +10,9 @@ public class SerieService {
     
     private init() {}
 
-    public func upsert(source: Source, serieID: String, harmonic: Harmonic) async throws {
-        guard var _ = try await harmonic.reader.read({ try Serie.all().whereSerie(serieID: serieID, scraperID: source.id).fetchOne($0) })
+    @discardableResult
+    public func upsert(source: Source, serieID: String, harmonic: Harmonic) async throws -> Serie {
+        guard let serie = try await harmonic.reader.read({ try Serie.all().whereSerie(serieID: serieID, scraperID: source.id).fetchOne($0) })
         else {
             let sourceData = try await source.fetchSerieDetail(serieId: serieID)
             let serie = Serie(from: sourceData, scraperID: source.id)
@@ -20,24 +21,25 @@ public class SerieService {
             try await harmonic.save(record: serie)
             try await harmonic.save(records: chapters)
 
-            return
+            return serie
         }
         
-        return
+        return serie
     }
 
-    public func update(source: Source, serieID: String, harmonic: Harmonic) async throws {
+    @discardableResult
+    public func update(source: Source, serieID: String, harmonic: Harmonic) async throws -> Serie {
         guard
             var serie = try await harmonic.reader.read({ try Serie.all().whereSerie(serieID: serieID, scraperID: source.id).fetchOne($0) }),
             let sourceData = try? await source.fetchSerieDetail(serieId: serieID)
-        else { return }
+        else { throw "Something happened" }
 
         serie.update(from: sourceData)
 
         guard
             !sourceData.chapters.isEmpty,
             let chapters = try? await harmonic.reader.read({ [serie] in try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll($0) })
-        else { return }
+        else { return serie }
 
         for sourceChapter in sourceData.chapters {
             if var dbChapter = chapters.first(where: { $0.internalID == sourceChapter.id }) {
@@ -53,5 +55,14 @@ public class SerieService {
             if (sourceData.chapters.first(where: { $0.id == dbChapter.internalID }) != nil) { continue }
             try await harmonic.delete(record: dbChapter)
         }
+        
+        return serie
+    }
+    
+    public func addSerieToCollection(source: Source, serieID: String, serieCollectionID: SerieCollection.ID, harmonic: Harmonic) async throws {
+        var serie = try await upsert(source: source, serieID: serieID, harmonic: harmonic)
+        serie.collectionID = serieCollectionID
+        
+        try await harmonic.save(record: serie)
     }
 }

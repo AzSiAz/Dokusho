@@ -9,12 +9,13 @@ enum LoadingState {
 }
 
 public struct ExploreSourceView: View {
-    @Harmony var harmony
     @Environment(ScraperService.self) var scraperService
     @Environment(SerieService.self) var serieService
+    
+    @Harmony var harmony
 
-//    @Query var inCollection: [Serie]
-//    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
+    @Query<SerieInCollectionsForScraperRequest> var inCollection: [SerieInCollection]
+    @Query(AllSerieCollectionRequest()) var collections
 
     private var scraper: Scraper
     
@@ -26,7 +27,7 @@ public struct ExploreSourceView: View {
     
     public init(scraper: Scraper) {
         self.scraper = scraper
-//        self._inCollection = Query(.seriesInCollection(scraperId: scraper.id))
+        self._inCollection = Query(SerieInCollectionsForScraperRequest(scraperID: scraper.id))
     }
     
     public var body: some View {
@@ -65,11 +66,10 @@ public struct ExploreSourceView: View {
     var SerieListBlock: some View {
         SerieList(series: series) { serie in
             NavigationLink(value: serie) {
-//                let found = inCollection.first { $0.internalId == serie.id }
-                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl)
-//                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection?.name)
+                let found = inCollection.first { $0.internalID == serie.id }
+                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection)
                     .serieCardFrame()
-//                    .contextMenu { ContextMenu(serie: serie) }
+                    .contextMenu { ContextMenu(serie: serie) }
                     .task {
                         if series.last == serie {
                             await fetchList()
@@ -114,14 +114,14 @@ public struct ExploreSourceView: View {
         .frame(maxWidth: 160)
     }
     
-//    @ViewBuilder
-//    func ContextMenu(serie: SourceSmallSerie) -> some View {
-//        ForEach(collections) { collection in
-//            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
-//                Text("Add to \(collection.name ?? "")")
-//            }
-//        }
-//    }
+    @ViewBuilder
+    func ContextMenu(serie: SourceSmallSerie) -> some View {
+        ForEach(collections) { collection in
+            AsyncButton(action: { await addToCollection(id: serie.id, serieCollection: collection) }) {
+                Text("Add to \(collection.name)")
+            }
+        }
+    }
 }
 
 extension ExploreSourceView {
@@ -164,13 +164,16 @@ extension ExploreSourceView {
     }
     
     @MainActor
-    func addToCollection(id: SourceSmallSerie.ID, collection: SerieCollection) async {
+    func addToCollection(id: SourceSmallSerie.ID, serieCollection: SerieCollection) async {
         guard
-            let source = scraperService.getSource(sourceId: scraper.id),
-            let serie = try? await source.fetchSerieDetail(serieId: id)
-        else { return }
+            let source = scraperService.getSource(sourceId: scraper.id)
+        else {  return }
         
-        print(serie)
-//        collection.series?.append(serie)
+        try? await serieService.addSerieToCollection(
+            source: source,
+            serieID: id,
+            serieCollectionID: serieCollection.id,
+            harmonic: harmony
+        )
     }
 }

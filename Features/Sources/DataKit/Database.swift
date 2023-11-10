@@ -33,7 +33,7 @@ public extension DatabaseMigrator {
                 t.column("order", .jsonText).notNull()
             }
         }
-        
+
         migrator.registerMigration("00000003_serie_table") { db in
             try db.create(table: "serie") { t in
                 t.column("id", .text).notNull().primaryKey(onConflict: .ignore, autoincrement: false)
@@ -50,11 +50,11 @@ public extension DatabaseMigrator {
 
                 t.column("scraperID", .text).references("scraper", onDelete: .setNull, onUpdate: .cascade).indexed()
                 t.column("collectionID", .text).references("serieCollection", onDelete: .setNull, onUpdate: .cascade).indexed()
-                
+
                 t.uniqueKey(["internalID", "scraperID"], onConflict: .ignore)
             }
         }
-        
+
         migrator.registerMigration("00000004_serie_chapter_table") { db in
             try db.create(table: "serieChapter") { t in
                 t.column("id", .text).notNull().primaryKey(onConflict: .ignore, autoincrement: false)
@@ -67,9 +67,9 @@ public extension DatabaseMigrator {
                 t.column("readAt", .date)
                 t.column("progress", .integer)
                 t.column("externalUrl", .text)
-                
+
                 t.column("serieID", .text).references("serie", onDelete: .cascade, onUpdate: .cascade).indexed()
-                
+
                 t.uniqueKey(["internalID", "serieID"], onConflict: .ignore)
             }
         }

@@ -2,6 +2,8 @@ import Foundation
 import GRDB
 
 public extension SerieChapter {
+    typealias InternalID = String
+
     enum CodingKeys: String, CodingKey {
         case id, internalID, title, subTitle, uploadedAt, volume, chapter, readAt, progress, externalUrl, serieID
     }
@@ -63,5 +65,13 @@ public extension DerivableRequest<SerieChapter> {
     
     func onlyUnRead() -> Self {
         filter(RowDecoder.Columns.readAt == nil)
+    }
+    
+    func orderHistoryAll() -> Self {
+        order(RowDecoder.Columns.uploadedAt.desc, RowDecoder.Columns.internalID, RowDecoder.Columns.volume.desc, RowDecoder.Columns.chapter.desc)
+    }
+    
+    func orderHistoryRead() -> Self {
+        order(RowDecoder.Columns.readAt.desc, RowDecoder.Columns.internalID, RowDecoder.Columns.volume.desc, RowDecoder.Columns.chapter.desc)
     }
 }

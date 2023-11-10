@@ -3,7 +3,7 @@ import SerieScraper
 
 public struct Serie: Identifiable, Equatable, Codable, Hashable {
     public var id: UUID
-    public var internalID: String
+    public var internalID: InternalID
     public var title: String
     public var cover: URL
     public var synopsis: String

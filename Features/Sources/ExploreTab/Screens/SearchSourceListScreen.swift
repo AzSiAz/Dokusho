@@ -21,7 +21,7 @@ public struct SearchSourceListScreen: View {
             if !searchText.isEmpty {
                 ForEach(scrapers) { scraper in
                     Section(scraper.name) {
-//                        ScraperSearch(scraper: Bindable(scraper), textToSearch: $searchText)
+                        ScraperSearch(scraper: scraper, textToSearch: searchText)
                     }
                     .listSectionSeparator(.hidden)
                 }

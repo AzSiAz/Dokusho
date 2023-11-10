@@ -7,9 +7,12 @@ import Collections
 
 public struct ScraperSearch: View {
     @Environment(ScraperService.self) var scraperService
+    @Environment(SerieService.self) var serieService
+    
+    @Harmony var harmony
 
-//    @Query var seriesInCollection: [Serie]
-//    @Query(.allSerieCollectionByPosition(.forward)) var collections: [SerieCollection]
+    @Query<SerieInCollectionsForScraperRequest> var inCollection: [SerieInCollection]
+    @Query(AllSerieCollectionRequest()) var collections
 
     private var scraper: Scraper
     private var text: String
@@ -23,7 +26,7 @@ public struct ScraperSearch: View {
     public init(scraper: Scraper, textToSearch: String) {
         self.scraper = scraper
         self.text = textToSearch
-//        _seriesInCollection = Query(.seriesInCollection(scraperId: scraper.id))
+        self._inCollection = Query(SerieInCollectionsForScraperRequest(scraperID: scraper.id))
     }
     
     public var body: some View {
@@ -49,10 +52,11 @@ public struct ScraperSearch: View {
         ScrollView(.horizontal, showsIndicators: true) {
             SerieList(series: mangas, horizontal: true) { serie in
                 NavigationLink(value: SelectedSearchResult(scraperId: scraper.id, serieId: serie.id)) {
-//                    let found = seriesInCollection.first { $0.internalId == serie.id }
-                    SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl/*, collectionName: found?.collection?.name*/)
+                    let found = inCollection.first { $0.internalID == serie.id }
+                    SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection)
                         .contextMenu { ContextMenu(serie: serie) }
                         .task { await fetchMoreIfPossible(for: serie) }
+                        .serieCardFrame()
                 }
             }
         }
@@ -60,12 +64,11 @@ public struct ScraperSearch: View {
     
     @ViewBuilder
     func ContextMenu(serie: SourceSmallSerie) -> some View {
-        EmptyView()
-//        ForEach(collections, id: ) { collection in
-//            AsyncButton(action: { await addToCollection(id: serie.id, collection: collection) }) {
-//                Text("Add to \(collection.name ?? "")")
-//            }
-//        }
+        ForEach(collections) { collection in
+            AsyncButton(action: { await addToCollection(id: serie.id, serieCollection: collection) }) {
+                Text("Add to \(collection.name)")
+            }
+        }
     }
 }
 
@@ -103,35 +106,16 @@ extension ScraperSearch {
         }
     }
     
-    func addToCollection(id: SourceSmallSerie.ID, collection: SerieCollection) async {
-//        guard
-//            let source = scraperService.getSource(sourceId: scraper.id),
-//            let sourceManga = try? await source.fetchSerieDetail(serieId: id)
-//        else {  return }
-//        
-//        print(sourceManga)
-//
-//        do {
-//            try await database.write { [scraper] db -> Void in
-//                guard var manga = try MangaDB.all().forMangaId(smallManga.id, scraper.id).fetchOne(db) else {
-//                    var manga = MangaDB(from: sourceManga, sourceId: scraper.id)
-//                    manga.mangaCollectionId = collection.id
-//                    try manga.save(db)
-//
-//                    for info in sourceManga.chapters.enumerated() {
-//                        let chapter = MangaChapterDB(from: info.element, position: info.offset, mangaId: manga.id, scraperId: scraper.id)
-//                        try chapter.save(db)
-//                    }
-//
-//                    return
-//                }
-//
-//                manga.mangaCollectionId = collection.id
-//
-//                return try manga.save(db)
-//            }
-//        } catch(let err) {
-//            print(err)
-//        }
+    func addToCollection(id: SourceSmallSerie.ID, serieCollection: SerieCollection) async {
+        guard
+            let source = scraperService.getSource(sourceId: scraper.id)
+        else {  return }
+
+        try? await serieService.addSerieToCollection(
+            source: source,
+            serieID: id,
+            serieCollectionID: serieCollection.id,
+            harmonic: harmony
+        )
     }
 }

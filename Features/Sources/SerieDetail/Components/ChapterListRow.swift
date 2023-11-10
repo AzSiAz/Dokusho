@@ -1,9 +1,12 @@
 import SwiftUI
 import DataKit
 import Reader
+import SharedUI
 
 public struct ChapterListRow: View {
     @Environment(ReaderManager.self) var readerManager
+    
+    @Harmony var harmony
     
     var chapters: [SerieChapter]
     var scraper: Scraper
@@ -64,7 +67,7 @@ public struct ChapterListRow: View {
 
     @ViewBuilder
     var chapterRowContextMenu: some View {
-        Button(action: { changeChapterStatus(for: chapter) }) {
+        AsyncButton(action: { await changeChapterStatus(for: chapter) }) {
             if (chapter.readAt != nil) {
                 Text("Mark as unread")
             } else {
@@ -73,7 +76,7 @@ public struct ChapterListRow: View {
         }
         
         let hasUnread = hasPreviousUnreadChapter(for: chapter, chapters: chapters)
-        Button(action: { changePreviousChapterStatus(for: chapter, in: chapters, toRead: hasUnread) }) {
+        AsyncButton(action: { await changePreviousChapterStatus(for: chapter, in: chapters, toRead: hasUnread) }) {
             if hasUnread {
                 Text("Mark previous as read")
             } else {
@@ -84,39 +87,33 @@ public struct ChapterListRow: View {
 }
 
 private extension ChapterListRow {
-    func changeChapterStatus(for chapter: SerieChapter) {
-//        withAnimation {
-//            if chapter.readAt == nil {
-//                chapter.readAt = .now
-//            } else {
-//                chapter.readAt = nil
-//            }
-//        }
+    func changeChapterStatus(for chapter: SerieChapter) async {
+        do {
+            var ch = chapter
+            ch.toggleReadAt()
+            
+            try await harmony.save(record: ch)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 
-    func changePreviousChapterStatus(for chapter: SerieChapter, in chapters: [SerieChapter], toRead: Bool) {
-//        do {
-//            let toUpdate = chapters
-//                .lazy
-//                .filter { toRead ? $0.readAt == nil : $0.readAt != nil }
-//                .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
-//                .filter { chapter.chapter ?? 0 > $0.chapter ?? 0 }
-//                .map { $0.persistentModelID }
-//            
-//            let context = ModelContext(modelContext.container)
-//            context.autosaveEnabled = false
-//            
-//            for chapterId in toUpdate {
-//                if let found = context.model(for: chapterId) as? SerieChapter {
-//                    if toRead { found.readAt = .now }
-//                    else { found.readAt = nil }
-//                }
-//            }
-//            
-//            try context.save()
-//        } catch {
-//            print(error)
-//        }
+    func changePreviousChapterStatus(for chapter: SerieChapter, in chapters: [SerieChapter], toRead: Bool) async {
+        do {
+            let toUpdate = chapters
+                .lazy
+                .filter { toRead ? $0.readAt == nil : $0.readAt != nil }
+                .filter { chapter.volume ?? 0 >= $0.volume ?? 0 }
+                .filter { chapter.chapter > $0.chapter }
+
+            for var chapter in toUpdate {
+                if toRead { chapter.readAt = .now }
+                else { chapter.readAt = nil }
+                try await harmony.save(record: chapter)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 
     func hasPreviousUnreadChapter(for chapter: SerieChapter, chapters: [SerieChapter]) -> Bool {

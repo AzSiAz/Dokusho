@@ -3,6 +3,8 @@ import SerieScraper
 import GRDB
 
 public extension Serie {
+    typealias InternalID = String
+    
     enum Status: String, Codable, CaseIterable, DatabaseValueConvertible {
         case complete = "Complete", ongoing = "Ongoing", unknown = "Unknown"
         
@@ -100,5 +102,33 @@ public extension DerivableRequest<Serie> {
 
     func whereSerie(serieID: String, scraperID: UUID) -> Self {
         whereScraper(scraperID: scraperID).filter(RowDecoder.Columns.internalID == serieID)
+    }
+    
+    func filterByName(_ searchTerm: String) -> Self {
+        let search = "%\(searchTerm)%"
+        return filter(RowDecoder.Columns.title.like(search) || RowDecoder.Columns.alternateTitles.like(search))
+    }
+    
+    func isInCollection(_ bool: Bool = true) -> Self {
+        filter(bool ? RowDecoder.Columns.collectionID != nil : RowDecoder.Columns.collectionID == nil)
+    }
+    
+    func filterByGenre(_ genre: String) -> Self {
+        filter(RowDecoder.Columns.genres.like("%\(genre)%"))
+    }
+    
+    func orderByTitle(direction: SerieCollection.Order.Direction = .ASC) -> Self {
+        switch direction {
+        case .ASC: return order(RowDecoder.Columns.title.collating(.localizedCaseInsensitiveCompare).ascNullsLast)
+        case .DESC: return order(RowDecoder.Columns.title.collating(.localizedCaseInsensitiveCompare).desc)
+        }
+    }
+    
+    func forSerieCollectionID(_ serieCollectionID: SerieCollection.ID) -> Self {
+        filter(RowDecoder.Columns.collectionID == serieCollectionID)
+    }
+    
+    func forSerieStatus(_ status: Serie.Status) -> Self {
+        filter(RowDecoder.Columns.status == status)
     }
 }
