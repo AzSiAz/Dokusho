@@ -36,8 +36,8 @@ public struct DetailedSerieInListRequest: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> [DetailedSerieInList] {
-        let unreadChapterCount = "DISTINCT \"SerieChapter\".\"id\") FILTER (WHERE serieChapter.readAt = null"
-        let readChapterCount = "DISTINCT \"SerieChapter\".\"id\") FILTER (WHERE serieChapter.readAt != null"
+        let unreadChapterCount = "DISTINCT \"serieChapter\".\"id\") FILTER (WHERE serieChapter.readAt IS null"
+        let readChapterCount = "DISTINCT \"serieChapter\".\"id\") FILTER (WHERE serieChapter.readAt IS NOT null"
         let chapterCount = "DISTINCT \"serieChapter\".\"id\""
         
         var request = Serie

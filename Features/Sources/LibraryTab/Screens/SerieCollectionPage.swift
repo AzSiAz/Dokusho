@@ -85,7 +85,13 @@ public struct SerieCollectionPage: View {
                 SerieInGrid(data: data)
             }
         }
-        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: userPreference.onlyUpdateAllRead) }
+        .refreshable {
+            await vm.refreshLibrary(
+                libraryUpdater: libraryUpdater,
+                collection: collection!,
+                onlyUpdateAllRead: userPreference.onlyUpdateAllRead
+            )
+        }
     }
     
     @ViewBuilder
@@ -103,7 +109,13 @@ public struct SerieCollectionPage: View {
         List(list) { data in
             MangaInList(data: data)
         }
-        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: userPreference.onlyUpdateAllRead) }
+        .refreshable {
+            await vm.refreshLibrary(
+                libraryUpdater: libraryUpdater,
+                collection: collection!,
+                onlyUpdateAllRead: userPreference.onlyUpdateAllRead
+            )
+        }
         .listStyle(PlainListStyle())
     }
     

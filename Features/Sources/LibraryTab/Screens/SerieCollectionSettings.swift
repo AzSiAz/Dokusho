@@ -59,57 +59,42 @@ public struct SerieCollectionSettings: View {
 
 extension SerieCollectionSettings {
     func updateCollectionUseList(d: Bool) {
-//        Task {
-//            guard let collection = collection else { return }
-//
-//            do {
-//                try await appDatabase.database.write { db in
-//                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
-//                    
-//                    try foundCollection.updateChanges(db) {
-//                        $0.useList = d
-//                    }
-//                }
-//            } catch(let err) {
-//                print(err)
-//            }
-//        }
+        Task {
+            guard var collection = collection else { return }
+
+            do {
+                collection.useList = d
+                try await harmony.save(record: collection)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func updateCollectionFilter(newFilter: SerieCollection.Filter) {
-//        Task {
-//            guard let collection = collection else { return }
-//
-//            do {
-//                try await appDatabase.database.write { db in
-//                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
-//                    
-//                    try foundCollection.updateChanges(db) {
-//                        $0.filter = newFilter
-//                    }
-//                }
-//            } catch(let err) {
-//                print(err)
-//            }
-//        }
+        Task {
+            guard var collection = collection else { return }
+
+            do {
+                collection.filter = newFilter
+                try await harmony.save(record: collection)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func updateCollectionOrder(direction: SerieCollection.Order.Direction? = nil, field: SerieCollection.Order.Field? = nil) {
-//        Task {
-//            guard let collection = collection else { return }
-//            
-//            do {
-//                try await appDatabase.database.write { db in
-//                    guard var foundCollection = try MangaCollectionDB.fetchOne(db, id: collection.id) else { return }
-//                    
-//                    try foundCollection.updateChanges(db) {
-//                        if let direction = direction { $0.order.direction = direction }
-//                        if let field = field { $0.order.field = field }
-//                    }
-//                }
-//            } catch(let err) {
-//                print(err)
-//            }
-//        }
+        Task {
+            guard var collection = collection else { return }
+            
+            do {
+                if let direction { collection.order.direction = direction }
+                if let field { collection.order.field = field }
+                try await harmony.save(record: collection)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
