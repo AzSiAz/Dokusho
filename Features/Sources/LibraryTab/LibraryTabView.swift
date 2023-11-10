@@ -62,9 +62,9 @@ public struct LibraryTabView: View {
             }
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
-//            .navigationDestination(for: DetailedMangaInList.self) { data in
-//                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
-//            }
+            .navigationDestination(for: DetailedSerieInList.self) { data in
+                SerieDetailScreen(serieID: data.serie.internalID, scraperID: data.scraper.id)
+            }
             .navigationDestination(for: SerieCollection.self) { data in
                 SerieCollectionPage(collection: data)
             }

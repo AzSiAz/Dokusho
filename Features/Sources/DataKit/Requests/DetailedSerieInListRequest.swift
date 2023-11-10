@@ -36,73 +36,65 @@ public struct DetailedSerieInListRequest: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> [DetailedSerieInList] {
-        do {
-            let unreadChapterCount = "DISTINCT \"SerieChapter\".\"id\") FILTER (WHERE serieChapter.readAt = null"
-            let readChapterCount = "DISTINCT \"SerieChapter\".\"id\") FILTER (WHERE serieChapter.readAt != null"
-            let chapterCount = "DISTINCT \"serieChapter\".\"id\""
+        let unreadChapterCount = "DISTINCT \"SerieChapter\".\"id\") FILTER (WHERE serieChapter.readAt = null"
+        let readChapterCount = "DISTINCT \"SerieChapter\".\"id\") FILTER (WHERE serieChapter.readAt != null"
+        let chapterCount = "DISTINCT \"serieChapter\".\"id\""
+        
+        var request = Serie
+            .select([
+                Serie.Columns.alternateTitles,
+                Serie.Columns.authors,
+                Serie.Columns.collectionID,
+                Serie.Columns.cover,
+                Serie.Columns.genres,
+                Serie.Columns.id,
+                Serie.Columns.internalID,
+                Serie.Columns.kind,
+                Serie.Columns.readerDirection,
+                Serie.Columns.scraperID,
+                Serie.Columns.status,
+                Serie.Columns.synopsis,
+                Serie.Columns.title,
+                count(SQL(sql: unreadChapterCount)).forKey("unreadChapterCount"),
+                count(SQL(sql: readChapterCount)).forKey("readChapterCount"),
+                count(SQL(sql: chapterCount)).forKey("chapterCount"),
+                max(SQL(sql: "\"serieChapter\".\"uploadedAt\"")).forKey("lastUpdate")
+            ])
+            .joining(optional: Serie.chapters)
+            .including(required: Serie.scraper)
+            .group(Serie.Columns.id)
+        
+        if !searchTerm.isEmpty { request = request.filterByName(searchTerm) }
+        
+        switch requestType {
+        case .genre(let genre):
+            request = request.orderByTitle().filterByGenre(genre).isInCollection()
+        case .scraper(let scraper):
+            request = request.orderByTitle().whereScraper(scraperID: scraper.id).isInCollection()
+        case .collection(let collectionId):
+            let serieCollection = try? SerieCollection.all().filter(id: collectionId).fetchOne(db)
             
-            var request = Serie
-                .select([
-                    Serie.Columns.alternateTitles,
-                    Serie.Columns.authors,
-                    Serie.Columns.collectionID,
-                    Serie.Columns.cover,
-                    Serie.Columns.genres,
-                    Serie.Columns.id,
-                    Serie.Columns.internalID,
-                    Serie.Columns.kind,
-                    Serie.Columns.readerDirection,
-                    Serie.Columns.scraperID,
-                    Serie.Columns.status,
-                    Serie.Columns.synopsis,
-                    Serie.Columns.title,
-                    count(SQL(sql: unreadChapterCount)).forKey("unreadChapterCount"),
-                    count(SQL(sql: readChapterCount)).forKey("readChapterCount"),
-                    count(SQL(sql: chapterCount)).forKey("chapterCount"),
-                    max(SQL(sql: "\"serieChapter\".\"uploadedAt\"")).forKey("lastUpdate")
-                ])
-                .joining(optional: Serie.chapters)
-                .including(required: Serie.scraper)
-                .group(Serie.Columns.id)
+            request = request.forSerieCollectionID(collectionId)
             
-            if !searchTerm.isEmpty { request = request.filterByName(searchTerm) }
-            
-            switch requestType {
-            case .genre(let genre):
-                request = request.orderByTitle().filterByGenre(genre).isInCollection()
-            case .scraper(let scraper):
-                request = request.orderByTitle().whereScraper(scraperID: scraper.id).isInCollection()
-            case .collection(let collectionId):
-                let serieCollection = try? SerieCollection.all().filter(id: collectionId).fetchOne(db)
-                
-                request = request.forSerieCollectionID(collectionId)
-                
-                if let filter = serieCollection?.filter {
-                    switch filter {
-                    case .all: break
-                    case .onlyUnReadChapter: request = request.having(sql: "unreadChapterCount > 0")
-                    case .completed: request = request.forSerieStatus(.complete)
-                    }
-                }
-                
-                
-                if let order = serieCollection?.order {
-                    switch order.field {
-                    case .unreadChapters: request = request.order(sql: "unreadChapterCount \(order.direction)")
-                    case .title: request = request.orderByTitle(direction: order.direction)
-                    case .lastUpdate: request = request.order(sql: "serieChapter.uploadedAt \(order.direction)")
-                    case .chapterCount: request = request.order(sql: "chapterCount \(order.direction)")
-                    }
+            if let filter = serieCollection?.filter {
+                switch filter {
+                case .all: break
+                case .onlyUnReadChapter: request = request.having(sql: "unreadChapterCount > 0")
+                case .completed: request = request.forSerieStatus(.complete)
                 }
             }
             
-            print(try request.makePreparedRequest(db).statement)
             
-            return try DetailedSerieInList.fetchAll(db, request)
-        } catch {
-            print(error.localizedDescription)
-            
-            return []
+            if let order = serieCollection?.order {
+                switch order.field {
+                case .unreadChapters: request = request.order(sql: "unreadChapterCount \(order.direction)")
+                case .title: request = request.orderByTitle(direction: order.direction)
+                case .lastUpdate: request = request.order(sql: "serieChapter.uploadedAt \(order.direction)")
+                case .chapterCount: request = request.order(sql: "chapterCount \(order.direction)")
+                }
+            }
         }
+        
+        return try DetailedSerieInList.fetchAll(db, request)
     }
 }
