@@ -12,7 +12,7 @@ public struct SettingsTabScreen: View {
     @Environment(UserPreferences.self) private var userPreference
     
     @State private var showExportfile = false
-    @State private var file: Backup?
+    @State private var file: BackupV1?
     @State private var fileName: String?
     @State private var showImportfile = false
     @State private var showImageCleanupAlert = false
@@ -29,6 +29,7 @@ public struct SettingsTabScreen: View {
                     Button(action: { createBackup() }) {
                         Text("Create Backup")
                     }
+
                     Button(action: { showImportfile.toggle() }) {
                         Text("Import Backup")
                     }
@@ -48,6 +49,7 @@ public struct SettingsTabScreen: View {
                     Button(action: { showImageCleanupAlert.toggle() }) {
                         Text("Clear image cache")
                     }
+
                     Button(action: { showDataCleanupAlert.toggle() }) {
                         Text("Clean serie cache (not in library)")
                     }
@@ -84,7 +86,7 @@ extension SettingsTabScreen {
         let backup = backupManager.createBackup()
 
         fileName = "dokusho-backup-\(Date.now.ISO8601Format()).json"
-        file = Backup(data: backup)
+        file = BackupV1(data: backup)
 
         showExportfile.toggle()
     }
@@ -92,12 +94,11 @@ extension SettingsTabScreen {
     func importBackup(url: URL) async {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
-//            let data = try Data(contentsOf: url)
-//            let backup = try JSONDecoder().decode(BackupData.self, from: data)
+            let data = try Data(contentsOf: url)
+            let backup = try JSONDecoder().decode(BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
-            throw "TODO: Fix backup"
 
-//            await backupManager.importBackup(backup: backup)
+            await backupManager.importBackup(backup: backup)
         } catch {
             Logger.backup.error("Error importing backup: \(error.localizedDescription)")
             CFURLStopAccessingSecurityScopedResource(url as CFURL)

@@ -13,6 +13,8 @@ public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(ReaderManager.self) public var readerManager
     
+    @Harmony var harmony
+    
     @State private var vm: ReaderViewModel
     @Namespace private var overlayAnimation
     
@@ -35,7 +37,7 @@ public struct ReaderView: View {
         .navigationBarHidden(true)
         .onTapGesture { vm.toggleToolbar() }
         .task(id: vm.currentChapter) { await vm.fetchChapter() }
-        .task(id: vm.tabIndex) { await vm.updateChapterStatus() }
+        .task(id: vm.tabIndex) { await vm.updateChapterStatus(harmony: harmony) }
         .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }

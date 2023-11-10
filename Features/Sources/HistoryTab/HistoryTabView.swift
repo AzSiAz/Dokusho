@@ -38,7 +38,7 @@ public struct HistoryTabView: View {
 
     @ViewBuilder
     func ChapterRow(_ chapter: SerieChaptersHistory) -> some View {
-        NavigationLink(destination: SerieDetailScreen(serieID: chapter.serieInternalID, scraperID: chapter.scraperID)) {
+        NavigationLink(destination: SerieDetailScreen(serieInternalID: chapter.serieInternalID, scraperID: chapter.scraperID)) {
             HStack {
                 SerieCard(imageUrl: chapter.serieCover, contentMode: .fit)
                     .serieCardFrame(width: 90, height: 120)
@@ -80,7 +80,7 @@ public struct HistoryTabView: View {
             ContentUnavailableView(
                 "No chapter",
                 systemImage: "book",
-                description: Text("Browse manga")
+                description: Text("Browse Serie on Explore Tab")
             )
         }
     }

@@ -107,7 +107,7 @@ public struct SerieCollectionPage: View {
     @ViewBuilder
     func ListView() -> some View {
         List(list) { data in
-            MangaInList(data: data)
+            SerieInList(data: data)
         }
         .refreshable {
             await vm.refreshLibrary(
@@ -120,7 +120,7 @@ public struct SerieCollectionPage: View {
     }
     
     @ViewBuilder
-    func MangaInList(data: DetailedSerieInList) -> some View {
+    func SerieInList(data: DetailedSerieInList) -> some View {
         NavigationLink(value: data) {
             HStack {
                 SerieCard(imageUrl: data.serie.cover, chapterCount: data.unreadChapterCount)

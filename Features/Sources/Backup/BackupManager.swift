@@ -6,7 +6,7 @@ import SerieScraper
 import DataKit
 import Common
 
-public struct Backup: FileDocument {
+public struct BackupV1: FileDocument {
     public static var readableContentTypes = [UTType.json]
     public static var writableContentTypes = [UTType.json]
     
@@ -22,22 +22,21 @@ public struct Backup: FileDocument {
     }
     
     public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-//        let data = try JSONEncoder().encode(data)
-//        return FileWrapper(regularFileWithContents: data)
-        throw "TODO: BackupData is not Codable"
+        let data = try JSONEncoder().encode(data)
+        return FileWrapper(regularFileWithContents: data)
     }
 }
 
-public struct BackupData {
+public struct BackupData: Codable {
     var collections: [BackupCollectionData]
 }
 
-public struct BackupCollectionData {
+public struct BackupCollectionData: Codable {
     var collection: SerieCollection
     var series: [Serie]
 }
 
-public struct MangaWithChapters {
+public struct MangaWithChapters: Codable {
     var serie: Serie
     var chapters: [SerieChapter]
 }

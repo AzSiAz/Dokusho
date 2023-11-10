@@ -50,7 +50,7 @@ public struct ExploreSourceView: View {
         .task { await fetchList(clean: true) }
         .onChange(of: type) { _, _ in Task { await fetchList(clean: true, typeChange: true) } }
         .navigationDestination(for: SourceSmallSerie.self) { serie in
-            SerieDetailScreen(serieID: serie.id, scraperID: scraper.id)
+            SerieDetailScreen(serieInternalID: serie.id, scraperID: scraper.id)
         }
     }
     
@@ -148,11 +148,11 @@ extension ExploreSourceView {
         }
         
         do {
-            let newManga = try await type == .latest ? source.fetchLatestUpdates(page: nextPage) : source.fetchPopularSerie(page: nextPage)
+            let newSeries = try await type == .latest ? source.fetchLatestUpdates(page: nextPage) : source.fetchPopularSerie(page: nextPage)
             
             withAnimation {
-                if clean { self.series = OrderedSet(newManga.data) }
-                else { self.series.append(contentsOf: newManga.data) }
+                if clean { self.series = OrderedSet(newSeries.data) }
+                else { self.series.append(contentsOf: newSeries.data) }
                 
                 self.nextPage += 1
             }
@@ -171,7 +171,7 @@ extension ExploreSourceView {
         
         try? await serieService.addSerieToCollection(
             source: source,
-            serieID: id,
+            serieInternalID: id,
             serieCollectionID: serieCollection.id,
             harmonic: harmony
         )

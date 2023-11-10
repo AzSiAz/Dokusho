@@ -2,14 +2,14 @@ import GRDBQuery
 import GRDB
 
 public struct OneSerieRequest: Queryable {
-    public var serieID: String
+    public var serieInternalID: Serie.InternalID
     public var scraperID: Scraper.ID
     
     public static var defaultValue: Serie? { nil }
     
-    public init(serieID: String, scraperID: Scraper.ID) {
+    public init(serieInternalID: Serie.InternalID, scraperID: Scraper.ID) {
         self.scraperID = scraperID
-        self.serieID = serieID
+        self.serieInternalID = serieInternalID
     }
     
     public func publisher(in database: DatabaseReader) -> DatabasePublishers.Value<Serie?> {
@@ -19,6 +19,6 @@ public struct OneSerieRequest: Queryable {
     }
     
     public func fetchValue(_ db: Database) throws -> Serie? {
-        return try Serie.all().whereSerie(serieID: serieID, scraperID: scraperID).fetchOne(db)
+        return try Serie.all().whereSerie(serieInternalID: serieInternalID, scraperID: scraperID).fetchOne(db)
     }
 }

@@ -47,7 +47,7 @@ extension SerieChapter: TableRecord {
 }
 
 public extension DerivableRequest<SerieChapter> {
-    func whereSerie(serieID: UUID) -> Self {
+    func whereSerie(serieID: Serie.ID) -> Self {
         filter(RowDecoder.Columns.serieID == serieID)
     }
     

@@ -46,4 +46,8 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
             self.readAt = nil
         }
     }
+    
+    public mutating func setReadAt(date: Date?) {
+        self.readAt = date
+    }
 }

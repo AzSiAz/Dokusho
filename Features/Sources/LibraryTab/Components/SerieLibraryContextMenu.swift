@@ -1,16 +1,11 @@
-//
-//  MangaLibraryContextMenu.swift
-//  Dokusho
-//
-//  Created by Stephan Deumier on 04/07/2021.
-//
-
 import SwiftUI
 import DataKit
 
 public struct SerieLibraryContextMenu: View {
     var serie: Serie
     var count: Int
+    
+    @Harmony var harmony
     
     public init(serie: Serie, count: Int) {
         self.serie = serie
@@ -32,14 +27,34 @@ public struct SerieLibraryContextMenu: View {
     }
     
     func markAllChapterAsRead() {
-//        try? appDB.database.write { db in
-//            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
-//        }
+        Task {
+            let chapters = try await harmony.reader.read { db in
+                return try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll(db)
+            }
+            let chs = chapters.map {
+                var ch = $0
+                ch.setReadAt(date: .now)
+
+                return ch
+            }
+
+            try await harmony.save(records: chs)
+        }
     }
     
     func markAllChapterAsUnRead() {
-//        try? appDB.database.write { db in
-//            try MangaChapterDB.markAllAs(newStatus: newSatus, db: db, mangaId: manga.id)
-//        }
+        Task {
+            let chapters = try await harmony.reader.read { db in
+                return try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll(db)
+            }
+            let chs = chapters.map {
+                var ch = $0
+                ch.setReadAt(date: nil)
+
+                return ch
+            }
+            
+            try await harmony.save(records: chs)
+        }
     }
 }

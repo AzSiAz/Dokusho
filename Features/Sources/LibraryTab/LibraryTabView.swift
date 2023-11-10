@@ -63,7 +63,7 @@ public struct LibraryTabView: View {
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
             .navigationDestination(for: DetailedSerieInList.self) { data in
-                SerieDetailScreen(serieID: data.serie.internalID, scraperID: data.scraper.id)
+                SerieDetailScreen(serieInternalID: data.serie.internalID, scraperID: data.scraper.id)
             }
             .navigationDestination(for: SerieCollection.self) { data in
                 SerieCollectionPage(collection: data)
@@ -92,19 +92,23 @@ public struct LibraryTabView: View {
     }
     
     func onMove(_ offsets: IndexSet, _ position: Int) {
-//        try? appDB.database.write { db in
-//            var revisedItems: [MangaCollectionDB] = collections.map{ $0.mangaCollection }
-//
-////            change the order of the items in the array
-//            revisedItems.move(fromOffsets: offsets, toOffset: position)
-//
-////            update the position attribute in revisedItems to
-////            persist the new order. This is done in reverse order
-////            to minimize changes to the indices.
-//            for reverseIndex in stride(from: revisedItems.count - 1, through: 0, by: -1) {
-//                revisedItems[reverseIndex].position = reverseIndex
-//                try revisedItems[reverseIndex].save(db)
-//            }
-//        }
+        Task {
+            do {
+                var revisedItems = collections.map{ $0.serieCollection }
+                revisedItems.move(fromOffsets: offsets, toOffset: position)
+                
+                let updatedSerieCollection = revisedItems
+                    .enumerated()
+                    .map { d in
+                        var serieCollection = d.element
+                        serieCollection.position = d.offset;
+                        return serieCollection
+                    }
+                
+                try await harmony.save(records: updatedSerieCollection)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }

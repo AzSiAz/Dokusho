@@ -126,19 +126,18 @@ public class ReaderViewModel {
         return Double(onlyUrl.count)
     }
     
-    func updateChapterStatus() async {
+    func updateChapterStatus(harmony: Harmonic) async {
         if progressBarCount() == progressBarCurrent() {
             withAnimation {
                 self.showToolBar = true
             }
 
-//            do {
-//                try await self.database.write { [currentChapter] db in
-//                    try MangaChapterDB.markChapterAs(newStatus: .read, db: db, chapterId: currentChapter.id)
-//                }
-//            } catch(let err) {
-//                print(err)
-//            }
+            do {
+                currentChapter.readAt = .now
+                try await harmony.save(record: currentChapter)
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
     

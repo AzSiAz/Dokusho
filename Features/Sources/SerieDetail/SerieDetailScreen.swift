@@ -11,13 +11,13 @@ public struct SerieDetailScreen: View {
 
     @State var isError: Bool = false
     
-    var serieID: String
+    var serieInternalID: Serie.InternalID
     var scraperID: Scraper.ID
 
-    public init(serieID: String, scraperID: UUID) {
-        self.serieID = serieID
+    public init(serieInternalID: Serie.InternalID, scraperID: UUID) {
+        self.serieInternalID = serieInternalID
         self.scraperID = scraperID
-        self._serie = Query(OneSerieWithDetailRequest(serieID: serieID, scraperID: scraperID))
+        self._serie = Query(OneSerieWithDetailRequest(serieInternalID: serieInternalID, scraperID: scraperID))
     }
 
     public var body: some View {
@@ -49,7 +49,7 @@ private extension SerieDetailScreen {
         do {
             guard let source = scraperService.getSource(sourceId: scraperID) else { return }
             
-            try await serieService.upsert(source: source, serieID: serieID, harmonic: harmony)
+            try await serieService.upsert(source: source, serieInternalID: serieInternalID, harmonic: harmony)
         } catch {
             withAnimation {
                 isError = true

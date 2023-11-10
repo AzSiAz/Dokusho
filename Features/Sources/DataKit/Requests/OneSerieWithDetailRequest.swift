@@ -11,11 +11,11 @@ public struct SerieWithDetail: Decodable, FetchableRecord {
 public struct OneSerieWithDetailRequest: Queryable {
     public static var defaultValue: SerieWithDetail? { nil }
 
-    public var serieID: String
+    public var serieInternalID: Serie.InternalID
     public var scraperID: Scraper.ID
 
-    public init(serieID: String, scraperID: Scraper.ID) {
-        self.serieID = serieID
+    public init(serieInternalID: Serie.InternalID, scraperID: Scraper.ID) {
+        self.serieInternalID = serieInternalID
         self.scraperID = scraperID
     }
 
@@ -28,7 +28,7 @@ public struct OneSerieWithDetailRequest: Queryable {
     public func fetchValue(_ db: Database) throws -> SerieWithDetail? {
         let request = Serie
             .all()
-            .whereSerie(serieID: serieID, scraperID: scraperID)
+            .whereSerie(serieInternalID: serieInternalID, scraperID: scraperID)
             .including(required: Serie.scraper)
             .including(optional: Serie.serieCollection)
         

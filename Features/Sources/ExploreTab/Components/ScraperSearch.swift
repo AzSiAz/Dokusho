@@ -21,7 +21,7 @@ public struct ScraperSearch: View {
     @State private var oldSearch: String?
     @State private var isLoading = true
     @State private var hasNextPage = false
-    @State private var mangas = OrderedSet<SourceSmallSerie>()
+    @State private var series = OrderedSet<SourceSmallSerie>()
 
     public init(scraper: Scraper, textToSearch: String) {
         self.scraper = scraper
@@ -31,9 +31,9 @@ public struct ScraperSearch: View {
     
     public var body: some View {
         Group {
-            if isLoading && mangas.isEmpty {
+            if isLoading && series.isEmpty {
                 ProgressView()
-            } else if !isLoading && mangas.isEmpty {
+            } else if !isLoading && series.isEmpty {
                 Text("No Results founds")
             }
             else {
@@ -50,8 +50,8 @@ public struct ScraperSearch: View {
     @ViewBuilder
     func SearchResult() -> some View {
         ScrollView(.horizontal, showsIndicators: true) {
-            SerieList(series: mangas, horizontal: true) { serie in
-                NavigationLink(value: SelectedSearchResult(scraperId: scraper.id, serieId: serie.id)) {
+            SerieList(series: series, horizontal: true) { serie in
+                NavigationLink(value: SelectedSearchResult(scraperId: scraper.id, serieInternalID: serie.id)) {
                     let found = inCollection.first { $0.internalID == serie.id }
                     SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection)
                         .contextMenu { ContextMenu(serie: serie) }
@@ -79,7 +79,7 @@ extension ScraperSearch {
         isLoading = true
 
         if oldSearch != text {
-            mangas = []
+            series = []
             hasNextPage = false
             nextPage = 1
         }
@@ -91,17 +91,17 @@ extension ScraperSearch {
         
         withAnimation {
             self.hasNextPage = data.hasNextPage
-            self.mangas.append(contentsOf: data.data)
+            self.series.append(contentsOf: data.data)
             self.isLoading = false
             self.nextPage += 1
             self.oldSearch = text
         }
     }
     
-    func fetchMoreIfPossible(for manga: SourceSmallSerie) async {
+    func fetchMoreIfPossible(for serie: SourceSmallSerie) async {
         guard let oldSearch = oldSearch else { return }
 
-        if mangas.last == manga && hasNextPage {
+        if series.last == serie && hasNextPage {
             return await fetchData(text: oldSearch)
         }
     }
@@ -113,7 +113,7 @@ extension ScraperSearch {
 
         try? await serieService.addSerieToCollection(
             source: source,
-            serieID: id,
+            serieInternalID: id,
             serieCollectionID: serieCollection.id,
             harmonic: harmony
         )

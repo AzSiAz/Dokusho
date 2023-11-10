@@ -57,7 +57,7 @@ public class LibraryUpdater {
 //                    guard
 //                        let internalId = data.toRefresh.internalId,
 //                        let sourceData = try? await data.source.fetchSerieDetail(serieId: internalId)
-//                    else { throw "Manga not found: \(String(describing: data.toRefresh.internalId))" }
+//                    else { throw "Serie not found: \(String(describing: data.toRefresh.internalId))" }
 //                    
 //                    data.toRefresh.update(from: sourceData)
 //                } catch (let error) {

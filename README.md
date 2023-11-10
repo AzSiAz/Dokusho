@@ -1,6 +1,6 @@
 # Dokusho
 
-Kind of tired to need an Android Device on me, just to read manga, so here we are.
+Kind of tired to need an Android Device on me, just to read my serie, so here we are.
 
 
 I am going to prioritize feature based on how I feel and not people expectation, you know the saying if you want something do it yourself (or pay me/someone to do it if you don't know how).     
@@ -18,20 +18,20 @@ Alternative to consider:
 - One from the app store (no seriously don't do this they are mostly full of ads)
 
 ## Features
-- MultiSource (see progress in [MangaScraper](https://github.com/AzSiAz/MangaScraper) repository)
+- MultiSource
 - Library stored in GRDB
-- Multi collection (only one manga per collection)
+- Multi collection (only one serie per collection)
 - some Library Filter and order (saved)
-- Very basic manga/webtoon/etc reader and a way to change reader direction
+- Very basic manga/webtoon/LN reader and a way to change reader direction
 - Backup/Restore
 
 ## Working On
-- Save reader direction for manga/webtoon/etc.
+- Save reader direction for manga/webtoon/LN.
 
 ## Planned
 - Tracker (maybe, I don't use them anymore)
 - Scroll to next chapter in reader
-- One manga in multiple collection, maybe
+- One serie in multiple collection, maybe
 - Cleanup DB, cache
 - Cloudflare bypass (pain in the ass when you are hit currently)
 - Double Page reader

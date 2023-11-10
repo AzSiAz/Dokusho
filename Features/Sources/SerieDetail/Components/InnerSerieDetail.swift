@@ -39,7 +39,7 @@ public struct InnerSerieDetail: View {
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                if let url = getMangaURL() {
+                if let url = getSerieURL() {
                     Link(destination: url) {
                         Image(systemName: "safari")
                     }
@@ -204,7 +204,7 @@ public struct InnerSerieDetail: View {
 }
 
 extension InnerSerieDetail {
-    func getMangaURL() -> URL? {
+    func getSerieURL() -> URL? {
         guard
             let source = ScraperService.shared.getSource(sourceId: scraper.id)
         else { return nil }
@@ -215,7 +215,7 @@ extension InnerSerieDetail {
     func update() async {
         guard
             let source = ScraperService.shared.getSource(sourceId: scraper.id),
-            let _ = try? await serieService.update(source: source, serieID: serie.internalID, harmonic: harmony)
+            let _ = try? await serieService.update(source: source, serieInternalID: serie.internalID, harmonic: harmony)
         else { return }
     }
     

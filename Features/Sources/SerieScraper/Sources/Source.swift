@@ -26,6 +26,7 @@ public enum SourceSerieType: String, CaseIterable {
     case manhwa = "Manhwa"
     case doujinshi = "Doujinshi"
     case unknown = "Unknown"
+    case lightNovel = "Light Novel"
 }
 
 public struct SourceSerie: Identifiable, Equatable, Hashable {

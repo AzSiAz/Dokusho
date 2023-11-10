@@ -19,7 +19,7 @@ public struct SerieForScraperPage: View {
     public var body: some View {
         ScrollView {
             SerieList(series: list) { data in
-                NavigationLink(destination: SerieDetailScreen(serieID: data.serie.internalID, scraperID: data.scraper.id)) {
+                NavigationLink(destination: SerieDetailScreen(serieInternalID: data.serie.internalID, scraperID: data.scraper.id)) {
                     SerieCard(title: data.serie.title, imageUrl: data.serie.cover, chapterCount: data.unreadChapterCount)
                         .serieCardFrame()
                 }

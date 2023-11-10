@@ -18,7 +18,7 @@ public extension Serie {
     }
     
     enum Kind: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case manga = "Manga", manhua = "Manhua", manhwa = "Manhwa", doujinshi = "Doujinshi", unknown = "Unknown"
+        case manga = "Manga", manhua = "Manhua", manhwa = "Manhwa", doujinshi = "Doujinshi", unknown = "Unknown", lightNovel = "Light Novel"
         
         public init(from: SourceSerieType) {
             switch(from) {
@@ -26,6 +26,7 @@ public extension Serie {
             case .manga: self = .manga
             case .manhua: self = .manhua
             case .manhwa: self = .manhwa
+            case .lightNovel: self = .lightNovel
             case .unknown: self = .unknown
             }
         }
@@ -100,8 +101,8 @@ public extension DerivableRequest<Serie> {
         filter(RowDecoder.Columns.scraperID == scraperID)
     }
 
-    func whereSerie(serieID: String, scraperID: UUID) -> Self {
-        whereScraper(scraperID: scraperID).filter(RowDecoder.Columns.internalID == serieID)
+    func whereSerie(serieInternalID: Serie.InternalID, scraperID: UUID) -> Self {
+        whereScraper(scraperID: scraperID).filter(RowDecoder.Columns.internalID == serieInternalID)
     }
     
     func filterByName(_ searchTerm: String) -> Self {

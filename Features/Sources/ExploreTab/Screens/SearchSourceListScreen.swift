@@ -6,7 +6,7 @@ import SerieDetail
 
 struct SelectedSearchResult: Hashable {
     var scraperId: UUID
-    var serieId: String
+    var serieInternalID: Serie.InternalID
 }
 
 public struct SearchSourceListScreen: View {
@@ -30,7 +30,7 @@ public struct SearchSourceListScreen: View {
         .listStyle(.plain)
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .navigationDestination(for: SelectedSearchResult.self) { result in
-            SerieDetailScreen(serieID: result.serieId, scraperID: result.scraperId)
+            SerieDetailScreen(serieInternalID: result.serieInternalID, scraperID: result.scraperId)
         }
         .navigationTitle(Text("Search"))
         .navigationBarTitleDisplayMode(.inline)
