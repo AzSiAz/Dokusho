@@ -1,69 +1,92 @@
-//
-//  ExploreSourceView.swift
-//  ExploreSourceView
-//
-//  Created by Stephan Deumier on 14/08/2021.
-//
-
 import SwiftUI
-import MangaScraper
-import GRDBQuery
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
+import Collections
+
+enum LoadingState {
+    case loadingFirstPage, loadingNextPage, error(String), loaded
+}
 
 public struct ExploreSourceView: View {
-    @Query<MangaInCollectionsRequest> var mangas: [MangaInCollection]
-    @Query(MangaCollectionRequest()) var collections
+    @Environment(ScraperService.self) var scraperService
+    @Environment(SerieService.self) var serieService
     
-    @StateObject var vm: ExploreSourceVM
+    @Harmony var harmony
 
+    @Query<SerieInCollectionsForScraperRequest> var inCollection: [SerieInCollection]
+    @Query(AllSerieCollectionRequest()) var collections
+
+    private var scraper: Scraper
+    
+    @State private var nextPage = 1
+    @State private var isLoading = false
+    @State private var type: SourceFetchType = .latest
+    @State private var error = false
+    @State private var series = OrderedSet<SourceSmallSerie>()
+    
     public init(scraper: Scraper) {
-        _vm = .init(wrappedValue: .init(for: scraper))
-        _mangas = Query(MangaInCollectionsRequest(srcId: scraper.id))
+        self.scraper = scraper
+        self._inCollection = Query(SerieInCollectionsForScraperRequest(scraperID: scraper.id))
     }
     
     public var body: some View {
         ScrollView {
-            switch(vm.error, vm.fromSegment, vm.mangas.isEmpty) {
-            case (true, _, true): ErrorBlock()
-            case (true, _, false): ErrorWithMangaInListBlock()
-            case (false, true, _): LoadingBlock()
-            case (_, _, true): LoadingBlock()
-            case (false, _, _): MangaListBlock()
+            switch(error, series.count) {
+            case (true, 0): ErrorBlock
+            case (false, 0): LoadingBlock
+            case (true, _): ErrorWithSerieInListBlock
+            case (false, _): SerieListBlock
+            case (_, 0): LoadingBlock
             }
         }
-        .refreshable { await vm.fetchList(clean: true) }
-        .toolbar { ToolbarItem(placement: .principal) { Header() } }
-        .navigationTitle(vm.getTitle())
-        .task { await vm.initView() }
-        .onChange(of: vm.type) { _ in Task { await vm.fetchList(clean: true, typeChange: true) } }
-    }
-    
-    @ViewBuilder
-    func ErrorWithMangaInListBlock() -> some View {
-        Group {
-            MangaListBlock()
-            ErrorBlock()
+        .refreshable { await fetchList(clean: true) }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Header
+            }
+        }
+        .navigationTitle(scraper.name)
+        .task { await fetchList(clean: true) }
+        .onChange(of: type) { _, _ in Task { await fetchList(clean: true, typeChange: true) } }
+        .navigationDestination(for: SourceSmallSerie.self) { serie in
+            SerieDetailScreen(serieID: serie.id, scraperID: scraper.id)
         }
     }
     
     @ViewBuilder
-    func MangaListBlock() -> some View {
-        MangaList(mangas: vm.mangas) { manga in
-            NavigationLink(destination: MangaDetail(mangaId: manga.id, scraper: vm.scraper)) {
-                let found = mangas.first { $0.mangaId == manga.id }
-                MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
-                    .mangaCardFrame()
-                    .contextMenu { ContextMenu(manga: manga) }
-                    .task { await vm.fetchMoreIfPossible(for: manga) }
+    var ErrorWithSerieInListBlock: some View {
+        Group {
+            SerieListBlock
+            ErrorBlock
+        }
+    }
+    
+    @ViewBuilder
+    var SerieListBlock: some View {
+        SerieList(series: series) { serie in
+            NavigationLink(value: serie) {
+                let found = inCollection.first { $0.internalID == serie.id }
+                SerieCard(title: serie.title, imageUrl: serie.thumbnailUrl, collectionName: found?.collection)
+                    .serieCardFrame()
+                    .contextMenu { ContextMenu(serie: serie) }
+                    .task {
+                        if series.last == serie {
+                            await fetchList()
+                        }
+                    }
             }
             .buttonStyle(.plain)
         }
+        .padding(.bottom, 10)
+        
+        if isLoading {
+            LoadingBlock
+        }
     }
     
     @ViewBuilder
-    func LoadingBlock() -> some View {
+    var LoadingBlock: some View {
         ProgressView()
             .progressViewStyle(.circular)
             .frame(maxWidth: .infinity)
@@ -72,18 +95,17 @@ public struct ExploreSourceView: View {
     }
     
     @ViewBuilder
-    func ErrorBlock() -> some View {
-        VStack {
-            Text("Something weird happened, try again")
-            AsyncButton(action: { await vm.fetchList(clean: true) }) {
-                Image(systemName: "arrow.clockwise")
-            }
-        }
+    var ErrorBlock: some View {
+        ContentUnavailableView(
+            "Refresh",
+            systemImage: "bolt.horizontal.circle",
+            description: Text("Source might be unavailable... \n Please use pull to refresh")
+        )
     }
     
     @ViewBuilder
-    func Header() -> some View {
-        Picker("Order", selection: $vm.type) {
+    var Header: some View {
+        Picker("Order", selection: $type) {
             ForEach(SourceFetchType.allCases) { type in
                 Text(type.rawValue).tag(type)
             }
@@ -93,11 +115,65 @@ public struct ExploreSourceView: View {
     }
     
     @ViewBuilder
-    func ContextMenu(manga: SourceSmallManga) -> some View {
+    func ContextMenu(serie: SourceSmallSerie) -> some View {
         ForEach(collections) { collection in
-            AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection) }) {
+            AsyncButton(action: { await addToCollection(id: serie.id, serieCollection: collection) }) {
                 Text("Add to \(collection.name)")
             }
         }
+    }
+}
+
+extension ExploreSourceView {
+    func fetchList(clean: Bool = false, typeChange: Bool = false) async {
+        guard
+            isLoading == false,
+            let source = scraperService.getSource(sourceId: scraper.id)
+//            (!clean && !typeChange && self.series.isEmpty) || typeChange
+        else { return }
+        
+        defer {
+            isLoading = false
+        }
+        
+        if clean {
+            nextPage = 1
+            if typeChange {
+                self.series = OrderedSet()
+                self.error = false
+            }
+        } else {
+            self.isLoading = true
+            self.error = false
+        }
+        
+        do {
+            let newManga = try await type == .latest ? source.fetchLatestUpdates(page: nextPage) : source.fetchPopularSerie(page: nextPage)
+            
+            withAnimation {
+                if clean { self.series = OrderedSet(newManga.data) }
+                else { self.series.append(contentsOf: newManga.data) }
+                
+                self.nextPage += 1
+            }
+        } catch {
+            withAnimation {
+                self.error = true
+            }
+        }
+    }
+    
+    @MainActor
+    func addToCollection(id: SourceSmallSerie.ID, serieCollection: SerieCollection) async {
+        guard
+            let source = scraperService.getSource(sourceId: scraper.id)
+        else {  return }
+        
+        try? await serieService.addSerieToCollection(
+            source: source,
+            serieID: id,
+            serieCollectionID: serieCollection.id,
+            harmonic: harmony
+        )
     }
 }
