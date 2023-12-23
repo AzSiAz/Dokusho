@@ -1,10 +1,3 @@
-//
-//  SwiftUIView.swift
-//  
-//
-//  Created by Stef on 05/06/2022.
-//
-
 import SwiftUI
 
 public struct BackupImporterScreen: View {
