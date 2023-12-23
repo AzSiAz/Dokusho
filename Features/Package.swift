@@ -28,8 +28,8 @@ let package = Package(
          .package(url: "https://github.com/apple/swift-collections.git", exact: "1.0.5"),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.5.0"),
          .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main"),
-         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.21.0"),
-         .package(url: "https://github.com/groue/GRDBQuery", exact: "0.7.0"),
+         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.23.0"),
+         .package(url: "https://github.com/groue/GRDBQuery", exact: "0.8.0"),
          .package(url: "https://github.com/aaronpearce/Harmony", branch: "main"),
     ],
     targets: [
