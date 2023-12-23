@@ -14,6 +14,7 @@
 		E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */ = {isa = PBXBuildFile; productRef = E2474C9F284E5C5F0090E032 /* DynamicCollection */; };
 		E2474CA2284E62820090E032 /* LibraryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA1284E62820090E032 /* LibraryTab */; };
 		E2474CA4284E64080090E032 /* ExploreTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA3284E64080090E032 /* ExploreTab */; };
+		E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E24804C32846D2E80017F4E2 /* MangaScraper */; };
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46C8284B68FE004C594C /* SettingsTab */; };
 		E25E46CB284B697C004C594C /* HistoryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46CA284B697C004C594C /* HistoryTab */; };
@@ -22,8 +23,7 @@
 		E270C0D8282BDEFE00E3093E /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D7282BDEFE00E3093E /* Common */; };
 		E270C0DA282BDF1300E3093E /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D9282BDF1300E3093E /* Reader */; };
 		E270C0E1282C471400E3093E /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0E0282C471400E3093E /* SharedUI */; };
-		E2EA8EC12ADC4D740084EF54 /* SerieDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E2EA8EC02ADC4D740084EF54 /* SerieDetail */; };
-		E2EA8EC32ADC4D740084EF54 /* SerieScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E2EA8EC22ADC4D740084EF54 /* SerieScraper */; };
+		E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E29D727B283FBE2D0052EBED /* MangaDetail */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,11 +62,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2474CA4284E64080090E032 /* ExploreTab in Frameworks */,
-				E2EA8EC12ADC4D740084EF54 /* SerieDetail in Frameworks */,
+				E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */,
+				E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */,
 				E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */,
 				E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */,
 				E270C0E1282C471400E3093E /* SharedUI in Frameworks */,
-				E2EA8EC32ADC4D740084EF54 /* SerieScraper in Frameworks */,
 				E25B0C83282BC4360080A71A /* DataKit in Frameworks */,
 				E270C0D8282BDEFE00E3093E /* Common in Frameworks */,
 				E270C0DA282BDF1300E3093E /* Reader in Frameworks */,
@@ -152,13 +152,13 @@
 				E270C0D7282BDEFE00E3093E /* Common */,
 				E270C0D9282BDF1300E3093E /* Reader */,
 				E270C0E0282C471400E3093E /* SharedUI */,
+				E29D727B283FBE2D0052EBED /* MangaDetail */,
+				E24804C32846D2E80017F4E2 /* MangaScraper */,
 				E25E46C8284B68FE004C594C /* SettingsTab */,
 				E25E46CA284B697C004C594C /* HistoryTab */,
 				E2474C9F284E5C5F0090E032 /* DynamicCollection */,
 				E2474CA1284E62820090E032 /* LibraryTab */,
 				E2474CA3284E64080090E032 /* ExploreTab */,
-				E2EA8EC02ADC4D740084EF54 /* SerieDetail */,
-				E2EA8EC22ADC4D740084EF54 /* SerieScraper */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -358,7 +358,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -373,7 +373,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -400,7 +400,7 @@
 				CODE_SIGN_ENTITLEMENTS = Dokusho/Dokusho.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 27U585A9E3;
 				ENABLE_PREVIEWS = YES;
@@ -415,7 +415,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -469,6 +469,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ExploreTab;
 		};
+		E24804C32846D2E80017F4E2 /* MangaScraper */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MangaScraper;
+		};
 		E25B0C82282BC4360080A71A /* DataKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DataKit;
@@ -493,13 +497,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedUI;
 		};
-		E2EA8EC02ADC4D740084EF54 /* SerieDetail */ = {
+		E29D727B283FBE2D0052EBED /* MangaDetail */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SerieDetail;
-		};
-		E2EA8EC22ADC4D740084EF54 /* SerieScraper */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SerieScraper;
+			productName = MangaDetail;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
