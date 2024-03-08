@@ -15,6 +15,8 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
     public var externalUrl: URL?
 
     public var serieID: UUID
+    
+    public var archivedRecordData: Data?
 
     public init(from data: SourceChapter, serieID: UUID) {
         self.id = UUID()

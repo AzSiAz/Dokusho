@@ -13,10 +13,10 @@ import Common
 @main
 struct DokushoApp: App {
     @State private var userPreferences = UserPreferences.shared
-    @State private var backupManager = BackupManager.shared
-    @State private var libraryUpdater = LibraryUpdater.shared
+    @State private var backupManager = BackupManager()
+    @State private var libraryUpdater = LibraryUpdater()
     @State private var scraperService = ScraperService.shared
-    @State private var serieService = SerieService.shared
+    @State private var serieService = SerieService()
 
     @Harmony(
         records: [Scraper.self, SerieCollection.self, Serie.self, SerieChapter.self],

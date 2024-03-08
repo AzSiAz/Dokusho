@@ -4,15 +4,11 @@ import CloudKit
 import GRDB
 
 extension SerieCollection: HRecord {
-    public mutating func updateChanges(db: Database, ckRecord: CKRecord) throws {}
-    
-    public var archivedRecordData: Data? {
-        get { Data() }
-        set(newValue) { }
-    }
-    
     public var zoneID: CKRecordZone.ID {
-        return .default
+        return CKRecordZone.ID(
+            zoneName: "SerieCollection",
+            ownerName: CKCurrentUserDefaultName
+        )
     }
     
     public var record: CKRecord {

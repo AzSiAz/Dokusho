@@ -7,8 +7,6 @@ import Harmony
 
 @Observable
 public class LibraryUpdater {
-    public static let shared = LibraryUpdater()
-
     public struct RefreshStatus {
         public var isRefreshing: Bool
         public var progress: Double
@@ -24,7 +22,7 @@ public class LibraryUpdater {
 
     public var refreshStatus: [UUID: Bool] = [:]
     
-    private init() {}
+    public init() {}
     
     public func refreshCollection(collection: SerieCollection, harmonic: Harmonic, onlyAllRead: Bool = true) async throws {
 //        guard refreshStatus[collection.id] == nil else { return }

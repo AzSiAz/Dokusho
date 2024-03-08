@@ -25,22 +25,7 @@ struct SourceRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical)
             .contentShape(RoundedRectangle(cornerRadius: 5))
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: { toggleIsActive() }) {
-                    Label(scraper.isActive ? "Deactivate" : "Activate", systemImage: scraper.isActive ? "eye.slash" : "eye")
-                }
-                .tint(scraper.isActive ? .red : .blue)
-            }
         }
         .buttonStyle(.plain)
-    }
-    
-    func toggleIsActive() {
-        var sc = scraper
-        sc.toggleIsActive()
-        
-        Task { [sc] in
-            try? await harmony.save(record: sc)
-        }
     }
 }

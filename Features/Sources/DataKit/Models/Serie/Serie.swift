@@ -16,6 +16,8 @@ public struct Serie: Identifiable, Equatable, Codable, Hashable {
     
     public var scraperID: UUID
     public var collectionID: UUID?
+    
+    public var archivedRecordData: Data?
 
     public init(from data: SourceSerie, scraperID: UUID, collectionID: UUID? = nil) {
         self.id = UUID()

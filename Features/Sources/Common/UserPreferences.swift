@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @Observable
-public class UserPreferences {
+public class UserPreferences: @unchecked Sendable {
     class Storage {
         // Reader Preference
         @AppStorage("USE_NEW_HORIZONTAL_READER") var useNewHorizontalReader = false

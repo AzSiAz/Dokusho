@@ -26,32 +26,32 @@ public struct LibraryTabView: View {
     public var body: some View {
         NavigationStack {
             List {
-                Section("User Collection") {
-                    ForEach(collections) { info in
-                        NavigationLink(value: info.serieCollection) {
-                            Label(info.serieCollection.name, systemImage: "square.grid.2x2")
-                                .badge("\(info.serieCount)")
-                                .padding(.vertical)
-                        }
-                    }
-                    .onDelete(perform: onDelete)
-                    .onMove(perform: onMove)
-                    
-                    if editMode.isEditing {
-                        TextField("New collection name", text: $newCollectionName)
+                ForEach(collections) { info in
+                    NavigationLink(value: info.serieCollection) {
+                        Label(info.serieCollection.name, systemImage: "square.grid.2x2")
+                            .badge("\(info.serieCount)")
                             .padding(.vertical)
-                            .submitLabel(.done)
-                            .onSubmit(saveNewCollection)
                     }
                 }
+                .onDelete(perform: onDelete)
+                .onMove(perform: onMove)
                 
-                Section("Dynamic Collection") {
-                    NavigationLink(destination: SeriesByGenreListPage()) {
-                        Text("By Genres")
-                    }
-                    
-                    NavigationLink(destination: SeriesByScraperListPage()) {
-                        Text("By Source List")
+                if editMode.isEditing {
+                    TextField("New collection name", text: $newCollectionName)
+                        .padding(.vertical)
+                        .submitLabel(.done)
+                        .onSubmit(saveNewCollection)
+                }
+                
+                if !collections.isEmpty {
+                    Section("Dynamic Collection") {
+                        NavigationLink(destination: SeriesByGenreListPage()) {
+                            Text("By Genres")
+                        }
+                        
+                        NavigationLink(destination: SeriesByScraperListPage()) {
+                            Text("By Source List")
+                        }
                     }
                 }
             }
@@ -67,6 +67,12 @@ public struct LibraryTabView: View {
             }
             .navigationDestination(for: SerieCollection.self) { data in
                 SerieCollectionPage(collection: data)
+            }
+            .overlay {
+                if collections.isEmpty && !editMode.isEditing {
+                    ContentUnavailableView("No collection", systemImage: "text.book.closed", description: Text("Create a collection"))
+
+                }
             }
         }
         .navigationViewStyle(.stack)

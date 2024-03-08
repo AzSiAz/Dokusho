@@ -31,7 +31,7 @@ public struct ExploreTabView: View {
             }
             .overlay {
                 if scrapers.isEmpty {
-                    ContentUnavailableView("No Source", systemImage: "safari", description: Text("Please enable a source to explore"))
+                    ContentUnavailableView("No Source", systemImage: "safari", description: Text("Enable a source to explore"))
                 }
             }
             .toolbar {

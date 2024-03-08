@@ -12,7 +12,7 @@ public struct BackupChoiceScreen: View {
     @Harmony var harmony
     
     @State private var showExportfile = false
-    @State private var file: BackupV1?
+    @State private var file: BackupV2?
     @State private var fileName: String?
     @State private var showImportV1File = false
     @State private var showImportV2File = false
@@ -56,7 +56,7 @@ public struct BackupChoiceScreen: View {
         let backup = backupManager.createBackup(harmonic: harmony)
         
         fileName = "dokusho-backup-\(Date.now.ISO8601Format()).json"
-        file = BackupV1(data: backup)
+        file = BackupV2(data: backup)
         
         showExportfile.toggle()
     }
@@ -65,7 +65,7 @@ public struct BackupChoiceScreen: View {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
             let data = try Data(contentsOf: url)
-            let backup = try JSONDecoder().decode(BackupDataV1.self, from: data)
+            let backup = try JSONDecoder().decode(BackupV2.BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
             
             try await backupManager.importV1Backup(backup: backup, harmonic: harmony, scraperService: scraperService)
@@ -79,7 +79,7 @@ public struct BackupChoiceScreen: View {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
             let data = try Data(contentsOf: url)
-            let backup = try JSONDecoder().decode(BackupDataV1.self, from: data)
+            let backup = try JSONDecoder().decode(BackupV2.BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
             
             try await backupManager.importV2Backup(backup: backup, harmonic: harmony)

@@ -4,7 +4,7 @@ import SerieScraper
 import OSLog
 
 @Observable
-public class ScraperService {
+public class ScraperService: @unchecked Sendable {
     public static let shared = ScraperService()
 
     #if DEBUG

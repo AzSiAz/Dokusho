@@ -4,11 +4,9 @@ import OSLog
 
 @Observable
 public class SerieService {
-    public static let shared = SerieService()
+private let logger = Logger.serieService
     
-    private let logger = Logger.serieService
-    
-    private init() {}
+    public init() {}
 
     @discardableResult
     public func upsert(source: Source, serieInternalID: Serie.InternalID, harmonic: Harmonic) async throws -> Serie {

@@ -6,17 +6,17 @@ import SerieScraper
 import DataKit
 import Common
 
-public struct BackupV1: FileDocument {
+public struct BackupV2: FileDocument {
     public static var readableContentTypes = [UTType.json]
     public static var writableContentTypes = [UTType.json]
     
-    var data: BackupDataV1
+    var data: BackupData
     
     public init(configuration: ReadConfiguration) throws {
         throw "Not done"
     }
 
-    public init(data: BackupDataV1) {
+    public init(data: BackupData) {
         self.data = data
     }
     
@@ -24,53 +24,60 @@ public struct BackupV1: FileDocument {
         let data = try JSONEncoder().encode(data)
         return FileWrapper(regularFileWithContents: data)
     }
+    
+    public struct BackupData: Codable {
+        var collections: [BackupCollectionData]
+        var scrapers: [Scraper.Backup.V2]
+    }
+    
+    public struct BackupCollectionData: Codable {
+        var collection: SerieCollection
+        var series: [SerieWithChapters]
+    }
+    
+    public struct SerieWithChapters: Codable {
+        var serie: Serie
+        var chapters: [SerieChapter]
+    }
 }
 
-public struct BackupDataV1: Codable {
-    var collections: [BackupCollectionDataV1]
-    var scrapers: [Scraper]
-}
-
-public struct BackupCollectionDataV1: Codable {
+public struct BackupTask<T> {
+    var serieBackup: T
     var collection: SerieCollection
-    var series: [SerieWithChaptersV1]
 }
 
-public struct SerieWithChaptersV1: Codable {
-    var serie: Serie
-    var chapters: [SerieChapter]
-}
-
-
-public struct BackupTask {
-    var serieBackup: SerieWithChaptersV1
-    var collection: SerieCollection
-}
-
-public typealias BackupResult = Result<BackupTask, Error>
+public typealias BackupResultV2 = Result<BackupTask<BackupV2.SerieWithChapters>, Error>
 
 @Observable
 public class BackupManager {
-    public static let shared = BackupManager()
-    
     public var isImporting: Bool = false
     public var total: Double = 0
     public var progress: Double = 0
     
-    private init() {}
+    public init() {}
     
-    public func createBackup(harmonic: Harmonic) -> BackupDataV1 {
-        var backupCollections = [BackupCollectionDataV1]()
-        var scrapers = [Scraper]()
+    public func createBackup(harmonic: Harmonic) -> BackupV2.BackupData {
+        var backupCollections = [BackupV2.BackupCollectionData]()
+        var scrapers = [Scraper.Backup.V2]()
 
         do {
             try harmonic.reader.read { db in
-                scrapers = try Scraper.all().fetchAll(db)
+                scrapers = try Scraper.all().fetchAll(db).map {
+                    Scraper.Backup.V2(
+                        id: $0.id,
+                        name: $0.name,
+                        icon: $0.icon,
+                        isActive: $0.isActive,
+                        position: $0.position,
+                        language: $0.language
+                    )
+                }
+                
                 let collections = try SerieCollection.all().fetchAll(db)
 
                 for collection in collections {
                     let series = try Serie.all().forSerieCollectionID(collection.id).fetchAll(db)
-                    var seriesBackup = [SerieWithChaptersV1]()
+                    var seriesBackup = [BackupV2.SerieWithChapters]()
 
                     for serie in series {
                         let chapters = try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll(db)
@@ -87,16 +94,20 @@ public class BackupManager {
         return .init(collections: backupCollections, scrapers: scrapers)
     }
 
-    public func importV1Backup(backup: BackupDataV1, harmonic: Harmonic, scraperService: ScraperService) async throws {}
+    public func importV1Backup(backup: BackupV2.BackupData, harmonic: Harmonic, scraperService: ScraperService) async throws {}
 
-    public func importV2Backup(backup: BackupDataV1, harmonic: Harmonic) async throws {
+    public func importV2Backup(backup: BackupV2.BackupData, harmonic: Harmonic) async throws {
         withAnimation {
             self.isImporting = true
         }
 
-        try await withThrowingTaskGroup(of: BackupResult.self) { group in
+        try await withThrowingTaskGroup(of: BackupResultV2.self) { group in
             for scraperBackup in backup.scrapers {
-                try await harmonic.save(record: scraperBackup)
+//                let foundScraper = ScraperService.shared.getSource(sourceId: scraperBackup.id)
+//                let icon = foundScraper?.icon ?? .init(string: "https://google.com/favicon.ico")!
+//                let language = Scraper.Language(from: foundScraper?.language ?? .all)
+                let scraper = Scraper(backup: scraperBackup)
+                try await harmonic.save(record: scraper)
             }
 
             for collectionBackup in backup.collections {

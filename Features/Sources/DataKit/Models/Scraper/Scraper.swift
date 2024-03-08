@@ -9,6 +9,8 @@ public struct Scraper: Identifiable, Equatable, Codable, Hashable {
     public var isActive: Bool
     public var position: Int?
     public var language: Language
+    
+    public var archivedRecordData: Data?
 
     public init(source: Source, isActive: Bool = false, position: Int? = nil) {
         self.id = source.id

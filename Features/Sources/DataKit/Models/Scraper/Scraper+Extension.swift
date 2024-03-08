@@ -6,7 +6,7 @@ public extension Scraper {
     enum Language: String, Codable, CaseIterable, DatabaseValueConvertible {
         case all = "All", english = "English", french = "French", japanese = "Japanese", unknown = "Unknown"
         
-        init(from: SourceLanguage) {
+        public init(from: SourceLanguage) {
             switch from {
             case .fr: self = .french
             case .en: self = .english
