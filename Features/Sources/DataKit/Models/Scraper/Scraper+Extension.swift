@@ -1,10 +1,12 @@
 import Foundation
 import SerieScraper
 import GRDB
+import Common
+import SwiftUI
 
 public extension Scraper {
-    enum Language: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case all = "All", english = "English", french = "French", japanese = "Japanese", unknown = "Unknown"
+    enum Language: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+        case all = 0, english = 1, french = 2, japanese = 3, unknown = 4
         
         public init(from: SourceLanguage) {
             switch from {
@@ -12,6 +14,16 @@ public extension Scraper {
             case .en: self = .english
             case .jp: self = .japanese
             case .all: self = .all
+            }
+        }
+        
+        public func label() -> LocalizedStringKey {
+            switch self {
+            case .all: "All"
+            case .english: "English"
+            case .french: "French"
+            case .japanese: "Japanese"
+            case .unknown: "Unknown"
             }
         }
     }

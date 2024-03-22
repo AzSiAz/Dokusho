@@ -1,26 +1,90 @@
 import Foundation
 import GRDB
+import SwiftUI
+import Common
 
 public extension SerieCollection {
-    enum Filter: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case all = "All", onlyUnReadChapter = "Only unread chapter", completed = "Only completed"
+    enum Filter: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+        case all = 0, onlyUnReadChapter = 1, completed = 2
+        
+        public init(_ rawValue: Int) {
+            switch rawValue {
+            case 0: self = .all
+            case 1: self = .onlyUnReadChapter
+            case 2: self = .completed
+            default: self = .all
+            }
+        }
+        
+        public init(_ backup: Backup.V1.BackupFilter) {
+            switch backup {
+            case .all: self = .all
+            case .onlyUnReadChapter: self = .onlyUnReadChapter
+            case .completed: self = .completed
+            }
+        }
+        
+        public func label() -> LocalizedStringKey {
+            switch self {
+            case .all: "All"
+            case .onlyUnReadChapter: "Only unread chapter"
+            case .completed: "Only completed"
+            }
+        }
     }
     
     struct Order: Codable, Hashable, Equatable {
-        public enum Direction: String, Codable, CaseIterable, DatabaseValueConvertible {
-            case ASC = "Ascending", DESC = "Descending"
+        public enum Direction: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+            case ASC = 0, DESC = 1
+            
+            public init(_ backup: Backup.V1.BackupOrder.Direction) {
+                switch backup {
+                case .ASC: self = .ASC
+                case .DESC: self = .DESC
+                }
+            }
+            
+            public func label() -> LocalizedStringKey {
+                switch self {
+                case .ASC: "Ascending"
+                case .DESC: "Descending"
+                }
+            }
         }
         
-        public enum Field: String, Codable, CaseIterable, DatabaseValueConvertible {
-            case unreadChapters = "By unread chapter", lastUpdate = "By last update", title = "By title", chapterCount = "By chapter count"
+        public enum Field: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+            case unreadChapters = 0, lastUpdate = 1, title = 2, chapterCount = 3
+            
+            public init(_ backup: Backup.V1.BackupOrder.Field) {
+                switch backup {
+                case .chapterCount: self = .chapterCount
+                case .lastUpdate: self = .lastUpdate
+                case .title: self = .title
+                case .unreadChapters: self = .unreadChapters
+                }
+            }
+            
+            public func label() -> LocalizedStringKey {
+                switch self {
+                case .unreadChapters: "By unread chapter"
+                case .lastUpdate: "By last update"
+                case .title: "By title"
+                case .chapterCount: "By chapter count"
+                }
+            }
         }
-        
+
         public var field: Field
         public var direction: Direction
         
         public init(field: Field = .lastUpdate, direction: Direction = .DESC) {
             self.field = field
             self.direction = direction
+        }
+        
+        public init(_ backup: Backup.V1.BackupOrder) {
+            self.field = .init(backup.field)
+            self.direction = .init(backup.direction)
         }
     }
     

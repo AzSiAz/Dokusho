@@ -17,7 +17,7 @@ struct SourceRow: View {
                 
                 VStack(alignment: .leading) {
                     Text(scraper.name)
-                    Text(scraper.language.rawValue)
+                    Text(scraper.language)
                         .font(.callout.italic())
                 }
                 .padding(.leading, 8)

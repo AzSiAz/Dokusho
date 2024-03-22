@@ -26,7 +26,7 @@ public struct SerieCollectionSettings: View {
                 Section("Filter") {
                     Picker("Change collection filter", selection: $collectionFilter) {
                         ForEach(SerieCollection.Filter.allCases, id: \.self) { filter in
-                            Text(filter.rawValue).tag(filter)
+                            Text(filter).tag(filter)
                         }
                     }
                 }
@@ -34,12 +34,12 @@ public struct SerieCollectionSettings: View {
                 Section("Order") {
                     Picker("Change collection order field", selection: $collectionOrder.field) {
                         ForEach(SerieCollection.Order.Field.allCases, id: \.self) { filter in
-                            Text(filter.rawValue).tag(filter)
+                            Text(filter).tag(filter)
                         }
                     }
                     Picker("Change collection order direction", selection: $collectionOrder.direction) {
                         ForEach(SerieCollection.Order.Direction.allCases, id: \.self) { filter in
-                            Text(filter.rawValue).tag(filter)
+                            Text(filter).tag(filter)
                         }
                     }
                 }

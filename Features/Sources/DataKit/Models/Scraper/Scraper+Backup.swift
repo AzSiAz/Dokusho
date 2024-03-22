@@ -35,22 +35,6 @@ public extension Scraper {
             public var isActive: Bool
         }
         
-        public struct V2: Codable {
-            public var id: UUID
-            public var name: String
-            public var icon: URL
-            public var isActive: Bool
-            public var position: Int?
-            public var language: Language
-            
-            public init(id: UUID, name: String, icon: URL, isActive: Bool, position: Int? = nil, language: Language) {
-                self.id = id
-                self.name = name
-                self.icon = icon
-                self.isActive = isActive
-                self.position = position
-                self.language = language
-            }
-        }
+        public typealias V2 = Scraper
     }
 }

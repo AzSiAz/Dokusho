@@ -122,7 +122,7 @@ public struct InnerSerieDetail: View {
                     }
                     .padding(.bottom, 5)
                     
-                    Text(serie.status.rawValue)
+                    Text(serie.status)
                         .font(.callout.bold())
                         .padding(.bottom, 5)
                     

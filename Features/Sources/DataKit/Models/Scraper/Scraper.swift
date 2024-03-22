@@ -11,6 +11,15 @@ public struct Scraper: Identifiable, Equatable, Codable, Hashable {
     public var language: Language
     
     public var archivedRecordData: Data?
+    
+    public init(id: UUID, name: String, icon: URL, isActive: Bool, language: Language, position: Int?) {
+        self.id = id
+        self.name = name
+        self.icon = icon
+        self.language = language
+        self.isActive = isActive
+        self.position = position
+    }
 
     public init(source: Source, isActive: Bool = false, position: Int? = nil) {
         self.id = source.id

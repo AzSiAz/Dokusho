@@ -65,11 +65,12 @@ public struct BackupChoiceScreen: View {
         do {
             CFURLStartAccessingSecurityScopedResource(url as CFURL)
             let data = try Data(contentsOf: url)
-            let backup = try JSONDecoder().decode(BackupV2.BackupData.self, from: data)
+            let backup = try JSONDecoder().decode(BackupV1.BackupData.self, from: data)
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
             
             try await backupManager.importV1Backup(backup: backup, harmonic: harmony, scraperService: scraperService)
         } catch {
+            print(error)
             Logger.backup.error("Error importing backup: \(error.localizedDescription)")
             CFURLStopAccessingSecurityScopedResource(url as CFURL)
         }

@@ -1,26 +1,36 @@
 import Foundation
 import SerieScraper
 import GRDB
+import SwiftUI
+import Common
 
 public extension Serie {
     typealias InternalID = String
     
-    enum Status: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case complete = "Complete", ongoing = "Ongoing", unknown = "Unknown"
+    enum Status: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+        case complete = 0, ongoing = 1, unknown = 2
         
-        public init(from: SourceSerieCompletion) {
+        public init(_ from: SourceSerieCompletion) {
             switch(from) {
             case .complete: self = .complete
             case .ongoing: self = .ongoing
             case .unknown: self = .unknown
             }
         }
+        
+        public func label() -> LocalizedStringKey {
+            switch self {
+            case .complete: "Complete"
+            case .ongoing: "Ongoing"
+            case .unknown: "Unknown"
+            }
+        }
     }
     
-    enum Kind: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case manga = "Manga", manhua = "Manhua", manhwa = "Manhwa", doujinshi = "Doujinshi", unknown = "Unknown", lightNovel = "Light Novel"
+    enum Kind: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+        case manga = 0, manhua = 1, manhwa = 2, doujinshi = 3, unknown = 4, lightNovel = 5
         
-        public init(from: SourceSerieType) {
+        public init(_ from: SourceSerieType) {
             switch(from) {
             case .doujinshi: self = .doujinshi
             case .manga: self = .manga
@@ -30,21 +40,48 @@ public extension Serie {
             case .unknown: self = .unknown
             }
         }
+        
+        public func label() -> LocalizedStringKey {
+            switch self {
+            case .manga: "Manga"
+            case .manhua: "Manhua"
+            case .manhwa: "Manhwa"
+            case .doujinshi: "Doujinshi"
+            case .unknown: "Unknown"
+            case .lightNovel: "Light Novel"
+            }
+        }
     }
     
     
-    enum ReaderDirection: String, Codable, CaseIterable, DatabaseValueConvertible {
-        case rightToLeft = "Right to Left (Manga)"
-        case leftToRight = "Left to Right (Manhua)"
-        case vertical = "Vertical (Webtoon, no gaps)"
+    enum ReaderDirection: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
+        case rightToLeft = 0, leftToRight = 1, vertical = 3
         
-        public init(from: SourceSerieType) {
+        public init(_ from: SourceSerieType) {
             switch from {
                 case .manga: self = .rightToLeft
                 case .manhua: self = .leftToRight
                 case .manhwa: self = .vertical
                 case .doujinshi: self = .rightToLeft
                 default: self = .rightToLeft
+            }
+        }
+        
+        public init(from: Kind) {
+            switch from {
+            case .manga: self = .rightToLeft
+            case .manhua: self = .leftToRight
+            case .manhwa: self = .vertical
+            case .doujinshi: self = .rightToLeft
+            default: self = .rightToLeft
+            }
+        }
+        
+        public func label() -> LocalizedStringKey {
+            switch self {
+            case .rightToLeft: "Right to Left (Manga)"
+            case .leftToRight: "Left to Right (Manhua)"
+            case .vertical: "Vertical (Webtoon, no gaps)"
             }
         }
     }

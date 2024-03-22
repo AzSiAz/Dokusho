@@ -7,20 +7,20 @@ public enum SourceError: Error {
     case notImplemented
 }
 
-public enum SourceLanguage: String, CaseIterable {
+public enum SourceLanguage: String, CaseIterable, Codable {
     case fr = "French"
     case en = "English"
     case jp = "Japanese"
     case all = "All"
 }
 
-public enum SourceSerieCompletion: String, CaseIterable {
+public enum SourceSerieCompletion: String, CaseIterable, Codable {
     case ongoing = "Ongoing"
     case complete = "Complete"
     case unknown = "Unknown"
 }
 
-public enum SourceSerieType: String, CaseIterable {
+public enum SourceSerieType: String, CaseIterable, Codable {
     case manga = "Manga"
     case manhua = "Manhua"
     case manhwa = "Manhwa"

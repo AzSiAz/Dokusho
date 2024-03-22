@@ -5,13 +5,13 @@ import SwiftUI
 public extension DatabaseMigrator {
     static var dokushoMigration: DatabaseMigrator {
         var migrator = DatabaseMigrator()
-        
+
         #if DEBUG
         // Speed up development by nuking the database when migrations change
         // See https://github.com/groue/GRDB.swift/blob/master/Documentation/Migrations.md#the-erasedatabaseonschemachange-option
 //        migrator.eraseDatabaseOnSchemaChange = true
         #endif
-        
+
         migrator.registerMigration("00000001_scraper_table") { db in
             try db.create(table: "scraper") { t in
                 t.column("id", .text).notNull().primaryKey(onConflict: .ignore, autoincrement: false)
@@ -19,17 +19,17 @@ public extension DatabaseMigrator {
                 t.column("icon", .text).notNull()
                 t.column("isActive", .boolean).notNull()
                 t.column("position", .integer)
-                t.column("language", .text).notNull()
+                t.column("language", .integer).notNull()
             }
         }
-        
+
         migrator.registerMigration("00000002_serie_collection_table") { db in
             try db.create(table: "serieCollection") { t in
                 t.column("id", .text).notNull().primaryKey(onConflict: .ignore, autoincrement: false)
                 t.column("name", .text).notNull()
                 t.column("position", .integer).notNull()
                 t.column("useList", .boolean).notNull()
-                t.column("filter", .text).notNull()
+                t.column("filter", .integer).notNull()
                 t.column("order", .jsonText).notNull()
             }
         }
@@ -44,9 +44,9 @@ public extension DatabaseMigrator {
                 t.column("alternateTitles", .jsonText).notNull()
                 t.column("genres", .jsonText).notNull()
                 t.column("authors", .jsonText).notNull()
-                t.column("status", .text).notNull().indexed()
-                t.column("kind", .text).notNull().indexed()
-                t.column("readerDirection", .text).notNull()
+                t.column("status", .integer).notNull().indexed()
+                t.column("kind", .integer).notNull().indexed()
+                t.column("readerDirection", .integer).notNull()
 
                 t.column("scraperID", .text).references("scraper", onDelete: .setNull, onUpdate: .cascade).indexed()
                 t.column("collectionID", .text).references("serieCollection", onDelete: .setNull, onUpdate: .cascade).indexed()
@@ -68,12 +68,12 @@ public extension DatabaseMigrator {
                 t.column("progress", .integer)
                 t.column("externalUrl", .text)
 
-                t.column("serieID", .text).references("serie", onDelete: .cascade, onUpdate: .cascade).indexed()
+                t.column("serieID", .text).notNull().references("serie", onDelete: .cascade, onUpdate: .cascade).indexed()
 
                 t.uniqueKey(["internalID", "serieID"], onConflict: .ignore)
             }
         }
-        
+
         return migrator
     }
 }
