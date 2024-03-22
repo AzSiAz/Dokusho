@@ -24,7 +24,7 @@
       "location" : "https://github.com/aaronpearce/Harmony",
       "state" : {
         "branch" : "main",
-        "revision" : "741713abf98828b59e78ad1fa142a2385dc2dc39"
+        "revision" : "855c64a92f541a53a3ee7aed5df23194e2b6d6db"
       }
     },
     {
@@ -60,7 +60,7 @@
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
         "branch" : "master",
-        "revision" : "41e7c263fb8c277e980ebcb9b0b5f6031d3d4886"
+        "revision" : "028487d4a8a291b2fe1b4392b5425b6172056148"
       }
     },
     {
@@ -69,7 +69,7 @@
       "location" : "https://github.com/apptekstudios/SwiftUILayouts",
       "state" : {
         "branch" : "main",
-        "revision" : "ea2aee25571471e7cb80e963332c7eb6cabb913b"
+        "revision" : "de1da15d1afee3b41dc628b22a4cfef381d3986f"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2d4d0e20c29a66db3cfa59cb764f77dffa64707e"
+        "revision" : "95e399ac149577d6996a7c62c90282d06373a3b7"
       }
     }
   ],

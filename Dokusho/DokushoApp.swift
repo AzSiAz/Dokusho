@@ -20,7 +20,7 @@ struct DokushoApp: App {
 
     @Harmony(
         records: [Scraper.self, SerieCollection.self, Serie.self, SerieChapter.self],
-        configuration: Configuration(sharedAppGroupContainerIdentifier: "group.tech.azsias.Dokusho"),
+        configuration: Configuration(sharedAppGroupContainerIdentifier: "group.tech.azsiaz.Dokusho"),
         migrator: .dokushoMigration
     ) var harmony
 
