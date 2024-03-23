@@ -3,7 +3,7 @@
     {
       "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/GRDB.swift",
+      "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
         "revision" : "dd7e7f39e8e4d7a22d258d9809a882f914690b01",
         "version" : "5.26.1"
@@ -12,7 +12,7 @@
     {
       "identity" : "grdbquery",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/GRDBQuery",
+      "location" : "https://github.com/groue/GRDBQuery.git",
       "state" : {
         "revision" : "be64298b4f9d70510226fa7e698aef84f41cec02",
         "version" : "0.7.0"
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "a902f1823a7ff3c9ab2fba0f992396b948eda307",
-        "version" : "1.0.5"
+        "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
+        "version" : "1.1.0"
       }
     },
     {
@@ -51,7 +51,7 @@
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
         "branch" : "master",
-        "revision" : "41e7c263fb8c277e980ebcb9b0b5f6031d3d4886"
+        "revision" : "028487d4a8a291b2fe1b4392b5425b6172056148"
       }
     },
     {
@@ -60,7 +60,7 @@
       "location" : "https://github.com/apptekstudios/SwiftUILayouts",
       "state" : {
         "branch" : "main",
-        "revision" : "ea2aee25571471e7cb80e963332c7eb6cabb913b"
+        "revision" : "de1da15d1afee3b41dc628b22a4cfef381d3986f"
       }
     },
     {
@@ -69,7 +69,7 @@
       "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2d4d0e20c29a66db3cfa59cb764f77dffa64707e"
+        "revision" : "95e399ac149577d6996a7c62c90282d06373a3b7"
       }
     }
   ],
