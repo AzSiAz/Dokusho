@@ -1,5 +1,5 @@
 import Foundation
-import Harmony
+import SwiftData
 import SerieScraper
 import OSLog
 
@@ -23,45 +23,43 @@ public class ScraperService: @unchecked Sendable {
         return sources.first { $0.id == sourceId }
     }
 
-    public func upsertAllSource(in harmonic: Harmonic) async {
+    public func upsertAllSource(in container: ModelContainer? = nil) {
         do {
-            let scrapers = try await harmonic.reader.read { db in
-                return try Scraper.all().fetchAll(db)
-            }
+            let context = ModelContext(container ?? .dokusho())
+            let scrapers = try context.fetch(.allScrapers())
 
             for source in sources {
-                if let scraper = scrapers.first(where: { $0.id == source.id }) {
-                    var sc = scraper
-                    sc.update(source: source)
-                    if sc != scraper {
-                        logger.debug("Updating source: \(scraper.name)")
-                        try await harmonic.save(record: sc)
-                    }
+                if let scraper = scrapers.first(where: { $0.scraperId == source.id }) {
+                    logger.debug("Updating source: \(scraper.name)")
+                    scraper.update(source: source)
                 } else {
                     logger.debug("Inserting source: \(source.name)")
-                    try await harmonic.create(record: Scraper(source: source))
+                    context.insert(Scraper(source: source))
                 }
+            }
+            
+            if context.hasChanges {
+                try context.save()
             }
         } catch {
             logger.error("Error upserting scrapers: \(error.localizedDescription)")
         }
     }
 
-    public func onMove(scrapers: [Scraper], offsets: IndexSet, position: Int, in harmonic: Harmonic) async {
+    public func onMove(offsets: IndexSet, position: Int, in container: ModelContainer? = nil) {
         do {
-            var sc = scrapers
-            // change the order of the items in the array
-            sc.move(fromOffsets: offsets, toOffset: position)
+            let context = ModelContext(container ?? .dokusho())
 
-            let updatedScrapers = sc
-                .enumerated()
-                .map { d in
-                    var scraper = d.element
-                    scraper.position = d.offset;
-                    return scraper
-                }
+            var scrapers = try context.fetch(.activeScrapersByPosition())
+            scrapers.move(fromOffsets: offsets, toOffset: position)
+
+            for (position, scraper) in scrapers.enumerated() {
+                scraper.position = position
+            }
             
-            try await harmonic.save(records: updatedScrapers)
+            if context.hasChanges {
+                try context.save()
+            }
         } catch {
             logger.error("Error changing scraper order: \(error.localizedDescription)")
         }

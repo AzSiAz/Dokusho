@@ -1,7 +1,9 @@
 import Foundation
 import SerieScraper
+import SwiftData
 
-public struct Serie: Identifiable, Equatable, Codable, Hashable {
+@Model
+public class Serie: Identifiable, Equatable, Hashable {
     public var id: UUID
     public var internalID: InternalID
     public var title: String
@@ -14,10 +16,11 @@ public struct Serie: Identifiable, Equatable, Codable, Hashable {
     public var kind: Kind
     public var readerDirection: ReaderDirection
     
-    public var scraperID: Scraper.ID
-    public var collectionID: SerieCollection.ID?
+    public var scraperID: UUID
+    public var collection: SerieCollection?
     
-    public var archivedRecordData: Data?
+    @Relationship()
+    public var chapters: [SerieChapter]
     
     public init(
         id: Serie.ID,
@@ -31,8 +34,9 @@ public struct Serie: Identifiable, Equatable, Codable, Hashable {
         status: Status,
         kind: Kind,
         readerDirection: ReaderDirection,
-        scraperID: Scraper.ID,
-        collectionID: SerieCollection.ID?
+        scraperID: UUID,
+        collection: SerieCollection,
+        chapters: [SerieChapter]? = nil
     ) {
         self.id = id
         self.internalID = internalID
@@ -47,10 +51,11 @@ public struct Serie: Identifiable, Equatable, Codable, Hashable {
         self.readerDirection = readerDirection
         
         self.scraperID = scraperID
-        self.collectionID = collectionID
+        self.collection = collection
+        self.chapters = chapters ?? []
     }
 
-    public init(from data: SourceSerie, scraperID: UUID, collectionID: UUID? = nil) {
+    public init(from data: SourceSerie, scraperID: UUID, collection: SerieCollection? = nil) {
         self.id = UUID()
         self.internalID = data.id
         self.title = data.title
@@ -64,10 +69,11 @@ public struct Serie: Identifiable, Equatable, Codable, Hashable {
         self.readerDirection = ReaderDirection(data.type)
 
         self.scraperID = scraperID
-        self.collectionID = collectionID
+        self.collection = collection
+        self.chapters = []
     }
     
-    public mutating func update(from data: SourceSerie) {
+    public func update(from data: SourceSerie) {
         if (self.title != data.title) { self.title = data.title }
         if (self.cover != data.cover) { self.cover = data.cover }
         if (self.synopsis != data.synopsis) { self.synopsis = data.synopsis }
@@ -76,7 +82,7 @@ public struct Serie: Identifiable, Equatable, Codable, Hashable {
         if (self.kind != Kind(data.type)) { self.kind = Kind(data.type) }
     }
     
-    public mutating func changeCollection(serieCollectionID: SerieCollection.ID?) {
-        self.collectionID = serieCollectionID
+    public func changeCollection(serieCollection: SerieCollection) {
+        self.collection = serieCollection
     }
 }

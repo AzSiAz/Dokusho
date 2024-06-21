@@ -16,14 +16,6 @@ public extension SerieCollection {
             }
         }
         
-        public init(_ backup: Backup.V1.BackupFilter) {
-            switch backup {
-            case .all: self = .all
-            case .onlyUnReadChapter: self = .onlyUnReadChapter
-            case .completed: self = .completed
-            }
-        }
-        
         public func label() -> LocalizedStringKey {
             switch self {
             case .all: "All"
@@ -37,13 +29,6 @@ public extension SerieCollection {
         public enum Direction: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
             case ASC = 0, DESC = 1
             
-            public init(_ backup: Backup.V1.BackupOrder.Direction) {
-                switch backup {
-                case .ASC: self = .ASC
-                case .DESC: self = .DESC
-                }
-            }
-            
             public func label() -> LocalizedStringKey {
                 switch self {
                 case .ASC: "Ascending"
@@ -54,15 +39,6 @@ public extension SerieCollection {
         
         public enum Field: Int, Codable, CaseIterable, DatabaseValueConvertible, Labelized {
             case unreadChapters = 0, lastUpdate = 1, title = 2, chapterCount = 3
-            
-            public init(_ backup: Backup.V1.BackupOrder.Field) {
-                switch backup {
-                case .chapterCount: self = .chapterCount
-                case .lastUpdate: self = .lastUpdate
-                case .title: self = .title
-                case .unreadChapters: self = .unreadChapters
-                }
-            }
             
             public func label() -> LocalizedStringKey {
                 switch self {
@@ -81,50 +57,9 @@ public extension SerieCollection {
             self.field = field
             self.direction = direction
         }
-        
-        public init(_ backup: Backup.V1.BackupOrder) {
-            self.field = .init(backup.field)
-            self.direction = .init(backup.direction)
-        }
     }
     
     enum CodingKeys: String, CodingKey {
         case id, name, position, useList, filter, order
-    }
-}
-
-/// GRDB extension
-extension SerieCollection: FetchableRecord, PersistableRecord {}
-
-extension SerieCollection: TableRecord {
-    public static var databaseTableName: String = "serieCollection"
-    
-    public static let series = hasMany(Serie.self)
-    
-    public enum Columns {
-        public static let id = Column(CodingKeys.id)
-        public static let name = Column(CodingKeys.name)
-        public static let position = Column(CodingKeys.position)
-        public static let useList = Column(CodingKeys.useList)
-        public static let filter = Column(CodingKeys.filter)
-        public static let order = Column(CodingKeys.order)
-    }
-    
-    public static let databaseSelection: [SQLSelectable] = [
-        Columns.id,
-        Columns.name,
-        Columns.position,
-        Columns.useList,
-        Columns.filter,
-        Columns.order
-    ]
-}
-
-public extension DerivableRequest<SerieCollection> {
-    func orderByPosition() -> Self {
-        order(
-            RowDecoder.Columns.position.ascNullsLast,
-            RowDecoder.Columns.name.collating(.localizedCaseInsensitiveCompare).asc
-        )
     }
 }

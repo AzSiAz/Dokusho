@@ -1,5 +1,5 @@
 import Foundation
-import Harmony
+import SwiftData
 import OSLog
 
 @Observable
@@ -9,58 +9,63 @@ private let logger = Logger.serieService
     public init() {}
 
     @discardableResult
-    public func upsert(source: Source, serieInternalID: Serie.InternalID, harmonic: Harmonic) async throws -> Serie {
-        guard let serie = try await harmonic.reader.read({ try Serie.all().whereSerie(serieInternalID: serieInternalID, scraperID: source.id).fetchOne($0) })
+    public func upsert(source: Source, serieInternalID: Serie.InternalID, in container: ModelContainer? = nil) async throws -> Serie {
+        let context = ModelContext(container ?? .dokusho())
+        guard
+            let series = try? context.fetch(.serieBySourceIdAndInternalId(scraperId: source.id, id: serieInternalID)),
+            let serie = series.first
         else {
             let sourceData = try await source.fetchSerieDetail(serieId: serieInternalID)
             let serie = Serie(from: sourceData, scraperID: source.id)
-            let chapters = sourceData.chapters.map { SerieChapter(from: $0, serieID: serie.id) }
+            let chapters = sourceData.chapters.map { SerieChapter(from: $0, serie: serie) }
+            serie.chapters = chapters
 
-            try await harmonic.save(record: serie)
-            try await harmonic.save(records: chapters)
+            context.insert(serie)
 
             return serie
         }
         
+        if context.hasChanges { try context.save() }
+
         return serie
     }
 
     @discardableResult
-    public func update(source: Source, serieInternalID: Serie.InternalID, harmonic: Harmonic) async throws -> Serie {
+    public func update(source: Source, serieInternalID: Serie.InternalID, in container: ModelContainer? = nil) async throws -> Serie {
+        let context = ModelContext(container ?? .dokusho())
         guard
-            var serie = try await harmonic.reader.read({ try Serie.all().whereSerie(serieInternalID: serieInternalID, scraperID: source.id).fetchOne($0) }),
+            let series = try? context.fetch(.serieBySourceIdAndInternalId(scraperId: source.id, id: serieInternalID)),
+            let serie = series.first,
             let sourceData = try? await source.fetchSerieDetail(serieId: serieInternalID)
         else { throw "Something happened" }
 
         serie.update(from: sourceData)
-
         guard
             !sourceData.chapters.isEmpty,
-            let chapters = try? await harmonic.reader.read({ [serie] in try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll($0) })
+            let chapters = try? context.fetch(.chaptersForSerie(serieId: serie.internalID, scraperId: source.id))
         else { return serie }
 
         for sourceChapter in sourceData.chapters {
-            if var dbChapter = chapters.first(where: { $0.internalID == sourceChapter.id }) {
+            if let dbChapter = chapters.first(where: { $0.internalID == sourceChapter.id }) {
                 dbChapter.update(from: sourceChapter)
-                try await harmonic.save(record: dbChapter)
             } else {
-                let dbChapter = SerieChapter(from: sourceChapter, serieID: serie.id)
-                try await harmonic.save(record: dbChapter)
+                let dbChapter = SerieChapter(from: sourceChapter, serie: serie)
+                context.insert(dbChapter)
             }
         }
 
         for dbChapter in chapters {
             if (sourceData.chapters.first(where: { $0.id == dbChapter.internalID }) != nil) { continue }
-            try await harmonic.delete(record: dbChapter)
+            context.delete(dbChapter)
         }
+
+        if context.hasChanges { try context.save() }
         
         return serie
     }
     
-    public func addSerieToCollection(source: Source, serieInternalID: Serie.InternalID, serieCollectionID: SerieCollection.ID, harmonic: Harmonic) async throws {
-        var serie = try await upsert(source: source, serieInternalID: serieInternalID, harmonic: harmonic)
-        serie.collectionID = serieCollectionID
-        
-        try await harmonic.save(record: serie)
+    public func addSerieToCollection(source: Source, serieInternalID: Serie.InternalID, serieCollection: SerieCollection, in container: ModelContainer) async throws {
+        let serie = try await upsert(source: source, serieInternalID: serieInternalID, in: container)
+        serie.collection = serieCollection
     }
 }

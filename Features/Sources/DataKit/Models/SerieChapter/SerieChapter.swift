@@ -1,9 +1,9 @@
 import Foundation
-import GRDB
+import SwiftData
 import SerieScraper
 
-public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
-    public var id: UUID
+@Model
+public class SerieChapter: Identifiable, Equatable, Hashable {
     public var internalID: InternalID
     public var title: String
     public var subTitle: String?
@@ -14,12 +14,10 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
     public var progress: Int?
     public var externalUrl: URL?
 
-    public var serieID: UUID
-    
-    public var archivedRecordData: Data?
+    @Relationship()
+    public var serie: Serie?
 
-    public init(from data: SourceChapter, serieID: UUID) {
-        self.id = UUID()
+    public init(from data: SourceChapter, serie: Serie) {
         self.internalID = data.id
         self.title = data.name
         self.subTitle = data.subTitle
@@ -29,10 +27,10 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
         self.externalUrl = data.externalUrl
         self.progress = nil
 
-        self.serieID = serieID
+        self.serie = serie
     }
 
-    public mutating func update(from data: SourceChapter) {
+    public func update(from data: SourceChapter) {
         if (self.title != data.name) { self.title = data.name }
         if (self.subTitle != data.subTitle) { self.subTitle = data.subTitle }
         if (self.uploadedAt != data.dateUpload) { self.uploadedAt = data.dateUpload }
@@ -41,7 +39,7 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
         if (self.externalUrl != data.externalUrl) { self.externalUrl = data.externalUrl }
     }
     
-    public mutating func toggleReadAt() {
+    public func toggleReadAt() {
         if self.readAt == nil {
             self.readAt = .now
         } else {
@@ -49,7 +47,7 @@ public struct SerieChapter: Identifiable, Equatable, Codable, Hashable {
         }
     }
     
-    public mutating func setReadAt(date: Date?) {
+    public func setReadAt(date: Date?) {
         self.readAt = date
     }
 }
