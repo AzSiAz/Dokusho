@@ -9,7 +9,7 @@ import SwiftUI
 import Common
 
 struct HorizontalReaderView: View {
-    @ObservedObject var vm: ReaderVM
+    @Bindable var vm: ReaderViewModel
     @State var isZooming = false
 
     var body: some View {
@@ -40,7 +40,7 @@ struct HorizontalReaderView: View {
         .tag(image)
     }
     
-    func ImageView(image: String, proxy: GeometryProxy) -> some View {
+    func ImageView(image: URL?, proxy: GeometryProxy) -> some View {
         ChapterImageView(url: image, contentMode: .fit, isZooming: $isZooming)
             .frame(
                 minWidth: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,

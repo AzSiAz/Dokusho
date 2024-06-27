@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "dd7e7f39e8e4d7a22d258d9809a882f914690b01",
-        "version" : "5.26.1"
+        "revision" : "bd9aea303d9dab3a4941ee838a0e4ff51c9448df",
+        "version" : "6.25.0"
       }
     },
     {
@@ -14,8 +14,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDBQuery.git",
       "state" : {
-        "revision" : "be64298b4f9d70510226fa7e698aef84f41cec02",
-        "version" : "0.7.0"
+        "revision" : "42fef11503d221229ec39201c08316b6930755b2",
+        "version" : "0.8.0"
+      }
+    },
+    {
+      "identity" : "harmony",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aaronpearce/Harmony",
+      "state" : {
+        "branch" : "main",
+        "revision" : "855c64a92f541a53a3ee7aed5df23194e2b6d6db"
       }
     },
     {
@@ -32,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
-        "revision" : "93c8dc78fbc0aa3538a0db460eb389d4180af242",
-        "version" : "11.3.1"
+        "revision" : "8ecbfc886da39bccb01c34abef5f2ff4073ad633",
+        "version" : "12.4.0"
       }
     },
     {

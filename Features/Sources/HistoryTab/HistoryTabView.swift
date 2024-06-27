@@ -1,76 +1,87 @@
-//
-//  HistoryTabView.swift
-//  HistoryTabView
-//
-//  Created by Stephan Deumier on 12/09/2021.
-//
-
 import SwiftUI
-import GRDBQuery
-import Combine
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 public struct HistoryTabView: View {
-    @Query(ChaptersHistoryRequest(filter: .read, searchTerm: "")) var list: [ChaptersHistory]
-    
+    @Query(SerieChaptersHistoryRequest(filter: .read, searchTerm: "")) var chapters: [SerieChaptersHistory]
+    @State var searchTerm: String = ""
+
     public init() {}
 
     public var body: some View {
         NavigationView {
             List {
-                ForEach(list) { data in
-                    ChapterRow(data)
+                ForEach(chapters) { chapter in
+                    ChapterRow(chapter)
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Picker("Chapter Status", selection: $list.filter) {
-                        Text(ChapterStatusHistory.read.rawValue).tag(ChapterStatusHistory.read)
-                        Text(ChapterStatusHistory.all.rawValue).tag(ChapterStatusHistory.all)
+                    Picker("Chapter Status", selection: $chapters.filter) {
+                        Text(SerieChaptersHistoryRequest.ChapterStatusHistory.read.rawValue).tag(SerieChaptersHistoryRequest.ChapterStatusHistory.read)
+                        Text(SerieChaptersHistoryRequest.ChapterStatusHistory.all.rawValue).tag(SerieChaptersHistoryRequest.ChapterStatusHistory.all)
                     }
                     .frame(maxWidth: 150)
                     .pickerStyle(.segmented)
                 }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
             }
+            .overlay {
+                NoContent()
+            }
+            .searchable(text: $chapters.searchTerm)
             .listStyle(PlainListStyle())
-            .id($list.filter.wrappedValue)
-            .searchable(text: $list.searchTerm)
-            .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
+            .navigationBarTitle($chapters.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
         }
         .navigationViewStyle(.columns)
     }
-    
+
     @ViewBuilder
-    func ChapterRow(_ data: ChaptersHistory) -> some View {
-        NavigationLink(destination: MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)) {
+    func ChapterRow(_ chapter: SerieChaptersHistory) -> some View {
+        NavigationLink(destination: SerieDetailScreen(serieInternalID: chapter.serieInternalID, scraperID: chapter.scraperID)) {
             HStack {
-                MangaCard(imageUrl: data.manga.cover.absoluteString)
-                    .mangaCardFrame(width: 90, height: 120)
-                    .id(data.id)
+                SerieCard(imageUrl: chapter.serieCover, contentMode: .fit)
+                    .serieCardFrame(width: 90, height: 120)
+                    .id(chapter.id)
 
                 VStack(alignment: .leading) {
-                    Text(data.manga.title)
+                    Text(chapter.serieTitle)
                         .lineLimit(2)
                         .font(.body)
                         .allowsTightening(true)
-                    Text(data.chapter.title)
+                    Text(chapter.serieChapterTitle)
                         .lineLimit(1)
                         .font(.callout.italic())
-                    
+
                     Group {
-                        if $list.filter.wrappedValue == .read { Text("Read at: \(data.chapter.readAt?.formatted() ?? "No date...")") }
-                        if $list.filter.wrappedValue == .all { Text("Uploaded at: \(data.chapter.dateSourceUpload.formatted())") }
+                        if $chapters.filter.wrappedValue == .read {
+                            Text("Read at: \(chapter.serieChapterReadAt?.formatted() ?? "No date...")")
+                        }
+                        if $chapters.filter.wrappedValue == .all {
+                            Text("Uploaded at: \(chapter.serieChapterUploadedAt.formatted())")
+                        }
                     }
                     .font(.footnote)
                 }
             }
             .frame(height: 120)
+        }
+    }
+    
+    @ViewBuilder
+    func NoContent() -> some View {
+        if $chapters.filter.wrappedValue == .read && chapters.isEmpty {
+            ContentUnavailableView(
+                "No read chapter",
+                systemImage: "book",
+                description: Text("Mark chapters as read or read one")
+            )
+        } else if $chapters.filter.wrappedValue == .all && chapters.isEmpty {
+            ContentUnavailableView(
+                "No chapter",
+                systemImage: "book",
+                description: Text("Browse Serie on Explore Tab")
+            )
         }
     }
 }

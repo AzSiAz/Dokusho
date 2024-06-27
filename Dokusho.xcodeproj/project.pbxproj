@@ -14,7 +14,6 @@
 		E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */ = {isa = PBXBuildFile; productRef = E2474C9F284E5C5F0090E032 /* DynamicCollection */; };
 		E2474CA2284E62820090E032 /* LibraryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA1284E62820090E032 /* LibraryTab */; };
 		E2474CA4284E64080090E032 /* ExploreTab in Frameworks */ = {isa = PBXBuildFile; productRef = E2474CA3284E64080090E032 /* ExploreTab */; };
-		E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E24804C32846D2E80017F4E2 /* MangaScraper */; };
 		E25B0C83282BC4360080A71A /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = E25B0C82282BC4360080A71A /* DataKit */; };
 		E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46C8284B68FE004C594C /* SettingsTab */; };
 		E25E46CB284B697C004C594C /* HistoryTab in Frameworks */ = {isa = PBXBuildFile; productRef = E25E46CA284B697C004C594C /* HistoryTab */; };
@@ -23,7 +22,8 @@
 		E270C0D8282BDEFE00E3093E /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D7282BDEFE00E3093E /* Common */; };
 		E270C0DA282BDF1300E3093E /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0D9282BDF1300E3093E /* Reader */; };
 		E270C0E1282C471400E3093E /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = E270C0E0282C471400E3093E /* SharedUI */; };
-		E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E29D727B283FBE2D0052EBED /* MangaDetail */; };
+		E27FBA552B3731B100FCC71D /* SerieDetail in Frameworks */ = {isa = PBXBuildFile; productRef = E27FBA542B3731B100FCC71D /* SerieDetail */; };
+		E27FBA572B3731B100FCC71D /* SerieScraper in Frameworks */ = {isa = PBXBuildFile; productRef = E27FBA562B3731B100FCC71D /* SerieScraper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,14 +62,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2474CA4284E64080090E032 /* ExploreTab in Frameworks */,
-				E24804C42846D2E80017F4E2 /* MangaScraper in Frameworks */,
-				E29D727C283FBE2D0052EBED /* MangaDetail in Frameworks */,
 				E2474CA0284E5C5F0090E032 /* DynamicCollection in Frameworks */,
+				E27FBA552B3731B100FCC71D /* SerieDetail in Frameworks */,
 				E25E46C9284B68FE004C594C /* SettingsTab in Frameworks */,
 				E270C0E1282C471400E3093E /* SharedUI in Frameworks */,
 				E25B0C83282BC4360080A71A /* DataKit in Frameworks */,
 				E270C0D8282BDEFE00E3093E /* Common in Frameworks */,
 				E270C0DA282BDF1300E3093E /* Reader in Frameworks */,
+				E27FBA572B3731B100FCC71D /* SerieScraper in Frameworks */,
 				E25E46CB284B697C004C594C /* HistoryTab in Frameworks */,
 				E2474CA2284E62820090E032 /* LibraryTab in Frameworks */,
 			);
@@ -152,13 +152,13 @@
 				E270C0D7282BDEFE00E3093E /* Common */,
 				E270C0D9282BDF1300E3093E /* Reader */,
 				E270C0E0282C471400E3093E /* SharedUI */,
-				E29D727B283FBE2D0052EBED /* MangaDetail */,
-				E24804C32846D2E80017F4E2 /* MangaScraper */,
 				E25E46C8284B68FE004C594C /* SettingsTab */,
 				E25E46CA284B697C004C594C /* HistoryTab */,
 				E2474C9F284E5C5F0090E032 /* DynamicCollection */,
 				E2474CA1284E62820090E032 /* LibraryTab */,
 				E2474CA3284E64080090E032 /* ExploreTab */,
+				E27FBA542B3731B100FCC71D /* SerieDetail */,
+				E27FBA562B3731B100FCC71D /* SerieScraper */,
 			);
 			productName = Dokusho;
 			productReference = E26662B626CC36830054868A /* Dokusho.app */;
@@ -469,10 +469,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ExploreTab;
 		};
-		E24804C32846D2E80017F4E2 /* MangaScraper */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MangaScraper;
-		};
 		E25B0C82282BC4360080A71A /* DataKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DataKit;
@@ -497,9 +493,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedUI;
 		};
-		E29D727B283FBE2D0052EBED /* MangaDetail */ = {
+		E27FBA542B3731B100FCC71D /* SerieDetail */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MangaDetail;
+			productName = SerieDetail;
+		};
+		E27FBA562B3731B100FCC71D /* SerieScraper */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SerieScraper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

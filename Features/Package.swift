@@ -1,19 +1,19 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "Features",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v17)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Common", targets: ["Common"]),
         .library(name: "SharedUI", targets: ["SharedUI"]),
         .library(name: "DataKit", targets: ["DataKit"]),
         .library(name: "Reader", targets: ["Reader"]),
-        .library(name: "MangaDetail", targets: ["MangaDetail"]),
-        .library(name: "MangaScraper", targets: ["MangaScraper"]),
+        .library(name: "SerieDetail", targets: ["SerieDetail"]),
+        .library(name: "SerieScraper", targets: ["SerieScraper"]),
         .library(name: "SettingsTab", targets: ["SettingsTab"]),
         .library(name: "HistoryTab", targets: ["HistoryTab"]),
         .library(name: "Backup", targets: ["Backup"]),
@@ -22,30 +22,31 @@ let package = Package(
         .library(name: "ExploreTab", targets: ["ExploreTab"]),
     ],
     dependencies: [
-         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "5.26.1"),
-         .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.7.0"),
-         .package(url: "https://github.com/kean/Nuke", exact: "11.3.1"),
+         .package(url: "https://github.com/kean/Nuke", exact: "12.4.0"),
          .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
-         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
+         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.1.0"),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.5.0"),
          .package(url: "https://github.com/apptekstudios/SwiftUILayouts", branch: "main"),
+         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.25.0"),
+         .package(url: "https://github.com/groue/GRDBQuery", exact: "0.8.0"),
+         .package(url: "https://github.com/aaronpearce/Harmony", branch: "main"),
     ],
     targets: [
         .target(
-            name: "MangaScraper",
+            name: "SerieScraper",
             dependencies: [
                 .byName(name: "SwiftSoup"),
                 .byName(name: "JAYSON"),
                 .product(name: "Collections", package: "swift-collections")
             ]
         ),
-        .testTarget(name: "MangaScraperTests", dependencies: ["MangaScraper"]),
+        .testTarget(name: "SerieScraperTests", dependencies: ["SerieScraper"]),
 
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Nuke", package: "Nuke")
+                .product(name: "Nuke", package: "Nuke"),
             ]
         ),
 
@@ -64,7 +65,7 @@ let package = Package(
             dependencies: [
                 .byName(name: "Common"),
                 .byName(name: "DataKit"),
-                .byName(name: "MangaScraper"),
+                .byName(name: "SerieScraper"),
                 .product(name: "Nuke", package: "Nuke"),
                 .product(name: "NukeUI", package: "Nuke")
             ]
@@ -74,22 +75,22 @@ let package = Package(
             name: "DataKit",
             dependencies: [
                 .byName(name: "Common"),
-                .byName(name: "MangaScraper"),
+                .byName(name: "SerieScraper"),
                 .product(name: "GRDB", package: "GRDB.swift"),
-                .byName(name: "GRDBQuery")
+                .byName(name: "GRDBQuery"),
+                .product(name: "Harmony", package: "Harmony")
             ]
         ),
         
         .target(
-            name: "MangaDetail",
+            name: "SerieDetail",
             dependencies: [
-                .byName(name: "MangaScraper"),
+                .byName(name: "SerieScraper"),
                 .byName(name: "DataKit"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
                 .byName(name: "Reader"),
-                .byName(name: "SwiftUILayouts"),
+                .byName(name: "SwiftUILayouts")
             ]
         ),
         
@@ -108,9 +109,8 @@ let package = Package(
             name: "HistoryTab",
             dependencies: [
                 .byName(name: "DataKit"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail")
+                .byName(name: "SerieDetail")
             ]
         ),
         
@@ -118,7 +118,7 @@ let package = Package(
             name: "Backup",
             dependencies: [
                 .byName(name: "DataKit"),
-                .byName(name: "Common"),
+                .byName(name: "Common")
             ]
         ),
         
@@ -127,10 +127,9 @@ let package = Package(
             dependencies: [
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail"),
-                .byName(name: "MangaScraper")
+                .byName(name: "SerieDetail"),
+                .byName(name: "SerieScraper")
             ]
         ),
         
@@ -139,12 +138,10 @@ let package = Package(
             dependencies: [
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
-                .product(name: "GRDB", package: "GRDB.swift"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail"),
-                .byName(name: "MangaScraper"),
-                .byName(name: "DynamicCollection"),
+                .byName(name: "SerieDetail"),
+                .byName(name: "SerieScraper"),
+                .byName(name: "DynamicCollection")
             ]
         ),
         
@@ -153,12 +150,10 @@ let package = Package(
             dependencies: [
                 .byName(name: "DataKit"),
                 .byName(name: "Common"),
-                .product(name: "GRDB", package: "GRDB.swift"),
-                .byName(name: "GRDBQuery"),
                 .byName(name: "SharedUI"),
-                .byName(name: "MangaDetail"),
-                .byName(name: "MangaScraper"),
-                .product(name: "Collections", package: "swift-collections"),
+                .byName(name: "SerieDetail"),
+                .byName(name: "SerieScraper"),
+                .product(name: "Collections", package: "swift-collections")
             ]
         ),
     ]

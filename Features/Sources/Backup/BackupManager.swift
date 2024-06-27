@@ -1,28 +1,60 @@
-//
-//  Backup.swift
-//  Dokusho
-//
-//  Created by Stef on 21/12/2021.
-//
-
 import Foundation
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
-import MangaScraper
+import SerieScraper
 import DataKit
 import Common
 
-public struct Backup: FileDocument {
+public struct BackupV2: FileDocument {
     public static var readableContentTypes = [UTType.json]
     public static var writableContentTypes = [UTType.json]
     
     var data: BackupData
     
     public init(configuration: ReadConfiguration) throws {
-        throw "Not done"
+        throw "Should not be used"
+    }
+
+    public init(data: BackupData) {
+        self.data = data
     }
     
+    public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        let data = try JSONEncoder().encode(data)
+        return FileWrapper(regularFileWithContents: data)
+    }
+    
+    public struct BackupData: Codable {
+        var collections: [BackupCollectionData]
+        var scrapers: [Scraper.Backup.V2]
+    }
+    
+    public struct BackupCollectionData: Codable {
+        var collection: SerieCollection.Backup.V2
+        var series: [SerieWithChapters]
+    }
+    
+    public struct SerieWithChapters: Codable {
+        var serie: Serie.Backup.V2
+        var chapters: [SerieChapter.Backup.V2]
+    }
+    
+    public struct Task {
+        var serie: SerieWithChapters
+        var collection: SerieCollection
+    }
+}
+
+public struct BackupV1: FileDocument {
+    public static var readableContentTypes = [UTType.json]
+    public static var writableContentTypes = [UTType.json]
+    
+    var data: BackupData
+    
+    public init(configuration: ReadConfiguration) throws {
+        throw "Should not be used"
+    }
     
     public init(data: BackupData) {
         self.data = data
@@ -30,119 +62,194 @@ public struct Backup: FileDocument {
     
     public func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         let data = try JSONEncoder().encode(data)
-
         return FileWrapper(regularFileWithContents: data)
+    }
+    
+    public struct BackupData: Codable {
+        var collections: [BackupCollectionData]
+        var scrapers: [Scraper.Backup.V1]
+    }
+    
+    public struct BackupCollectionData: Codable {
+        var collection: SerieCollection.Backup.V1
+        var mangas: [MangaWithChapters]
+    }
+    
+    public struct MangaWithChapters: Codable {
+        var manga: Serie.Backup.V1
+        var chapters: [SerieChapter.Backup.V1]
+    }
+    
+    public struct Task {
+        var serie: MangaWithChapters
+        var collection: SerieCollection
     }
 }
 
-public struct BackupData: Codable {
-    var collections: [BackupCollectionData]
-    var scrapers: [Scraper]
-}
+typealias BackupResultV1 = Result<BackupV1.Task, Error>
+typealias BackupResultV2 = Result<BackupV2.Task, Error>
 
-public struct BackupCollectionData: Codable {
-    var collection: MangaCollection
-    var mangas: [MangaWithChapters]
-}
-
-public struct MangaWithChapters: Codable {
-    var manga: Manga
-    var chapters: [MangaChapter]
-}
-
-
-public struct BackupTask {
-    var mangaBackup: MangaWithChapters
-    var collection: MangaCollection
-}
-
-public typealias BackupResult = Result<BackupTask, Error>
-
-public class BackupManager: ObservableObject {
-    public static let shared = BackupManager()
-    
-    private let database = AppDatabase.shared.database
-    
-    @Published public var isImporting: Bool = false
-    @Published public var total: Double = 0
-    @Published public var progress: Double = 0
+@Observable
+public class BackupManager {
+    public var isImporting: Bool = false
+    public var total: Double = 0
+    public var progress: Double = 0
     
     public init() {}
     
-    public func createBackup() -> BackupData {
-        var backupCollections = [BackupCollectionData]()
-        var scrapers = [Scraper]()
+    public func createBackup(harmonic: Harmonic) -> BackupV2.BackupData {
+        var backupCollections = [BackupV2.BackupCollectionData]()
+        var scrapers = [Scraper.Backup.V2]()
 
         do {
-            try database.read { db in
-                scrapers = try Scraper.all().fetchAll(db)
-                let collections = try MangaCollection.all().fetchAll(db)
+            try harmonic.reader.read { db in
+                scrapers = try Scraper.all().fetchAll(db).map {
+                    Scraper.Backup.V2(
+                        id: $0.id,
+                        name: $0.name,
+                        icon: $0.icon,
+                        isActive: $0.isActive,
+                        language: $0.language,
+                        position: $0.position
+                    )
+                }
                 
-                for collection in collections {
-                    let mangas = try Manga.all().forCollectionId(collection.id).fetchAll(db)
-                    var mangasBackup = [MangaWithChapters]()
+                let collections = try SerieCollection.all().fetchAll(db)
 
-                    for manga in mangas {
-                        let chapters = try MangaChapter.all().forMangaId(manga.id).fetchAll(db)
-                        mangasBackup.append(.init(manga: manga, chapters: chapters))
+                for collection in collections {
+                    let series = try Serie.all().forSerieCollectionID(collection.id).fetchAll(db)
+                    var seriesBackup = [BackupV2.SerieWithChapters]()
+
+                    for serie in series {
+                        let chapters = try SerieChapter.all().whereSerie(serieID: serie.id).fetchAll(db)
+                        seriesBackup.append(.init(serie: serie, chapters: chapters))
                     }
                     
-                    backupCollections.append(.init(collection: collection, mangas: mangasBackup))
+                    backupCollections.append(.init(collection: collection, series: seriesBackup))
                 }
             }
         } catch(let err) {
-            print(err)
+            Logger.backup.error("Error creating backup: \(err.localizedDescription)")
         }
         
         return .init(collections: backupCollections, scrapers: scrapers)
     }
 
-    public func importBackup(backup: BackupData) async {
-        await animateAsyncChange {
+    public func importV1Backup(backup: BackupV1.BackupData, harmonic: Harmonic, scraperService: ScraperService) async throws {
+        withAnimation {
             self.isImporting = true
         }
 
-        await withTaskGroup(of: BackupResult.self) { group in
-            
-            for scraper in backup.scrapers {
-                let _ = try? await database.write({ try Scraper.fetchOrCreateFromBackup(db: $0, backup: scraper) })
+        try await withThrowingTaskGroup(of: BackupResultV1.self) { group in
+            for scraperBackup in backup.scrapers {
+                guard let foundSource = ScraperService.shared.getSource(sourceId: scraperBackup.id) else { throw "Can't handle scraper \(scraperBackup)" }
+                let scraper = Scraper(backup: scraperBackup, icon: foundSource.icon, language: Scraper.Language(from: foundSource.language))
+
+                try await harmonic.save(record: scraper)
             }
             
             for collectionBackup in backup.collections {
-                guard let collection = try? await database.write({ try MangaCollection.fetchOrCreateFromBackup(db: $0, backup: collectionBackup.collection) }) else { continue }
+                let collection = SerieCollection(backup: collectionBackup.collection)
+                try await harmonic.save(record: collection)
                 
-                for mangaBackup in collectionBackup.mangas {
-                    group.addTask(priority: .background) {
-                        await self.asyncChange {
-                            self.total += 1
-                        }
-                        return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
+                withAnimation {
+                    self.total += Double(collectionBackup.mangas.count)
+                }
+                
+                for serieBackup in collectionBackup.mangas {
+                    group.addTask(priority: .background) { [collection] in
+                        return .success(.init(serie: serieBackup, collection: collection))
                     }
                 }
             }
             
-            
-            for await taskResult in group {
+            for try await taskResult in group {
                 switch(taskResult) {
                 case .failure(let error): Logger.backup.error("\(error.localizedDescription)")
                 case .success(let task):
-                    Logger.backup.info("Restoring \(task.mangaBackup.manga.title)")                    
+                    Logger.backup.info("Restoring \(task.serie.manga.title)")
                     do {
-                        try await database.write { db in
-                            let _ = try task.mangaBackup.manga.saved(db)
-                            try task.mangaBackup.chapters.forEach { try $0.save(db) }
+                        guard let scraperID = task.serie.manga.scraperId else { throw "Scraper for serie should be defined" }
+                        guard let foundSource = ScraperService.shared.getSource(sourceId: scraperID) else { throw "Source should be found to restore correctly on V1 backup" }
+                        guard let sourceSerie = try? await foundSource.fetchSerieDetail(serieId: task.serie.manga.mangaId) else { throw "Serie should still exist on source" }
+
+                        var serie = Serie(backup: task.serie.manga, scraperID: scraperID, serieCollectionID: task.collection.id)
+                        serie.update(from: sourceSerie)
+                        try await harmonic.save(record: serie)
+                        
+                        let chapters = task.serie.chapters.map { backup in
+                            var chapter = SerieChapter(backup: backup, serieID: serie.id, chapter: Float(backup.position), volume: 0)
+                            if let sourceChapter = sourceSerie.chapters.first(where: { $0.id == "\(scraperID)@@\(backup.chapterId)" }) {
+                                chapter.update(from: sourceChapter)
+                            }
+
+                            return chapter
                         }
-                        await self.asyncChange {
+
+                        try await harmonic.save(records: chapters)
+
+                        withAnimation {
                             self.progress += 1
                         }
                     } catch(let err) {
-                        print(err)
+                        Logger.backup.error("Error importing manga \(task.serie.manga.title): \(err.localizedDescription)")
                     }
                 }
             }
         }
         
-        await animateAsyncChange {
+        withAnimation {
+            self.isImporting = false
+        }
+    }
+
+    public func importV2Backup(backup: BackupV2.BackupData, harmonic: Harmonic) async throws {
+        withAnimation {
+            self.isImporting = true
+        }
+
+        try await withThrowingTaskGroup(of: BackupResultV2.self) { group in
+            for scraperBackup in backup.scrapers {
+                let scraper = Scraper(backup: scraperBackup)
+                try await harmonic.save(record: scraper)
+            }
+
+            for collectionBackup in backup.collections {
+                let collection = SerieCollection(backup: collectionBackup.collection)
+                try await harmonic.save(record: collection)
+
+                withAnimation {
+                    self.total += Double(collectionBackup.series.count)
+                }
+
+                for serieBackup in collectionBackup.series {
+                    group.addTask(priority: .background) { [collection] in
+                        return .success(BackupV2.Task(serie: serieBackup, collection: collection))
+                    }
+                }
+            }
+
+            for try await taskResult in group {
+                switch(taskResult) {
+                case .failure(let error): Logger.backup.error("\(error.localizedDescription)")
+                case .success(let task):
+                    Logger.backup.info("Restoring \(task.serie.serie.title)")
+                    do {
+                        try await harmonic.save(record: task.serie.serie)
+                        try await harmonic.save(records: task.serie.chapters)
+
+                        withAnimation {
+                            self.progress += 1
+                        }
+                    } catch(let err) {
+                        print(err)
+                        Logger.backup.error("Error importing manga \(task.serie.serie.title): \(err.localizedDescription)")
+                    }
+                }
+            }
+        }
+
+        withAnimation {
             self.isImporting = false
         }
     }

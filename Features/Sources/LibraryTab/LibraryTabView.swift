@@ -6,17 +6,17 @@
 //
 
 import SwiftUI
-import MangaScraper
-import GRDBQuery
+import SerieScraper
 import DataKit
 import SharedUI
-import MangaDetail
+import SerieDetail
 
 public struct LibraryTabView: View {
-    @Environment(\.appDatabase) var appDB
-    @EnvironmentObject var libraryRefresh: LibraryUpdater
+    @Environment(LibraryUpdater.self) private var libraryRefresh
+    
+    @Harmony var harmony
 
-    @Query(DetailedMangaCollectionRequest()) var collections
+    @Query(AllSerieCollectionWithCountRequest()) var collections
 
     @State var editMode: EditMode = .inactive
     @State var newCollectionName = ""
@@ -26,32 +26,32 @@ public struct LibraryTabView: View {
     public var body: some View {
         NavigationStack {
             List {
-                Section("User Collection") {
-                    ForEach(collections) { info in
-                        NavigationLink(value: info.mangaCollection) {
-                            Label(info.mangaCollection.name, systemImage: "square.grid.2x2")
-                                .badge("\(info.mangaCount)")
-                                .padding(.vertical)
-                        }
-                    }
-                    .onDelete(perform: onDelete)
-                    .onMove(perform: onMove)
-                    
-                    if editMode.isEditing {
-                        TextField("New collection name", text: $newCollectionName)
+                ForEach(collections) { info in
+                    NavigationLink(value: info.serieCollection) {
+                        Label(info.serieCollection.name, systemImage: "square.grid.2x2")
+                            .badge("\(info.serieCount)")
                             .padding(.vertical)
-                            .submitLabel(.done)
-                            .onSubmit(saveNewCollection)
                     }
                 }
+                .onDelete(perform: onDelete)
+                .onMove(perform: onMove)
                 
-                Section("Dynamic Collection") {
-                    NavigationLink(destination: ByGenreListPage()) {
-                        Text("By Genres")
-                    }
-                    
-                    NavigationLink(destination: BySourceListPage()) {
-                        Text("By Source List")
+                if editMode.isEditing {
+                    TextField("New collection name", text: $newCollectionName)
+                        .padding(.vertical)
+                        .submitLabel(.done)
+                        .onSubmit(saveNewCollection)
+                }
+                
+                if !collections.isEmpty {
+                    Section("Dynamic Collection") {
+                        NavigationLink(destination: SeriesByGenreListPage()) {
+                            Text("By Genres")
+                        }
+                        
+                        NavigationLink(destination: SeriesByScraperListPage()) {
+                            Text("By Source List")
+                        }
                     }
                 }
             }
@@ -62,12 +62,17 @@ public struct LibraryTabView: View {
             }
             .navigationTitle("Collections")
             .environment(\.editMode, $editMode)
-            .queryObservation(.always)
-            .navigationDestination(for: DetailedMangaInList.self) { data in
-                MangaDetail(mangaId: data.manga.mangaId, scraper: data.scraper)
+            .navigationDestination(for: DetailedSerieInList.self) { data in
+                SerieDetailScreen(serieInternalID: data.serie.internalID, scraperID: data.scraper.id)
             }
-            .navigationDestination(for: MangaCollection.self) { data in
-                CollectionPage(collection: data)
+            .navigationDestination(for: SerieCollection.self) { data in
+                SerieCollectionPage(collection: data)
+            }
+            .overlay {
+                if collections.isEmpty && !editMode.isEditing {
+                    ContentUnavailableView("No collection", systemImage: "text.book.closed", description: Text("Create a collection"))
+
+                }
             }
         }
         .navigationViewStyle(.stack)
@@ -75,47 +80,40 @@ public struct LibraryTabView: View {
     
     func saveNewCollection() {
         guard !newCollectionName.isEmpty else { return }
-        let lastPosition = (collections.last?.mangaCollection.position ?? 0) + 1
-        
-        do {
-            try appDB.database.write { db in
-                let collection = MangaCollection(id: UUID(), name: newCollectionName, position: lastPosition)
-                try collection.save(db)
-            }
-        } catch(let err) {
-            print(err)
-        }
-        
+        let lastPosition = (collections.last?.serieCollection.position ?? 0) + 1
+        let collection = SerieCollection(name: newCollectionName, position: lastPosition)
         newCollectionName = ""
+
+        Task { [collection] in
+            try await harmony.save(record: collection)
+        }
     }
     
     func onDelete(_ offsets: IndexSet) {
-        offsets
-            .map { collections[$0] }
-            .forEach { collection in
-                do {
-                    let _ = try appDB.database.write { db in
-                        try collection.mangaCollection.delete(db)
-                    }
-                } catch(let err) {
-                    print(err)
-                }
-            }
+        let toDelete = offsets.map { collections[$0].serieCollection }
+        
+        Task { [toDelete] in
+            try await harmony.delete(records: toDelete)
+        }
     }
     
     func onMove(_ offsets: IndexSet, _ position: Int) {
-        try? appDB.database.write { db in
-            var revisedItems: [MangaCollection] = collections.map{ $0.mangaCollection }
-
-//            change the order of the items in the array
-            revisedItems.move(fromOffsets: offsets, toOffset: position)
-
-//            update the position attribute in revisedItems to
-//            persist the new order. This is done in reverse order
-//            to minimize changes to the indices.
-            for reverseIndex in stride(from: revisedItems.count - 1, through: 0, by: -1) {
-                revisedItems[reverseIndex].position = reverseIndex
-                try revisedItems[reverseIndex].save(db)
+        Task {
+            do {
+                var revisedItems = collections.map{ $0.serieCollection }
+                revisedItems.move(fromOffsets: offsets, toOffset: position)
+                
+                let updatedSerieCollection = revisedItems
+                    .enumerated()
+                    .map { d in
+                        var serieCollection = d.element
+                        serieCollection.position = d.offset;
+                        return serieCollection
+                    }
+                
+                try await harmony.save(records: updatedSerieCollection)
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }

@@ -9,18 +9,17 @@ import SwiftUI
 import DataKit
 import Common
 
-typealias OnProgress = (_ status: ChapterStatus) -> Void
-
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(ReaderManager.self) public var readerManager
     
-    @StateObject public var vm: ReaderVM
-    @ObservedObject public var readerManager: ReaderManager
+    @Harmony var harmony
+    
+    @State private var vm: ReaderViewModel
     @Namespace private var overlayAnimation
     
-    public init(vm: ReaderVM, readerManager: ReaderManager) {
+    public init(vm: ReaderViewModel) {
         _vm = .init(wrappedValue: vm)
-        _readerManager = .init(wrappedValue: readerManager)
     }
     
     public var body: some View {
@@ -29,7 +28,7 @@ public struct ReaderView: View {
                 ProgressView()
                     .scaleEffect(3)
             } else {
-                if vm.direction == .vertical { VerticalReaderView(vm: vm) }
+                if vm.serie.readerDirection == .vertical { VerticalReaderView(vm: vm) }
                 else { HorizontalReaderView(vm: vm) }
             }
         }
@@ -38,7 +37,7 @@ public struct ReaderView: View {
         .navigationBarHidden(true)
         .onTapGesture { vm.toggleToolbar() }
         .task(id: vm.currentChapter) { await vm.fetchChapter() }
-        .task(id: vm.tabIndex) { await vm.updateChapterStatus() }
+        .task(id: vm.tabIndex) { await vm.updateChapterStatus(harmony: harmony) }
         .statusBar(hidden: !vm.showToolBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
@@ -73,7 +72,7 @@ public struct ReaderView: View {
                         VStack {
                             // TODO: Add a custom slider to be able to update tabIndex value
                             ProgressView(value: vm.progressBarCurrent(), total: vm.progressBarCount())
-                                .rotationEffect(.degrees(vm.direction == .rightToLeft ? 180 : 0))
+                                .rotationEffect(.degrees(vm.serie.readerDirection == .rightToLeft ? 180 : 0))
                         }
                         .frame(height: 25)
                     }
@@ -107,7 +106,7 @@ public struct ReaderView: View {
         }
     }
     
-    @ViewBuilder
+    @MainActor @ViewBuilder
     func TopOverlay() -> some View {
         if vm.showToolBar {
             Group {
@@ -119,7 +118,7 @@ public struct ReaderView: View {
                     Spacer()
                     
                     VStack(alignment: .center, spacing: 0) {
-                        Text(vm.manga.title)
+                        Text(vm.serie.title)
                             .font(.subheadline)
                             .allowsTightening(true)
                             .lineLimit(1)
@@ -144,10 +143,10 @@ public struct ReaderView: View {
                         }
                         
                         Menu("Reader direction") {
-                            ForEach(ReadingDirection.allCases, id: \.self) { direction in
-                                Button(action: { vm.setReadingDirection(new: direction) }) {
-                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.direction == direction)
-                                }
+                            ForEach(Serie.ReaderDirection.allCases, id: \.self) { direction in
+//                                Button(action: { vm.serie.readerDirection = direction }) {
+//                                    SelectedMenuItem(text: direction.rawValue, comparaison: vm.serie.readerDirection == direction)
+//                                }
                             }
                         }
                     } label: {
