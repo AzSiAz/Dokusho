@@ -161,5 +161,6 @@ let package = Package(
                 .product(name: "Collections", package: "swift-collections"),
             ]
         ),
-    ]
+    ],
+    swiftLanguageVersions: [.version("6")]
 )
