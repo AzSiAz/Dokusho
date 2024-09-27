@@ -59,20 +59,20 @@ private struct LDJSONInfo: Codable {
     var mainEntity: LDJSONInfoMainEntity
 }
 
-public class NepNepSource: MultiSource {
+public class NepNepSource: MultiSource, @unchecked Sendable {
     static let MangaSee123Source = NepNepSource(baseUrl: "https://mangasee123.com", icon: "https://mangasee123.com/media/favicon.png", id: UUID(uuidString: "FFAECF22-DBB3-4B13-B4AF-665DC31CE775")!, name: "MangaSee")
     static let Manga4LifeSource = NepNepSource(baseUrl: "https://manga4life.com", icon: "https://manga4life.com/media/favicon.png", id: UUID(uuidString: "B6127CD7-A9C0-4610-8491-47DFCFD90DBC")!, name: "MangaLife")
 
-    public var icon: String
-    public var id: UUID
-    public var name: String
-    public var baseUrl: String
-    public var lang = SourceLang.en
-    public var supportsLatest = true
-    public var headers = ["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"]
-    public var versionNumber: Float = 1.0
-    public var nsfw: Bool = false
-    public var updatedAt = Date.from(year: 2021, month: 12, day: 31)
+    public let icon: String
+    public let id: UUID
+    public let name: String
+    public let baseUrl: String
+    public let lang = SourceLang.en
+    public let supportsLatest = true
+    public let headers = ["User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/77.0"]
+    public let versionNumber: Float = 1.0
+    public let nsfw: Bool = false
+    public let updatedAt = Date.from(year: 2021, month: 12, day: 31)
 
     private var directory: [MangaSeeDirectoryManga] = []
 

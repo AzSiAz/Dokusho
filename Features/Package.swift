@@ -22,10 +22,9 @@ let package = Package(
         .library(name: "ExploreTab", targets: ["ExploreTab"]),
     ],
     dependencies: [
-         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "5.26.1"),
+         .package(url: "https://github.com/groue/GRDB.swift.git", exact: "6.29.3"),
          .package(url: "https://github.com/groue/GRDBQuery.git", exact: "0.7.0"),
          .package(url: "https://github.com/kean/Nuke", exact: "11.3.1"),
-         .package(url: "https://github.com/SwiftUIX/SwiftUIX.git", branch: "master"),
          .package(url: "https://github.com/scinfu/SwiftSoup.git", branch: "master"),
          .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
          .package(url: "https://github.com/muukii/JAYSON", exact: "2.5.0"),
@@ -53,7 +52,6 @@ let package = Package(
             name: "SharedUI",
             dependencies: [
                 .byName(name: "Common"),
-                .byName(name: "SwiftUIX"),
                 .product(name: "Nuke", package: "Nuke"),
                 .product(name: "NukeUI", package: "Nuke")
             ]
@@ -162,5 +160,5 @@ let package = Package(
             ]
         ),
     ],
-    swiftLanguageVersions: [.version("6")]
+    swiftLanguageVersions: [.version("5")]
 )

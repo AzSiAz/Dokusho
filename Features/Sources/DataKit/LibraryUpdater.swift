@@ -11,10 +11,11 @@ import MangaScraper
 import OSLog
 import Common
 
+@MainActor
 public class LibraryUpdater: ObservableObject {
     public static let shared = LibraryUpdater()
     
-    public struct RefreshStatus {
+    public struct RefreshStatus: Sendable {
         public var isRefreshing: Bool
         public var refreshProgress: Double
         public var refreshCount: Double
@@ -22,7 +23,7 @@ public class LibraryUpdater: ObservableObject {
         public var collectionId: MangaCollection.ID
     }
     
-    public struct RefreshData {
+    public struct RefreshData : Sendable {
         public var source: Source
         public var toRefresh: RefreshManga
     }
@@ -37,13 +38,13 @@ public class LibraryUpdater: ObservableObject {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
-        await updateRefreshStatus(collectionID: collection.id, refreshing: true)
+        updateRefreshStatus(collectionID: collection.id, refreshing: true)
 
-        let data = try await database.read { db in
+        let data = try await database.read { [collection] db in
             try Manga.fetchForUpdate(db, collectionId: collection.id, onlyAllRead: onlyAllRead)
         }
         print("---------------------Fetching--------------------------")
-        
+
         if data.count != 0 {
             try await withThrowingTaskGroup(of: RefreshData.self) { group in
                 for row in data {
@@ -67,14 +68,14 @@ public class LibraryUpdater: ObservableObject {
                         await Task.yield()
                     } catch (let error) {
                         print(error)
-                        await updateRefreshStatus(collectionID: collection.id, refreshing: false)
+                        updateRefreshStatus(collectionID: collection.id, refreshing: false)
                     }
                 }
             }
             
             print("---------------------Fetched--------------------------")
             
-            await self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
+            self.updateRefreshStatus(collectionID: collection.id, refreshing: nil)
             await MainActor.run {
                 UIApplication.shared.isIdleTimerDisabled = false
             }

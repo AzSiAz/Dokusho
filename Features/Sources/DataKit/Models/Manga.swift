@@ -7,7 +7,7 @@
 
 import Foundation
 import MangaScraper
-import GRDB
+@preconcurrency import GRDB
 
 extension SourceMangaCompletion: @retroactive StatementBinding {}
 extension SourceMangaCompletion: @retroactive SQLExpressible {}
@@ -16,13 +16,13 @@ extension SourceMangaType: @retroactive StatementBinding {}
 extension SourceMangaType: @retroactive SQLExpressible {}
 extension SourceMangaType: Codable, @retroactive DatabaseValueConvertible {}
 
-public enum ReadingDirection: String, CaseIterable {
+public enum ReadingDirection: String, CaseIterable, Sendable {
     case rightToLeft = "Right to Left (Manga)"
     case leftToRight = "Left to Right (Manhua)"
     case vertical = "Vertical (Webtoon, no gaps)"
 }
 
-public struct PartialManga: Decodable, Identifiable, Hashable {
+public struct PartialManga: Decodable, Identifiable, Hashable, Sendable {
     public var id: UUID
     public var mangaId: String
     public var title: String
@@ -30,7 +30,7 @@ public struct PartialManga: Decodable, Identifiable, Hashable {
     public var scraperId: UUID?
 }
 
-public struct RefreshManga: Identifiable, Hashable, FetchableRecord, Decodable {
+public struct RefreshManga: Identifiable, Hashable, FetchableRecord, Decodable, Sendable {
     public var id: String { mangaId }
     public var title: String
     public var mangaId: String
@@ -38,7 +38,7 @@ public struct RefreshManga: Identifiable, Hashable, FetchableRecord, Decodable {
     public var unreadChapterCount: Int
 }
 
-public struct Manga: Identifiable, Equatable, Codable {
+public struct Manga: Identifiable, Equatable, Codable, Sendable {
     public var id: UUID
     public var mangaId: String
     public var title: String

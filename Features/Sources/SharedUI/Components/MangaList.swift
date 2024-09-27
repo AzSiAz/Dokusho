@@ -14,7 +14,7 @@ public struct MangaList<MangaContent: View, T: Identifiable, Y: RandomAccessColl
     
     var columns: [GridItem] {
         let size: Double = UIScreen.isLargeScreen ? 130*1.3 : 130
-        return [GridItem(.adaptive(size))]
+        return [GridItem(.adaptive(minimum: size))]
     }
     
     public init(mangas: Y, @ViewBuilder mangaRender: @escaping (T) -> MangaContent) {

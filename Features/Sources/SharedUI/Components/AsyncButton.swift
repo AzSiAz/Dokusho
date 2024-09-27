@@ -10,10 +10,10 @@ import SwiftUI
 public struct AsyncButton<Content: View>: View {
     @State var isActionRunning = false
     
-    let action: () async throws -> Void
+    let action: @Sendable () async throws -> Void
     let content: Content
     
-    public init(action: @escaping () async -> Void, @ViewBuilder _ content: () -> Content) {
+    public init(action: @Sendable @escaping () async -> Void, @ViewBuilder _ content: () -> Content) {
         self.action = action
         self.content = content()
     }

@@ -11,6 +11,7 @@ import MangaScraper
 import GRDB
 import DataKit
 
+@MainActor
 public class MangaDetailVM: ObservableObject {
     private let database = AppDatabase.shared.database
     
@@ -39,8 +40,8 @@ public class MangaDetailVM: ObservableObject {
 
             let sourceManga = try await source.fetchMangaDetail(id: mangaId)
             
-            try _ = await database.write { db in
-                try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+            try _ = await database.write { [scraper] db in
+                try Manga.updateFromSource(db: db, scraper: scraper, data: sourceManga)
             }
         } catch {
             print(error)

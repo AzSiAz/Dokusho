@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import GRDB
+@preconcurrency import GRDB
 import MangaScraper
 
-public enum ChapterStatusHistory: String {
+public enum ChapterStatusHistory: String, Sendable {
     case all = "Update", read = "Read"
 }
 
-public enum ChapterStatusFilter: String {
+public enum ChapterStatusFilter: String, Sendable {
     case all, unread
     
     static func toggle(value: Self) -> Self {
@@ -27,7 +27,7 @@ public enum ChapterStatusFilter: String {
     
 }
 
-public enum ChapterStatus: String, CaseIterable, Codable, DatabaseValueConvertible {
+public enum ChapterStatus: String, CaseIterable, Codable, DatabaseValueConvertible, Sendable {
     case unread, read
     
     func inverse() -> ChapterStatus {
@@ -40,7 +40,7 @@ public enum ChapterStatus: String, CaseIterable, Codable, DatabaseValueConvertib
     }
 }
 
-public struct MangaChapter: Identifiable, Equatable, Codable {
+public struct MangaChapter: Identifiable, Equatable, Codable, Sendable {
     public var id: String
     public var chapterId: String
     public var title: String

@@ -70,7 +70,7 @@ class ExploreSourceVM: ObservableObject {
         if !initialized && mangas.isEmpty {
             await fetchList()
             
-            await asyncChange {
+            withAnimation {
                 self.initialized = true
             }
         }
@@ -90,9 +90,9 @@ class ExploreSourceVM: ObservableObject {
         guard let sourceManga = try? await scraper.asSource()?.fetchMangaDetail(id: smallManga.id) else { return }
 
         do {
-            try await database.write { db -> Void in
-                guard var manga = try Manga.all().forMangaId(smallManga.id, self.scraper.id).fetchOne(db) else {
-                    var manga = try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+            try await database.write { [scraper] db -> Void in
+                guard var manga = try Manga.all().forMangaId(smallManga.id, scraper.id).fetchOne(db) else {
+                    var manga = try Manga.updateFromSource(db: db, scraper: scraper, data: sourceManga)
                     try manga.updateChanges(db) {
                         $0.mangaCollectionId = collection.id
                     }

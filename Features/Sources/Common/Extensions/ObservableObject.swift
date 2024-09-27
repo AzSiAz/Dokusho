@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 public extension ObservableObject {
-    func animateAsyncChange(_ animation: Animation? = .default, _ change: @escaping () -> Void) async {
+    func animateAsyncChange(_ animation: Animation? = .default, _ change: @Sendable @escaping () -> Void) async {
         await MainActor.run {
             withAnimation(animation) {
                 change()
@@ -17,7 +17,7 @@ public extension ObservableObject {
         }
     }
     
-    func asyncChange(_ change: @escaping () -> Void) async {
+    func asyncChange(_ change: @Sendable @escaping () -> Void) async {
         await MainActor.run {
             change()
         }

@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import GRDB
+@preconcurrency import GRDB
 import MangaScraper
 
-public struct Scraper: Identifiable, Equatable, Codable, Hashable {
+public struct Scraper: Identifiable, Equatable, Codable, Hashable, Sendable {
     public var id: UUID
     public var name: String
     public var position: Int?

@@ -5,7 +5,7 @@
 //  Created by Stephan Deumier on 17/08/2021.
 //
 import SwiftUI
-import GRDB
+@preconcurrency import GRDB
 import GRDBQuery
 import OSLog
 import MangaScraper
@@ -128,7 +128,7 @@ public extension AppDatabase {
         }
     }
 
-    static let uiTestMangaCollection = [
+    nonisolated(unsafe) static let uiTestMangaCollection = [
         MangaCollection(id: UUID(), name: "Reading", position: 1),
         MangaCollection(id: UUID(), name: "To Read", position: 2),
         MangaCollection(id: UUID(), name: "Special", position: 3),
@@ -136,7 +136,7 @@ public extension AppDatabase {
         MangaCollection(id: UUID(), name: "Paper", position: 5),
     ]
     
-    static let uiTestScraper = [
+    nonisolated(unsafe) static let uiTestScraper = [
         Scraper(id: UUID(), name: "Favorite", isFavorite: true, isActive: true),
         Scraper(id: UUID(), name: "Active", isFavorite: false, isActive: true),
     ]
@@ -152,7 +152,7 @@ public extension AppDatabase {
 
 public extension AppDatabase {
     /// The database for the application
-    static let shared = makeShared()
+    nonisolated(unsafe) static let shared = makeShared()
     
     private static func makeShared() -> AppDatabase {
         do {

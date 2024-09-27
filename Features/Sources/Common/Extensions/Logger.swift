@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 
 public extension Logger {
-    private static var subsystem = Bundle.main.bundleIdentifier!
+    private static let subsystem = Bundle.main.bundleIdentifier!
 
     static let persistence = Logger(subsystem: subsystem, category: "db")
     static let migration = Logger(subsystem: subsystem, category: "db.migration")

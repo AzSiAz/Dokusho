@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
-import Combine
+@preconcurrency import Combine
 
+@MainActor
 public final class DeviceOrientation: ObservableObject {
     public enum Orientation {
         case portrait, landscape

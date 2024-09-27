@@ -58,7 +58,7 @@ public struct MangaCard: View {
                     .padding(.top, 1)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundColor(.white)
-                    .background(Color.darkGray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
+                    .background(.gray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
             }
             .padding(2)
         }
@@ -71,7 +71,7 @@ public struct MangaCard: View {
                 Text(String(count))
                     .padding(2)
                     .foregroundColor(.white)
-                    .background(Color.darkGray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
+                    .background(.gray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
             }
             .padding(2)
         }
@@ -85,7 +85,7 @@ public struct MangaCard: View {
                     .lineLimit(1)
                     .padding(2)
                     .foregroundColor(.white)
-                    .background(Color.darkGray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]) )
+                    .background(.gray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]) )
             }
             .padding(2)
         }

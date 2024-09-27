@@ -14,20 +14,20 @@ public enum SourceError: Error {
     case notImplemented
 }
 
-public enum SourceLang: String, CaseIterable {
+public enum SourceLang: String, CaseIterable, Sendable {
     case fr = "French"
     case en = "English"
     case jp = "Japanese"
     case all = "All"
 }
 
-public enum SourceMangaCompletion: String, CaseIterable {
+public enum SourceMangaCompletion: String, CaseIterable, Sendable {
     case ongoing = "Ongoing"
     case complete = "Complete"
     case unknown = "Unknown"
 }
 
-public enum SourceMangaType: String, CaseIterable {
+public enum SourceMangaType: String, CaseIterable, Sendable {
     case manga = "Manga"
     case manhua = "Manhua"
     case manhwa = "Manhwa"
@@ -35,7 +35,7 @@ public enum SourceMangaType: String, CaseIterable {
     case unknown = "Unknown"
 }
 
-public struct SourceManga: Identifiable, Equatable, Hashable {
+public struct SourceManga: Identifiable, Equatable, Hashable, Sendable {
     public var id: String
     public var title: String
     public var cover: String
@@ -48,14 +48,14 @@ public struct SourceManga: Identifiable, Equatable, Hashable {
     public var type: SourceMangaType
 }
 
-public struct SourceChapter: Identifiable, Equatable, Hashable {
+public struct SourceChapter: Identifiable, Equatable, Hashable, Sendable {
     public var name: String
     public var id: String
     public var dateUpload: Date
     public var externalUrl: String?
 }
 
-public struct SourceChapterImage: Identifiable, Equatable, Hashable {
+public struct SourceChapterImage: Identifiable, Equatable, Hashable, Sendable {
     public var id = UUID()
     
     public var index: Int
@@ -67,7 +67,7 @@ public struct SourceChapterImage: Identifiable, Equatable, Hashable {
     }
 }
 
-public struct SourceSmallManga: Identifiable, Equatable, Hashable {
+public struct SourceSmallManga: Identifiable, Equatable, Hashable, Sendable {
     public init(id: String, title: String, thumbnailUrl: String) {
         self.id = id
         self.title = title
@@ -79,7 +79,7 @@ public struct SourceSmallManga: Identifiable, Equatable, Hashable {
     public var thumbnailUrl: String
 }
 
-public enum SourceFetchType: String, CaseIterable, Identifiable {
+public enum SourceFetchType: String, CaseIterable, Identifiable, Sendable {
     case latest = "Latest"
     case popular = "Popular"
     
@@ -88,7 +88,7 @@ public enum SourceFetchType: String, CaseIterable, Identifiable {
 
 public typealias SourcePaginatedSmallManga = (mangas: [SourceSmallManga], hasNextPage: Bool)
 
-public protocol Source {
+public protocol Source: Sendable {
     var name: String { get }
     var id: UUID { get }
     var versionNumber: Float { get }

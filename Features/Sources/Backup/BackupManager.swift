@@ -13,13 +13,14 @@ import MangaScraper
 import DataKit
 import Common
 
-public struct Backup: FileDocument {
+@MainActor
+public struct Backup: @preconcurrency FileDocument {
     public static var readableContentTypes = [UTType.json]
     public static var writableContentTypes = [UTType.json]
     
     var data: BackupData
     
-    public init(configuration: ReadConfiguration) throws {
+    nonisolated public init(configuration: ReadConfiguration) throws {
         throw "Not done"
     }
     
@@ -35,23 +36,23 @@ public struct Backup: FileDocument {
     }
 }
 
-public struct BackupData: Codable {
+public struct BackupData: Codable, Sendable {
     var collections: [BackupCollectionData]
     var scrapers: [Scraper]
 }
 
-public struct BackupCollectionData: Codable {
+public struct BackupCollectionData: Codable, Sendable {
     var collection: MangaCollection
     var mangas: [MangaWithChapters]
 }
 
-public struct MangaWithChapters: Codable {
+public struct MangaWithChapters: Codable, Sendable {
     var manga: Manga
     var chapters: [MangaChapter]
 }
 
 
-public struct BackupTask {
+public struct BackupTask: Sendable {
     var mangaBackup: MangaWithChapters
     var collection: MangaCollection
 }
@@ -59,7 +60,7 @@ public struct BackupTask {
 public typealias BackupResult = Result<BackupTask, Error>
 
 public class BackupManager: ObservableObject {
-    public static let shared = BackupManager()
+    nonisolated(unsafe) public static let shared = BackupManager()
     
     private let database = AppDatabase.shared.database
     
@@ -98,7 +99,8 @@ public class BackupManager: ObservableObject {
     }
 
     public func importBackup(backup: BackupData) async {
-        await animateAsyncChange {
+        
+        withAnimation {
             self.isImporting = true
         }
 
@@ -113,10 +115,11 @@ public class BackupManager: ObservableObject {
                 
                 for mangaBackup in collectionBackup.mangas {
                     group.addTask(priority: .background) {
-                        await self.asyncChange {
-                            self.total += 1
-                        }
                         return .success(BackupTask(mangaBackup: mangaBackup, collection: collection))
+                    }
+                    
+                    withAnimation {
+                        self.total += 1
                     }
                 }
             }
@@ -132,7 +135,8 @@ public class BackupManager: ObservableObject {
                             let _ = try task.mangaBackup.manga.saved(db)
                             try task.mangaBackup.chapters.forEach { try $0.save(db) }
                         }
-                        await self.asyncChange {
+                        
+                        withAnimation {
                             self.progress += 1
                         }
                     } catch(let err) {
@@ -142,7 +146,7 @@ public class BackupManager: ObservableObject {
             }
         }
         
-        await animateAsyncChange {
+        withAnimation {
             self.isImporting = false
         }
     }

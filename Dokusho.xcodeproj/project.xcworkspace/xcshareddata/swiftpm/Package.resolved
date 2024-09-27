@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift",
       "state" : {
-        "revision" : "dd7e7f39e8e4d7a22d258d9809a882f914690b01",
-        "version" : "5.26.1"
+        "revision" : "2cf6c756e1e5ef6901ebae16576a7e4e4b834622",
+        "version" : "6.29.3"
       }
     },
     {
@@ -61,15 +61,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "de1da15d1afee3b41dc628b22a4cfef381d3986f"
-      }
-    },
-    {
-      "identity" : "swiftuix",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SwiftUIX/SwiftUIX.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "95e399ac149577d6996a7c62c90282d06373a3b7"
       }
     }
   ],

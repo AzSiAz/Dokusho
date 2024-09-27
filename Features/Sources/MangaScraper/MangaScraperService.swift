@@ -1,7 +1,7 @@
 import Foundation
 
 public class MangaScraperService {
-    public static let shared = MangaScraperService()
+    nonisolated(unsafe) public static let shared = MangaScraperService()
     
     public var list: [Source] = [
         NepNepSource.MangaSee123Source,

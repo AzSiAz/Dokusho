@@ -34,6 +34,7 @@ enum ReaderLink: Equatable, Hashable {
     }
 }
 
+@MainActor
 public class ReaderVM: ObservableObject {
     private let database = AppDatabase.shared.database
     
@@ -138,7 +139,7 @@ public class ReaderVM: ObservableObject {
     
     func updateChapterStatus() async {
         if progressBarCount() == progressBarCurrent() {
-            await asyncChange {
+            withAnimation {
                 self.showToolBar = true
             }
 

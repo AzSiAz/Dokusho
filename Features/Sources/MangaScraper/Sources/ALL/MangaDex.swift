@@ -9,8 +9,7 @@ import Foundation
 import JAYSON
 import Collections
 
-
-public struct MangaDex: Source {
+public struct MangaDex: Source, @unchecked Sendable {
     public static let shared = MangaDex.init()
     
     public var name: String = "MangaDex"
