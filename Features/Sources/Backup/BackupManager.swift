@@ -13,8 +13,7 @@ import MangaScraper
 import DataKit
 import Common
 
-@MainActor
-public struct Backup: @preconcurrency FileDocument {
+public struct Backup: FileDocument {
     public static var readableContentTypes = [UTType.json]
     public static var writableContentTypes = [UTType.json]
     

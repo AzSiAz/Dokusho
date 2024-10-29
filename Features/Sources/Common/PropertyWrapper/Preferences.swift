@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-@MainActor
 @propertyWrapper
 public struct UserDefault<Value> {
     let key: String
@@ -56,7 +55,6 @@ public final class PublisherObservableObject: ObservableObject {
     }
 }
 
-@MainActor
 public final class Preferences {
     
     public static let standard = Preferences(userDefaults: .standard)
@@ -82,7 +80,6 @@ public final class Preferences {
     public var numberOfPreloadedImages: Int = 3
 }
 
-@MainActor
 @propertyWrapper
 public struct Preference<Value>: DynamicProperty {
     

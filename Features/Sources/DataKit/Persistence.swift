@@ -128,7 +128,7 @@ public extension AppDatabase {
         }
     }
 
-    nonisolated(unsafe) static let uiTestMangaCollection = [
+    static let uiTestMangaCollection = [
         MangaCollection(id: UUID(), name: "Reading", position: 1),
         MangaCollection(id: UUID(), name: "To Read", position: 2),
         MangaCollection(id: UUID(), name: "Special", position: 3),
@@ -136,7 +136,7 @@ public extension AppDatabase {
         MangaCollection(id: UUID(), name: "Paper", position: 5),
     ]
     
-    nonisolated(unsafe) static let uiTestScraper = [
+    static let uiTestScraper = [
         Scraper(id: UUID(), name: "Favorite", isFavorite: true, isActive: true),
         Scraper(id: UUID(), name: "Active", isFavorite: false, isActive: true),
     ]
