@@ -5,10 +5,11 @@
 //  Created by Stephan Deumier on 03/05/2022.
 //
 
-import Foundation
+@preconcurrency import Foundation
+@preconcurrency import Combine
 import SwiftUI
-import Combine
 
+@MainActor
 @propertyWrapper
 public struct UserDefault<Value> {
     let key: String
@@ -44,6 +45,7 @@ public struct UserDefault<Value> {
     }
 }
 
+@preconcurrency
 public final class PublisherObservableObject: ObservableObject {
     
     var subscriber: AnyCancellable?
@@ -55,7 +57,8 @@ public final class PublisherObservableObject: ObservableObject {
     }
 }
 
-public final class Preferences {
+@MainActor
+public final class Preferences: Sendable {
     
     public static let standard = Preferences(userDefaults: .standard)
     fileprivate let userDefaults: UserDefaults
@@ -80,6 +83,7 @@ public final class Preferences {
     public var numberOfPreloadedImages: Int = 3
 }
 
+@MainActor
 @propertyWrapper
 public struct Preference<Value>: DynamicProperty {
     

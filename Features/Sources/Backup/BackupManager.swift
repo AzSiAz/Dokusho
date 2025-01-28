@@ -8,14 +8,14 @@
 import Foundation
 import OSLog
 import SwiftUI
-import UniformTypeIdentifiers
+@preconcurrency import UniformTypeIdentifiers
 import MangaScraper
 import DataKit
 import Common
 
 public struct Backup: FileDocument {
-    public static var readableContentTypes = [UTType.json]
-    public static var writableContentTypes = [UTType.json]
+    public static let readableContentTypes = [UTType.json]
+    public static let writableContentTypes = [UTType.json]
     
     var data: BackupData
     

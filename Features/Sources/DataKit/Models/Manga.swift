@@ -9,12 +9,12 @@ import Foundation
 import MangaScraper
 @preconcurrency import GRDB
 
-extension SourceMangaCompletion: @retroactive StatementBinding {}
-extension SourceMangaCompletion: @retroactive SQLExpressible {}
-extension SourceMangaCompletion: Codable, @retroactive DatabaseValueConvertible {}
-extension SourceMangaType: @retroactive StatementBinding {}
-extension SourceMangaType: @retroactive SQLExpressible {}
-extension SourceMangaType: Codable, @retroactive DatabaseValueConvertible {}
+extension SourceMangaCompletion: StatementBinding {}
+extension SourceMangaCompletion: SQLExpressible {}
+extension SourceMangaCompletion: Codable, DatabaseValueConvertible {}
+extension SourceMangaType: StatementBinding {}
+extension SourceMangaType: SQLExpressible {}
+extension SourceMangaType: Codable, DatabaseValueConvertible {}
 
 public enum ReadingDirection: String, CaseIterable, Sendable {
     case rightToLeft = "Right to Left (Manga)"

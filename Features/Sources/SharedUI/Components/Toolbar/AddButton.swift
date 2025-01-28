@@ -8,9 +8,9 @@
 import SwiftUI
 
 public struct AddButton: View {
-    let onTapGesture: () -> Void
+    let onTapGesture: @Sendable () -> Void
     
-    public init(onTapGesture: @escaping () -> Void) {
+    public init(onTapGesture: @Sendable @escaping () -> Void) {
         self.onTapGesture = onTapGesture
     }
     

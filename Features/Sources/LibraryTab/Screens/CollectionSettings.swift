@@ -1,10 +1,3 @@
-//
-//  CollectionSettings.swift
-//  Dokusho
-//
-//  Created by Stephan Deumier on 04/06/2022.
-//
-
 import Foundation
 import SwiftUI
 import GRDBQuery
@@ -57,10 +50,10 @@ public struct CollectionSettings: View {
                 }
             }
             .navigationTitle(Text("Modify Filter"))
-            .onChange(of: $collectionFilter.wrappedValue, perform: { updateCollectionFilter(newFilter: $0) })
-            .onChange(of: $collectionOrder.field.wrappedValue, perform: { updateCollectionOrder(direction: nil, field: $0) })
-            .onChange(of: $collectionOrder.direction.wrappedValue, perform: { updateCollectionOrder(direction: $0, field: nil) })
-            .onChange(of: $useList.wrappedValue, perform: { updateCollectionUseList(d: $0) })
+            .onChange(of: $collectionFilter.wrappedValue) { _, filter in updateCollectionFilter(newFilter: filter) }
+            .onChange(of: $collectionOrder.field.wrappedValue) { _, field in updateCollectionOrder(direction: nil, field: field) }
+            .onChange(of: $collectionOrder.direction.wrappedValue) { _, direction in updateCollectionOrder(direction: direction, field: nil) }
+            .onChange(of: $useList.wrappedValue) { _, useList in updateCollectionUseList(d: useList) }
         }
     }
 }

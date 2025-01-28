@@ -81,7 +81,7 @@ public struct ScraperSearch: View {
             }
         }
         .padding(.bottom, 10)
-        .onChange(of: textToSearch) { text in
+        .onChange(of: textToSearch) { _, text in
             Task {
                 await vm.fetchData(textToSearch: textToSearch)
             }
@@ -102,7 +102,7 @@ public struct ScraperSearch: View {
                     MangaCard(title: manga.title, imageUrl: manga.thumbnailUrl, collectionName: found?.collectionName ?? "")
                         .mangaCardFrame()
                         .contextMenu { ContextMenu(manga: manga) }
-                        .task { await vm.fetchMoreIfPossible(for: manga) }
+                        .task { await self.vm.fetchMoreIfPossible(for: manga) }
                         .onTapGesture { vm.selectedManga = manga }
                         .padding(.trailing, vm.mangas.last == manga ? 15 : 0)
                         .padding(.leading, vm.mangas.first == manga ? 15 : 0)
@@ -118,7 +118,11 @@ public struct ScraperSearch: View {
     @ViewBuilder
     func ContextMenu(manga: SourceSmallManga) -> some View {
         ForEach(collections) { collection in
-            AsyncButton(action: { await vm.addToCollection(smallManga: manga, collection: collection) }) {
+            Button(action: {
+                Task {
+                    await vm.addToCollection(smallManga: manga, collection: collection)
+                }
+            }) {
                 Text("Add to \(collection.name)")
             }
         }

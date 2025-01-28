@@ -14,32 +14,6 @@ import SharedUI
 import MangaDetail
 import DynamicCollection
 
-public class CollectionPageViewModel: ObservableObject {
-    private var refreshTask: Task<Void, Error>?
-    
-    @Published var showFilter = false
-    @Published var reload = true
-    @Published var selectedGenre: String?
-    
-    public func refreshLibrary(libraryUpdater: LibraryUpdater, collection: MangaCollection, onlyUpdateAllRead: Bool) async {
-        guard refreshTask == nil else { return }
-        
-        refreshTask = Task {
-            try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
-        }
-        
-        try? await refreshTask?.value
-    }
-    
-    public func cancelRefresh() {
-        refreshTask?.cancel()
-    }
-    
-    public func selectGenre(genre: String) -> Void {
-        self.selectedGenre = genre
-    }
-}
-
 public struct CollectionPage: View {
     @Environment(\.appDatabase) var appDatabase
     @EnvironmentObject var libraryUpdater: LibraryUpdater
@@ -48,7 +22,11 @@ public struct CollectionPage: View {
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
     
-    @StateObject var vm: CollectionPageViewModel = .init()
+    @State var showFilter = false
+    @State var reload = true
+    @State var selectedGenre: String?
+    
+    @State private var refreshTask: Task<Void, Error>?
     
     public init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -61,12 +39,12 @@ public struct CollectionPage: View {
                 if collection.useList ?? false { ListView() }
                 else { GridView() }
             }
-            .sheet(isPresented: $vm.showFilter) { CollectionSettings(collection: collection) }
+            .sheet(isPresented: $showFilter) { CollectionSettings(collection: collection) }
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
             .queryObservation(.always)
-            .onDisappear { vm.cancelRefresh() }
+            .onDisappear { cancelRefresh() }
         }
     }
     
@@ -77,7 +55,7 @@ public struct CollectionPage: View {
                 MangaInGrid(data: data)
             }
         }
-        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
+        .refreshable { await refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
     }
     
     @ViewBuilder
@@ -95,7 +73,7 @@ public struct CollectionPage: View {
         List(list) { data in
             MangaInList(data: data)
         }
-        .refreshable { await vm.refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
+        .refreshable { await refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
         .listStyle(PlainListStyle())
     }
     
@@ -117,9 +95,27 @@ public struct CollectionPage: View {
     
     var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(action: { vm.showFilter.toggle() }) {
+            Button(action: { showFilter.toggle() }) {
                 Image(systemName: "line.3.horizontal.decrease")
             }
         }
+    }
+    
+    func refreshLibrary(libraryUpdater: LibraryUpdater, collection: MangaCollection, onlyUpdateAllRead: Bool) async {
+        guard refreshTask == nil else { return }
+        
+        refreshTask = Task {
+            try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
+        }
+        
+        try? await refreshTask?.value
+    }
+    
+    func cancelRefresh() {
+        refreshTask?.cancel()
+    }
+    
+    func selectGenre(genre: String) -> Void {
+        self.selectedGenre = genre
     }
 }
