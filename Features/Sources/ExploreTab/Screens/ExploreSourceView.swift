@@ -152,7 +152,7 @@ public struct ExploreSourceView: View {
     
     @MainActor
     func initView() async {
-        if !initialized && mangasInCollection.isEmpty {
+        if !initialized {
             await fetchList()
             
             withAnimation {

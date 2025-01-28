@@ -97,11 +97,10 @@ public class BackupManager: ObservableObject {
         return .init(collections: backupCollections, scrapers: scrapers)
     }
 
+    @MainActor
     public func importBackup(backup: BackupData) async {
         
-        withAnimation {
-            self.isImporting = true
-        }
+        toggleIsImporting()
 
         await withTaskGroup(of: BackupResult.self) { group in
             
@@ -145,8 +144,13 @@ public class BackupManager: ObservableObject {
             }
         }
         
+        toggleIsImporting()
+    }
+    
+    @MainActor
+    func toggleIsImporting() {
         withAnimation {
-            self.isImporting = false
+            self.isImporting.toggle()
         }
     }
 }
