@@ -122,6 +122,7 @@ public struct MangaDetail: View {
             VStack(spacing: 0) {
                 VStack(alignment: .leading) {
                     Text(data.manga.title)
+                        .textSelection(.enabled)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.subheadline.bold())
