@@ -21,6 +21,12 @@ public struct SettingsTabView: View {
     public var body: some View {
         NavigationView {
             List {
+                Section("Sources") {
+                    NavigationLink(destination: TsundokuSettingsView()) {
+                        Label("Tsundoku", systemImage: "server.rack")
+                    }
+                }
+
                 Section("Data") {
                     Button(action: { vm.createBackup() }) {
                         Text("Create Backup")

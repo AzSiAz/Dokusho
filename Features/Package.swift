@@ -98,6 +98,7 @@ let package = Package(
                 .byName(name: "Common"),
                 .byName(name: "SharedUI"),
                 .byName(name: "Backup"),
+                .byName(name: "MangaScraper"),
                 .product(name: "Nuke", package: "Nuke")
             ]
         ),

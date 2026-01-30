@@ -84,36 +84,40 @@ public struct ExploreTabView: View {
     
     @ViewBuilder
     func ActiveSourceRowView(scraper: Scraper) -> some View {
-        let source = scraper.asSource()!
-
-        ScraperRow(scraper: scraper)
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: { vm.toogleActive(source: source) }) {
-                    Label("Deactivate", systemImage: "xmark")
-                }.tint(.purple)
-            }
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button(action: { vm.toogleFavorite(source: source) }) {
-                    Label("Favorite", systemImage: "hand.thumbsup")
-                }.tint(.blue)
-            }
+        if let source = scraper.asSource() {
+            ScraperRow(scraper: scraper)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(action: { vm.toogleActive(source: source) }) {
+                        Label("Deactivate", systemImage: "xmark")
+                    }.tint(.purple)
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                    Button(action: { vm.toogleFavorite(source: source) }) {
+                        Label("Favorite", systemImage: "hand.thumbsup")
+                    }.tint(.blue)
+                }
+        } else {
+            UnavailableScraperRow(scraper: scraper)
+        }
     }
-    
+
     @ViewBuilder
     func FavoriteSourceRowView(scraper: Scraper) -> some View {
-        let source = scraper.asSource()!
-
-        ScraperRow(scraper: scraper)
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: { vm.toogleActive(source: source) }) {
-                    Label("Deactivate", systemImage: "xmark")
-                }.tint(.purple)
-            }
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button(action: { vm.toogleFavorite(source: source) }) {
-                    Label("Unfavorite", systemImage: "hand.thumbsdown")
-                }.tint(.blue)
-            }
+        if let source = scraper.asSource() {
+            ScraperRow(scraper: scraper)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(action: { vm.toogleActive(source: source) }) {
+                        Label("Deactivate", systemImage: "xmark")
+                    }.tint(.purple)
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                    Button(action: { vm.toogleFavorite(source: source) }) {
+                        Label("Unfavorite", systemImage: "hand.thumbsdown")
+                    }.tint(.blue)
+                }
+        } else {
+            UnavailableScraperRow(scraper: scraper)
+        }
     }
     
     @ViewBuilder
@@ -134,9 +138,36 @@ public struct ExploreTabView: View {
     
     @ViewBuilder
     func ScraperRow(scraper: Scraper) -> some View {
-        let src = scraper.asSource()!
-        NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
-            SourceRow(src: src)
+        if let src = scraper.asSource() {
+            NavigationLink(destination: ExploreSourceView(scraper: scraper)) {
+                SourceRow(src: src)
+            }
+        } else {
+            UnavailableScraperRow(scraper: scraper)
+        }
+    }
+
+    @ViewBuilder
+    func UnavailableScraperRow(scraper: Scraper) -> some View {
+        HStack {
+            Image(systemName: "exclamationmark.triangle")
+                .foregroundStyle(.secondary)
+                .frame(width: 32, height: 32)
+                .padding(.trailing)
+
+            VStack(alignment: .leading) {
+                Text(scraper.name)
+                Text("Source unavailable")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.leading, 8)
+        }
+        .padding(.vertical)
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive, action: { vm.removeScraper(scraper: scraper) }) {
+                Label("Remove", systemImage: "trash")
+            }
         }
     }
 }
