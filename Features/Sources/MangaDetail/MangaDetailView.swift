@@ -22,6 +22,14 @@ public struct MangaDetail: View {
     @StateObject var orientation: DeviceOrientation = DeviceOrientation()
     @StateObject var readerManager = ReaderManager()
 
+    @State private var migrationItem: MigrationSheetItem?
+
+    struct MigrationSheetItem: Identifiable {
+        let id = UUID()
+        let manga: Manga
+        let scraper: Scraper
+    }
+
     let selectGenre: ((_ genre: String) -> Void)?
     
     public init(mangaId: String, scraper: Scraper, selectGenre: ((_ genre: String) -> Void)? = nil) {
@@ -64,6 +72,9 @@ public struct MangaDetail: View {
         }
         .fullScreenCover(item: $readerManager.selectedChapter) { data in
             ReaderView(vm: .init(manga: data.manga, chapter: data.chapter, scraper: data.scraper, chapters: data.chapters), readerManager: readerManager)
+        }
+        .sheet(item: $migrationItem) { item in
+            MigrateMangaView(manga: item.manga, scraper: item.scraper)
         }
         .environmentObject(readerManager)
     }
@@ -118,6 +129,15 @@ public struct MangaDetail: View {
             MangaCard(imageUrl: data.manga.cover.absoluteString)
                 .mangaCardFrame()
                 .padding(.leading, 10)
+                .contextMenu {
+                    if data.mangaCollection != nil {
+                        Button(action: {
+                            migrationItem = MigrationSheetItem(manga: data.manga, scraper: vm.scraper)
+                        }) {
+                            Label("Migrate to Another Source", systemImage: "arrow.triangle.swap")
+                        }
+                    }
+                }
             
             VStack(spacing: 0) {
                 VStack(alignment: .leading) {

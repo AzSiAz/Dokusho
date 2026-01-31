@@ -21,12 +21,18 @@ public struct CollectionPage: View {
 
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
-    
+
     @State var showFilter = false
     @State var reload = true
     @State var selectedGenre: String?
-    
+
     @State private var refreshTask: Task<Void, Error>?
+    @State private var migrationTarget: MigrationSheetItem?
+
+    struct MigrationSheetItem: Identifiable {
+        let id = UUID()  // New UUID each time forces sheet recreation
+        let manga: DetailedMangaInList
+    }
     
     public init(collection : MangaCollection) {
         _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
@@ -40,6 +46,9 @@ public struct CollectionPage: View {
                 else { GridView() }
             }
             .sheet(isPresented: $showFilter) { CollectionSettings(collection: collection) }
+            .sheet(item: $migrationTarget) { item in
+                MigrateMangaView(manga: item.manga, scraper: item.manga.scraper)
+            }
             .searchable(text: $list.searchTerm)
             .toolbar { toolbar }
             .navigationTitle("\(collection.name) (\(list.count))")
@@ -62,7 +71,11 @@ public struct CollectionPage: View {
     func MangaInGrid(data: DetailedMangaInList) -> some View {
         NavigationLink(value: data) {
             MangaCard(title: data.manga.title, imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
-                .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+                .contextMenu {
+                    MangaLibraryContextMenu(manga: data.manga, scraper: data.scraper, count: data.unreadChapterCount) {
+                        migrationTarget = MigrationSheetItem(manga: data)
+                    }
+                }
                 .mangaCardFrame()
                 .id(data.id)
         }
@@ -88,7 +101,11 @@ public struct CollectionPage: View {
                 Text(data.manga.title)
                     .lineLimit(3)
             }
-            .contextMenu { MangaLibraryContextMenu(manga: data.manga, count: data.unreadChapterCount) }
+            .contextMenu {
+                MangaLibraryContextMenu(manga: data.manga, scraper: data.scraper, count: data.unreadChapterCount) {
+                    migrationTarget = MigrationSheetItem(manga: data)
+                }
+            }
             .frame(height: 120)
         }
     }

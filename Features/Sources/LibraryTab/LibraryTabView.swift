@@ -57,6 +57,14 @@ public struct LibraryTabView: View {
             }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Menu {
+                        NavigationLink(destination: MassMigrationView()) {
+                            Label("Mass Migration", systemImage: "arrow.triangle.2.circlepath")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+
                     EditButton()
                 }
             }
