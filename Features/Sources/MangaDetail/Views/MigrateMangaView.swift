@@ -13,21 +13,21 @@ import SharedUI
 public struct MigrateMangaView: View {
     @Environment(\.dismiss) var dismiss
 
-    @StateObject var vm: MigrateMangaVM
+    @State private var vm: MigrateMangaVM
 
     private let loadError: String?
 
     public init(manga: Manga, scraper: Scraper) {
-        _vm = StateObject(wrappedValue: MigrateMangaVM(manga: manga, scraper: scraper))
         loadError = nil
+        self.vm = MigrateMangaVM(manga: manga, scraper: scraper)
     }
 
     /// Initialize from DetailedMangaInList (used from collection page context menu)
     public init(manga: DetailedMangaInList, scraper: Scraper) {
         // Try to fetch full manga from database
         if let fullManga = try? MigrationService.shared.getFullManga(from: manga.manga) {
-            _vm = StateObject(wrappedValue: MigrateMangaVM(manga: fullManga, scraper: scraper))
             loadError = nil
+            self.vm = MigrateMangaVM(manga: fullManga, scraper: scraper)
         } else {
             // Fallback: create minimal manga (should rarely happen as manga must be in collection)
             let fallbackManga = Manga(
@@ -36,8 +36,8 @@ public struct MigrateMangaView: View {
                 cover: manga.manga.cover,
                 synopsis: ""
             )
-            _vm = StateObject(wrappedValue: MigrateMangaVM(manga: fallbackManga, scraper: scraper))
             loadError = "Could not load full manga details"
+            self.vm = MigrateMangaVM(manga: fallbackManga, scraper: scraper)
         }
     }
 
@@ -316,7 +316,7 @@ public struct MigrateMangaView: View {
 // MARK: - Manual Match View
 
 struct ManualMatchView: View {
-    @ObservedObject var vm: MigrateMangaVM
+    @Bindable var vm: MigrateMangaVM
     @Environment(\.dismiss) var dismiss
 
     @State private var selectedSourceIndex: Int = 0

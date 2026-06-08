@@ -22,7 +22,7 @@ public struct CollectionSettings: View {
     }
     
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section("Filter") {
                     Picker("Change collection filter", selection: $collectionFilter) {

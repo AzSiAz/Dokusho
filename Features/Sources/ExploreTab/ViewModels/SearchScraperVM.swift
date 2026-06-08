@@ -3,17 +3,19 @@ import MangaScraper
 import SwiftUI
 import DataKit
 
-class SearchScraperVM: ObservableObject {
-    private var database = AppDatabase.shared.database
-    
-    var scraper: Scraper
-    var nextPage = 1
-    var oldSearch: String?
-    
-    @Published var isLoading = true
-    @Published var hasNextPage = false
-    @Published var mangas = [SourceSmallManga]()
-    @Published var selectedManga: SourceSmallManga?
+@MainActor
+@Observable
+final class SearchScraperVM {
+    @ObservationIgnored private var database = AppDatabase.shared.database
+
+    @ObservationIgnored var scraper: Scraper
+    @ObservationIgnored var nextPage = 1
+    @ObservationIgnored var oldSearch: String?
+
+    var isLoading = true
+    var hasNextPage = false
+    var mangas = [SourceSmallManga]()
+    var selectedManga: SourceSmallManga?
     
     init(scraper: Scraper) {
         self.scraper = scraper

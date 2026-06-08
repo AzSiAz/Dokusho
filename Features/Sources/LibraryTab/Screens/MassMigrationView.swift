@@ -11,7 +11,7 @@ import MangaScraper
 import SharedUI
 
 public struct MassMigrationView: View {
-    @StateObject private var vm = MassMigrationVM()
+    @State private var vm = MassMigrationVM()
     @Environment(\.dismiss) var dismiss
 
     public init() {}
@@ -224,7 +224,7 @@ public struct MassMigrationView: View {
 // MARK: - Migration Stats Row
 
 struct MigrationStatsRow: View {
-    @ObservedObject var vm: MassMigrationVM
+    var vm: MassMigrationVM
 
     var exactMatchCount: Int {
         vm.migratableItems.filter { $0.matchStatus == .matched && $0.matchConfidence == .exact }.count
@@ -357,7 +357,7 @@ struct StatBadge: View {
 
 struct MigrationItemRow: View {
     let item: MassMigrationVM.MigrationItem
-    @ObservedObject var vm: MassMigrationVM
+    var vm: MassMigrationVM
 
     @State private var showManualSearch = false
     @State private var showDetailSheet = false
@@ -572,7 +572,7 @@ struct StatusBadge: View {
 
 struct ManualSearchSheet: View {
     let item: MassMigrationVM.MigrationItem
-    @ObservedObject var vm: MassMigrationVM
+    var vm: MassMigrationVM
     @Environment(\.dismiss) var dismiss
 
     @State private var searchQuery: String = ""
@@ -672,7 +672,7 @@ struct ManualSearchSheet: View {
 
 struct MigrationDetailSheet: View {
     let item: MassMigrationVM.MigrationItem
-    @ObservedObject var vm: MassMigrationVM
+    var vm: MassMigrationVM
     @Environment(\.dismiss) var dismiss
 
     @State private var showManualSearch = false
@@ -903,8 +903,7 @@ struct MigrationProgressOverlay: View {
             .font(.subheadline)
         }
         .padding(24)
-        .background(.ultraThinMaterial)
-        .cornerRadius(16)
+        .glassEffect(in: .rect(cornerRadius: 16))
         .shadow(radius: 10)
         .padding(40)
     }

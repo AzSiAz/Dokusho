@@ -18,9 +18,9 @@ public struct MangaDetail: View {
     @Query(MangaCollectionRequest()) var collections
     @Query<MangaDetailRequest> var data: MangaWithDetail?
 
-    @StateObject var vm: MangaDetailVM
-    @StateObject var orientation: DeviceOrientation = DeviceOrientation()
-    @StateObject var readerManager = ReaderManager()
+    @State private var vm: MangaDetailVM
+    @State private var orientation = DeviceOrientation()
+    @State private var readerManager = ReaderManager()
 
     @State private var migrationItem: MigrationSheetItem?
 
@@ -34,9 +34,8 @@ public struct MangaDetail: View {
     
     public init(mangaId: String, scraper: Scraper, selectGenre: ((_ genre: String) -> Void)? = nil) {
         _data = .init(.init(mangaId: mangaId, scraper: scraper))
-        _vm = .init(wrappedValue: .init(for: scraper, mangaId: mangaId))
-        
         self.selectGenre = selectGenre
+        self.vm = .init(for: scraper, mangaId: mangaId)
     }
     
     public var body: some View {
@@ -76,7 +75,7 @@ public struct MangaDetail: View {
         .sheet(item: $migrationItem) { item in
             MigrateMangaView(manga: item.manga, scraper: item.scraper)
         }
-        .environmentObject(readerManager)
+        .environment(readerManager)
     }
     
     @ViewBuilder
@@ -125,10 +124,10 @@ public struct MangaDetail: View {
     
     @ViewBuilder
     func HeaderRow(_ data: MangaWithDetail) -> some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 16) {
             MangaCard(imageUrl: data.manga.cover.absoluteString)
                 .mangaCardFrame()
-                .padding(.leading, 10)
+                .shadow(color: .black.opacity(0.25), radius: 8, y: 4)
                 .contextMenu {
                     if data.mangaCollection != nil {
                         Button(action: {
@@ -138,36 +137,36 @@ public struct MangaDetail: View {
                         }
                     }
                 }
-            
-            VStack(spacing: 0) {
-                VStack(alignment: .leading) {
-                    Text(data.manga.title)
-                        .textSelection(.enabled)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .font(.subheadline.bold())
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(data.manga.title)
+                    .font(.title2.bold())
+                    .textSelection(.enabled)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if !data.manga.authors.isEmpty {
+                    Text(data.manga.authors.joined(separator: ", "))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                .padding(.bottom, 5)
-                
-                VStack(alignment: .center) {
-                    VStack {
-                        ForEach(data.manga.authors) { author in
-                            Text(author)
-                                .font(.caption.italic())
-                        }
+
+                HStack(spacing: 8) {
+                    Label(data.manga.status.rawValue, systemImage: "book.closed")
+                    if let name = data.scraper?.name {
+                        Label(name, systemImage: "server.rack")
                     }
-                    .padding(.bottom, 5)
-                    
-                    Text(data.manga.status.rawValue)
-                        .font(.callout.bold())
-                        .padding(.bottom, 5)
-                    
-                    Text(data.scraper?.name ?? "No Name")
-                        .font(.callout.bold())
                 }
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.secondary)
+                .padding(.top, 2)
+
+                Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(.horizontal)
+        .padding(.top, 8)
     }
     
     @ViewBuilder
@@ -186,30 +185,18 @@ public struct MangaDetail: View {
             }
             .disabled(collections.count == 0)
             .buttonStyle(.plain)
-            .actionSheet(isPresented: $vm.addToCollection) {
-                var actions: [ActionSheet.Button] = []
-                    
-                collections.forEach { col in
-                    actions.append(.default(
-                        Text(col.name),
-                        action: {
-                            vm.updateMangaInCollection(data: data, col.id)
-                        }
-                    ))
+            .confirmationDialog("Choose collection", isPresented: $vm.addToCollection, titleVisibility: .visible) {
+                ForEach(collections) { col in
+                    Button(col.name) {
+                        vm.updateMangaInCollection(data: data, col.id)
+                    }
                 }
 
                 if let collectionName = data.mangaCollection?.name {
-                    actions.append(.destructive(
-                        Text("Remove from \(collectionName)"),
-                        action: {
-                            vm.updateMangaInCollection(data: data)
-                        }
-                    ))
+                    Button("Remove from \(collectionName)", role: .destructive) {
+                        vm.updateMangaInCollection(data: data)
+                    }
                 }
-
-                actions.append(.cancel())
-
-                return ActionSheet(title: Text("Choose collection"), buttons: actions)
             }
             
             Divider()
@@ -254,7 +241,7 @@ public struct MangaDetail: View {
         FlowLayout(alignment: .center) {
             ForEach(genres) { genre in
                 Button(genre, action: { selectGenre?(genre) })
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.glass)
             }
         }
     }

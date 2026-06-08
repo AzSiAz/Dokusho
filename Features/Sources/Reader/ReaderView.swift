@@ -14,13 +14,13 @@ typealias OnProgress = (_ status: ChapterStatus) -> Void
 public struct ReaderView: View {
     @Environment(\.dismiss) var dismiss
     
-    @StateObject public var vm: ReaderVM
-    @ObservedObject public var readerManager: ReaderManager
+    @State private var vm: ReaderVM
+    var readerManager: ReaderManager
     @Namespace private var overlayAnimation
-    
+
     public init(vm: ReaderVM, readerManager: ReaderManager) {
-        _vm = .init(wrappedValue: vm)
-        _readerManager = .init(wrappedValue: readerManager)
+        self.readerManager = readerManager
+        self.vm = vm
     }
     
     public var body: some View {
@@ -39,7 +39,7 @@ public struct ReaderView: View {
         .onTapGesture { vm.toggleToolbar() }
         .task(id: vm.currentChapter) { await vm.fetchChapter() }
         .task(id: vm.tabIndex) { await vm.updateChapterStatus() }
-        .statusBar(hidden: !vm.showToolBar)
+        .toolbarVisibility(vm.showToolBar ? .visible : .hidden, for: .statusBar)
         .overlay(alignment: .top) { TopOverlay() }
         .overlay(alignment: .bottom) { BottomOverlay() }
         .preferredColorScheme(.dark)
@@ -59,50 +59,58 @@ public struct ReaderView: View {
     @ViewBuilder
     func BottomOverlay() -> some View {
         if vm.showToolBar {
-            VStack(alignment: .center, spacing: 1) {
-                HStack(alignment: .center) {
-                    Button(action: { vm.goToChapter(.previous) }) {
-                        Image(systemName: "chevron.left")
-                            .padding(.trailing)
-                    }
-                    .disabled(!vm.hasPreviousChapter())
+            GlassEffectContainer(spacing: 8) {
+                VStack(alignment: .center, spacing: 10) {
+                    HStack(alignment: .center, spacing: 16) {
+                        Button(action: { vm.goToChapter(.previous) }) {
+                            Image(systemName: "chevron.left")
+                                .font(.title3)
+                                .foregroundStyle(vm.hasPreviousChapter() ? .primary : .secondary)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Circle())
+                                .glassEffect(.regular.interactive(), in: .circle)
+                                .opacity(vm.hasPreviousChapter() ? 1 : 0.4)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(!vm.hasPreviousChapter())
 
-                    Spacer()
+                        if !vm.images.isEmpty {
+                            ReaderProgressSlider(vm: vm)
+                        }
+
+                        Button(action: { vm.goToChapter(.next) }) {
+                            Image(systemName: "chevron.right")
+                                .font(.title3)
+                                .foregroundStyle(vm.hasNextChapter() ? .primary : .secondary)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Circle())
+                                .glassEffect(.regular.interactive(), in: .circle)
+                                .opacity(vm.hasNextChapter() ? 1 : 0.4)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(!vm.hasNextChapter())
+                    }
 
                     if !vm.images.isEmpty {
-                        VStack {
-                            // TODO: Add a custom slider to be able to update tabIndex value
-                            ProgressView(value: vm.progressBarCurrent(), total: vm.progressBarCount())
-                                .rotationEffect(.degrees(vm.direction == .rightToLeft ? 180 : 0))
-                        }
-                        .frame(height: 25)
+                        Text("\(Int(vm.progressBarCurrent())) of \(Int(vm.progressBarCount()))")
+                            .font(.footnote.italic())
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .glassEffect()
                     }
-
-                    Spacer()
-                    
-                    Button(action: { vm.goToChapter(.next) }) {
-                        Image(systemName: "chevron.right")
-                            .padding(.leading)
-                    }
-                    .disabled(!vm.hasNextChapter())
                 }
-                
-                if !vm.images.isEmpty {
-                    Text("\(Int(vm.progressBarCurrent())) of \(Int(vm.progressBarCount()))")
-                        .padding(.leading)
-                        .font(.footnote.italic())
-                }
+                .padding(.horizontal)
+                .padding(.bottom, 8)
             }
-            .padding([.horizontal, .top])
-            .background(.thickMaterial)
-            .offset(x: 0, y: vm.showToolBar ? 0 : 500)
-            .transition(.move(edge: vm.showToolBar ? .bottom : .top))
+            .transition(.move(edge: .bottom))
         } else {
             if !vm.images.isEmpty {
                 Text("\(Int(vm.progressBarCurrent())) / \(Int(vm.progressBarCount()))")
-                    .transition(.move(edge: !vm.showToolBar ? .bottom : .top))
-                    .glowBorder(color: .black, lineWidth: 3)
                     .font(.footnote.italic())
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .glassEffect()
+                    .transition(.move(edge: !vm.showToolBar ? .bottom : .top))
             }
         }
     }
@@ -114,6 +122,9 @@ public struct ReaderView: View {
                 HStack(alignment: .center) {
                     Button(action: dismiss.callAsFunction) {
                         Image(systemName: "xmark")
+                            .font(.title3)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
                     
                     Spacer()
@@ -152,12 +163,15 @@ public struct ReaderView: View {
                         }
                     } label: {
                         Image(systemName: "slider.horizontal.3")
+                            .font(.title3)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
                 }
             }
             .padding(.all)
             .offset(x: 0, y: vm.showToolBar ? 0 : -150)
-            .background(.thickMaterial)
+            .glassEffect(in: .rect(cornerRadius: 20))
             .transition(.move(edge: vm.showToolBar ? .top : .bottom))
         }
     }

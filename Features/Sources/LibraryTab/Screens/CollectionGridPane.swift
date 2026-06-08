@@ -1,44 +1,42 @@
 //
-//  ManageCollectionsModal.swift
-//  Dokusho (iOS)
+//  CollectionGridPane.swift
+//  Dokusho
 //
-//  Created by Stephan Deumier on 26/06/2021.
+//  Detail column of the Library split view: the manga grid/list for the
+//  selected collection. Built from the collection id so switching collections
+//  (via .id(id) in LibraryRootView) re-initializes its queries. Pushes
+//  MangaDetail through the enclosing NavigationStack.
 //
 
 import SwiftUI
 import GRDBQuery
-import Combine
 import DataKit
 import Common
 import SharedUI
 import MangaDetail
-import DynamicCollection
 
-public struct CollectionPage: View {
+public struct CollectionGridPane: View {
     @Environment(\.appDatabase) var appDatabase
-    @EnvironmentObject var libraryUpdater: LibraryUpdater
+    @Environment(LibraryUpdater.self) var libraryUpdater
     @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
 
     @Query<OneMangaCollectionRequest> var collection: MangaCollection?
     @Query<DetailedMangaInListRequest> var list: [DetailedMangaInList]
 
-    @State var showFilter = false
-    @State var reload = true
-    @State var selectedGenre: String?
-
+    @State private var showFilter = false
     @State private var refreshTask: Task<Void, Error>?
     @State private var migrationTarget: MigrationSheetItem?
 
     struct MigrationSheetItem: Identifiable {
-        let id = UUID()  // New UUID each time forces sheet recreation
+        let id = UUID()
         let manga: DetailedMangaInList
     }
-    
-    public init(collection : MangaCollection) {
-        _collection = Query(OneMangaCollectionRequest(collectionId: collection.id))
-        _list = Query(DetailedMangaInListRequest(requestType: .collection(collectionId: collection.id)))
+
+    public init(collectionId: MangaCollection.ID) {
+        _collection = Query(OneMangaCollectionRequest(collectionId: collectionId))
+        _list = Query(DetailedMangaInListRequest(requestType: .collection(collectionId: collectionId)))
     }
-    
+
     public var body: some View {
         if let collection = collection {
             Group {
@@ -54,9 +52,12 @@ public struct CollectionPage: View {
             .navigationTitle("\(collection.name) (\(list.count))")
             .queryObservation(.always)
             .onDisappear { cancelRefresh() }
+        } else {
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
-    
+
     @ViewBuilder
     func GridView() -> some View {
         ScrollView {
@@ -66,7 +67,7 @@ public struct CollectionPage: View {
         }
         .refreshable { await refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
     }
-    
+
     @ViewBuilder
     func MangaInGrid(data: DetailedMangaInList) -> some View {
         NavigationLink(value: data) {
@@ -80,7 +81,7 @@ public struct CollectionPage: View {
                 .id(data.id)
         }
     }
-    
+
     @ViewBuilder
     func ListView() -> some View {
         List(list) { data in
@@ -89,7 +90,7 @@ public struct CollectionPage: View {
         .refreshable { await refreshLibrary(libraryUpdater: libraryUpdater, collection: collection!, onlyUpdateAllRead: onlyUpdateAllRead) }
         .listStyle(PlainListStyle())
     }
-    
+
     @ViewBuilder
     func MangaInList(data: DetailedMangaInList) -> some View {
         NavigationLink(value: data) {
@@ -97,7 +98,7 @@ public struct CollectionPage: View {
                 MangaCard(imageUrl: data.manga.cover.absoluteString, chapterCount: data.unreadChapterCount)
                     .mangaCardFrame(width: 90, height: 120)
                     .id(data.id)
-                
+
                 Text(data.manga.title)
                     .lineLimit(3)
             }
@@ -109,30 +110,26 @@ public struct CollectionPage: View {
             .frame(height: 120)
         }
     }
-    
+
     var toolbar: some ToolbarContent {
-        ToolbarItemGroup(placement: .navigationBarTrailing) {
+        ToolbarItemGroup(placement: .topBarTrailing) {
             Button(action: { showFilter.toggle() }) {
                 Image(systemName: "line.3.horizontal.decrease")
             }
         }
     }
-    
+
     func refreshLibrary(libraryUpdater: LibraryUpdater, collection: MangaCollection, onlyUpdateAllRead: Bool) async {
         guard refreshTask == nil else { return }
-        
+
         refreshTask = Task {
             try? await libraryUpdater.refreshCollection(collection: collection, onlyAllRead: onlyUpdateAllRead)
         }
-        
+
         try? await refreshTask?.value
     }
-    
+
     func cancelRefresh() {
         refreshTask?.cancel()
-    }
-    
-    func selectGenre(genre: String) -> Void {
-        self.selectedGenre = genre
     }
 }

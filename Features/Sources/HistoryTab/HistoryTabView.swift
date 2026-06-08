@@ -18,7 +18,7 @@ public struct HistoryTabView: View {
     public init() {}
 
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 ForEach(list) { data in
                     ChapterRow(data)
@@ -43,7 +43,6 @@ public struct HistoryTabView: View {
             .searchable(text: $list.searchTerm)
             .navigationBarTitle($list.filter.wrappedValue == .read ? "Reading history" : "Update history", displayMode: .large)
         }
-        .navigationViewStyle(.columns)
     }
     
     @ViewBuilder

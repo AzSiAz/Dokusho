@@ -1,26 +1,32 @@
 //
 //  FieldObserver.swift
-//  
+//
 //
 //  Created by Stef on 11/05/2022.
 //
 
 import Foundation
-import SwiftUI
-import Combine
+import Observation
 
-public class FieldObserver : ObservableObject {
-    @Published var debouncedText = ""
-    @Published var searchText = ""
-    
-    private var subscriptions = Set<AnyCancellable>()
-    
-    public init() {
-        $searchText
-            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] t in
-                self?.debouncedText = t
-            })
-            .store(in: &subscriptions)
+@MainActor
+@Observable
+public final class FieldObserver {
+    public private(set) var debouncedText = ""
+    public var searchText = "" {
+        didSet { scheduleDebounce() }
+    }
+
+    @ObservationIgnored private var debounceTask: Task<Void, Never>?
+
+    public init() {}
+
+    private func scheduleDebounce() {
+        debounceTask?.cancel()
+        let text = searchText
+        debounceTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            self?.debouncedText = text
+        }
     }
 }

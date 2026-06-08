@@ -8,10 +8,10 @@
 import SwiftUI
 
 public struct BackupImporter: View {
-    @ObservedObject var backupManager: BackupManager
-    
+    var backupManager: BackupManager
+
     public init(backupManager: BackupManager) {
-        _backupManager = .init(wrappedValue: backupManager)
+        self.backupManager = backupManager
     }
     
     public var body: some View {

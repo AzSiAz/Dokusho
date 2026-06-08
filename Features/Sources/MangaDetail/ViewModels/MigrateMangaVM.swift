@@ -11,31 +11,32 @@ import MangaScraper
 import DataKit
 
 @MainActor
-public class MigrateMangaVM: ObservableObject {
-    private let migrationService = MigrationService.shared
+@Observable
+public final class MigrateMangaVM {
+    @ObservationIgnored private let migrationService = MigrationService.shared
 
     public let manga: Manga
     public let currentScraper: Scraper
 
-    @Published public var targetSources: [TargetSourceConfig] = []
-    @Published public var matchResult: SourceMatch?
-    @Published public var selectedMatch: SourceSmallManga?
-    @Published public var selectedSource: Source?
-    @Published public var chapterPreview: ChapterMappingPreview?
-    @Published public var isSearching: Bool = false
-    @Published public var isMigrating: Bool = false
-    @Published public var deleteOriginal: Bool = false
-    @Published public var error: String?
-    @Published public var migrationComplete: Bool = false
-    @Published public var migrationResult: MigrationResult?
+    public var targetSources: [TargetSourceConfig] = []
+    public var matchResult: SourceMatch?
+    public var selectedMatch: SourceSmallManga?
+    public var selectedSource: Source?
+    public var chapterPreview: ChapterMappingPreview?
+    public var isSearching: Bool = false
+    public var isMigrating: Bool = false
+    public var deleteOriginal: Bool = false
+    public var error: String?
+    public var migrationComplete: Bool = false
+    public var migrationResult: MigrationResult?
 
     // For manual search
-    @Published public var searchResults: [SourceSmallManga] = []
-    @Published public var searchQuery: String = ""
+    public var searchResults: [SourceSmallManga] = []
+    public var searchQuery: String = ""
 
     // Chapter counts
-    @Published public var readChapterCount: Int = 0
-    @Published public var totalChapterCount: Int = 0
+    public var readChapterCount: Int = 0
+    public var totalChapterCount: Int = 0
 
     public struct TargetSourceConfig: Identifiable {
         public let id: UUID

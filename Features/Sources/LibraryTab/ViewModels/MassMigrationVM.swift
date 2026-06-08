@@ -11,19 +11,20 @@ import MangaScraper
 import DataKit
 
 @MainActor
-public class MassMigrationVM: ObservableObject {
-    private let migrationService = MigrationService.shared
+@Observable
+public final class MassMigrationVM {
+    @ObservationIgnored private let migrationService = MigrationService.shared
 
-    @Published public var sourceScrapers: [(scraper: Scraper, count: Int)] = []
-    @Published public var selectedSourceId: UUID?
-    @Published public var targetSources: [TargetSourceConfig] = []
-    @Published public var migratableItems: [MigrationItem] = []
-    @Published public var isLoading: Bool = false
-    @Published public var isSearching: Bool = false
-    @Published public var isMigrating: Bool = false
-    @Published public var progress: MigrationProgress?
-    @Published public var error: String?
-    @Published public var deleteOriginals: Bool = false
+    public var sourceScrapers: [(scraper: Scraper, count: Int)] = []
+    public var selectedSourceId: UUID?
+    public var targetSources: [TargetSourceConfig] = []
+    public var migratableItems: [MigrationItem] = []
+    public var isLoading: Bool = false
+    public var isSearching: Bool = false
+    public var isMigrating: Bool = false
+    public var progress: MigrationProgress?
+    public var error: String?
+    public var deleteOriginals: Bool = false
 
     public struct TargetSourceConfig: Identifiable {
         public let id: UUID

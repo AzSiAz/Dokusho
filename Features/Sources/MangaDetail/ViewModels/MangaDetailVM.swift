@@ -12,17 +12,18 @@ import GRDB
 import DataKit
 
 @MainActor
-public class MangaDetailVM: ObservableObject {
-    private let database = AppDatabase.shared.database
-    
+@Observable
+public final class MangaDetailVM {
+    @ObservationIgnored private let database = AppDatabase.shared.database
+
     let scraper: Scraper
     let mangaId: String
-    
-    @Published var error = false
-    @Published var showMoreDesc = false
-    @Published var addToCollection = false
-    @Published var refreshing = false
-    @Published var selectedChapter: MangaChapter?
+
+    var error = false
+    var showMoreDesc = false
+    var addToCollection = false
+    var refreshing = false
+    var selectedChapter: MangaChapter?
     
     public init(for scraper: Scraper, mangaId: String) {
         self.scraper = scraper

@@ -16,39 +16,40 @@ import ExploreTab
 import Common
 
 struct RootView: View {
-    @EnvironmentObject var backupManager: BackupManager
+    @Environment(BackupManager.self) var backupManager
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @AppStorage("selectedTab") private var tab: ActiveTab = .library
 
     var body: some View {
-        if backupManager.isImporting { BackupImporter(backupManager: backupManager) }
-        else if UIScreen.isLargeScreen { iPadView() }
-        else { iPhoneView() }
-    }
-    
-    @ViewBuilder
-    func iPhoneView() -> some View {
-        TabView(selection: $tab) {
-            LibraryTabView()
-                .tabItem { Label("Library", systemImage: "books.vertical") }
-                .tag(ActiveTab.library)
-            
-            HistoryTabView()
-                .tabItem { Label("History", systemImage: "clock") }
-                .tag(ActiveTab.history)
-
-            ExploreTabView()
-                .tabItem { Label("Explore", systemImage: "safari") }
-                .tag(ActiveTab.explore)
-
-            SettingsTabView()
-                .tabItem { Label("Settings", systemImage: "gear") }
-                .tag(ActiveTab.settings)
+        if backupManager.isImporting {
+            BackupImporter(backupManager: backupManager)
+        } else if horizontalSizeClass == .regular {
+            // iPad / regular width: a single unified sidebar.
+            IPadRootView()
+        } else {
+            // iPhone / compact width: the tab bar.
+            tabs
         }
     }
-    
-    // TODO: Change to double sidebar to avoid using a not ergonomic tab bar for iPadOS & MacOS
-    @ViewBuilder
-    func iPadView() -> some View {
-        iPhoneView()
+
+    private var tabs: some View {
+        TabView(selection: $tab) {
+            Tab("Library", systemImage: "books.vertical", value: ActiveTab.library) {
+                LibraryRootView()
+            }
+
+            Tab("History", systemImage: "clock", value: ActiveTab.history) {
+                HistoryTabView()
+            }
+
+            Tab("Explore", systemImage: "safari", value: ActiveTab.explore) {
+                ExploreTabView()
+            }
+
+            Tab("Settings", systemImage: "gear", value: ActiveTab.settings) {
+                SettingsTabView()
+            }
+        }
+        .tabBarMinimizeBehavior(.onScrollDown)
     }
 }

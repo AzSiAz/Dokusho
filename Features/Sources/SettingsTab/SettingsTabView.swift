@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import Common
 
 public struct SettingsTabView: View {
-    @StateObject var vm = SettingsVM()
+    @State var vm = SettingsVM()
     @Preference(\.useNewHorizontalReader) var userNewHorizontalReader
     @Preference(\.useNewVerticalReader) var useNewVerticalReader
     @Preference(\.onlyUpdateAllRead) var onlyUpdateAllRead
@@ -19,7 +19,7 @@ public struct SettingsTabView: View {
     public init() {}
     
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section("Sources") {
                     NavigationLink(destination: TsundokuSettingsView()) {
@@ -65,18 +65,18 @@ public struct SettingsTabView: View {
             .overlay {
                 if vm.actionInProgress {
                     ZStack {
+                        Color.black.opacity(0.25)
+                            .ignoresSafeArea()
                         ProgressView()
                             .scaleEffect(2)
+                            .padding(40)
+                            .glassEffect(in: .rect(cornerRadius: 20))
                     }
                     .zIndex(1000)
-                    .ignoresSafeArea(.all)
-                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                    .background(.ultraThinMaterial)
                 }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
         }
-        .navigationViewStyle(.stack)
     }
 }

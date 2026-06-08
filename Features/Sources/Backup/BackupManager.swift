@@ -58,14 +58,16 @@ public struct BackupTask: Sendable {
 
 public typealias BackupResult = Result<BackupTask, Error>
 
-public class BackupManager: ObservableObject {
-    nonisolated(unsafe) public static let shared = BackupManager()
-    
-    private let database = AppDatabase.shared.database
-    
-    @Published public var isImporting: Bool = false
-    @Published public var total: Double = 0
-    @Published public var progress: Double = 0
+@MainActor
+@Observable
+public final class BackupManager {
+    public static let shared = BackupManager()
+
+    @ObservationIgnored private let database = AppDatabase.shared.database
+
+    public var isImporting: Bool = false
+    public var total: Double = 0
+    public var progress: Double = 0
     
     public init() {}
     

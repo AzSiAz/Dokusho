@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct DebouncedTextField: View {
     @Binding var debouncedText : String
-    @StateObject private var textObserver = FieldObserver()
+    @State private var textObserver = FieldObserver()
     
     public init(debouncedText: Binding<String>) {
         _debouncedText = debouncedText
@@ -25,7 +25,7 @@ public struct DebouncedTextField: View {
                         .stroke(Color.blue, lineWidth: 1)
                 )
                 .padding(.horizontal, 20)
-        }.onReceive(textObserver.$debouncedText) { (val) in
+        }.onChange(of: textObserver.debouncedText) { _, val in
             debouncedText = val
         }
     }}

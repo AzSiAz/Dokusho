@@ -9,14 +9,15 @@ import SwiftUI
 @preconcurrency import Combine
 
 @MainActor
-public final class DeviceOrientation: ObservableObject {
-    public enum Orientation {
+@Observable
+public final class DeviceOrientation {
+    public enum Orientation: Equatable {
         case portrait, landscape
     }
-    
-    @Published public var orientation: Orientation
-   
-    private var listener: AnyCancellable?
+
+    public var orientation: Orientation
+
+    @ObservationIgnored private var listener: AnyCancellable?
     
     public init() {
         orientation = UIDevice.current.orientation.isLandscape ? .landscape : .portrait

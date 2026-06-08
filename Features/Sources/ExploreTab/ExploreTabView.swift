@@ -17,7 +17,7 @@ public struct ExploreTabView: View {
     @Query(ScraperRequest(type: .onlyFavorite)) var favoriteScrapers
     @Query(ScraperRequest(type: .onlyActive)) var activeScrapers
     
-    @StateObject var vm = ExploreTabVM()
+    @State var vm = ExploreTabVM()
     
     public init() {}
     

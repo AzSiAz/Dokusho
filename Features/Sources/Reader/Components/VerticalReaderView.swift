@@ -9,7 +9,7 @@ import SwiftUI
 import Common
 
 struct VerticalReaderView: View {
-    @ObservedObject var vm: ReaderVM
+    var vm: ReaderVM
 
     var body: some View {
         GeometryReader { proxy in
@@ -24,6 +24,7 @@ struct VerticalReaderView: View {
                 .id(vm.images)
             }
         }
+        .onAppear { vm.isDoublePage = false }
     }
 
     @ViewBuilder

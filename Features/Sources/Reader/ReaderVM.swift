@@ -35,26 +35,32 @@ enum ReaderLink: Equatable, Hashable {
 }
 
 @MainActor
-public class ReaderVM: ObservableObject {
-    private let database = AppDatabase.shared.database
-    
-    @Published var currentChapter: MangaChapter
-    @Published var images = [ReaderLink]()
-    @Published var isLoading = true
-    @Published var showToolBar = false
-    @Published var tabIndex = ReaderLink.image(url: "")
-    @Published var direction: ReadingDirection = .vertical
-    @Published var showReaderDirectionChoice = false
-    @Published var isTransitioningChapter = false
-    @Published var transitionError: Error?
+@Observable
+public final class ReaderVM {
+    @ObservationIgnored private let database = AppDatabase.shared.database
 
-    @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
-    @Preference(\.autoChapterTransition) var autoChapterTransition
-    @Preference(\.hapticFeedbackEnabled) var hapticFeedbackEnabled
+    var currentChapter: MangaChapter
+    var images = [ReaderLink]()
+    var isLoading = true
+    var showToolBar = false
+    var tabIndex = ReaderLink.image(url: "")
+    var direction: ReadingDirection = .vertical
+    var showReaderDirectionChoice = false
+    var isTransitioningChapter = false
+    var transitionError: Error?
+
+    @ObservationIgnored @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
+    @ObservationIgnored @Preference(\.autoChapterTransition) var autoChapterTransition
+    @ObservationIgnored @Preference(\.hapticFeedbackEnabled) var hapticFeedbackEnabled
 
     var manga: Manga
-    private var scraper: Scraper
-    private var chapters: [MangaChapter]
+    @ObservationIgnored private var scraper: Scraper
+    @ObservationIgnored private var chapters: [MangaChapter]
+
+    /// True when the horizontal reader shows two pages per screen (iPad). The
+    /// last spread then shows the final page while the current index points at
+    /// the first of the pair, so the "read" threshold is allowed one page short.
+    @ObservationIgnored var isDoublePage = false
 
     public init(manga: Manga, chapter: MangaChapter, scraper: Scraper, chapters: [MangaChapter]) {
         self.currentChapter = chapter
@@ -148,7 +154,11 @@ public class ReaderVM: ObservableObject {
     }
     
     func updateChapterStatus() async {
-        if progressBarCount() == progressBarCurrent() {
+        let current = progressBarCurrent()
+        let total = progressBarCount()
+        let reachedEnd = total > 0 && (current >= total || (isDoublePage && current >= total - 1))
+
+        if reachedEnd {
             withAnimation {
                 self.showToolBar = true
             }
@@ -293,7 +303,17 @@ public class ReaderVM: ObservableObject {
             self.updateTabIndex(index: index)
         }
     }
-    
+
+    /// Jump to a page based on a 0...1 progress fraction (used by the reader scrubber).
+    func scrub(toFraction fraction: Double) {
+        let onlyImages = getOnlyImagesUrl()
+        guard onlyImages.count > 1 else { return }
+        let clampedFraction = min(max(fraction, 0), 1)
+        let index = Int((clampedFraction * Double(onlyImages.count - 1)).rounded())
+        let target = onlyImages[min(max(index, 0), onlyImages.count - 1)]
+        if tabIndex != target { tabIndex = target }
+    }
+
     func getOnlyImagesUrl() -> [ReaderLink] {
         return images.filter { if case .image(_) = $0 { return true } else { return false } }
     }

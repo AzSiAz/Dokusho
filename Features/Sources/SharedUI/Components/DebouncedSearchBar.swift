@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct DebouncedSearchBar: View {
-    @StateObject private var textObserver = FieldObserver()
+    @State private var textObserver = FieldObserver()
     
     @Binding var debouncedText: String
     @Binding var isFocused: Bool
@@ -24,7 +24,7 @@ public struct DebouncedSearchBar: View {
         VStack {
             TextField("Title", text: $textObserver.searchText)
                 .disableAutocorrection(disableAutoCorrect)
-        }.onReceive(textObserver.$debouncedText) { (val) in
+        }.onChange(of: textObserver.debouncedText) { _, val in
             debouncedText = val
         }
     }

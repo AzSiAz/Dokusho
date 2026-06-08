@@ -11,12 +11,14 @@ import Nuke
 import DataKit
 import Backup
 
-class SettingsVM: ObservableObject {
-    @Published var actionInProgress = false
-    @Published var showExportfile = false
-    @Published var file: Backup?
-    @Published var fileName: String?
-    @Published var showImportfile = false
+@MainActor
+@Observable
+final class SettingsVM {
+    var actionInProgress = false
+    var showExportfile = false
+    var file: Backup?
+    var fileName: String?
+    var showImportfile = false
     
     @MainActor
     func createBackup() {

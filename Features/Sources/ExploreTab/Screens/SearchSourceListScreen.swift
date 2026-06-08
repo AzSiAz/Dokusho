@@ -42,16 +42,16 @@ public struct SearchSourceListScreen: View {
 public struct ScraperSearch: View {
     @Query<MangaInCollectionsRequest> var mangasInCollection: [MangaInCollection]
 
-    @StateObject var vm: SearchScraperVM
+    @State var vm: SearchScraperVM
     @Binding var textToSearch: String
-    
+
     var collections: [MangaCollection]
-    
+
     public init(scraper: Scraper, textToSearch: Binding<String>, collections: [MangaCollection]) {
         self.collections = collections
         _textToSearch = textToSearch
-        _vm = .init(wrappedValue: .init(scraper: scraper))
         _mangasInCollection = Query(MangaInCollectionsRequest(srcId: scraper.id))
+        self.vm = .init(scraper: scraper)
     }
     
     public var body: some View {
@@ -87,7 +87,7 @@ public struct ScraperSearch: View {
             }
         }
         .sheet(item: $vm.selectedManga) { manga in
-            NavigationView {
+            NavigationStack {
                 MangaDetail(mangaId: manga.id, scraper: vm.scraper)
             }
         }

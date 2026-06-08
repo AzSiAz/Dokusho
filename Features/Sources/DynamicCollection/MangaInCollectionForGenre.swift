@@ -27,7 +27,7 @@ public struct MangaInCollectionForGenre: View {
     
     public var body: some View {
         if inModal {
-            NavigationView {
+            NavigationStack {
                 content
             }
         } else {

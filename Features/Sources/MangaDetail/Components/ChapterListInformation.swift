@@ -11,19 +11,19 @@ import DataKit
 import Reader
 
 public struct ChapterListInformation: View {
-    @EnvironmentObject var readerManager: ReaderManager
-    
+    @Environment(ReaderManager.self) var readerManager
+
     @Query<MangaChaptersRequest> var chapters: [MangaChapter]
-    @StateObject var vm: ChapterListVM
-    
+    @State private var vm: ChapterListVM
+
     var manga: Manga
     var scraper: Scraper
-    
+
     public init(manga: Manga, scraper: Scraper) {
         self.manga = manga
         self.scraper = scraper
-        _vm = .init(wrappedValue: .init(manga: manga, scraper: scraper))
         _chapters = Query(MangaChaptersRequest(manga: manga))
+        self.vm = .init(manga: manga, scraper: scraper)
     }
 
     public var body: some View {
@@ -62,7 +62,7 @@ public struct ChapterListInformation: View {
                         }
                     }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.glassProminent)
                 .controlSize(.large)
                 .padding(.horizontal)
             }

@@ -34,70 +34,72 @@ struct ChapterBoundaryView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            Spacer()
+        ZStack {
+            Color.black
 
-            // Icon
-            Image(systemName: iconName)
-                .font(.system(size: 48))
-                .foregroundColor(.secondary)
-
-            // Title
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.primary)
-
-            // Subtitle (chapter name)
-            if let subtitle = subtitle {
-                Text(subtitle)
-                    .font(.subheadline)
+            VStack(spacing: 16) {
+                // Icon
+                Image(systemName: iconName)
+                    .font(.system(size: 48))
                     .foregroundColor(.secondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-            }
 
-            // Loading indicator
-            if isLoading {
-                VStack(spacing: 8) {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
+                // Title
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
 
-                    Text("Loading chapter...")
-                        .font(.caption)
+                // Subtitle (chapter name)
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
                 }
-                .padding(.top, 8)
-            }
 
-            // Error state with retry
-            if error != nil, !isLoading {
-                VStack(spacing: 8) {
-                    Text("Failed to load chapter")
-                        .font(.caption)
-                        .foregroundColor(.red)
+                // Loading indicator
+                if isLoading {
+                    VStack(spacing: 8) {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
 
-                    if let onRetry = onRetry {
-                        Button(action: onRetry) {
-                            Label("Retry", systemImage: "arrow.clockwise")
+                        Text("Loading chapter...")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 8)
+                }
+
+                // Error state with retry
+                if error != nil, !isLoading {
+                    VStack(spacing: 8) {
+                        Text("Failed to load chapter")
+                            .font(.caption)
+                            .foregroundColor(.red)
+
+                        if let onRetry = onRetry {
+                            Button(action: onRetry) {
+                                Label("Retry", systemImage: "arrow.clockwise")
+                            }
+                            .buttonStyle(.glass)
                         }
-                        .buttonStyle(.bordered)
                     }
                 }
-            }
 
-            // Hint text
-            if !isLoading && error == nil && hasHint {
-                Text(hintText)
-                    .font(.caption)
-                    .foregroundColor(.secondary.opacity(0.7))
-                    .padding(.top, 8)
+                // Hint text
+                if !isLoading && error == nil && hasHint {
+                    Text(hintText)
+                        .font(.caption)
+                        .foregroundColor(.secondary.opacity(0.7))
+                        .padding(.top, 8)
+                }
             }
-
-            Spacer()
+            .padding(32)
+            .glassEffect(in: .rect(cornerRadius: 24))
+            .padding(40)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
     }
 
     private var iconName: String {

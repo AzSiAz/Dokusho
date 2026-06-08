@@ -39,11 +39,13 @@ public struct MangaCard: View {
     }
     
     public var body: some View {
-        RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
-            .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
-            .overlay(alignment: .topTrailing) { ChapterCounter() }
-            .overlay(alignment: .topLeading) { CollectionName() }
-            .overlay(alignment: .bottomLeading) { Title() }
+        GlassEffectContainer {
+            RemoteImageCacheView(url: self.imageUrl, contentMode: .fill)
+                .clipShape(RoundedCorner(radius: radius, corners: [.allCorners]))
+                .overlay(alignment: .topTrailing) { ChapterCounter() }
+                .overlay(alignment: .topLeading) { CollectionName() }
+                .overlay(alignment: .bottomLeading) { Title() }
+        }
     }
     
     @ViewBuilder
@@ -58,7 +60,7 @@ public struct MangaCard: View {
                     .padding(.top, 1)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundColor(.white)
-                    .background(.gray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
+                    .glassEffect(.regular.tint(.black.opacity(0.35)), in: RoundedCorner(radius: radius, corners: [.allCorners]))
             }
             .padding(2)
         }
@@ -71,7 +73,7 @@ public struct MangaCard: View {
                 Text(String(count))
                     .padding(2)
                     .foregroundColor(.white)
-                    .background(.gray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]))
+                    .glassEffect(.regular.tint(.black.opacity(0.35)), in: RoundedCorner(radius: radius, corners: [.allCorners]))
             }
             .padding(2)
         }
@@ -85,7 +87,7 @@ public struct MangaCard: View {
                     .lineLimit(1)
                     .padding(2)
                     .foregroundColor(.white)
-                    .background(.gray.opacity(opacity), in: RoundedCorner(radius: radius, corners: [.allCorners]) )
+                    .glassEffect(.regular.tint(.black.opacity(0.35)), in: RoundedCorner(radius: radius, corners: [.allCorners]))
             }
             .padding(2)
         }
@@ -94,15 +96,22 @@ public struct MangaCard: View {
 
 public extension View {
     func mangaCardFrame(width: Double = 130, height: Double = 180) -> some View {
+        modifier(MangaCardFrame(width: width, height: height))
+    }
+}
+
+private struct MangaCardFrame: ViewModifier {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    let width: Double
+    let height: Double
+
+    func body(content: Content) -> some View {
         if width != 130 || height != 180 {
-            return self
-                .frame(width: width, height: height)
-        } else if UIScreen.isLargeScreen {
-            return self
-                .frame(width: 130*1.3, height: 180*1.3)
+            content.frame(width: width, height: height)
+        } else if horizontalSizeClass == .regular {
+            content.frame(width: 130*1.3, height: 180*1.3)
         } else {
-            return self
-                .frame(width: 130, height: 180)
+            content.frame(width: 130, height: 180)
         }
     }
 }

@@ -12,7 +12,8 @@ import OSLog
 import Common
 
 @MainActor
-public class LibraryUpdater: ObservableObject {
+@Observable
+public final class LibraryUpdater {
     public static let shared = LibraryUpdater()
     
     public struct RefreshStatus: Sendable {
@@ -28,8 +29,8 @@ public class LibraryUpdater: ObservableObject {
         public var toRefresh: RefreshManga
     }
 
-    private let database = AppDatabase.shared.database
-    private var refreshStatus: [MangaCollection.ID: Bool] = [:]
+    @ObservationIgnored private let database = AppDatabase.shared.database
+    @ObservationIgnored private var refreshStatus: [MangaCollection.ID: Bool] = [:]
     
     public func refreshCollection(collection: MangaCollection, onlyAllRead: Bool = true) async throws {
         guard refreshStatus[collection.id] == nil else { return }
