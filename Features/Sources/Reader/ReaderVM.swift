@@ -45,8 +45,12 @@ public class ReaderVM: ObservableObject {
     @Published var tabIndex = ReaderLink.image(url: "")
     @Published var direction: ReadingDirection = .vertical
     @Published var showReaderDirectionChoice = false
-    
+    @Published var isTransitioningChapter = false
+    @Published var transitionError: Error?
+
     @Preference(\.numberOfPreloadedImages) var numberOfPreloadedImages
+    @Preference(\.autoChapterTransition) var autoChapterTransition
+    @Preference(\.hapticFeedbackEnabled) var hapticFeedbackEnabled
 
     var manga: Manga
     private var scraper: Scraper
@@ -109,12 +113,18 @@ public class ReaderVM: ObservableObject {
         guard let currentImageIndex = self.images.firstIndex(of: self.tabIndex) else { return }
         let nextLoadingIndex = currentImageIndex <= self.images.endIndex && currentImageIndex != 0 ? self.images.index(after: currentImageIndex) : currentImageIndex
         let imagesToLoad = self.images[nextLoadingIndex...].prefix(numberOfPreloadedImages)
-        
+
         for image in imagesToLoad {
             if Task.isCancelled { break }
-            guard case let .image(url) = image else { return }
+            guard case let .image(url) = image else { continue }
 
             _ = try? await ImagePipeline.inMemory.image(for: url.asImageRequest())
+        }
+
+        // Pre-fetch next chapter at 80% progress
+        let progress = progressBarCurrent() / progressBarCount()
+        if progress >= 0.8 && !isTransitioningChapter {
+            await prefetchNextChapter()
         }
     }
     
@@ -290,5 +300,94 @@ public class ReaderVM: ObservableObject {
     
     func setReadingDirection(new direction: ReadingDirection) {
         self.direction = direction
+    }
+
+    // MARK: - Auto Chapter Transition
+
+    func checkAndTriggerChapterTransition() async {
+        guard autoChapterTransition else { return }
+        guard !isTransitioningChapter else { return }
+
+        switch tabIndex {
+        case .next:
+            await autoTransitionToChapter(.next)
+        case .previous:
+            await autoTransitionToChapter(.previous)
+        case .image:
+            break
+        }
+    }
+
+    func autoTransitionToChapter(_ direction: GoToChapterDirection) async {
+        guard !isTransitioningChapter else { return }
+
+        // Get target chapter
+        guard let targetChapter = getChapter(direction) else {
+            // No more chapters in this direction
+            return
+        }
+
+        isTransitioningChapter = true
+        transitionError = nil
+
+        // Haptic feedback for boundary reached
+        HapticService.chapterBoundaryReached()
+
+        do {
+            // Pre-fetch chapter images
+            guard let data = try await scraper.asSource()?.fetchChapterImages(
+                mangaId: manga.mangaId,
+                chapterId: targetChapter.chapterId
+            ) else {
+                throw "Error fetching images for chapter"
+            }
+
+            // Cache first few images
+            for imageInfo in data.prefix(numberOfPreloadedImages) {
+                if Task.isCancelled { break }
+                _ = try? await ImagePipeline.inMemory.image(for: imageInfo.imageUrl.asImageRequest())
+            }
+
+            // Success haptic
+            HapticService.chapterLoaded()
+
+            // Perform transition
+            changeChapters(chapter: targetChapter)
+            isTransitioningChapter = false
+        } catch {
+            Logger.reader.error("Failed to auto-transition to chapter: \(error)")
+            transitionError = error
+            isTransitioningChapter = false
+            HapticService.chapterLoadFailed()
+        }
+    }
+
+    func retryTransition(_ direction: GoToChapterDirection) {
+        transitionError = nil
+        Task {
+            await autoTransitionToChapter(direction)
+        }
+    }
+
+    // MARK: - Chapter Pre-loading
+
+    func prefetchNextChapter() async {
+        guard let nextChapter = getChapter(.next) else { return }
+
+        do {
+            let data = try await scraper.asSource()?.fetchChapterImages(
+                mangaId: manga.mangaId,
+                chapterId: nextChapter.chapterId
+            )
+
+            // Pre-cache first few images of next chapter
+            for imageInfo in (data ?? []).prefix(numberOfPreloadedImages) {
+                if Task.isCancelled { break }
+                _ = try? await ImagePipeline.inMemory.image(for: imageInfo.imageUrl.asImageRequest())
+            }
+        } catch {
+            // Silent fail for prefetch
+            Logger.reader.debug("Prefetch failed for next chapter: \(error)")
+        }
     }
 }

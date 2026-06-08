@@ -81,6 +81,12 @@ public final class Preferences: Sendable {
     
     @UserDefault("NUMBER_OF_PRELOADED_IMAGES")
     public var numberOfPreloadedImages: Int = 3
+
+    @UserDefault("AUTO_CHAPTER_TRANSITION")
+    public var autoChapterTransition: Bool = true
+
+    @UserDefault("HAPTIC_FEEDBACK_ENABLED")
+    public var hapticFeedbackEnabled: Bool = true
 }
 
 @MainActor

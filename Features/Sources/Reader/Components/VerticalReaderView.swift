@@ -10,7 +10,7 @@ import Common
 
 struct VerticalReaderView: View {
     @ObservedObject var vm: ReaderVM
-    
+
     var body: some View {
         GeometryReader { proxy in
             ScrollViewReader { scrollProxy in
@@ -25,7 +25,7 @@ struct VerticalReaderView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     func ReaderLinkRender(image: ReaderLink, proxy: GeometryProxy) -> some View {
         Group {
@@ -33,14 +33,70 @@ struct VerticalReaderView: View {
             case .image(let url):
                 ImageView(image: url, proxy: proxy)
             case .previous(let chapter):
-                DirectionView(title: "Previous chapter \(chapter.title)", direction: .previous, size: .init(width: proxy.size.width, height: 50))
+                if vm.hasPreviousChapter() {
+                    ChapterBoundaryView(
+                        boundaryType: .previous(chapter: chapter),
+                        isLoading: vm.isTransitioningChapter,
+                        error: vm.transitionError,
+                        onRetry: { vm.retryTransition(.previous) }
+                    )
+                    .frame(
+                        width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                        height: proxy.size.height * 0.4,
+                        alignment: .center
+                    )
+                } else {
+                    ChapterBoundaryView(
+                        boundaryType: .startOfBook,
+                        isLoading: false,
+                        error: nil,
+                        onRetry: nil
+                    )
+                    .frame(
+                        width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                        height: proxy.size.height * 0.3,
+                        alignment: .center
+                    )
+                }
             case .next(let chapter):
-                DirectionView(title: "Next chapter \(chapter.title)", direction: .next, size: .init(width: proxy.size.width, height: 50))
+                if vm.hasNextChapter() {
+                    ChapterBoundaryView(
+                        boundaryType: .next(chapter: chapter),
+                        isLoading: vm.isTransitioningChapter,
+                        error: vm.transitionError,
+                        onRetry: { vm.retryTransition(.next) }
+                    )
+                    .frame(
+                        width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                        height: proxy.size.height * 0.4,
+                        alignment: .center
+                    )
+                } else {
+                    ChapterBoundaryView(
+                        boundaryType: .endOfBook,
+                        isLoading: false,
+                        error: nil,
+                        onRetry: nil
+                    )
+                    .frame(
+                        width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
+                        height: proxy.size.height * 0.3,
+                        alignment: .center
+                    )
+                }
             }
         }
         .id(image)
         .tag(image)
-        .onAppear { vm.updateTabIndex(image: image) }
+        .onAppear {
+            vm.updateTabIndex(image: image)
+            // Trigger auto-transition when boundary view appears
+            if case .next = image {
+                Task { await vm.checkAndTriggerChapterTransition() }
+            } else if case .previous = image {
+                Task { await vm.checkAndTriggerChapterTransition() }
+            }
+        }
     }
 
     func ImageView(image: String, proxy: GeometryProxy) -> some View {
@@ -49,19 +105,5 @@ struct VerticalReaderView: View {
                 width: UIScreen.isLargeScreen ? proxy.size.width / 2 : proxy.size.width,
                 alignment: .center
             )
-    }
-    
-    func DirectionView(title: String, direction: GoToChapterDirection, size: CGSize) -> some View {
-        Rectangle()
-            .fill(.black)
-            .frame(
-                minWidth: UIScreen.isLargeScreen ? size.width / 2 : size.width,
-                minHeight: size.height,
-                alignment: .center
-            )
-            .overlay(alignment: .center) {
-                Text(title)
-            }
-            .onTapGesture(count: 3) { vm.goToChapter(direction) }
     }
 }

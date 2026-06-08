@@ -85,7 +85,7 @@ class ExploreTabVM: ObservableObject {
     func removeScraper(scraper: Scraper) {
         do {
             try database.write { db in
-                try Scraper.deleteOne(db, id: scraper.id)
+                _ = try Scraper.deleteOne(db, id: scraper.id)
             }
         } catch(let err) {
             print(err)

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 public struct AsyncButton<Content: View>: View {
     @State var isActionRunning = false
@@ -21,9 +22,14 @@ public struct AsyncButton<Content: View>: View {
     public var body: some View {
         Button(action: {
             Task {
-                self.isActionRunning.toggle()
-                try await self.action()
-                self.isActionRunning.toggle()
+                self.isActionRunning = true
+                defer { self.isActionRunning = false }
+                do {
+                    try await self.action()
+                } catch {
+                    Logger(subsystem: Bundle.main.bundleIdentifier ?? "Dokusho", category: "ui")
+                        .error("AsyncButton action failed: \(error)")
+                }
             }
         }) {
             if isActionRunning { ProgressView() }

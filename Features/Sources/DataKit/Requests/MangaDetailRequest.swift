@@ -8,6 +8,8 @@
 @preconcurrency import GRDBQuery
 @preconcurrency import GRDB
 import Foundation
+import OSLog
+import Common
 
 public struct MangaDetailRequest: Queryable, Sendable {
     public static var defaultValue: MangaWithDetail? { nil }
@@ -29,11 +31,15 @@ public struct MangaDetailRequest: Queryable, Sendable {
     public func fetchValue(_ db: Database) throws -> MangaWithDetail? {
         guard let manga = try Manga.fetchMangaWithDetail(for: mangaId, in: scraper.id, db) else {
             Task { [self] in
-                guard let source = scraper.asSource() else { throw "Source Not found" }
-                let sourceManga = try await source.fetchMangaDetail(id: mangaId)
-                
-                try _ = await AppDatabase.shared.database.write { [self] db in
-                    try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+                do {
+                    guard let source = scraper.asSource() else { throw "Source Not found" }
+                    let sourceManga = try await source.fetchMangaDetail(id: mangaId)
+
+                    try _ = await AppDatabase.shared.database.write { [self] db in
+                        try Manga.updateFromSource(db: db, scraper: self.scraper, data: sourceManga)
+                    }
+                } catch {
+                    Logger.persistence.error("Failed to fetch manga detail for \(mangaId): \(error)")
                 }
             }
             
